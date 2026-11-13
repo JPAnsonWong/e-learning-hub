@@ -168,6 +168,6 @@ const ELH = (() => {
     el.innerHTML = `<p class="elh-empty">載入失敗：${esc(e.message)}。請確認是透過網址（不是直接雙擊檔案）打開。</p>`;
   }
 
-  return { loadAll, itemState, points, doneCount, markStart, complete, undoComplete, toggleReview, ptsFor,
+  return { loadAll, itemState, points, doneCount, markStart, complete, undoComplete, toggleReview, ptsFor, exportJson, importJson,
     esc, stageLabel, typeLabel, student, subject, badges, isNew, card, recent, reviewList, latest, section, backupTools, bindBackup, fail };
 })();
