@@ -1,0 +1,16 @@
+{
+  "types": [
+    { "id": "preview", "label": "課文預習" },
+    { "id": "review", "label": "課後複習" },
+    { "id": "practice", "label": "專項練習" },
+    { "id": "wrong", "label": "錯題訓練" },
+    { "id": "vocab", "label": "詞彙學習" },
+    { "id": "cards", "label": "知識卡片" },
+    { "id": "quiz", "label": "小測驗" },
+    { "id": "game", "label": "互動遊戲" },
+    { "id": "topic", "label": "專題學習" }
+  ],
+  "tags": [
+    { "id": "key", "label": "重點" }
+  ]
+}

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>女兒的時事常識溫習　50 題投屏練習（2026-11-17）</title>
+<style>
+  :root {
+    --bg: #f4efe6;
+    --ink: #1c2430;
+    --muted: #5a6573;
+    --card: #fffdf8;
+    --line: #e2d8c8;
+    --accent: #8b2e2e;
+    --accent-2: #c2781a;
+    --good: #157a3a;
+    --good-bg: #dff6e8;
+    --bad: #b42318;
+    --bad-bg: #fde8e6;
+    --pick: #1f6f8b;
+    --must: #8b2e2e;
+    --suggest: #1f5f4b;
+    --extra: #3d4f7a;
+    --easy: #8a5a12;
+    --shadow: 0 10px 30px rgba(28,36,48,.08);
+  }
+  html.dark {
+    --bg: #101826;
+    --ink: #f3efe6;
+    --muted: #b7c0cc;
+    --card: #1a2536;
+    --line: #2c3a50;
+    --accent: #e08b8b;
+    --accent-2: #f0b429;
+    --good: #5ee09a;
+    --good-bg: #163528;
+    --bad: #ff8d85;
+    --bad-bg: #3a1d1c;
+    --pick: #5ec8e6;
+    --must: #ffb4b0;
+    --suggest: #7ddec0;
+    --extra: #a8b8e8;
+    --easy: #f0c06a;
+    --shadow: 0 10px 30px rgba(0,0,0,.35);
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "PingFang HK", "Microsoft JhengHei", "Heiti TC", sans-serif;
+    overflow: hidden;
+    user-select: none;
+  }
+  #app { height: 100%; display: flex; flex-direction: column; padding: 1.4vmin 2.2vmin 1.2vmin; position: relative; }
+  header.top {
+    display: flex; align-items: center; gap: 1.2vmin;
+    flex: 0 0 auto;
+  }
+  .brand { font-weight: 800; font-size: 2.1vmin; color: var(--accent); white-space: nowrap; }
+  .chip {
+    font-size: 1.8vmin; font-weight: 800;
+    border-radius: 999px; padding: .25vmin 1.3vmin;
+    border: 1px solid var(--line); background: var(--card);
+    white-space: nowrap;
+  }
+  .chip.must { color: var(--must); }
+  .chip.suggest { color: var(--suggest); }
+  .chip.extra { color: var(--extra); }
+  .chip.easy { color: var(--easy); }
+  .spacer { flex: 1; }
+  .progress { font-weight: 800; font-size: 2.6vmin; letter-spacing: .04em; }
+  button.icon, button.nav, button.act, button.jump { font-family: inherit; cursor: pointer; border: 0; }
+  button.icon {
+    background: var(--card); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 1.1vmin;
+    font-size: 2vmin; padding: .5vmin 1.1vmin; font-weight: 700;
+  }
+  main {
+    flex: 1; min-height: 0;
+    display: flex; flex-direction: column;
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 2vmin; box-shadow: var(--shadow);
+    padding: 2.2vmin 2.8vmin; margin: 1.1vmin 0;
+  }
+  main.split { flex-direction: row; gap: 2.2vmin; align-items: stretch; }
+  .col-q { flex: 1.2; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+  .prompt {
+    font-size: clamp(40px, 4.6vmin, 56px);
+    font-weight: 800; line-height: 1.35;
+    margin: 0 0 1.8vmin; letter-spacing: .01em; flex: 0 0 auto;
+    max-width: 22em;
+  }
+  .options {
+    display: grid; gap: 1.3vmin;
+    grid-template-columns: 1fr;
+    margin-top: auto; flex: 0 0 auto;
+  }
+  .options.four { grid-template-columns: 1fr 1fr; }
+  .opt {
+    display: flex; align-items: center; gap: 1.4vmin;
+    background: transparent; color: var(--ink);
+    border: 3px solid var(--line); border-radius: 1.5vmin;
+    padding: 1.1vmin 1.6vmin; text-align: left;
+    font-size: clamp(28px, 3.15vmin, 36px);
+    font-weight: 700; min-height: 8vmin;
+    line-height: 1.3;
+  }
+  main.split .opt { min-height: 6.4vmin; font-size: clamp(26px, 2.7vmin, 32px); padding: .8vmin 1.2vmin; }
+  .opt:hover { border-color: var(--accent); }
+  .opt .tag {
+    flex: 0 0 5.2vmin; height: 5.2vmin; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--bg); font-size: 2.4vmin; font-weight: 800;
+  }
+  .opt.picked { border-color: var(--pick); box-shadow: 0 0 0 3px color-mix(in srgb, var(--pick) 25%, transparent); }
+  .opt.correct { border-color: var(--good); background: var(--good-bg); }
+  .opt.wrong { border-color: var(--bad); background: var(--bad-bg); }
+  .explain {
+    display: none; flex: 0.95; min-width: 0;
+    padding: 1.8vmin 2vmin; overflow: auto;
+    background: var(--bg); border-radius: 1.6vmin; border: 1px solid var(--line);
+  }
+  main.split .explain { display: flex; flex-direction: column; }
+  .explain h3 { margin: 0 0 .8vmin; font-size: 2.3vmin; color: var(--accent-2); }
+  .explain .body { font-size: clamp(22px, 2.5vmin, 30px); line-height: 1.5; font-weight: 700; margin: 0 0 1.2vmin; }
+  .verdict { font-size: 2.7vmin; font-weight: 800; margin: 0 0 1vmin; }
+  .verdict.ok { color: var(--good); }
+  .verdict.no { color: var(--bad); }
+  .speak {
+    margin-top: auto;
+    font-size: clamp(20px, 2.3vmin, 28px);
+    font-weight: 700; line-height: 1.45;
+    background: var(--card); border: 1px dashed var(--accent-2);
+    border-radius: 1.2vmin; padding: 1.2vmin 1.4vmin;
+  }
+  .speak b { color: var(--accent-2); display: block; font-size: 1.9vmin; margin-bottom: .3vmin; }
+  .src { font-size: 1.7vmin; color: var(--muted); font-weight: 600; margin-top: 1.1vmin; }
+  footer.bar { flex: 0 0 auto; display: flex; align-items: center; gap: 1.1vmin; }
+  button.nav, button.act {
+    font-size: 2.4vmin; font-weight: 800; border-radius: 1.3vmin;
+    padding: 1vmin 2vmin; min-height: 6.2vmin;
+  }
+  button.nav { background: var(--card); color: var(--ink); border: 1px solid var(--line); }
+  button.act { background: var(--accent); color: #fff; }
+  html.dark button.act { color: #102018; }
+  button.act.ready { background: var(--accent-2); color: #1c1408; }
+  button:disabled { opacity: .35; cursor: default; }
+  .bar-mid { flex: 1; display: flex; flex-direction: column; align-items: center; gap: .5vmin; }
+  .pbar { width: min(52vmin, 70%); height: .9vmin; background: var(--line); border-radius: 99px; overflow: hidden; }
+  .pbar > i { display: block; height: 100%; background: var(--accent); width: 0; }
+  .pbar-lab { font-size: 1.7vmin; color: var(--muted); font-weight: 700; }
+  .cover, .end {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; gap: 1.4vmin; padding: 2vmin;
+  }
+  .cover h1, .end h1 { font-size: 6.2vmin; margin: 0; letter-spacing: .04em; line-height: 1.2; }
+  .cover p, .end p { font-size: 2.6vmin; color: var(--muted); margin: 0; font-weight: 600; max-width: 28em; line-height: 1.5; }
+  .hint { font-size: 1.9vmin; color: var(--muted); margin-top: 1.2vmin; font-weight: 600; }
+  .fine { font-size: 1.7vmin; color: var(--muted); font-weight: 600; margin-top: 2vmin; max-width: 36em; line-height: 1.5; }
+  /* jump panel */
+  .drawer {
+    position: absolute; top: 0; right: 0; bottom: 0;
+    width: min(46vmin, 520px);
+    background: var(--card);
+    border-left: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    padding: 1.8vmin 1.8vmin 2vmin;
+    display: flex; flex-direction: column;
+    transform: translateX(105%);
+    transition: transform .2s ease;
+    z-index: 5;
+  }
+  .drawer.show { transform: none; }
+  .drawer h2 { margin: 0 0 1vmin; font-size: 2.3vmin; }
+  .drawer .sub { font-size: 1.6vmin; color: var(--muted); font-weight: 600; margin: 0 0 1.2vmin; }
+  .jgrid {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: .7vmin;
+    overflow: auto; flex: 1;
+  }
+  button.jump {
+    min-height: 5.2vmin;
+    border-radius: 1vmin; font-size: 2vmin; font-weight: 800;
+    background: var(--bg); color: var(--ink); border: 2px solid var(--line);
+  }
+  button.jump.must { border-color: color-mix(in srgb, var(--must) 45%, var(--line)); }
+  button.jump.suggest { border-color: color-mix(in srgb, var(--suggest) 45%, var(--line)); }
+  button.jump.extra { border-color: color-mix(in srgb, var(--extra) 45%, var(--line)); }
+  button.jump.easy { border-color: color-mix(in srgb, var(--easy) 45%, var(--line)); }
+  button.jump.now { background: var(--accent); color: #fff; border-color: var(--accent); }
+  html.dark button.jump.now { color: #102018; }
+  button.jump.seen { opacity: .85; }
+  .legend { font-size: 1.6vmin; color: var(--muted); font-weight: 600; margin-top: 1vmin; }
+  .mask {
+    position: absolute; inset: 0; background: rgba(16,20,28,.35);
+    display: none; z-index: 4;
+  }
+  .mask.show { display: block; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const QUESTIONS = [{"id":1,"priority":"必溫","prompt":"黎家盈姐姐在「天宮課堂」提到，中國空間站環繞地球一周，大約需要多少時間？","options":["45 分鐘","90 分鐘","120 分鐘"],"answer":1,"explain":"空間站大約每 90 分鐘繞地球一周，所以一天裏會見到好幾次日出和日落。","speak":"太空站環繞地球一周，大約需要九十分鐘。","source":"3D時事常識10月工作紙；爸爸提供並已對報道；香港文匯報、香港電台 2026-09-09"},{"id":2,"priority":"必溫","prompt":"「天宮課堂」港澳專場，主要是由哪一位香港載荷專家主持的？","options":["黎家盈","黃澤林","何詩蓓"],"answer":0,"explain":"主持課堂的是香港載荷專家黎家盈。黃澤林是網球運動員，何詩蓓是游泳運動員。","speak":"「天宮課堂」是由黎家盈姐姐主持的。","source":"香港文匯報、香港電台 2026-09-09"},{"id":3,"priority":"必溫","prompt":"「天宮課堂」港澳專場，是在哪一年哪一個月舉行的？","options":["2026 年 5 月","2026 年 10 月","2026 年 9 月"],"answer":2,"explain":"這堂課在 2026 年 9 月 9 日舉行。黎家盈是 2026 年 5 月乘神舟二十三號執行任務的，不要把兩個月份混淆。","speak":"「天宮課堂」港澳專場在二零二六年九月舉行。","source":"香港文匯報、香港電台 2026-09-09"},{"id":4,"priority":"必溫","prompt":"港隊在 2026 年亞運會，第一次奪得網球男單金牌的運動員是誰？","options":["黃澤林","張瑋桓","鄧銘漮","何詩蓓"],"answer":0,"explain":"黃澤林在 2026 年 10 月 3 日奪得港隊歷來第一面亞運網球男單金牌。","speak":"港隊第一面亞運網球男單金牌，是黃澤林奪得的。","source":"3D時事常識10月工作紙；爸爸提供；政府新聞公報 2026-10-26；香港中通社 2026-10-03"},{"id":5,"priority":"必溫","prompt":"黃澤林在亞運會奪得的「港隊第一面」金牌，是哪一個項目？","options":["游泳","男子七人欖球","網球男單"],"answer":2,"explain":"黃澤林參加的是網球，而且是男子單打。游泳的代表人物是何詩蓓，七人欖球是另一項團體項目。","speak":"黃澤林奪得的是網球男單金牌。","source":"政府新聞公報 2026-10-26；香港中通社 2026-10-03"},{"id":6,"priority":"必溫","prompt":"為甚麼說黃澤林這面金牌是「第一面」？","options":["這是港隊歷來第一面亞運網球男單金牌","這是港隊在今屆亞運的第一面金牌","這是港隊歷來第一面亞運金牌"],"answer":0,"explain":"「第一面」是指網球男單這個項目，港隊從來未奪過亞運金牌；並不是說港隊有史以來第一次在亞運奪金。","speak":"這是港隊歷來第一面亞運網球男單金牌。","source":"政府新聞公報 2026-10-26；香港中通社 2026-10-03"},{"id":7,"priority":"必溫","prompt":"香港特別行政區的區旗，主要是哪兩種顏色？","options":["白色和紅色","紅色和黃色","藍色和白色"],"answer":0,"explain":"區旗旗面是紅色，中間是一朵白色紫荊花，所以記「白和紅」。不要記成國旗的紅和黃。","speak":"香港區旗的顏色是白色和紅色。","source":"政府總部禮賓處；2D評估一舊錯訂正"},{"id":8,"priority":"必溫","prompt":"香港區旗正中央，那朵五瓣紫荊花是甚麼顏色？","options":["黃色","紅色","白色"],"answer":2,"explain":"中央是白色五瓣紫荊花；每瓣上有紅色五角星和紅色花蕊。","speak":"區旗中間的紫荊花是白色的。","source":"政府總部禮賓處"},{"id":9,"priority":"必溫","prompt":"下面哪一句說得對？","options":["國旗和區旗中間都是黃色的花或星星","國旗有黃色五角星，區旗中間是白色紫荊花","區旗是全黃色的"],"answer":1,"explain":"國旗是紅底，左上有五顆黃色五角星；區旗是紅底，中間是白色紫荊花。兩面旗都有紅色，但另一種顏色不同。","speak":"國旗有黃色星星，區旗中間是白色紫荊花。","source":"政府總部禮賓處"},{"id":10,"priority":"必溫","prompt":"專責統籌香港康樂、體育及文化活動的部門，全稱是哪一個？","options":["食物環境衞生署","漁農自然護理署","康樂及文化事務署","民政事務總署"],"answer":2,"explain":"全稱是康樂及文化事務署，簡稱康文署。不要和負責食物、環境衞生的食環署混淆。","speak":"統籌康樂體育文化的部門，全稱是康樂及文化事務署。","source":"2D評估二舊錯訂正；康樂及文化事務署網站"},{"id":11,"priority":"必溫","prompt":"公園、游泳池、圖書館這類康樂文化設施，主要由哪個部門負責？","options":["康樂及文化事務署","食物環境衞生署","教育局"],"answer":0,"explain":"這些康樂、文化場所主要由康樂及文化事務署負責。","speak":"公園、游泳池和圖書館，主要由康樂及文化事務署負責。","source":"康樂及文化事務署網站"},{"id":12,"priority":"必溫","prompt":"「康樂及文化事務署」的簡稱是甚麼？","options":["文康署","文體署","康文署"],"answer":2,"explain":"簡稱是康文署，取「康樂」的「康」和「文化」的「文」。","speak":"康樂及文化事務署，簡稱康文署。","source":"康樂及文化事務署網站"},{"id":13,"priority":"必溫","prompt":"三色回收箱裏，廢紙應該放入哪一種顏色的箱子？","options":["黃色","啡色","藍色"],"answer":2,"explain":"小學常記的三色回收：藍色放廢紙，黃色放金屬（如鋁罐），啡色放塑膠（如膠樽）。不要把廢紙記成黃色。","speak":"廢紙應該放入藍色的回收箱。","source":"2D評估三舊錯訂正；政府新聞公報（三色分類：藍紙、黃罐、啡膠）"},{"id":14,"priority":"必溫","prompt":"黃色的回收箱，通常用來回收甚麼？","options":["廢紙","金屬（例如鋁罐）","塑膠（例如膠樽）"],"answer":1,"explain":"黃色回收箱回收金屬，例如鋁罐。廢紙是藍色，塑膠是啡色。","speak":"黃色回收箱通常用來回收金屬，例如鋁罐。","source":"政府新聞公報（三色分類）"},{"id":15,"priority":"必溫","prompt":"啡色的回收箱，通常用來回收甚麼？","options":["塑膠（例如膠樽）","廢紙","金屬（例如鋁罐）"],"answer":0,"explain":"啡色回收箱回收塑膠，例如膠樽。","speak":"啡色回收箱通常用來回收塑膠，例如膠樽。","source":"政府新聞公報（三色分類）"},{"id":16,"priority":"建議","prompt":"2026 年第 20 屆亞洲運動會，主要在哪一個地方舉行？","options":["中國杭州","日本愛知縣／名古屋","韓國首爾","日本東京"],"answer":1,"explain":"本屆亞運在日本愛知縣／名古屋舉行。","speak":"第二十屆亞運會在日本愛知縣名古屋舉行。","source":"政府新聞公報 2026-10-26"},{"id":17,"priority":"建議","prompt":"第 20 屆亞運會大約在哪一段時間舉行？","options":["2026 年 9 月 19 日至 10 月 4 日","2026 年 10 月 1 日至 10 月 17 日","2026 年 8 月 1 日至 8 月 15 日"],"answer":0,"explain":"開幕是 2026 年 9 月 19 日，閉幕是 10 月 4 日。黃澤林在 10 月 3 日奪得網球男單金牌，正是比賽尾段。","speak":"本屆亞運由二零二六年九月十九日舉行至十月四日。","source":"政府新聞公報 2026-10-26"},{"id":18,"priority":"建議","prompt":"港隊在本屆亞運會一共奪得多少面獎牌？有甚麼特別的地方？","options":["共 54 面（11 金、19 銀、24 銅），金牌數和總獎牌數都是歷來最高","共 45 面，和上屆一樣","共 54 面，但沒有公布金銀銅數目"],"answer":0,"explain":"港隊奪得 11 金、19 銀、24 銅，合共 54 面，金牌數和總獎牌數都是歷來最高。各報道對獎牌榜名次說法不一，不必強記名次。","speak":"港隊奪得十一金、十九銀、二十四銅，共五十四面獎牌，是歷來最高。","source":"政府新聞公報 2026-10-26"},{"id":19,"priority":"建議","prompt":"每年哪一日是中華人民共和國國慶日？","options":["10 月 1 日","7 月 1 日","5 月 1 日"],"answer":0,"explain":"每年 10 月 1 日是國慶日。7 月 1 日是香港特別行政區成立紀念日，5 月 1 日是勞動節。","speak":"每年十月一日是中華人民共和國國慶日。","source":"GovHK 2026年公眾假期；2D評估一、3C舊題亦曾考日期"},{"id":20,"priority":"建議","prompt":"2026 年是中華人民共和國成立多少周年？","options":["75 周年","76 周年","77 周年"],"answer":2,"explain":"中華人民共和國於 1949 年成立，到 2026 年是 77 周年。維多利亞港有國慶煙花匯演。","speak":"二零二六年是國家成立七十七周年。","source":"GovHK 2026年公眾假期；香港政府新聞網 2026-10-08"},{"id":21,"priority":"建議","prompt":"2026 年中秋節的公眾假期（中秋節翌日）是哪一日？","options":["9 月 25 日（星期五）","10 月 1 日（星期四）","9 月 26 日（星期六）"],"answer":2,"explain":"中秋正日是 9 月 25 日，公眾假期是「中秋節翌日」9 月 26 日。官方假期表列出的是翌日。","speak":"二零二六年中秋節的公眾假期是九月二十六日。","source":"GovHK 2026年公眾假期"},{"id":22,"priority":"建議","prompt":"過中秋節時，我們通常吃甚麼傳統食物？","options":["糉子","月餅","湯丸"],"answer":1,"explain":"中秋吃月餅。糉子是端午節的食物，湯丸常見於冬至或元宵。","speak":"中秋節我們通常吃月餅。","source":"GovHK 2026年公眾假期；2D評估一曾考節日食物"},{"id":23,"priority":"建議","prompt":"2026 年 10 月起分階段投入服務、本港規模最大的公立醫院，是哪一間？","options":["啟德醫院","瑪麗醫院","威爾斯親王醫院","瑪嘉烈醫院"],"answer":0,"explain":"啟德醫院由 2026 年 10 月 5 日起分階段投入服務，是本港規模最大的公立醫院。","speak":"本港規模最大的公立醫院是啟德醫院。","source":"政府新聞公報 2026-09-28；香港政府新聞網 2026-10-05"},{"id":24,"priority":"建議","prompt":"啟德醫院全面啟用後，大約可提供多少張病床？","options":["約 800 張","約 2 400 張","約 5 000 張"],"answer":1,"explain":"全面啟用後大約有 2 400 張病床。記住是「大約」，也要記得現在還未全部啟用。","speak":"啟德醫院全面啟用後，大約有二千四百張病床。","source":"政府新聞公報 2026-09-28；香港政府新聞網 2026-10-05"},{"id":25,"priority":"建議","prompt":"關於啟德醫院，哪一句是正確的？","options":["2026 年 10 月已經有急症室服務","這是一間私家醫院","首階段主要是門診等服務，住院、手術及急症室預計 2028 年才投入"],"answer":2,"explain":"2026 年 10 月先開的主要是門診等服務。現時如有急症，仍須前往其他醫院；急症室預計 2028 年才投入。","speak":"啟德醫院現時主要先提供門診等服務，急症室預計二零二八年才投入。","source":"政府新聞公報 2026-09-28；香港政府新聞網 2026-10-05"},{"id":26,"priority":"建議","prompt":"重建後的皇崗口岸，在哪一天正式開通？","options":["2026 年 9 月 16 日","2026 年 10 月 5 日","2026 年 10 月 12 日"],"answer":2,"explain":"新皇崗口岸在 2026 年 10 月 12 日正式開通。不要和施政報告日（9 月 16 日）或啟德醫院投入日（10 月 5 日）混淆。","speak":"新皇崗口岸在二零二六年十月十二日正式開通。","source":"香港政府新聞網 2026-10-11；政府新聞公報 2026-10-12"},{"id":27,"priority":"建議","prompt":"新皇崗口岸採用哪一種通關模式？","options":["「合作查驗、一次放行」（排一次隊、核對一次證件）","兩地分開查驗，要排兩次隊","只檢查香港證件，不用辦理內地手續"],"answer":0,"explain":"這是港深之間第一個採用「合作查驗、一次放行」的陸路口岸，旅客排一次隊、核對一次證件，就可以完成兩地手續。","speak":"新皇崗口岸採用合作查驗、一次放行的通關模式。","source":"香港政府新聞網 2026-10-11；政府新聞公報 2026-10-12"},{"id":28,"priority":"建議","prompt":"新皇崗口岸的客運通關時間是怎樣的？","options":["只在白天開放","只在周末開放","提供 24 小時客運通關"],"answer":2,"explain":"新皇崗口岸提供 24 小時客運通關。","speak":"新皇崗口岸提供二十四小時客運通關。","source":"香港政府新聞網 2026-10-11；政府新聞公報 2026-10-12"},{"id":29,"priority":"建議","prompt":"香港特別行政區現任行政長官是誰？","options":["李家超","董建華","黃澤林"],"answer":0,"explain":"現任行政長官是李家超。董建華是香港特區第一任行政長官，不要把「現任」和「首任」混淆。","speak":"香港特別行政區現任行政長官是李家超。","source":"政府新聞公報 2026-09-16"},{"id":30,"priority":"建議","prompt":"現任行政長官在 2026 年 9 月 16 日發表了甚麼重要文件？","options":["《行政長官 2026 年施政報告》","《財政預算案》","《基本法》"],"answer":0,"explain":"李家超於 2026 年 9 月 16 日發表《行政長官 2026 年施政報告》。小三只需記住是誰、做了甚麼，不必背裏面的政策細節。","speak":"行政長官在二零二六年九月十六日發表了施政報告。","source":"政府新聞公報 2026-09-16"},{"id":31,"priority":"建議","prompt":"關於中華人民共和國國旗，哪一句說得對？","options":["紅底，左上有五顆黃色五角星","紅底，中間有一朵白色紫荊花","藍底，有一顆黃色大星"],"answer":0,"explain":"國旗是紅色旗面，左上方有五顆黃色五角星。中間有白色紫荊花的是香港區旗。","speak":"國旗是紅底，左上有五顆黃色五角星。","source":"政府總部禮賓處"},{"id":32,"priority":"建議","prompt":"中華人民共和國的國歌是哪一首？","options":["《東方之珠》","《義勇軍進行曲》","《中國人》"],"answer":1,"explain":"國歌是《義勇軍進行曲》。","speak":"我們的國歌是義勇軍進行曲。","source":"政府總部禮賓處"},{"id":33,"priority":"建議","prompt":"2026 年國慶黃金周，訪港旅客大約有多少人次？","options":["約 60 萬","約 1 000 萬","約 160 萬"],"answer":2,"explain":"政府公布，2026 年國慶黃金周訪港約 160 萬人次。記住是「大約」。","speak":"二零二六年國慶黃金周，訪港大約有一百六十萬人次。","source":"香港政府新聞網 2026-10-08"},{"id":34,"priority":"補充","prompt":"黎家盈博士是香港的第一位甚麼人？","options":["第一位載荷專家","第一位行政長官","第一位亞運金牌得主"],"answer":0,"explain":"黎家盈是香港首位載荷專家，在 2026 年 5 月隨神舟二十三號執行載人飛行任務。這也是她後來主持「天宮課堂」的背景。","speak":"黎家盈是香港首位載荷專家。","source":"政府新聞公報 2026-05-23"},{"id":35,"priority":"補充","prompt":"黎家盈是乘坐哪一艘飛船，在 2026 年 5 月執行載人飛行任務的？","options":["神舟十五號","天舟七號","神舟二十三號"],"answer":2,"explain":"她乘坐的是神舟二十三號。小三先記住「神舟二十三號」和「二零二六年五月」即可。","speak":"黎家盈乘坐神舟二十三號執行任務。","source":"政府新聞公報 2026-05-23"},{"id":36,"priority":"補充","prompt":"何詩蓓參加的是哪一項運動？","options":["游泳","網球","七人欖球"],"answer":0,"explain":"何詩蓓是游泳運動員，是本屆亞運可以多記的一個名字。網球男單金牌是黃澤林。","speak":"何詩蓓參加的是游泳。","source":"政府新聞公報 2026-10-26"},{"id":37,"priority":"補充","prompt":"本屆亞運，港隊男子七人欖球奪金，並且完成了甚麼？","options":["首次參賽","只取得銅牌","三連冠"],"answer":2,"explain":"男子七人欖球不但奪金，還完成三連冠。這是加分記憶，不必背全部獎牌名單。","speak":"港隊男子七人欖球奪金，並且完成三連冠。","source":"政府新聞公報 2026-10-26"},{"id":38,"priority":"補充","prompt":"香港特別行政區的第一任行政長官是誰？","options":["李家超","董建華","黎家盈"],"answer":1,"explain":"第一任（首任）行政長官是董建華。現任行政長官是李家超。","speak":"香港特區第一任行政長官是董建華。","source":"政府新聞公報 2026-09-09 哀悼聲明"},{"id":39,"priority":"補充","prompt":"董建華先生於哪一年哪一個月逝世？（政府其後發表了哀悼聲明）","options":["2026 年 9 月","2026 年 5 月","2025 年 12 月"],"answer":0,"explain":"政府在 2026 年 9 月 9 日發表哀悼聲明，可核實他於 2026 年 9 月逝世。若要記到「哪一日」，請再對照官方稿，本題不要求記確切日期。","speak":"董建華先生於二零二六年九月逝世。","source":"政府新聞公報 2026-09-09；準確逝世日期若要默寫仍待對照官方稿","pending":"準確逝世日期不強記，本題只考至年月"},{"id":40,"priority":"補充","prompt":"在公眾地方亂拋垃圾等潔淨違例，現時的定額罰款是多少？","options":["港幣 1,500 元","港幣 5,000 元","港幣 10,000 元","港幣 3,000 元"],"answer":3,"explain":"定額罰款是港幣 3,000 元。食環署頁面載明由 2023 年 10 月 22 日起實施，2026 年 11 月 13 日查核時未見改動。若學校工作紙有新數字，以工作紙為準。","speak":"在公眾地方亂拋垃圾，定額罰款是港幣三千元。","source":"食物環境衞生署：潔淨服務頁（查核截至 2026-11-13）"},{"id":41,"priority":"補充","prompt":"2026 年是國家哪一項規劃的「開局之年」？","options":["「十四五」規劃","「十五五」規劃（2026－2030）","「十三五」規劃"],"answer":1,"explain":"2026 年是國家「十五五」規劃（2026 至 2030 年）的開局之年，也就是未來五年發展藍圖的第一年。小三記住名稱即可。","speak":"二零二六年是國家十五五規劃的開局之年。","source":"行政長官在皇崗口岸致辭，見香港政府新聞網 2026-10-11"},{"id":42,"priority":"補充","prompt":"香港特別行政區成立紀念日是每年哪一日？","options":["10 月 1 日","1 月 1 日","7 月 1 日"],"answer":2,"explain":"香港在 1997 年 7 月 1 日回歸祖國，所以每年 7 月 1 日是特區成立紀念日。10 月 1 日是國慶日。","speak":"香港特別行政區成立紀念日是每年七月一日。","source":"GovHK 2026年公眾假期"},{"id":43,"priority":"補充","prompt":"2026 年的勞動節是哪一日？","options":["5 月 1 日","5 月 2 日","4 月 30 日"],"answer":0,"explain":"每年 5 月 1 日是勞動節。","speak":"勞動節是每年五月一日。","source":"GovHK 2026年公眾假期"},{"id":44,"priority":"補充","prompt":"2026 年的端午節是哪一日？這天常吃甚麼？","options":["6 月 19 日，吃月餅","6 月 19 日，吃糉子","9 月 25 日，吃糉子"],"answer":1,"explain":"2026 年端午節是 6 月 19 日，傳統食物是糉子。月餅是中秋節吃的，中秋正日是 9 月 25 日。","speak":"二零二六年端午節是六月十九日，我們常常吃糉子。","source":"GovHK 2026年公眾假期"},{"id":45,"priority":"建議","prompt":"舉行升國旗儀式時，我們應該怎樣做？","options":["要肅立，並行注目禮","可以邊走邊說話","只需坐下休息"],"answer":0,"explain":"升旗時要肅立，並行注目禮，表示尊重。","speak":"升國旗時，我們要肅立，並行注目禮。","source":"政府總部禮賓處；屬禮儀常識"},{"id":46,"priority":"補充","prompt":"2026 年重陽節正日是星期日，補假是哪一日？","options":["10 月 1 日","9 月 26 日","10 月 19 日"],"answer":2,"explain":"正日遇上星期日，補假是 10 月 19 日。10 月 1 日是國慶，9 月 26 日是中秋節翌日假期。","speak":"二零二六年重陽節的補假是十月十九日。","source":"GovHK 2026年公眾假期"},{"id":47,"priority":"稍易","prompt":"判斷：食物環境衞生署（食環署）負責統籌全港的康樂、體育及文化活動。","options":["正確","錯誤"],"answer":1,"explain":"這是錯的。統籌康樂、體育及文化的是康樂及文化事務署。食環署主要負責食物安全和環境衞生，例如處理亂拋垃圾。","speak":"食環署不是負責康樂體育的；那是康樂及文化事務署的工作。","source":"2D評估二舊錯訂正；康文署網站；食環署潔淨服務頁"},{"id":48,"priority":"稍易","prompt":"判斷：啟德醫院在 2026 年 10 月一啟用，就已經有急症室，有急症只需前往啟德醫院。","options":["正確","錯誤"],"answer":1,"explain":"這是錯的。首階段主要是門診等服務；現時急症仍須前往其他醫院，急症室預計 2028 年才投入。","speak":"啟德醫院現時還未有急症室，急症仍要去其他醫院。","source":"政府新聞公報 2026-09-28；香港政府新聞網 2026-10-05"},{"id":49,"priority":"稍易","prompt":"判斷：香港區旗正中央是一朵黃色紫荊花。","options":["正確","錯誤"],"answer":1,"explain":"這是錯的。區旗中央是白色紫荊花，不是黃色。黃色五角星是在國旗上。","speak":"區旗中間的紫荊花是白色，不是黃色。","source":"政府總部禮賓處；2D評估一舊錯"},{"id":50,"priority":"稍易","prompt":"下面哪一組全部正確？","options":["區旗是白和紅；廢紙箱是藍色；國慶是 10 月 1 日","區旗是紅和黃；廢紙箱是黃色；國慶是 7 月 1 日","區旗是藍和白；廢紙箱是啡色；國慶是 5 月 1 日"],"answer":0,"explain":"這三個都是要牢記的重點：區旗白和紅、廢紙藍色回收箱、國慶 10 月 1 日。另外兩組把區旗、回收顏色和節日都記錯了。","speak":"區旗是白和紅，廢紙箱是藍色，國慶是十月一日。","source":"禮賓處；舊卷訂正；GovHK 假期表"}];
+const letters = ["A","B","C","D"];
+const priClass = { "必溫":"must", "建議":"suggest", "補充":"extra", "稍易":"easy" };
+
+let i = -1;
+let picked = null;
+let revealed = false;
+let dark = false;
+let showJump = false;
+const seen = new Set();
+
+function priChip(p) {
+  return `<span class="chip ${priClass[p]||""}">${p}</span>`;
+}
+function hideJump(){ showJump = false; }
+
+function jumpPanel() {
+  const items = QUESTIONS.map((q,k) => {
+    const cls = ["jump", priClass[q.priority]||"", k===i?"now":"", seen.has(k)?"seen":""].join(" ");
+    return `<button class="${cls}" onclick="jumpTo(${k})">${k+1}</button>`;
+  }).join("");
+  return `
+    <div class="mask${showJump?" show":""}" onclick="toggleJump(false)"></div>
+    <aside class="drawer${showJump?" show":""}" role="dialog" aria-label="跳題目錄">
+      <h2>跳到題目</h2>
+      <p class="sub">共 50 題。紅邊＝必溫，綠邊＝建議，藍邊＝補充，黃邊＝稍易。</p>
+      <div class="jgrid">${items}</div>
+      <div class="legend">點題號即可跳題；跳題後答案會重新隱藏。</div>
+    </aside>`;
+}
+
+function qBody(s) {
+  const four = s.options.length >= 4 ? " four" : "";
+  return `<div class="options${four}">` + s.options.map((opt,idx)=>{
+    let cls = "opt";
+    if (picked === idx) cls += " picked";
+    if (revealed && idx === s.answer) cls += " correct";
+    if (revealed && picked !== null && idx === picked && idx !== s.answer) cls += " wrong";
+    return `<button class="${cls}" onclick="choose(${idx})"><span class="tag">${letters[idx]}</span><span>${opt}</span></button>`;
+  }).join("") + `</div>`;
+}
+
+function explainBox(s) {
+  let verdict = "";
+  if (picked !== null) {
+    verdict = picked === s.answer
+      ? `<div class="verdict ok">答對了！</div>`
+      : `<div class="verdict no">再看一看，正確答案是 ${letters[s.answer]}。</div>`;
+  }
+  return `<aside class="explain">
+      ${verdict}
+      <h3>講解</h3>
+      <p class="body">${s.explain}</p>
+      <div class="speak"><b>請用完整句子講一次</b>${s.speak}</div>
+      <div class="src">來源：${s.source}${s.pending ? "　｜　" + s.pending : ""}</div>
+    </aside>`;
+}
+
+function render() {
+  const app = document.getElementById("app");
+  if (i < 0) {
+    app.innerHTML = `
+      <main>
+        <div class="cover">
+          <div class="brand" style="font-size:2.6vmin">女兒｜3D 常識　｜　老師｜常識</div>
+          <h1>女兒的時事常識溫習</h1>
+          <p>共 50 題，一次只出一題。先自己想一想，再看答案和講解。</p>
+          <p>考試：2026 年 11 月 17 日（星期二）常識科<br>時事約佔全卷 10%。</p>
+          <button class="act" style="font-size:3.2vmin;padding:1.4vmin 4.2vmin;margin-top:1.6vmin" onclick="start()">開始練習</button>
+          <div class="hint">快捷鍵：空白鍵開始　← → 換題　空白鍵顯示答案　1–4 或 A–D 選項　F 全螢幕　D 深色　M 目錄</div>
+          <p class="fine">查核截至 2026 年 11 月 13 日（香港時間）。本頁是範圍預測與溫習練習，並非試題或標準答案卷。3C 舊卷只作題型參考，沒有沿用舊題內容。</p>
+        </div>
+      </main>`;
+    return;
+  }
+  if (i >= QUESTIONS.length) {
+    app.innerHTML = `
+      <main>
+        <div class="end">
+          <h1>今天練完了！</h1>
+          <p>可以再走一遍，或按「目錄」跳回還想溫的題。</p>
+          <button class="act" style="font-size:3vmin;padding:1.3vmin 3.6vmin;margin-top:1.6vmin" onclick="start()">再練習一次</button>
+          <button class="nav" style="font-size:2.4vmin;margin-top:.4vmin" onclick="toggleJump(true)">打開目錄</button>
+          <p class="fine">老師｜常識　｜　查核截至 2026-11-13　｜　範圍預測，非試題</p>
+        </div>
+      </main>
+      <footer class="bar">
+        <button class="nav" onclick="i=QUESTIONS.length-1;picked=null;revealed=false;hideJump();render()">回上一題</button>
+      </footer>
+      ${jumpPanel()}`;
+    return;
+  }
+  const s = QUESTIONS[i];
+  const pct = ((i+1) / QUESTIONS.length) * 100;
+  app.innerHTML = `
+    <header class="top">
+      <div class="brand">女兒的時事常識溫習</div>
+      ${priChip(s.priority)}
+      <div class="spacer"></div>
+      <div class="progress">第 ${i+1}／50 題</div>
+      <button class="icon" onclick="toggleJump(true)" title="目錄">目錄</button>
+      <button class="icon" onclick="toggleDark()" title="深色模式">${dark?"淺色":"深色"}</button>
+      <button class="icon" onclick="goFull()" title="全螢幕">全螢幕</button>
+    </header>
+    <main class="${revealed?"split":""}">
+      <div class="col-q">
+        <p class="prompt">${s.prompt}</p>
+        ${qBody(s)}
+      </div>
+      ${revealed ? explainBox(s) : ""}
+    </main>
+    <footer class="bar">
+      <button class="nav" ${i===0?"disabled":""} onclick="go(-1)">上一題</button>
+      <div class="bar-mid">
+        <div class="pbar"><i style="width:${pct}%"></i></div>
+        <div class="pbar-lab">第 ${i+1}／50 題</div>
+      </div>
+      <button class="act${revealed?"":" ready"}" onclick="toggleReveal()">${revealed?"隱藏答案":"顯示答案／講解"}</button>
+      <button class="nav" onclick="go(1)">${i===QUESTIONS.length-1?"完成":"下一題"}</button>
+    </footer>
+    ${jumpPanel()}`;
+}
+
+function start(){ i=0; picked=null; revealed=false; hideJump(); render(); }
+function go(d){
+  i = Math.min(QUESTIONS.length, Math.max(0, i+d));
+  picked=null; revealed=false; hideJump(); render();
+}
+function jumpTo(k){
+  i = k; picked=null; revealed=false; hideJump(); render();
+}
+function choose(idx){
+  if (revealed) return;
+  picked = idx;
+  render();
+}
+function toggleReveal(){
+  revealed = !revealed;
+  if (revealed) seen.add(i);
+  render();
+}
+function toggleDark(){
+  dark = !dark;
+  document.documentElement.classList.toggle("dark", dark);
+  render();
+}
+function toggleJump(on){
+  showJump = (on === false) ? false : (on === true ? true : !showJump);
+  render();
+}
+function goFull(){
+  const el = document.documentElement;
+  if (!document.fullscreenElement) el.requestFullscreen?.();
+  else document.exitFullscreen?.();
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "d" || e.key === "D") { toggleDark(); return; }
+  if (e.key === "f" || e.key === "F") { goFull(); return; }
+  if (e.key === "m" || e.key === "M") { if (i >= 0) toggleJump(); return; }
+  if (e.key === "Escape" && showJump) { toggleJump(false); return; }
+  if (i < 0) { if (e.key === " " || e.key === "Enter") { e.preventDefault(); start(); } return; }
+  if (showJump) return;
+  if (i >= QUESTIONS.length) {
+    if (e.key === "ArrowLeft") { i=QUESTIONS.length-1; picked=null; revealed=false; render(); }
+    return;
+  }
+  if (e.key === "ArrowRight" || e.key === "PageDown") { e.preventDefault(); go(1); }
+  else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); go(-1); }
+  else if (e.key === " " || e.key === "Enter") { e.preventDefault(); toggleReveal(); }
+  else if (["1","2","3","4","a","b","c","d","A","B","C","D"].includes(e.key)) {
+    const map = {a:0,b:1,c:2,d:3,A:0,B:1,C:2,D:3,"1":0,"2":1,"3":2,"4":3};
+    const s = QUESTIONS[i];
+    if (s && !revealed && map[e.key] < s.options.length) choose(map[e.key]);
+  }
+});
+
+function applyHash() {
+  const h = (location.hash || "").replace("#","");
+  picked = null;
+  showJump = false;
+  if (h === "dark") { dark = true; document.documentElement.classList.add("dark"); i = -1; revealed = false; }
+  else if (!h || h === "cover") { i = -1; revealed = false; }
+  else if (h === "end") { i = QUESTIONS.length; revealed = false; }
+  else if (h === "menu") { i = 0; revealed = false; showJump = true; }
+  else {
+    const m = h.match(/^(\d+)(r)?(d)?$/);
+    if (m) {
+      i = Math.max(0, Math.min(QUESTIONS.length-1, parseInt(m[1], 10)-1));
+      revealed = !!m[2];
+      dark = !!m[3];
+      document.documentElement.classList.toggle("dark", dark);
+    }
+  }
+  render();
+}
+window.addEventListener("hashchange", applyHash);
+applyHash();
+</script>
+</body>
+</html>

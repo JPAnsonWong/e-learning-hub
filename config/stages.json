@@ -1,0 +1,9 @@
+{
+  "stages": [
+    { "id": "g3-term1", "grade": "三年級", "label": "三年級 上學期" },
+    { "id": "g3-3d-exam1", "grade": "三年級", "label": "三年級 3D第一次考試" },
+    { "id": "g3-3d-exam2", "grade": "三年級", "label": "三年級 3D第二次考試" },
+    { "id": "g3-term2", "grade": "三年級", "label": "三年級 下學期" },
+    { "id": "g3-3d-exam3", "grade": "三年級", "label": "三年級 3D第三次考試" }
+  ]
+}

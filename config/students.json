@@ -1,0 +1,33 @@
+{
+  "students": [
+    {
+      "id": "daughter",
+      "name": "女兒",
+      "icon": "🌸",
+      "color": "#d6457f",
+      "subjects": [
+        { "id": "chinese", "name": "中文", "icon": "📖" },
+        { "id": "english", "name": "英文", "icon": "🔤" },
+        { "id": "math", "name": "數學", "icon": "➗" },
+        { "id": "general", "name": "常識", "icon": "🌍" },
+        { "id": "other", "name": "其它", "icon": "⭐" }
+      ]
+    },
+    {
+      "id": "son",
+      "name": "兒子",
+      "icon": "🚀",
+      "color": "#2a6fdb",
+      "subjects": [
+        { "id": "chinese", "name": "中文", "icon": "📖" },
+        { "id": "english", "name": "英文", "icon": "🔤" },
+        { "id": "math", "name": "數學", "icon": "➗" },
+        { "id": "science", "name": "科學", "icon": "🔬" },
+        { "id": "history", "name": "歷史", "icon": "🏛️" },
+        { "id": "geography", "name": "地理", "icon": "🗺️" },
+        { "id": "civics", "name": "公民經濟與社會", "icon": "⚖️" },
+        { "id": "other", "name": "其它", "icon": "⭐" }
+      ]
+    }
+  ]
+}

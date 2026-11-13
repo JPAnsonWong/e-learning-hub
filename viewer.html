@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>教材 · E_learning Hub</title>
+<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body class="elh-viewer">
+<div class="elh-bar" id="bar">
+  <a class="btn btn-outline-secondary" id="back" href="index.html">← 返回</a>
+  <div class="title" id="title">載入中…</div>
+  <span class="pts hide-sm" id="pts"></span>
+  <button class="btn btn-outline-danger" id="review">待複習</button>
+  <button class="btn btn-success" id="done">✓ 完成</button>
+  <button class="btn btn-outline-secondary hide-sm" id="undo" hidden>取消完成</button>
+  <a class="btn btn-outline-secondary hide-sm" id="newtab" target="_blank" rel="noopener">新分頁</a>
+  <button class="btn btn-outline-secondary" id="collapse" title="收起工具列">▲</button>
+</div>
+<button class="elh-reopen" id="reopen" title="顯示工具列">▼</button>
+<iframe class="elh-frame" id="frame" title="教材內容" allow="fullscreen" allowfullscreen></iframe>
+<div class="elh-toast" id="toast"></div>
+<script src="assets/js/common.js"></script>
+<script>
+(async () => {
+  const $ = (id) => document.getElementById(id);
+  const toast = (t) => { const el = $('toast'); el.textContent = t; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 1800); };
+  try {
+    const d = await ELH.loadAll();
+    const id = new URLSearchParams(location.search).get('id');
+    const item = d.items.find((i) => i.id === id);
+    if (!item) { $('title').textContent = '找不到這份教材'; return; }
+    const sid = item.student;
+    document.title = `${item.title} · E_learning Hub`;
+    $('title').textContent = item.title;
+    $('back').href = `student.html?s=${encodeURIComponent(sid)}`;
+    $('newtab').href = item.path;
+    $('frame').src = item.path;
+    ELH.markStart(sid, id);
+
+    const refresh = () => {
+      const st = ELH.itemState(sid, id);
+      $('pts').textContent = `⭐ ${ELH.points(sid)} 分`;
+      $('review').classList.toggle('btn-danger', st.review);
+      $('review').classList.toggle('btn-outline-danger', !st.review);
+      $('review').textContent = st.review ? '✓ 待複習中' : '待複習';
+      const n = st.completions.length;
+      $('done').textContent = n ? `✓ 再完成一次 (已${n}次)` : '✓ 完成';
+      $('undo').hidden = !n;
+    };
+    $('done').addEventListener('click', () => {
+      const p = ELH.complete(sid, id);
+      toast(p > 0 ? `太棒了！+${p} 分 ⭐` : '已完成！（此教材不再加分）');
+      refresh();
+    });
+    $('undo').addEventListener('click', () => {
+      if (!confirm('取消最近一次完成，並扣回該次積分？')) return;
+      const p = ELH.undoComplete(sid, id);
+      toast(p > 0 ? `已取消，扣回 ${p} 分` : '已取消');
+      refresh();
+    });
+    $('review').addEventListener('click', () => { toast(ELH.toggleReview(sid, id) ? '已加入待複習' : '已移出待複習'); refresh(); });
+    const setCollapsed = (v) => document.body.classList.toggle('elh-bar-collapsed', v);
+    $('collapse').addEventListener('click', () => setCollapsed(true));
+    $('reopen').addEventListener('click', () => setCollapsed(false));
+    refresh();
+  } catch (e) { $('title').textContent = '載入失敗：' + e.message; }
+})();
+</script>
+</body>
+</html>

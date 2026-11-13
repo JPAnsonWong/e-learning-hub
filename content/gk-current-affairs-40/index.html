@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>女兒的時事常識溫習　40 題四選一投屏練習（2026-11-17）</title>
+<style>
+  :root {
+    --bg: #f4efe6;
+    --ink: #1c2430;
+    --muted: #5a6573;
+    --card: #fffdf8;
+    --line: #e2d8c8;
+    --accent: #8b2e2e;
+    --accent-2: #c2781a;
+    --good: #157a3a;
+    --good-bg: #dff6e8;
+    --bad: #b42318;
+    --bad-bg: #fde8e6;
+    --pick: #1f6f8b;
+    --must: #8b2e2e;
+    --suggest: #1f5f4b;
+    --extra: #3d4f7a;
+    --easy: #8a5a12;
+    --shadow: 0 10px 30px rgba(28,36,48,.08);
+  }
+  html.dark {
+    --bg: #101826;
+    --ink: #f3efe6;
+    --muted: #b7c0cc;
+    --card: #1a2536;
+    --line: #2c3a50;
+    --accent: #e08b8b;
+    --accent-2: #f0b429;
+    --good: #5ee09a;
+    --good-bg: #163528;
+    --bad: #ff8d85;
+    --bad-bg: #3a1d1c;
+    --pick: #5ec8e6;
+    --must: #ffb4b0;
+    --suggest: #7ddec0;
+    --extra: #a8b8e8;
+    --easy: #f0c06a;
+    --shadow: 0 10px 30px rgba(0,0,0,.35);
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "PingFang HK", "Microsoft JhengHei", "Heiti TC", sans-serif;
+    overflow: hidden;
+    user-select: none;
+  }
+  #app { height: 100%; display: flex; flex-direction: column; padding: 1.4vmin 2.2vmin 1.2vmin; position: relative; }
+  header.top {
+    display: flex; align-items: center; gap: 1.2vmin;
+    flex: 0 0 auto;
+  }
+  .brand { font-weight: 800; font-size: 2.1vmin; color: var(--accent); white-space: nowrap; }
+  .chip {
+    font-size: 1.8vmin; font-weight: 800;
+    border-radius: 999px; padding: .25vmin 1.3vmin;
+    border: 1px solid var(--line); background: var(--card);
+    white-space: nowrap;
+  }
+  .chip.must { color: var(--must); }
+  .chip.suggest { color: var(--suggest); }
+  .chip.extra { color: var(--extra); }
+  .chip.easy { color: var(--easy); }
+  .spacer { flex: 1; }
+  .progress { font-weight: 800; font-size: 2.6vmin; letter-spacing: .04em; }
+  button.icon, button.nav, button.act, button.jump { font-family: inherit; cursor: pointer; border: 0; }
+  button.icon {
+    background: var(--card); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 1.1vmin;
+    font-size: 2vmin; padding: .5vmin 1.1vmin; font-weight: 700;
+  }
+  main {
+    flex: 1; min-height: 0;
+    display: flex; flex-direction: column;
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 2vmin; box-shadow: var(--shadow);
+    padding: 2.2vmin 2.8vmin; margin: 1.1vmin 0;
+  }
+  main.split { flex-direction: row; gap: 2.2vmin; align-items: stretch; }
+  .col-q { flex: 1.2; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+  .prompt {
+    font-size: clamp(40px, 4.6vmin, 56px);
+    font-weight: 800; line-height: 1.35;
+    margin: 0 0 1.8vmin; letter-spacing: .01em; flex: 0 0 auto;
+    max-width: 22em;
+  }
+  .options {
+    display: grid; gap: 1.3vmin;
+    grid-template-columns: 1fr;
+    margin-top: auto; flex: 0 0 auto;
+  }
+  .options.four { grid-template-columns: 1fr 1fr; }
+  .opt {
+    display: flex; align-items: center; gap: 1.4vmin;
+    background: transparent; color: var(--ink);
+    border: 3px solid var(--line); border-radius: 1.5vmin;
+    padding: 1.1vmin 1.6vmin; text-align: left;
+    font-size: clamp(28px, 3.15vmin, 36px);
+    font-weight: 700; min-height: 8vmin;
+    line-height: 1.3;
+  }
+  main.split .opt { min-height: 6.4vmin; font-size: clamp(26px, 2.7vmin, 32px); padding: .8vmin 1.2vmin; }
+  .opt:hover { border-color: var(--accent); }
+  .opt .tag {
+    flex: 0 0 5.2vmin; height: 5.2vmin; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--bg); font-size: 2.4vmin; font-weight: 800;
+  }
+  .opt.picked { border-color: var(--pick); box-shadow: 0 0 0 3px color-mix(in srgb, var(--pick) 25%, transparent); }
+  .opt.correct { border-color: var(--good); background: var(--good-bg); }
+  .opt.wrong { border-color: var(--bad); background: var(--bad-bg); }
+  .explain {
+    display: none; flex: 0.95; min-width: 0;
+    padding: 1.8vmin 2vmin; overflow: auto;
+    background: var(--bg); border-radius: 1.6vmin; border: 1px solid var(--line);
+  }
+  main.split .explain { display: flex; flex-direction: column; }
+  .explain h3 { margin: 0 0 .8vmin; font-size: 2.3vmin; color: var(--accent-2); }
+  .explain .body { font-size: clamp(22px, 2.5vmin, 30px); line-height: 1.5; font-weight: 700; margin: 0 0 1.2vmin; }
+  .verdict { font-size: 2.7vmin; font-weight: 800; margin: 0 0 1vmin; }
+  .verdict.ok { color: var(--good); }
+  .verdict.no { color: var(--bad); }
+  .speak {
+    margin-top: auto;
+    font-size: clamp(20px, 2.3vmin, 28px);
+    font-weight: 700; line-height: 1.45;
+    background: var(--card); border: 1px dashed var(--accent-2);
+    border-radius: 1.2vmin; padding: 1.2vmin 1.4vmin;
+  }
+  .speak b { color: var(--accent-2); display: block; font-size: 1.9vmin; margin-bottom: .3vmin; }
+  .src { font-size: 1.7vmin; color: var(--muted); font-weight: 600; margin-top: 1.1vmin; }
+  footer.bar { flex: 0 0 auto; display: flex; align-items: center; gap: 1.1vmin; }
+  button.nav, button.act {
+    font-size: 2.4vmin; font-weight: 800; border-radius: 1.3vmin;
+    padding: 1vmin 2vmin; min-height: 6.2vmin;
+  }
+  button.nav { background: var(--card); color: var(--ink); border: 1px solid var(--line); }
+  button.act { background: var(--accent); color: #fff; }
+  html.dark button.act { color: #102018; }
+  button.act.ready { background: var(--accent-2); color: #1c1408; }
+  button:disabled { opacity: .35; cursor: default; }
+  .bar-mid { flex: 1; display: flex; flex-direction: column; align-items: center; gap: .5vmin; }
+  .pbar { width: min(52vmin, 70%); height: .9vmin; background: var(--line); border-radius: 99px; overflow: hidden; }
+  .pbar > i { display: block; height: 100%; background: var(--accent); width: 0; }
+  .pbar-lab { font-size: 1.7vmin; color: var(--muted); font-weight: 700; }
+  .cover, .end {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; gap: 1.4vmin; padding: 2vmin;
+  }
+  .cover h1, .end h1 { font-size: 6.2vmin; margin: 0; letter-spacing: .04em; line-height: 1.2; }
+  .cover p, .end p { font-size: 2.6vmin; color: var(--muted); margin: 0; font-weight: 600; max-width: 28em; line-height: 1.5; }
+  .hint { font-size: 1.9vmin; color: var(--muted); margin-top: 1.2vmin; font-weight: 600; }
+  .fine { font-size: 1.7vmin; color: var(--muted); font-weight: 600; margin-top: 2vmin; max-width: 36em; line-height: 1.5; }
+  /* jump panel */
+  .drawer {
+    position: absolute; top: 0; right: 0; bottom: 0;
+    width: min(46vmin, 520px);
+    background: var(--card);
+    border-left: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    padding: 1.8vmin 1.8vmin 2vmin;
+    display: flex; flex-direction: column;
+    transform: translateX(105%);
+    transition: transform .2s ease;
+    z-index: 5;
+  }
+  .drawer.show { transform: none; }
+  .drawer h2 { margin: 0 0 1vmin; font-size: 2.3vmin; }
+  .drawer .sub { font-size: 1.6vmin; color: var(--muted); font-weight: 600; margin: 0 0 1.2vmin; }
+  .jgrid {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: .7vmin;
+    overflow: auto; flex: 1;
+  }
+  button.jump {
+    min-height: 5.2vmin;
+    border-radius: 1vmin; font-size: 2vmin; font-weight: 800;
+    background: var(--bg); color: var(--ink); border: 2px solid var(--line);
+  }
+  button.jump.must { border-color: color-mix(in srgb, var(--must) 45%, var(--line)); }
+  button.jump.suggest { border-color: color-mix(in srgb, var(--suggest) 45%, var(--line)); }
+  button.jump.extra { border-color: color-mix(in srgb, var(--extra) 45%, var(--line)); }
+  button.jump.easy { border-color: color-mix(in srgb, var(--easy) 45%, var(--line)); }
+  button.jump.now { background: var(--accent); color: #fff; border-color: var(--accent); }
+  html.dark button.jump.now { color: #102018; }
+  button.jump.seen { opacity: .85; }
+  .legend { font-size: 1.6vmin; color: var(--muted); font-weight: 600; margin-top: 1vmin; }
+  .mask {
+    position: absolute; inset: 0; background: rgba(16,20,28,.35);
+    display: none; z-index: 4;
+  }
+  .mask.show { display: block; }
+
+  /* Static PDF-like cover: visible in WPS even without JS */
+  #wps-gate {
+    position: absolute;
+    left: 0; top: 0; right: 0; bottom: 0;
+    width: 100%;
+    min-height: 100%;
+    z-index: 9999;
+    background: #5c5c5c;
+    overflow: auto;
+    user-select: text;
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Heiti TC", "SimSun", serif;
+  }
+  #wps-gate a { cursor: pointer; }
+  body.in-practice #wps-gate { display: none !important; }
+  #app { display: none; }
+  body.in-practice #app { display: flex; flex-direction: column; height: 100%; }
+  body.in-practice { overflow: hidden; background: var(--bg); }
+  body { background: #5c5c5c; }
+  .pdf-stage {
+    min-height: 100%;
+    padding: 24px 0 40px;
+    text-align: center;
+  }
+  .pdf-page {
+    width: 800px;
+    width: min(94vw, 240mm);
+    min-height: 600px;
+    min-height: min(88vh, 297mm);
+    margin: 0 auto;
+    text-align: left;
+    background: #fff;
+    color: #111;
+    box-shadow: 0 8px 28px rgba(0,0,0,.35);
+    padding: 48px 56px 56px;
+    box-sizing: border-box;
+    display: inline-block;
+  }
+  .pdf-kicker {
+    font-size: 22px;
+    letter-spacing: .12em;
+    color: #666;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 12px;
+    margin: 0 0 32px;
+  }
+  .pdf-page h1 {
+    font-size: 52px;
+    line-height: 1.3;
+    margin: 0 0 16px;
+    font-weight: 800;
+    color: #111;
+  }
+  .pdf-page .pdf-sub {
+    font-size: 26px;
+    color: #333;
+    margin: 0 0 28px;
+    line-height: 1.55;
+  }
+  .pdf-note {
+    font-size: 24px;
+    line-height: 1.65;
+    color: #222;
+    margin: 0 0 18px;
+  }
+  .pdf-link {
+    display: block;
+    font-size: 36px;
+    font-weight: 700;
+    color: #0563c1;
+    text-decoration: underline;
+    line-height: 1.45;
+    margin: 16px 0;
+    padding: 16px 0;
+  }
+  .pdf-link:visited { color: #0563c1; }
+  .pdf-alt {
+    display: block;
+    font-size: 24px;
+    color: #0563c1;
+    text-decoration: underline;
+    margin: 4px 0 28px;
+    padding: 10px 0;
+  }
+  .pdf-start {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 26px;
+    font-weight: 800;
+    font-family: inherit;
+    color: #fff;
+    background: #8b2e2e;
+    border: 0;
+    border-radius: 12px;
+    padding: 16px 32px;
+    cursor: pointer;
+  }
+  .pdf-foot {
+    margin-top: 40px;
+    font-size: 18px;
+    color: #666;
+    line-height: 1.5;
+    border-top: 1px solid #eee;
+    padding-top: 16px;
+  }
+
+  .ans-banner {
+    font-size: clamp(22px, 2.7vmin, 34px);
+    font-weight: 800;
+    line-height: 1.45;
+    background: #14532d;
+    color: #ecfdf5;
+    border-radius: 1.2vmin;
+    padding: 1.2vmin 1.4vmin;
+    margin: 0 0 1.2vmin;
+  }
+  html.dark .ans-banner {
+    background: #052e16;
+    color: #d1fae5;
+    box-shadow: inset 0 0 0 2px #4ade80;
+  }
+  .ans-banner .letter {
+    display: inline-block;
+    background: #facc15;
+    color: #14532d;
+    font-size: 1.08em;
+    border-radius: .5vmin;
+    padding: 0 .35em;
+    margin-right: .25em;
+  }
+  .explain h3 { margin: 0 0 .6vmin; font-size: 2.2vmin; color: var(--accent-2); }
+  .explain .body { font-size: clamp(20px, 2.35vmin, 28px); line-height: 1.55; font-weight: 650; margin: 0 0 1.1vmin; }
+  .hl-name { color: #0b5f8a; font-weight: 800; font-size: 1.06em; }
+  .hl-num  { color: #c2410c; font-weight: 800; font-size: 1.12em; }
+  .hl-date { color: #5b21b6; font-weight: 800; }
+  .hl-org  { color: #147a3a; font-weight: 800; }
+  .hl-event{ color: #8b2e2e; font-weight: 800; font-size: 1.05em; }
+  .hl-place{ color: #1d4ed8; font-weight: 800; }
+  html.dark .hl-name { color: #7dd3fc; }
+  html.dark .hl-num  { color: #fdba74; }
+  html.dark .hl-date { color: #e9d5ff; }
+  html.dark .hl-org  { color: #86efac; }
+  html.dark .hl-event{ color: #fca5a5; }
+  html.dark .hl-place{ color: #93c5fd; }
+  .src a { color: inherit; text-decoration: underline; }
+</style>
+</head>
+<body>
+<div id="wps-gate">
+  <div class="pdf-stage">
+    <div class="pdf-page">
+      <p class="pdf-kicker">女兒｜3D 常識　｜　老師｜常識</p>
+      <h1>女兒的時事常識溫習</h1>
+      <p class="pdf-sub">共 40 題（每題四個選項），一次只出一題。<br>先自己想一想，再看答案和講解。<br>考試：2026 年 11 月 17 日（星期二）常識科<br>時事約佔全卷 10%。</p>
+      <p class="pdf-note">請先把本檔下載到電腦或 USB，再用 Google Chrome 打開，然後投到客廳電視。若這一頁是用 WPS 打開的，請直接點下面的藍色連結，改用 Chrome 打開：</p>
+      <a class="pdf-link" href="時事常識40題_四選一_投屏溫習.html" target="_blank">請點這裡，用 Chrome 或瀏覽器打開本練習</a>
+      <a class="pdf-alt" href="用Chrome打開.url" target="_blank">若上面不行，請改點這個捷徑</a>
+      <p class="pdf-note">如果已經在 Chrome 或其他瀏覽器裡，請按下面的按鈕開始：</p>
+      <button class="pdf-start" type="button" onclick="start()">已經在瀏覽器裡了，開始練習</button>
+      <p class="pdf-foot">查核日期：2026 年 11 月 13 日（香港時間）。本頁是範圍預測與溫習練習，並非試題或標準答案卷。<br>請把本檔下載後用 Chrome 打開再投電視；可連同資料夾裏的「用Chrome打開.url」「用Chrome打開.bat」一起放進 USB。</p>
+    </div>
+  </div>
+</div>
+<div id="app"></div>
+<script>
+const QUESTIONS = [{"id":1,"priority":"建議","prompt":"2026 年第四屆青年奧林匹克運動會，主要在哪一個地方舉行？","options":["日本愛知縣／名古屋","塞內加爾達卡","意大利米蘭","中國海南三亞"],"answer":1,"correct_text":"第四屆青年奧林匹克運動會主要在塞內加爾達卡舉行。","explain":"2026 年的第四屆<span class=\"hl-event\">青年奧林匹克運動會</span>，簡稱青奧，主要在<span class=\"hl-place\">非洲</span>國家<span class=\"hl-place\">塞內加爾</span>的<span class=\"hl-place\">達卡</span>舉行。政府新聞公報用的中文地名是「<span class=\"hl-place\">達卡</span>」，不要和<span class=\"hl-place\">日本</span><span class=\"hl-place\">名古屋</span>的亞運會、<span class=\"hl-place\">意大利</span>的冬奧會混淆。","speak":"第四屆青年奧運會在塞內加爾達卡舉行。","source":"<a href=\"https://www.info.gov.hk/gia/general/202611/04/P2026110400524.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-11-04、2026-11-10</a>"},{"id":2,"priority":"建議","prompt":"第四屆青年奧林匹克運動會，大約在哪一段時間舉行？","options":["2026 年 9 月 19 日至 10 月 4 日","2026 年 2 月","2026 年 10 月 31 日至 11 月 13 日","2026 年 7 月 19 日"],"answer":2,"correct_text":"第四屆青奧於 2026 年 10 月 31 日至 11 月 13 日舉行。","explain":"港府新聞公報寫明，第四屆青奧於 <span class=\"hl-date\">10 月 31 日</span>至 <span class=\"hl-date\">11 月 13 日</span>舉行。<span class=\"hl-date\">9 月 19 日</span>至 <span class=\"hl-date\">10 月 4 日</span>是<span class=\"hl-place\">日本</span>亞運會的日子，不要混淆。","speak":"第四屆青奧由二零二六年十月三十一日舉行至十一月十三日。","source":"<a href=\"https://www.info.gov.hk/gia/general/202611/04/P2026110400524.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-11-04</a>"},{"id":3,"priority":"建議","prompt":"今屆青年奧運會，中國香港代表團一共派出多少位運動員，出戰多少個體育項目？","options":["約 580 人，出戰多個項目","15 位運動員，出戰 12 個項目","11 位運動員，出戰 19 個項目","30 位運動員，出戰 8 個項目"],"answer":1,"correct_text":"中國香港代表團共派出 15 位運動員，出戰 12 個體育項目。","explain":"<span class=\"hl-org\">文化體育及旅遊局</span>局長的賀辭中寫明：港隊派出 <span class=\"hl-num\">15 位運動員</span>，參加 <span class=\"hl-num\">12 個項目</span>。約 580 人是亞運會港隊規模，不要記錯。","speak":"今屆青奧，港隊派出十五位運動員，出戰十二個項目。","source":"<a href=\"https://www.info.gov.hk/gia/general/202611/04/P2026110400524.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-11-04、2026-11-10</a>"},{"id":4,"priority":"建議","prompt":"誰為中國香港隊奪得歷史上第一面青年奧運會金牌？","options":["黃澤林","何承謙","何詩蓓","潘浩然"],"answer":3,"correct_text":"武術運動員潘浩然為中國香港隊奪得歷史上第一面青奧金牌。","explain":"<span class=\"hl-date\">2026 年 11 月 4 日</span>，<span class=\"hl-org\">文化體育及旅遊局</span>局長恭賀武術運動員<span class=\"hl-name\">潘浩然</span>，在<span class=\"hl-place\">達卡</span>青奧奪得<span class=\"hl-event\">男子太極拳太極扇全能</span>金牌。這不但是今屆港隊第一面金牌，也是中國香港隊歷史上第一面青奧金牌。<span class=\"hl-name\">黃澤林</span>是亞運網球男單金牌，<span class=\"hl-name\">何承謙</span>稍後才奪得今屆第二金。","speak":"港隊歷史上第一面青奧金牌，是潘浩然奪得的。","source":"<a href=\"https://www.info.gov.hk/gia/general/202611/04/P2026110400524.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-11-04</a>"},{"id":5,"priority":"建議","prompt":"潘浩然在青年奧運會奪金的項目是甚麼？","options":["男子花劍個人賽","男子太極拳太極扇全能","網球男單","女子 100 米蛙泳"],"answer":1,"correct_text":"潘浩然奪得的是男子太極拳太極扇全能金牌。","explain":"<span class=\"hl-name\">潘浩然</span>參加的是武術項目，具體是<span class=\"hl-event\">男子太極拳太極扇全能</span>。<span class=\"hl-event\">男子花劍個人賽</span>是<span class=\"hl-name\">何承謙</span>的項目，網球男單金牌是亞運的<span class=\"hl-name\">黃澤林</span>，<span class=\"hl-event\">女子 100 米蛙泳</span>銅牌是<span class=\"hl-name\">文薈喬</span>。","speak":"潘浩然奪得男子太極拳太極扇全能金牌。","source":"<a href=\"https://www.info.gov.hk/gia/general/202611/04/P2026110400524.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-11-04</a>"},{"id":6,"priority":"建議","prompt":"何承謙在今屆青年奧運會奪得金牌的項目是甚麼？","options":["男子花劍個人賽","男子太極拳太極扇全能","乒乓球混合雙打","游泳"],"answer":0,"correct_text":"何承謙奪得男子花劍個人賽金牌。","explain":"<span class=\"hl-date\">2026 年 11 月 10 日</span>，<span class=\"hl-org\">文化體育及旅遊局</span>局長恭賀劍擊運動員<span class=\"hl-name\">何承謙</span>，在<span class=\"hl-place\">達卡</span>舉行的第四屆青奧奪得<span class=\"hl-event\">男子花劍個人賽</span>金牌。花劍是劍擊的一種。","speak":"何承謙奪得男子花劍個人賽金牌。","source":"<a href=\"https://www.info.gov.hk/gia/general/202611/10/P2026111000316.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-11-10</a>"},{"id":7,"priority":"建議","prompt":"關於何承謙這面青奧金牌，哪一句說得對？","options":["這是港隊歷來第一面亞運網球金牌","這是中國香港劍擊隊首面青奧金牌，也是今屆港隊第二面金牌","這是港隊歷史上第一面青奧金牌","這是他第一次在國際賽事取得名次"],"answer":1,"correct_text":"這是中國香港劍擊隊首面青奧金牌，也是中國香港隊今屆青奧的第二面金牌。","explain":"官方賀辭寫明：<span class=\"hl-name\">何承謙</span>這面金牌，是中國香港劍擊隊第一面青奧金牌，也是今屆港隊的第二面金牌。港隊歷史上第一面青奧金牌是<span class=\"hl-name\">潘浩然</span>較早前奪得的。<span class=\"hl-name\">何承謙</span>同年 4 月已在世界青少年劍擊錦標賽少年組奪金，9 月亞運又取得男子花劍團體銀牌。","speak":"何承謙這面金牌，是香港劍擊隊首面青奧金牌，也是今屆港隊第二面金牌。","source":"<a href=\"https://www.info.gov.hk/gia/general/202611/10/P2026111000316.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-11-10</a>"},{"id":8,"priority":"補充","prompt":"今屆青年奧運會，蘇籽童和黎騏豪合力奪得哪一面獎牌？","options":["武術金牌","男子花劍個人賽金牌","乒乓球混合雙打銀牌","女子 100 米蛙泳銅牌"],"answer":2,"correct_text":"蘇籽童和黎騏豪奪得乒乓球混合雙打銀牌。","explain":"<span class=\"hl-date\">2026 年 11 月 4 日</span>的官方賀辭，在恭賀<span class=\"hl-name\">潘浩然</span>的同時，也祝賀<span class=\"hl-name\">蘇籽童</span>、<span class=\"hl-name\">黎騏豪</span>奪得<span class=\"hl-event\">乒乓球混合雙打</span>銀牌。這是加分記憶，記住兩個人的名字和「乒乓球混雙銀牌」即可。","speak":"蘇籽童和黎騏豪奪得乒乓球混合雙打銀牌。","source":"<a href=\"https://www.info.gov.hk/gia/general/202611/04/P2026110400524.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-11-04</a>"},{"id":9,"priority":"補充","prompt":"文薈喬在今屆青年奧運會奪得銅牌，她參加的是哪一個項目？","options":["女子 100 米蛙泳","乒乓球混合雙打","劍擊花劍","武術太極拳"],"answer":0,"correct_text":"文薈喬奪得女子 100 米蛙泳銅牌。","explain":"同一份 <span class=\"hl-date\">11 月 4 日</span>官方賀辭寫明，<span class=\"hl-name\">文薈喬</span>奪得<span class=\"hl-event\">女子 100 米蛙泳</span>銅牌。蛙泳是游泳的一種泳式。","speak":"文薈喬奪得女子一百米蛙泳銅牌。","source":"<a href=\"https://www.info.gov.hk/gia/general/202611/04/P2026110400524.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-11-04</a>"},{"id":10,"priority":"建議","prompt":"下面哪一組配對全部正確？","options":["潘浩然：亞運網球男單金牌；何承謙：青奧武術金牌","黃澤林：青奧花劍金牌；何詩蓓：青奧蛙泳銅牌","潘浩然：青奧武術金牌；何承謙：青奧花劍金牌；黃澤林：亞運網球男單金牌","何承謙：港隊歷史上第一面青奧金牌；潘浩然：今屆第二金"],"answer":2,"correct_text":"潘浩然奪得青奧武術金牌，何承謙奪得青奧花劍金牌，黃澤林奪得亞運網球男單金牌。","explain":"三個名字不要記亂：<span class=\"hl-name\">潘浩然</span>是青奧武術（太極拳太極扇全能）金牌，也是港隊史上首面青奧金牌；<span class=\"hl-name\">何承謙</span>是青奧男子花劍金牌；<span class=\"hl-name\">黃澤林</span>是 2026 年亞運網球男單金牌，那是另一場大型運動會。","speak":"潘浩然是青奧武術金牌，何承謙是青奧花劍金牌，黃澤林是亞運網球男單金牌。","source":"<a href=\"https://www.info.gov.hk/gia/general/202611/10/P2026111000316.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-11-04、2026-11-10；亞運金牌見既有核對清單</a>"},{"id":11,"priority":"建議","prompt":"2026 年 11 月 10 日，政府與港鐵公司簽訂哪一條鐵路的全線項目協議，標誌項目全面進入建設階段？","options":["機場快線","北環線","東鐵線","屯馬線"],"answer":1,"correct_text":"政府與港鐵公司簽訂的是北環線全線項目協議。","explain":"<span class=\"hl-date\">2026 年 11 月 10 日</span>，<span class=\"hl-org\">運輸及物流局</span>與香<span class=\"hl-org\">港鐵</span>路有限公司（<span class=\"hl-org\">港鐵公司</span>）簽訂<span class=\"hl-event\">北環線</span>全線項目協議。<span class=\"hl-place\">東鐵線</span>和<span class=\"hl-place\">屯馬線</span>是已經營運的鐵路，<span class=\"hl-event\">北環線</span>會把它們連起來。","speak":"二零二六年十一月十日，政府與港鐵簽訂北環線全線項目協議。","source":"<a href=\"https://www.info.gov.hk/gia/general/202611/10/P2026111000471.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-11-10；香港政府新聞網 2026-11-10</a>"},{"id":12,"priority":"建議","prompt":"北環線的主線和支線，目標在哪一年或之前同步開通？","options":["2026 年","2028 年","2034 年或之前","2040 年"],"answer":2,"correct_text":"目標於 2034 年或之前，主線和支線同步開通。","explain":"官方公布，<span class=\"hl-event\">北環線</span>主線及支線全面進入建設階段，目標於 <span class=\"hl-num\">2034 年或之前</span>同步開通。記住是「二零三四年或之前」，現在還在建設，不是已經通車。","speak":"北環線目標在二零三四年或之前同步開通。","source":"<a href=\"https://www.info.gov.hk/gia/general/202611/10/P2026111000471.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-11-10</a>"},{"id":13,"priority":"補充","prompt":"運輸及物流局介紹北環線時，用了哪三個短語來說明項目的三大亮點？","options":["合作查驗、一次放行、二十四小時","通北都、匯兩線、連灣區","同圓航天夢、共襄復興業","十五五、開局之年、超級聯繫人"],"answer":1,"correct_text":"三大亮點是「通北都、匯兩線、連灣區」。","explain":"<span class=\"hl-org\">運輸及物流局</span>局長<span class=\"hl-name\">陳美寶</span>表示，<span class=\"hl-event\">北環線</span>有三大亮點：通北都（成為<span class=\"hl-place\">北部都會區</span>的主要公共運輸骨幹）、匯兩線（連繫<span class=\"hl-place\">屯馬線</span>和<span class=\"hl-place\">東鐵線</span>，形成環狀鐵路）、連灣區（連接<span class=\"hl-place\">皇崗口岸</span>，加強和大灣區的交通往來）。","speak":"北環線的三大亮點是通北都、匯兩線、連灣區。","source":"<a href=\"https://www.info.gov.hk/gia/general/202611/10/P2026111000471.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-11-10</a>"},{"id":14,"priority":"建議","prompt":"北環線開通後，將連繫哪兩條現有鐵路，形成環狀鐵路？","options":["機場快線和迪士尼線","屯馬線和東鐵線","觀塘線和荃灣線","東鐵線和港島線"],"answer":1,"correct_text":"北環線將連繫屯馬線和東鐵線，形成環狀鐵路。","explain":"主線會在<span class=\"hl-place\">錦上路</span>站連接<span class=\"hl-place\">屯馬線</span>，在<span class=\"hl-place\">古洞</span>站連接<span class=\"hl-place\">東鐵線</span>，這樣就能形成環狀鐵路，讓鐵路網更四通八達。這就是「匯兩線」的意思。","speak":"北環線會連繫屯馬線和東鐵線，形成環狀鐵路。","source":"<a href=\"https://www.info.gov.hk/gia/general/202611/10/P2026111000471.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-11-10</a>"},{"id":15,"priority":"建議","prompt":"北環線開通後，繁忙時段由錦上路往返古洞，車程預計會有甚麼變化？","options":["由約 12 分鐘增至約 60 分鐘","維持約 60 分鐘，沒有改變","由現時約 60 分鐘大幅減至約 12 分鐘","減至約 11 分鐘，終點是皇崗口岸"],"answer":2,"correct_text":"繁忙時段由錦上路往返古洞，車程將由現時約 60 分鐘大幅減至約 12 分鐘。","explain":"官方數字是：開通後，繁忙時段由<span class=\"hl-place\">錦上路</span>往返<span class=\"hl-place\">古洞</span>，會由現時大<span class=\"hl-num\">約 60 分鐘</span>，大幅減至大<span class=\"hl-num\">約 12 分鐘</span>。另外，「新田往返<span class=\"hl-place\">皇崗口岸</span><span class=\"hl-num\">約 11 分鐘</span>」是支線的預計車程，不要兩條路線記混。記住要加「大約」。","speak":"開通後，錦上路往返古洞，繁忙時段會由大約六十分鐘減至大約十二分鐘。","source":"<a href=\"https://www.info.gov.hk/gia/general/202611/10/P2026111000471.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-11-10；香港政府新聞網 2026-11-10</a>"},{"id":16,"priority":"建議","prompt":"北環線支線的終點站，計劃設在哪裏？","options":["錦上路站","古洞站","啟德醫院","深圳皇崗口岸"],"answer":3,"correct_text":"支線的終點站設於深圳皇崗口岸。","explain":"支線會從主線的新田站分出，設置洲頭、河套兩個中途站，終點是<span class=\"hl-place\">深圳皇崗口岸</span>。開通後，由新田往返<span class=\"hl-place\">皇崗口岸</span>預計只需<span class=\"hl-num\">約 11 分鐘</span>。新<span class=\"hl-place\">皇崗口岸</span>本身已在 <span class=\"hl-date\">2026 年 10 月 12 日</span>開通，鐵路支線則仍在建設，目標 <span class=\"hl-num\">2034 年或之前</span>才通車。","speak":"北環線支線的終點站，設在深圳皇崗口岸。","source":"<a href=\"https://www.info.gov.hk/gia/general/202611/10/P2026111000471.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-11-10</a>"},{"id":17,"priority":"建議","prompt":"2026 年 9 月 30 日起開放、位於油尖旺區的新公園，名稱是甚麼？","options":["中山紀念公園","海帆道公園","維多利亞公園","科學園"],"answer":1,"correct_text":"這座新公園叫海帆道公園。","explain":"<span class=\"hl-org\">康樂及文化事務署</span>在 <span class=\"hl-date\">2026 年 9 月 29 日</span>宣布，<span class=\"hl-place\">油尖旺</span>區新落成的<span class=\"hl-place\">海帆道公園</span>，由 <span class=\"hl-date\">9 月 30 日</span>起開放給市民使用。公園在海帆道 18 號，佔地大<span class=\"hl-num\">約 16 000 平方公尺</span>。<span class=\"hl-place\">中山紀念公園</span>是另一個地方，不要混淆。","speak":"二零二六年九月三十日起開放的新公園，叫做海帆道公園。","source":"<a href=\"https://www.info.gov.hk/gia/general/202609/29/P2026092800303.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-09-29</a>"},{"id":18,"priority":"建議","prompt":"宣布海帆道公園開放的部門是哪一個？","options":["食物環境衞生署","環保署","康樂及文化事務署","醫院管理局"],"answer":2,"correct_text":"宣布開放的是康樂及文化事務署（康文署）。","explain":"公園、球場、兒童遊樂場這類康樂設施，主要由<span class=\"hl-org\">康樂及文化事務署</span>負責。<span class=\"hl-place\">海帆道公園</span>也是由<span class=\"hl-org\">康文署</span>宣布開放的。<span class=\"hl-org\">食環署</span>負責食物安全和環境衞生，不要記錯。","speak":"海帆道公園是由康樂及文化事務署宣布開放的。","source":"<a href=\"https://www.info.gov.hk/gia/general/202609/29/P2026092800303.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-09-29</a>"},{"id":19,"priority":"補充","prompt":"關於海帆道公園，哪一句是正確的？","options":["它是一間新醫院，已設有急症室","它只准寵物進入，小朋友不能使用","它也是寵物共享公園，可由港鐵奧運站或南昌站步行前往","它位於深圳皇崗口岸"],"answer":2,"correct_text":"海帆道公園也是寵物共享公園，可由港鐵奧運站 A 出口或南昌站 C 出口步行前往。","explain":"官方介紹，公園有七人人造草足球場、籃球場暨排球場、健體設施、社區園圃和共融兒童遊樂場，而且是寵物共享公園，即是人和寵物都可以使用。市民可由奧運站或南昌站走去。","speak":"海帆道公園也是寵物共享公園，可以由奧運站或南昌站步行前往。","source":"<a href=\"https://www.info.gov.hk/gia/general/202609/29/P2026092800303.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-09-29</a>"},{"id":20,"priority":"建議","prompt":"康文署宣布，轄下多少個公眾游泳池，由 2026 年 11 月 8 日起供應暖水？","options":["8 個","15 個","23 個","30 個"],"answer":3,"correct_text":"康文署轄下 30 個公眾游泳池，由 2026 年 11 月 8 日起供應暖水。","explain":"<span class=\"hl-org\">康樂及文化事務署</span>在 <span class=\"hl-date\">10 月 30 日</span>宣布：轄下 <span class=\"hl-num\">30 個公眾游泳池</span>，將於 <span class=\"hl-date\">11 月 8 日</span>起供應暖水，冬天游泳會比較暖和。記住兩個數字：<span class=\"hl-num\">30 個泳池</span>、<span class=\"hl-date\">11 月 8 日</span>。","speak":"三十個公眾游泳池，由十一月八日起供應暖水。","source":"<a href=\"https://www.info.gov.hk/gia/general/202610/30/P2026103000436.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-10-30</a>"},{"id":21,"priority":"補充","prompt":"如果在 11 月 8 日之前，天氣預報顯示連續三天平均氣溫是多少，康文署便會提前供應暖水？","options":["攝氏 30 度或以上","攝氏 23 度或以下","攝氏 12 度或以下","攝氏 8 度或以下"],"answer":1,"correct_text":"若天氣預報顯示連續三天平均氣溫為攝氏 23 度或以下，會提前供應暖水。","explain":"官方說明，<span class=\"hl-org\">康文署</span>會留意天氣。如果 <span class=\"hl-date\">11 月 8 日</span>前，預報連續三天平均氣溫是 <span class=\"hl-num\">23 度</span>或更低，就會提早供應暖水，讓泳客不用等。記住是「連續三天」和「<span class=\"hl-num\">23 度</span>或以下」。","speak":"如果連續三天平均氣溫是二十三度或以下，就會提前供應暖水。","source":"<a href=\"https://www.info.gov.hk/gia/general/202610/30/P2026103000436.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-10-30</a>"},{"id":22,"priority":"建議","prompt":"2026 年 10 月 20 日至 21 日，哪一項重要國際會議第一次在香港特別行政區舉行？","options":["冬季奧運會開幕式","亞太經合組織財長會","青年奧林匹克運動會","北部都會區馬拉松"],"answer":1,"correct_text":"亞太經合組織財長會第一次在香港特別行政區舉行。","explain":"<span class=\"hl-date\">2026 年 10 月 20 日</span>，<span class=\"hl-event\">亞太區經濟合作組織</span>（簡稱<span class=\"hl-event\">亞太經合組織</span>）的財政部長會在香港開幕，<span class=\"hl-date\">10 月 21 日</span>圓滿結束。這是<span class=\"hl-event\">財長會</span>第一次在香港特區舉行，也顯示香港有能力舉辦大型國際會議。","speak":"二零二六年十月，亞太經合組織財長會第一次在香港舉行。","source":"<a href=\"https://www.info.gov.hk/gia/general/202610/21/P2026102100549.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-10-20、2026-10-21</a>"},{"id":23,"priority":"補充","prompt":"關於 2026 年亞太經合組織財長會，哪一句正確？","options":["主辦方是日本，會議在名古屋舉行","這是一場只准小朋友參加的運動會","國家是 2026 年亞太經合組織的主辦方，財長會由財政部主辦，並在香港特區政府安排下於香港舉行","會議在 2034 年才會舉行"],"answer":2,"correct_text":"國家是 2026 年亞太經合組織的主辦方；財長會由財政部主辦，在香港特區政府安排及組織下於香港舉行。","explain":"官方英文開幕稿寫明：中國是 2026 年<span class=\"hl-event\">亞太經合組織</span>的主辦方。這次<span class=\"hl-event\">財長會</span>由國家財政部主辦，並由香港特區政府負責安排和組織，所以會議在香港舉行。小三先記住「國家主辦、會議在香港開」即可。","speak":"二零二六年亞太經合組織由國家主辦，財長會在香港舉行。","source":"<a href=\"https://www.info.gov.hk/gia/general/202610/20/P2026102000247.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-10-20（英文開幕稿）、2026-10-21</a>"},{"id":24,"priority":"建議","prompt":"2026 年 11 月 12 日，是孫中山先生誕辰多少周年的紀念日？","options":["77 周年","29 周年","160 周年","100 周年"],"answer":2,"correct_text":"2026 年 11 月 12 日是孫中山先生誕辰 160 周年紀念日。","explain":"<span class=\"hl-name\">孫中山</span>先生是偉大的民族英雄、愛國主義者和中國民主革命的偉大先驅。每年 <span class=\"hl-date\">11 月 12 日</span>是他的誕辰；到 2026 年，正好是 <span class=\"hl-num\">160 周年</span>。77 周年是 2026 年國慶，不要記混。","speak":"二零二六年十一月十二日，是孫中山先生誕辰一百六十周年。","source":"<a href=\"https://www.info.gov.hk/gia/general/202611/10/P2026111000253.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-11-10</a>"},{"id":25,"priority":"建議","prompt":"特區政府在哪個公園，舉行孫中山先生誕辰 160 周年紀念儀式？","options":["海帆道公園","中山紀念公園","維多利亞公園","香港科學園"],"answer":1,"correct_text":"紀念儀式在中山紀念公園舉行。","explain":"特區政府公布，<span class=\"hl-date\">2026 年 11 月 12 日</span>上午 10 時，在<span class=\"hl-place\">中山紀念公園</span>舉行紀念儀式。公園名字裏有「中山」，較容易記住。現場不設公眾觀禮區，市民可收看<span class=\"hl-org\">香港電台電視 31</span> 的直播。","speak":"紀念儀式在中山紀念公園舉行。","source":"<a href=\"https://www.info.gov.hk/gia/general/202611/10/P2026111000253.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-11-10；舉行當日見香港電台報道 2026-11-12</a>"},{"id":26,"priority":"補充","prompt":"誰主持孫中山先生誕辰 160 周年紀念儀式，並且致辭？","options":["行政長官李家超","港鐵公司主席","游泳運動員何詩蓓","康文署署長"],"answer":0,"correct_text":"行政長官李家超主持紀念儀式並致辭。","explain":"政府預告稿寫明，行政長官<span class=\"hl-name\">李家超</span>將主持儀式和致辭。<span class=\"hl-date\">11 月 12 日</span><span class=\"hl-org\">香港電台</span>亦報道儀式已經舉行。小三記住：現任行政長官是<span class=\"hl-name\">李家超</span>，這次由他主持紀念儀式。","speak":"行政長官李家超主持紀念儀式，並且致辭。","source":"<a href=\"https://www.info.gov.hk/gia/general/202611/10/P2026111000253.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-11-10；香港電台 2026-11-12</a>"},{"id":27,"priority":"建議","prompt":"政府開設「社區客廳」，主要是為了幫助哪些家庭？","options":["只給外國遊客住宿","住在劏房等狹窄空間的基層家庭，為他們提供額外生活空間和支援","只給運動員訓練","取代所有公立醫院"],"answer":1,"correct_text":"社區客廳主要幫助劏房等基層家庭，為他們提供額外生活空間和社區支援。","explain":"很多劏房空間很細，甚至沒有獨立廚廁。<span class=\"hl-event\">社區客廳</span>讓這些家庭有多一點地方煮飯、做功課、洗衣和認識鄰居，也有社工可以幫忙。這是關心基層生活的民生措施。","speak":"社區客廳是幫助劏房等基層家庭，給他們額外的生活空間和支援。","source":"<a href=\"https://www.info.gov.hk/gia/general/202608/10/P2026081000689.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-08-10（政務司司長荃灣社區客廳開幕致辭）</a>"},{"id":28,"priority":"補充","prompt":"2026 年 8 月開幕、當時全港最大的社區客廳，是在哪一個地區？","options":["荃灣","名古屋","達卡","米蘭"],"answer":0,"correct_text":"當時全港最大的社區客廳在荃灣，於 2026 年 8 月開幕。","explain":"<span class=\"hl-date\">2026 年 8 月 10 日</span>，<span class=\"hl-place\">荃灣</span><span class=\"hl-event\">社區客廳</span>開幕。政務司司長<span class=\"hl-name\">陳國基</span>表示，它實用面積<span class=\"hl-num\">約 7 000 平方呎</span>，是當時全港最大的<span class=\"hl-event\">社區客廳</span>。後來其他地區也可能再有新的<span class=\"hl-event\">社區客廳</span>，所以這題記的是「<span class=\"hl-date\">2026 年 8 月</span>開幕時」這個事實。","speak":"二零二六年八月，當時全港最大的社區客廳在荃灣開幕。","source":"<a href=\"https://www.info.gov.hk/gia/general/202608/10/P2026081000689.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-08-10</a>"},{"id":29,"priority":"建議","prompt":"2026 年冬季奧運會在哪一個國家舉行？","options":["塞內加爾","日本","意大利","墨西哥"],"answer":2,"correct_text":"2026 年冬季奧運會在意大利舉行。","explain":"這屆冬奧會又稱為<span class=\"hl-event\">米蘭冬奧</span>，或<span class=\"hl-place\">米蘭－科爾蒂納</span>冬奧，在<span class=\"hl-place\">意大利</span>舉行，當地時間 <span class=\"hl-date\">2026 年 2 月 22 日</span>閉幕。<span class=\"hl-place\">塞內加爾達卡</span>是青奧，<span class=\"hl-place\">日本</span><span class=\"hl-place\">名古屋</span>是亞運，不要混淆這三場大賽的地點。","speak":"二零二六年冬季奧運會在意大利舉行。","source":"<a href=\"https://www.olympic.cn/news/focus/2026/0223/690069.html\" target=\"_blank\" rel=\"noopener\">中國奧委會網站／中國體育報 2026-02-23</a>"},{"id":30,"priority":"建議","prompt":"中國體育代表團在米蘭冬奧會一共奪得多少枚獎牌？有甚麼特別的地方？","options":["11 金 19 銀 24 銅共 54 枚，是港隊亞運成績","5 金 4 銀 6 銅共 15 枚，創中國境外參加冬奧會歷史最好成績","只有 1 枚銅牌","官方沒有公布金銀銅數目"],"answer":1,"correct_text":"中國代表團奪得 5 金、4 銀、6 銅，共 15 枚獎牌，創下中國在境外參加冬奧會的歷史最好成績。","explain":"中國奧委會網站轉載的總結稿寫明：中國體育代表團奪得 <span class=\"hl-num\">5 金 4 銀 6 銅</span>，合<span class=\"hl-num\">共 15 枚獎牌</span>，是中國到外國參加冬奧會以來最好的成績。<span class=\"hl-num\">11 金 19 銀 24 銅</span>是港隊在亞運會的成績，不要記到冬奧去。各報道如果只談名次，我們不必強記第幾名。","speak":"中國代表團奪得五金、四銀、六銅，共十五枚獎牌，是境外參加冬奧會最好成績。","source":"<a href=\"https://www.olympic.cn/news/focus/2026/0223/690069.html\" target=\"_blank\" rel=\"noopener\">中國奧委會網站／中國體育報 2026-02-23</a>"},{"id":31,"priority":"補充","prompt":"在米蘭冬奧會，誰為中國體育代表團奪得第一面金牌（坡面障礙技巧）？","options":["黃澤林","潘浩然","蘇翊鳴","何承謙"],"answer":2,"correct_text":"蘇翊鳴在坡面障礙技巧項目，為中國代表團奪得本屆冬奧第一面金牌。","explain":"總結稿寫明，<span class=\"hl-name\">蘇翊鳴</span>先為代表團取得首枚獎牌，之後又在<span class=\"hl-event\">坡面障礙技巧</span>項目奪得首金。他參加的是單板滑雪。<span class=\"hl-name\">黃澤林</span>、<span class=\"hl-name\">潘浩然</span>、<span class=\"hl-name\">何承謙</span>是其他賽事的香港運動員，不要記亂。","speak":"蘇翊鳴為中國代表團奪得米蘭冬奧的第一面金牌。","source":"<a href=\"https://www.olympic.cn/news/focus/2026/0223/690069.html\" target=\"_blank\" rel=\"noopener\">中國奧委會網站／中國體育報 2026-02-23</a>"},{"id":32,"priority":"補充","prompt":"徐夢桃在米蘭冬奧會有一個特別的成就，是甚麼？","options":["她成為首位蟬聯冬奧會自由式滑雪女子空中技巧冠軍的運動員","她奪得世界盃足球賽冠軍","她主持了天宮課堂","她修建了北環線"],"answer":0,"correct_text":"徐夢桃成為首位蟬聯冬奧會自由式滑雪女子空中技巧冠軍的運動員。","explain":"「蟬聯」的意思是連續兩屆都得到冠軍。官方總結稿寫明，<span class=\"hl-name\">徐夢桃</span>是第一位連續兩屆奪得冬奧會<span class=\"hl-event\">自由式滑雪女子空中技巧</span>金牌的運動員，非常了不起。","speak":"徐夢桃是第一位蟬聯冬奧會女子空中技巧冠軍的運動員。","source":"<a href=\"https://www.olympic.cn/news/focus/2026/0223/690069.html\" target=\"_blank\" rel=\"noopener\">中國奧委會網站／中國體育報 2026-02-23</a>"},{"id":33,"priority":"建議","prompt":"2026 年世界盃足球賽（報道又稱為美加墨世界盃），是由哪三個國家合辦的？","options":["中國、日本、韓國","美國、加拿大、墨西哥","意大利、法國、西班牙","塞內加爾、南非、阿根廷"],"answer":1,"correct_text":"2026 年世界盃由美國、加拿大和墨西哥合辦。","explain":"這屆<span class=\"hl-event\">世界盃</span>因為在北美三個國家舉行，報道常稱為「<span class=\"hl-event\">美加墨世界盃</span>」。決賽在 <span class=\"hl-date\">2026 年 7 月 19 日</span>舉行。記住三個主辦國的名字即可。","speak":"二零二六年世界盃由美國、加拿大和墨西哥合辦。","source":"<a href=\"https://www.news.cn/sports/20260720/3c993184db9d4af08106c175540ee9b8/c.html\" target=\"_blank\" rel=\"noopener\">新華社 2026-07-20（美加墨世界盃決賽報道）</a>"},{"id":34,"priority":"建議","prompt":"誰在決賽加時賽以 1 比 0 戰勝衛冕冠軍阿根廷，奪得 2026 年世界盃冠軍？","options":["日本隊","中國隊","西班牙隊","香港隊"],"answer":2,"correct_text":"西班牙隊在加時賽 1 比 0 戰勝阿根廷隊，奪得 2026 年世界盃冠軍。","explain":"新華社報道，決賽於 <span class=\"hl-date\">2026 年 7 月 19 日</span>舉行。<span class=\"hl-place\">西班牙</span>隊經過加時賽，以 <span class=\"hl-num\">1 比 0</span> 擊敗衛冕冠軍<span class=\"hl-place\">阿根廷</span>隊，這是<span class=\"hl-place\">西班牙</span>隊史第二次奪得<span class=\"hl-event\">世界盃</span>，上一次是 <span class=\"hl-num\">2010 年</span>在<span class=\"hl-place\">南非</span>。記住「<span class=\"hl-place\">西班牙</span>獲勝、對手是<span class=\"hl-place\">阿根廷</span>、加時 <span class=\"hl-num\">1 比 0</span>」。","speak":"西班牙隊加時賽一比零戰勝阿根廷，奪得二零二六年世界盃冠軍。","source":"<a href=\"https://www.news.cn/sports/20260720/3c993184db9d4af08106c175540ee9b8/c.html\" target=\"_blank\" rel=\"noopener\">新華社 2026-07-20</a>"},{"id":35,"priority":"建議","prompt":"2026 年 10 月 30 日起接受報名、邀請大家認識《基本法》的比賽，名稱是甚麼？","options":["北部都會區馬拉松","有問有答《基本法》問答比賽","天宮課堂","亞太經合組織財長會"],"answer":1,"correct_text":"比賽名稱是「有問有答《基本法》問答比賽」。","explain":"<span class=\"hl-org\">民政及青年事務局</span>、<span class=\"hl-org\">公民教育委員會</span>等機構舉辦新一屆「<span class=\"hl-event\">有問有答《基本法》問答比賽</span>」。初賽由 <span class=\"hl-date\">2026 年 10 月 30 日</span>開始接受報名，目的是讓更多人認識《憲法》和《基本法》。小朋友也可以和家人一起留意。","speak":"這項比賽叫做有問有答基本法問答比賽。","source":"<a href=\"https://www.info.gov.hk/gia/general/202610/30/P2026102900482.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-10-30</a>"},{"id":36,"priority":"補充","prompt":"「有問有答《基本法》問答比賽」設有哪些組別？","options":["只有大學組","親子組、高小組、中學組及公開組","只有運動員組","只有公務員組"],"answer":1,"correct_text":"比賽設有親子組、高小組、中學組及公開組。","explain":"官方稿寫明有四個組別：親子組、高小組、中學組和公開組。參加者要在網站回答 <span class=\"hl-num\">20 條問題</span>並交表。初賽截止日期是 <span class=\"hl-date\">12 月 31 日</span>。女兒如果參加，較可能是親子組或高小組，先問爸爸媽媽再決定。","speak":"比賽有親子組、高小組、中學組和公開組。","source":"<a href=\"https://www.info.gov.hk/gia/general/202610/30/P2026102900482.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-10-30</a>"},{"id":37,"priority":"補充","prompt":"2026 年 11 月 1 日舉行的大型跑步賽事，名稱是甚麼？","options":["香港單車節","北部都會區馬拉松","世界盃決賽","青年奧運會開幕禮"],"answer":1,"correct_text":"當天舉行的是北部都會區馬拉松。","explain":"運輸署在賽前公布了 <span class=\"hl-date\">11 月 1 日</span><span class=\"hl-event\">北部都會區馬拉松</span>的特別交通安排，確認這項賽事在當天舉行。<span class=\"hl-place\">北部都會區</span>是香港北部正在發展的地區。本題只記賽事名稱和日期，不必記冠軍是誰。","speak":"二零二六年十一月一日舉行北部都會區馬拉松。","source":"<a href=\"https://www.info.gov.hk/gia/general/202610/26/P2026102600319.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-10-26（賽事當日交通安排）</a>"},{"id":38,"priority":"補充","prompt":"環保署宣布，哪一項設施在 2026 年 10 月 4 日全面啟用，成為本港主要廢物終端處理設施之一？","options":["海帆道公園","新界東北堆填區擴建部分","啟德醫院急症室","北環線全線"],"answer":1,"correct_text":"新界東北堆填區擴建部分於 2026 年 10 月 4 日全面啟用。","explain":"<span class=\"hl-org\">環境保護署</span>宣布，<span class=\"hl-place\">新界東北堆填區</span>的擴建部分在 <span class=\"hl-date\">10 月 4 日</span>全面啟用，用來接替原來的堆填區，繼續處理廢物。它的設計容量大約是<span class=\"hl-num\"> 1 900 萬立方米</span>。啟德醫院急症室和<span class=\"hl-event\">北環線</span>當時都還未投入或通車，不要混淆。","speak":"新界東北堆填區擴建部分在十月四日全面啟用。","source":"<a href=\"https://www.info.gov.hk/gia/general/202610/04/P2026100200231.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-10-04</a>"},{"id":39,"priority":"補充","prompt":"特區政府推動航天科普時，用的主題是哪一句？","options":["通北都、匯兩線、連灣區","同圓航天夢 共襄復興業","合作查驗、一次放行","有問有答"],"answer":1,"correct_text":"主題是「同圓航天夢 共襄復興業」。","explain":"在「<span class=\"hl-event\">天宮課堂·港澳專場</span>」相關的官方公布中，特區政府以「<span class=\"hl-event\">同圓航天夢 共襄復興業</span>」作為航天科普和宣傳活動的主題。意思是大家一起實現航天夢想，共同為國家發展出力。這是已有<span class=\"hl-event\">天宮課堂</span>題目的新角度，幫助記住活動名稱和主題。","speak":"特區政府的航天科普主題是：同圓航天夢，共襄復興業。","source":"<a href=\"https://www.info.gov.hk/gia/general/202609/05/P2026090500602.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-09-05</a>"},{"id":40,"priority":"補充","prompt":"「天宮課堂·港澳專場」是由哪些機構共同主辦的？","options":["只由一間小學自己舉辦","香港特區政府、澳門特區政府及中國載人航天工程辦公室共同主辦","只由康樂及文化事務署主辦","由亞太經合組織財長會主辦"],"answer":1,"correct_text":"由香港特區政府、澳門特區政府及中國載人航天工程辦公室共同主辦。","explain":"<span class=\"hl-date\">2026 年 9 月 5 日</span>的政府公布寫明，這個太空授課活動由香港特區政府、澳門特區政府，以及<span class=\"hl-org\">中國載人航天工程辦公室</span>一起主辦。課堂由<span class=\"hl-name\">黎家盈</span>姐姐等航天員在空間站進行，讓港澳學生認識國家航天成就。已核對事實仍然是：空間站繞地球一周大約 <span class=\"hl-num\">90 分鐘</span>。","speak":"天宮課堂是由香港政府、澳門政府和中國載人航天工程辦公室共同主辦的。","source":"<a href=\"https://www.info.gov.hk/gia/general/202609/05/P2026090500602.htm\" target=\"_blank\" rel=\"noopener\">政府新聞公報 2026-09-05</a>"}];
+const letters = ["A","B","C","D"];
+const priClass = { "必溫":"must", "建議":"suggest", "補充":"extra", "稍易":"easy" };
+
+let i = -1;
+let picked = null;
+let revealed = false;
+let dark = false;
+let showJump = false;
+const seen = new Set();
+
+function priChip(p) {
+  return `<span class="chip ${priClass[p]||""}">${p}</span>`;
+}
+function hideJump(){ showJump = false; }
+
+function jumpPanel() {
+  const items = QUESTIONS.map((q,k) => {
+    const cls = ["jump", priClass[q.priority]||"", k===i?"now":"", seen.has(k)?"seen":""].join(" ");
+    return `<button class="${cls}" onclick="jumpTo(${k})">${k+1}</button>`;
+  }).join("");
+  return `
+    <div class="mask${showJump?" show":""}" onclick="toggleJump(false)"></div>
+    <aside class="drawer${showJump?" show":""}" role="dialog" aria-label="跳題目錄">
+      <h2>跳到題目</h2>
+      <p class="sub">共 40 題。紅邊＝必溫，綠邊＝建議，藍邊＝補充，黃邊＝稍易。</p>
+      <div class="jgrid">${items}</div>
+      <div class="legend">點題號即可跳題；跳題後答案會重新隱藏。</div>
+    </aside>`;
+}
+
+function qBody(s) {
+  const four = s.options.length >= 4 ? " four" : "";
+  return `<div class="options${four}">` + s.options.map((opt,idx)=>{
+    let cls = "opt";
+    if (picked === idx) cls += " picked";
+    if (revealed && idx === s.answer) cls += " correct";
+    if (revealed && picked !== null && idx === picked && idx !== s.answer) cls += " wrong";
+    return `<button class="${cls}" onclick="choose(${idx})"><span class="tag">${letters[idx]}</span><span>${opt}</span></button>`;
+  }).join("") + `</div>`;
+}
+
+function explainBox(s) {
+  let verdict = "";
+  if (picked !== null) {
+    verdict = picked === s.answer
+      ? `<div class="verdict ok">答對了！</div>`
+      : `<div class="verdict no">先看清楚正確答案，再記一遍。</div>`;
+  }
+  const letter = letters[s.answer];
+  return `<aside class="explain">
+      ${verdict}
+      <div class="ans-banner">正確是 <span class="letter">${letter}</span>　${s.correct_text}</div>
+      <h3>這則時事要記住</h3>
+      <p class="body">${s.explain}</p>
+      <div class="speak"><b>請用完整句子講一次</b>${s.speak}</div>
+      <div class="src">來源：${s.source}${s.pending ? "　｜　" + s.pending : ""}</div>
+    </aside>`;
+}
+
+function render() {
+  const app = document.getElementById("app");
+  document.body.classList.toggle("in-practice", i >= 0);
+  if (i < 0) return;
+  if (i >= QUESTIONS.length) {
+    app.innerHTML = `
+      <main>
+        <div class="end">
+          <h1>今天練完了！</h1>
+          <p>可以再走一遍，或按「目錄」跳回還想溫的題。</p>
+          <button class="act" style="font-size:3vmin;padding:1.3vmin 3.6vmin;margin-top:1.6vmin" onclick="start()">再練習一次</button>
+          <button class="nav" style="font-size:2.4vmin;margin-top:.4vmin" onclick="toggleJump(true)">打開目錄</button>
+          <p class="fine">老師｜常識　｜　查核截至 2026-11-13（香港時間）　｜　範圍預測，非試題</p>
+        </div>
+      </main>
+      <footer class="bar">
+        <button class="nav" onclick="i=QUESTIONS.length-1;picked=null;revealed=false;hideJump();render()">回上一題</button>
+      </footer>
+      ${jumpPanel()}`;
+    return;
+  }
+  const s = QUESTIONS[i];
+  const pct = ((i+1) / QUESTIONS.length) * 100;
+  app.innerHTML = `
+    <header class="top">
+      <div class="brand">女兒的時事常識溫習</div>
+      ${priChip(s.priority)}
+      <div class="spacer"></div>
+      <div class="progress">第 ${i+1}／40 題</div>
+      <button class="icon" onclick="toggleJump(true)" title="目錄">目錄</button>
+      <button class="icon" onclick="toggleDark()" title="深色模式">${dark?"淺色":"深色"}</button>
+      <button class="icon" onclick="goFull()" title="全螢幕">全螢幕</button>
+    </header>
+    <main class="${revealed?"split":""}">
+      <div class="col-q">
+        <p class="prompt">${s.prompt}</p>
+        ${qBody(s)}
+      </div>
+      ${revealed ? explainBox(s) : ""}
+    </main>
+    <footer class="bar">
+      <button class="nav" ${i===0?"disabled":""} onclick="go(-1)">上一題</button>
+      <div class="bar-mid">
+        <div class="pbar"><i style="width:${pct}%"></i></div>
+        <div class="pbar-lab">第 ${i+1}／40 題</div>
+      </div>
+      <button class="act${revealed?"":" ready"}" onclick="toggleReveal()">${revealed?"隱藏答案":"顯示答案／講解"}</button>
+      <button class="nav" onclick="go(1)">${i===QUESTIONS.length-1?"完成":"下一題"}</button>
+    </footer>
+    ${jumpPanel()}`;
+}
+
+function start(){ i=0; picked=null; revealed=false; hideJump(); render(); }
+function go(d){
+  i = Math.min(QUESTIONS.length, Math.max(0, i+d));
+  picked=null; revealed=false; hideJump(); render();
+}
+function jumpTo(k){
+  i = k; picked=null; revealed=false; hideJump(); render();
+}
+function choose(idx){
+  if (revealed) return;
+  picked = idx;
+  render();
+}
+function toggleReveal(){
+  revealed = !revealed;
+  if (revealed) seen.add(i);
+  render();
+}
+function toggleDark(){
+  dark = !dark;
+  document.documentElement.classList.toggle("dark", dark);
+  render();
+}
+function toggleJump(on){
+  showJump = (on === false) ? false : (on === true ? true : !showJump);
+  render();
+}
+function goFull(){
+  const el = document.documentElement;
+  if (!document.fullscreenElement) el.requestFullscreen?.();
+  else document.exitFullscreen?.();
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "d" || e.key === "D") { toggleDark(); return; }
+  if (e.key === "f" || e.key === "F") { goFull(); return; }
+  if (e.key === "m" || e.key === "M") { if (i >= 0) toggleJump(); return; }
+  if (e.key === "Escape" && showJump) { toggleJump(false); return; }
+  if (i < 0) { if (e.key === " " || e.key === "Enter") { e.preventDefault(); start(); } return; }
+  if (showJump) return;
+  if (i >= QUESTIONS.length) {
+    if (e.key === "ArrowLeft") { i=QUESTIONS.length-1; picked=null; revealed=false; render(); }
+    return;
+  }
+  if (e.key === "ArrowRight" || e.key === "PageDown") { e.preventDefault(); go(1); }
+  else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); go(-1); }
+  else if (e.key === " " || e.key === "Enter") { e.preventDefault(); toggleReveal(); }
+  else if (["1","2","3","4","a","b","c","d","A","B","C","D"].includes(e.key)) {
+    const map = {a:0,b:1,c:2,d:3,A:0,B:1,C:2,D:3,"1":0,"2":1,"3":2,"4":3};
+    const s = QUESTIONS[i];
+    if (s && !revealed && map[e.key] < s.options.length) choose(map[e.key]);
+  }
+});
+
+function applyHash() {
+  const h = (location.hash || "").replace("#","");
+  picked = null;
+  showJump = false;
+  if (h === "dark") { dark = true; document.documentElement.classList.add("dark"); i = -1; revealed = false; }
+  else if (!h || h === "cover") { i = -1; revealed = false; }
+  else if (h === "end") { i = QUESTIONS.length; revealed = false; }
+  else if (h === "menu") { i = 0; revealed = false; showJump = true; }
+  else {
+    const m = h.match(/^(\d+)(r)?(d)?$/);
+    if (m) {
+      i = Math.max(0, Math.min(QUESTIONS.length-1, parseInt(m[1], 10)-1));
+      revealed = !!m[2];
+      dark = !!m[3];
+      document.documentElement.classList.toggle("dark", dark);
+    }
+  }
+  render();
+}
+window.addEventListener("hashchange", applyHash);
+applyHash();
+</script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>學習空間 · E_learning Hub</title>
+<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+<div class="elh-wrap" id="wrap">
+  <div id="app"><p class="elh-empty">載入中…</p></div>
+</div>
+<script src="assets/js/common.js"></script>
+<script>
+(async () => {
+  const app = document.getElementById('app');
+  try {
+    const d = await ELH.loadAll();
+    const sid = new URLSearchParams(location.search).get('s');
+    const stu = ELH.student(d, sid);
+    if (!stu) { app.innerHTML = '<p class="elh-empty">找不到這個學習空間。<a href="index.html">回首頁</a></p>'; return; }
+    document.title = `${stu.name} · E_learning Hub`;
+    document.getElementById('wrap').style.setProperty('--accent', stu.color);
+
+    const mine = d.items.filter((i) => i.student === sid);
+    const f = { subject: '', stage: '', type: '', status: '', q: '', sort: 'date-desc' };
+
+    const stageOpts = d.stages.filter((s) => mine.some((i) => i.stage === s.id));
+    const typeOpts = d.types.filter((t) => mine.some((i) => i.type === t.id));
+    const sel = (id, opts, all) => `<select class="form-select" id="${id}"><option value="">${all}</option>${opts.map((o) => `<option value="${ELH.esc(o.id)}">${ELH.esc(o.label)}</option>`).join('')}</select>`;
+
+    app.innerHTML = `
+      <header class="elh-top">
+        <a class="btn btn-outline-secondary elh-btn" href="index.html">← 首頁</a>
+        <h1 style="color:var(--accent)">${ELH.esc(stu.icon)} ${ELH.esc(stu.name)}的學習空間</h1>
+        <span class="spacer"></span>
+        <span class="pts" id="pts" style="font-size:1.5rem;font-weight:800;color:#b26a00"></span>
+      </header>
+      <div id="extras"></div>
+      <section class="elh-section"><h2>全部教材</h2>
+        <div class="elh-chips" id="chips"></div>
+        <div class="elh-filters">
+          <input class="form-control" id="q" type="search" placeholder="搜尋標題、單元…">
+          ${sel('stage', stageOpts, '全部階段')}
+          ${sel('type', typeOpts, '全部類型')}
+          <select class="form-select" id="status">
+            <option value="">全部狀態</option><option value="todo">未完成</option><option value="done">已完成</option>
+            <option value="review">待複習</option><option value="key">重點</option><option value="new">新教材</option>
+          </select>
+          <select class="form-select" id="sort">
+            <option value="date-desc">最新優先</option><option value="date-asc">最舊優先</option>
+            <option value="stage">按階段</option>
+          </select>
+        </div>
+        <div id="list"></div>
+      </section>`;
+
+    const matches = (i) => {
+      const st = ELH.itemState(sid, i.id);
+      if (f.subject && i.subject !== f.subject) return false;
+      if (f.stage && i.stage !== f.stage) return false;
+      if (f.type && i.type !== f.type) return false;
+      if (f.status === 'todo' && st.completions.length) return false;
+      if (f.status === 'done' && !st.completions.length) return false;
+      if (f.status === 'review' && !st.review) return false;
+      if (f.status === 'key' && !(i.tags || []).includes('key')) return false;
+      if (f.status === 'new' && !ELH.badges(d, i).some(([k]) => k === 'new')) return false;
+      if (f.q) {
+        const hay = [i.title, i.unit, i.description, ...(i.tags || [])].join(' ').toLowerCase();
+        if (!hay.includes(f.q.toLowerCase())) return false;
+      }
+      return true;
+    };
+
+    function render() {
+      document.getElementById('pts').textContent = `⭐ ${ELH.points(sid)} 分`;
+      const cards = (l) => l.map((i) => ELH.card(d, i)).join('');
+      document.getElementById('extras').innerHTML =
+        (ELH.recent(d, sid, 4).length ? ELH.section('最近學習', cards(ELH.recent(d, sid, 4)), '') : '') +
+        (ELH.reviewList(d, sid, 4).length ? ELH.section('待複習', cards(ELH.reviewList(d, sid, 4)), '') : '');
+
+      document.getElementById('chips').innerHTML =
+        [{ id: '', name: '全部', icon: '' }, ...stu.subjects].map((s) => {
+          const n = s.id ? mine.filter((i) => i.subject === s.id).length : mine.length;
+          return `<button class="elh-chip${f.subject === s.id ? ' on' : ''}${n === 0 ? ' zero' : ''}" data-s="${ELH.esc(s.id)}">${ELH.esc(s.icon)} ${ELH.esc(s.name)} (${n})</button>`;
+        }).join('');
+
+      let list = mine.filter(matches);
+      if (f.sort === 'date-asc') list = [...list].sort((a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id));
+      let html = '';
+      if (!list.length) {
+        html = `<p class="elh-empty">${mine.length ? '沒有符合條件的教材。' : '暫無教材。'}</p>`;
+      } else if (f.sort === 'stage') {
+        const by = [...list].sort((a, b) => d.stageIndex.get(b.stage) - d.stageIndex.get(a.stage) || b.date.localeCompare(a.date));
+        let cur = null;
+        for (const i of by) {
+          if (i.stage !== cur) { if (cur !== null) html += '</div>'; cur = i.stage; html += `<div class="elh-stagehead">${ELH.esc(ELH.stageLabel(d, cur))}</div><div class="elh-grid">`; }
+          html += ELH.card(d, i);
+        }
+        html += '</div>';
+      } else {
+        html = `<div class="elh-grid">${cards(list)}</div>`;
+      }
+      document.getElementById('list').innerHTML = html;
+    }
+
+    document.getElementById('chips').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-s]'); if (!b) return;
+      f.subject = b.dataset.s; render();
+    });
+    for (const id of ['stage', 'type', 'status', 'sort']) document.getElementById(id).addEventListener('change', (e) => { f[id] = e.target.value; render(); });
+    document.getElementById('q').addEventListener('input', (e) => { f.q = e.target.value.trim(); render(); });
+    window.addEventListener('pageshow', render); // 從教材返回時更新狀態
+    render();
+  } catch (e) { ELH.fail(app, e); }
+})();
+</script>
+</body>
+</html>

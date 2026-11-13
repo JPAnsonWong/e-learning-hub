@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>20261113 3D 數學補充練習　錯題本</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --muted: #555;
+    --line: #e4e0d8;
+    --bg: #faf8f5;
+    --card: #fff;
+    --wrong: #b42318;
+    --wrong-bg: #fdecea;
+    --ok: #17633d;
+    --ok-bg: #e8f6ee;
+    --part: #9a6700;
+    --part-bg: #fff6d8;
+    --review: #185fa5;
+    --review-bg: #e8f1fb;
+    --accent: #1f4e79;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.65 "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Source Han Sans TC", sans-serif;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 32px 20px 64px; }
+  header.hero {
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 20px;
+    margin-bottom: 28px;
+  }
+  h1 { font-size: 1.7rem; margin: 0 0 8px; color: var(--accent); letter-spacing: 0.02em; }
+  .sub { color: var(--muted); margin: 0; font-size: 0.95rem; }
+  .summary {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+  }
+  .summary ul { margin: 8px 0 0; padding-left: 1.2em; }
+  .toc { margin: 0; padding-left: 1.2em; }
+  .toc a { color: var(--accent); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  h2 {
+    font-size: 1.25rem;
+    color: var(--accent);
+    border-left: 6px solid var(--accent);
+    padding-left: 12px;
+    margin: 36px 0 16px;
+  }
+  article.item {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 18px 20px 16px;
+    margin-bottom: 18px;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  .badge {
+    display: inline-block;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+  .badge.wrong { background: var(--wrong-bg); color: var(--wrong); }
+  .badge.part { background: var(--part-bg); color: var(--part); }
+  .badge.review { background: var(--review-bg); color: var(--review); }
+  h3 { margin: 0 0 10px; font-size: 1.08rem; }
+  .stem { white-space: pre-wrap; margin: 0 0 12px; }
+  .box {
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin: 8px 0 0;
+  }
+  .box.stu { background: var(--wrong-bg); }
+  .box.ans { background: var(--ok-bg); }
+  .box.why { background: #f4f1ea; }
+  .box .lab {
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-right: 6px;
+  }
+  .box.stu .lab { color: var(--wrong); }
+  .box.ans .lab { color: var(--ok); }
+  footer.note { color: var(--muted); font-size: 0.88rem; margin-top: 32px; }
+  @media print {
+    body { background: #fff; }
+    .wrap { padding: 0; max-width: none; }
+    article.item { border: 1px solid #ccc; box-shadow: none; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+  <h1>20261113 3D 數學補充練習　錯題本</h1>
+  <p class="sub">來源：HANNA／數學照片／20261113 3D補充練習（IMG_6664–IMG_6679）<br>
+  本冊只收錄已確認的錯題與部分錯誤題；須對照原圖才能確定的題目，放在最後「待覆核」一節。</p>
+</header>
+
+<section class="summary">
+  <strong>本冊摘要</strong>
+  <ul>
+    <li>錯題 <strong>10</strong> 題（整題答錯，或經批改後確認為錯）</li>
+    <li>部分錯誤 <strong>2</strong> 題（一題之中有部分小題錯）</li>
+    <li>待覆核 <strong>4</strong> 題（量度或鐘面較難從照片確定，未計入錯題數）</li>
+  </ul>
+  <p style="margin:12px 0 6px"><strong>目錄</strong></p>
+  <ol class="toc">
+    <li><a href="#w1">概念綜合應用（第 3 頁）題 8：兩個「4」的數值和</a></li>
+    <li><a href="#w2">概念綜合應用（第 5 頁）題 11：顯示屏闊度</a></li>
+    <li><a href="#w3">概念綜合應用（第 5 頁）題 13：絲帶長度</a></li>
+    <li><a href="#w4">單元概念短測 1（第 6 頁）題 1：「0」最多的數</a></li>
+    <li><a href="#w5">單元概念短測 1（第 7 頁）題 6：五位單數排列</a></li>
+    <li><a href="#w6">概念綜合應用（第 9 頁）題 15：最小而又是雙數的乘式</a></li>
+    <li><a href="#w7">概念綜合應用（第 11 頁）題 14：結果最小的乘式</a></li>
+    <li><a href="#w8">概念綜合應用（第 13 頁）題 9：批改題數</a></li>
+    <li><a href="#w9">概念綜合應用（第 15 頁）題 5：距離新一天還有多久</a></li>
+    <li><a href="#w10">概念綜合應用（第 15 頁）題 10：開始購物的時間</a></li>
+    <li><a href="#p1">部分錯誤：短測 1 題 8（蠟筆變短了多少）</a></li>
+    <li><a href="#p2">部分錯誤：短測 1 題 9（多走多少公里）</a></li>
+  </ol>
+</section>
+
+<h2>一、錯題</h2>
+
+<article class="item" id="w1">
+  <div class="meta"><span class="badge wrong">錯題</span> 五位數　·　概念綜合應用　·　練習冊第 3 頁　·　IMG_6665</div>
+  <h3>題 8　在 24 473 這個數裏，兩個數字「4」代表的數值之和是多少？</h3>
+  <p class="stem">選項：A. 8　　B. 44　　C. 440　　D. 4400</p>
+  <div class="box stu"><span class="lab">學生作答</span>C. 440（卷面旁有叉號及「(CD)」痕跡）</div>
+  <div class="box ans"><span class="lab">正確答案</span>D. 4400</div>
+  <div class="box why"><span class="lab">錯因</span>千位的 4 代表 4 000，百位的 4 代表 400，兩者之和是 4 400，不是 440。</div>
+</article>
+
+<article class="item" id="w2">
+  <div class="meta"><span class="badge wrong">錯題</span> 公里和毫米　·　概念綜合應用　·　練習冊第 5 頁　·　IMG_6667</div>
+  <h3>題 11　以下哪一項最接近電腦顯示屏的闊度？</h3>
+  <p class="stem">（圖示：一台電腦顯示器）
+選項：A. 50 mm　　B. 50 cm　　C. 5 m　　D. 5 km</p>
+  <div class="box stu"><span class="lab">學生作答</span>A. 50 mm（旁有「(B)」修正痕跡）</div>
+  <div class="box ans"><span class="lab">正確答案</span>B. 50 cm</div>
+  <div class="box why"><span class="lab">錯因</span>顯示屏闊度大約是幾十厘米。50 mm 只有 5 cm，太窄；5 m、5 km 又太大。較合理的是 50 cm。</div>
+</article>
+
+<article class="item" id="w3">
+  <div class="meta"><span class="badge wrong">錯題</span> 公里和毫米　·　概念綜合應用　·　練習冊第 5 頁　·　IMG_6667</div>
+  <h3>題 13　敏敏把一條長 95 mm 的絲帶剪成兩段，以下哪一項可能是其中一段的長度？</h3>
+  <p class="stem">選項：A. 105 mm　　B. 100 mm　　C. 10 cm　　D. 5 cm</p>
+  <div class="box stu"><span class="lab">學生作答</span>C. 10 cm（旁有「X (D)」痕跡）</div>
+  <div class="box ans"><span class="lab">正確答案</span>D. 5 cm</div>
+  <div class="box why"><span class="lab">錯因</span>絲帶全長 95 mm。10 cm＝100 mm，已長過整條絲帶，不可能是其中一段；5 cm＝50 mm，小於 95 mm，才有可能。</div>
+</article>
+
+<article class="item" id="w4">
+  <div class="meta"><span class="badge wrong">錯題</span> 五位數　·　單元概念短測 1　·　練習冊第 6 頁　·　IMG_6668</div>
+  <h3>題 1　以下哪一個數的「0」最多？</h3>
+  <p class="stem">A. 一萬七千五百
+B. 七萬零一百零五
+C. 五萬零一十七
+D. 一萬零七百</p>
+  <div class="box stu"><span class="lab">學生作答</span>B（旁有「x (D)」痕跡）</div>
+  <div class="box ans"><span class="lab">正確答案</span>D. 一萬零七百（10 700）</div>
+  <div class="box why"><span class="lab">錯因</span>先寫成阿拉伯數字再數「0」：A 17 500（兩個 0）、B 70 105（兩個 0）、C 50 017（兩個 0）、D 10 700（三個 0）。「0」最多的是 D。</div>
+</article>
+
+<article class="item" id="w5">
+  <div class="meta"><span class="badge wrong">錯題</span> 五位數　·　單元概念短測 1（續）　·　練習冊第 7 頁　·　IMG_6669</div>
+  <h3>題 6　用數卡排成三個五位單數，由大至小排列，第三個數是 90 083，其餘兩個數是甚麼？</h3>
+  <p class="stem">數卡：0、0、3、8、9
+答案格式：________ &gt; ________ &gt; 90 083</p>
+  <div class="box stu"><span class="lab">學生作答</span>98 300（有紅叉，後改為 98 003）&gt; 93 080（卷面有勾）&gt; 90 083</div>
+  <div class="box ans"><span class="lab">正確答案</span>98 003 &gt; 90 803 &gt; 90 083</div>
+  <div class="box why"><span class="lab">錯因</span>要排成五位單數，個位必須是 3。用這五張數卡、比 90 083 大的兩個單數是 98 003 和 90 803。98 300、93 080 的個位都是 0，是雙數，不合題意。</div>
+</article>
+
+<article class="item" id="w6">
+  <div class="meta"><span class="badge wrong">錯題</span> 乘法　·　概念綜合應用　·　練習冊第 9 頁　·　IMG_6671</div>
+  <h3>題 15　從圖中選出適當的數作為其中一個乘數，組成指定的乘式。結果是最小而又是雙數：　　× 3 ＝</h3>
+  <p class="stem">圖上四隻龜背上的數字分別為：57、25、71、52。</p>
+  <div class="box stu"><span class="lab">學生作答</span>25 × 3 ＝ 75</div>
+  <div class="box ans"><span class="lab">正確答案</span>52 × 3 ＝ 156</div>
+  <div class="box why"><span class="lab">錯因</span>57×3＝171、25×3＝75、71×3＝213 都是單數；只有 52×3＝156 是雙數，也符合「最小而又是雙數」。</div>
+</article>
+
+<article class="item" id="w7">
+  <div class="meta"><span class="badge wrong">錯題</span> 乘法　·　概念綜合應用　·　練習冊第 11 頁　·　IMG_6673</div>
+  <h3>題 14　以下哪一道乘式的結果最小？</h3>
+  <p class="stem">A. 708 × 9　　B. 809 × 7　　C. 709 × 8　　D. 908 × 7</p>
+  <div class="box stu"><span class="lab">學生作答</span>C. 709 × 8</div>
+  <div class="box ans"><span class="lab">正確答案</span>B. 809 × 7</div>
+  <div class="box why"><span class="lab">錯因</span>先算出各式：708×9＝6 372，809×7＝5 663，709×8＝5 672，908×7＝6 356。結果最小的是 B（5 663）。C 是 5 672，只差一點，但不是最小。</div>
+</article>
+
+<article class="item" id="w8">
+  <div class="meta"><span class="badge wrong">錯題</span> 乘法應用題　·　概念綜合應用　·　練習冊第 13 頁　·　IMG_6675</div>
+  <h3>題 9　陳老師須批改作業 25 本，如果每本作業有 8 課，每課有 8 題，陳老師共須批改多少題？</h3>
+  <p class="stem">選項：A. 200　　B. 400　　C. 1600　　D. 1640</p>
+  <div class="box stu"><span class="lab">學生作答</span>A. 200</div>
+  <div class="box ans"><span class="lab">正確答案</span>C. 1600</div>
+  <div class="box why"><span class="lab">錯因</span>共須批改 25 × 8 × 8 ＝ 1 600 題。200 只算了其中一部分相乘。</div>
+</article>
+
+<article class="item" id="w9">
+  <div class="meta"><span class="badge wrong">錯題</span> 時間　·　概念綜合應用　·　練習冊第 15 頁　·　IMG_6677</div>
+  <h3>題 5　現在是 11:37 p.m.，距離新一天的開始還有多久？</h3>
+  <p class="stem">選項：A. 3 h　　B. 3 min　　C. 23 min　　D. 33 min</p>
+  <div class="box stu"><span class="lab">學生作答</span>D. 33 min（上方有手寫「x(23)」）</div>
+  <div class="box ans"><span class="lab">正確答案</span>C. 23 min</div>
+  <div class="box why"><span class="lab">錯因</span>11:37 p.m. 到午夜 12:00 a.m. 還有 23 分鐘，不是 33 分鐘。</div>
+</article>
+
+<article class="item" id="w10">
+  <div class="meta"><span class="badge wrong">錯題</span> 時間　·　概念綜合應用　·　練習冊第 15 頁　·　IMG_6677</div>
+  <h3>題 10　看表演後，民民花了 26 分鐘購買紀念品，接著在下午 8 時 10 分離開主題公園。他開始購物的時間是？</h3>
+  <p class="stem">填空：下午 ____ 時 ____ 分</p>
+  <div class="box stu"><span class="lab">學生作答</span>下午 7 時 42 分（下方有手寫「(44)」痕跡）</div>
+  <div class="box ans"><span class="lab">正確答案</span>下午 7 時 44 分</div>
+  <div class="box why"><span class="lab">錯因</span>離開時間是下午 8 時 10 分，購物用了 26 分鐘。8 時 10 分減 26 分鐘，是下午 7 時 44 分，不是 7 時 42 分。</div>
+</article>
+
+<h2>二、部分錯誤</h2>
+
+<article class="item" id="p1">
+  <div class="meta"><span class="badge part">部分錯誤</span> 公里和毫米　·　單元概念短測 1（續）　·　練習冊第 7 頁　·　IMG_6669</div>
+  <h3>題 8　羊羊有以下兩枝蠟筆，用直尺量度它們的長度。</h3>
+  <p class="stem">（圖示：綠色與橙色兩枝蠟筆，附有量度刻度）
+(a) 綠色蠟筆長 ________ cm。
+(b) 橙色蠟筆長 ________ mm，比綠色蠟筆短 ________ mm。
+(c) 羊羊用橙色蠟筆畫畫，後來她量得橙色蠟筆長 4 cm，比原來的長度短了 ________ mm。</p>
+  <div class="box stu"><span class="lab">學生作答</span>(a) 7　(b) 65，5　(c) 4（有紅叉，後改為 25）</div>
+  <div class="box ans"><span class="lab">正確答案</span>(a) 7　(b) 65 mm，短 5 mm　(c) 25 mm</div>
+  <div class="box why"><span class="lab">錯因</span>(a)(b) 正確：綠色 7 cm＝70 mm，橙色 65 mm，相差 5 mm。(c) 後來剩 4 cm＝40 mm，比原來短了 65－40＝25 mm，不是 4。</div>
+</article>
+
+<article class="item" id="p2">
+  <div class="meta"><span class="badge part">部分錯誤</span> 公里和毫米　·　單元概念短測 1（續）　·　練習冊第 7 頁　·　IMG_6669</div>
+  <h3>題 9　這是彬彬家附近社區的簡圖。</h3>
+  <p class="stem">地圖距離：彬彬家 —1 km→ 公園；公園 —3 km→ 運動場 —2 km→ 商場；公園 —4 km→ 商場。
+(a) 彬彬從家走到公園，他走了 800 m 後，路程還有 ________ m。
+(b) 從公園經運動場往商場，比直接從公園往商場要多走 ________ km。</p>
+  <div class="box stu"><span class="lab">學生作答</span>(a) 200　(b) 5（有紅叉，後改為 1）</div>
+  <div class="box ans"><span class="lab">正確答案</span>(a) 200　(b) 1</div>
+  <div class="box why"><span class="lab">錯因</span>(a) 正確：1 km＝1 000 m，走了 800 m，還剩 200 m。(b) 經運動場是 3＋2＝5 km，直接走是 4 km，多走 1 km。學生寫了 5，那是較長那條路的總長，不是「多走」的距離。</div>
+</article>
+
+<h2>三、待覆核（不計入錯題）</h2>
+<p class="sub" style="margin-top:-8px;margin-bottom:16px">以下題目或須量原圖，或卷面有勾但與照片辨識不一致，請對照原卷後再決定是否納入錯題。</p>
+
+<article class="item" id="r1">
+  <div class="meta"><span class="badge review">待覆核</span> 五位數　·　概念綜合應用　·　練習冊第 3 頁　·　IMG_6665</div>
+  <h3>題 11　把算柱上的算珠重新擺放，以表示出最大的五位單數。</h3>
+  <p class="stem">左側算柱珠數：萬位 7、千位 7、百位 1、十位 0、個位 0。須在右側算柱畫出答案。</p>
+  <div class="box ans"><span class="lab">應為</span>77 001（數字 7、7、1、0、0 組成的最大五位單數）</div>
+  <div class="box why"><span class="lab">說明</span>卷面有大勾號；照片上右側算柱筆跡未能完全確定是否畫成 77 001。請對照原圖。</div>
+</article>
+
+<article class="item" id="r2">
+  <div class="meta"><span class="badge review">待覆核</span> 公里和毫米　·　單元概念短測 1　·　練習冊第 6 頁　·　IMG_6668</div>
+  <h3>題 4　用直尺量一量，哪一隻蝴蝶與花朵的距離是 25 毫米？</h3>
+  <p class="stem">圖中花朵在中央，四周有蝴蝶 P、Q、R、S。選項：A. 蝴蝶 P　B. 蝴蝶 Q　C. 蝴蝶 R　D. 蝴蝶 S</p>
+  <div class="box stu"><span class="lab">學生作答</span>B. 蝴蝶 Q</div>
+  <div class="box why"><span class="lab">說明</span>須用直尺按原圖量度，照片未能準確判斷對錯。</div>
+</article>
+
+<article class="item" id="r3">
+  <div class="meta"><span class="badge review">待覆核</span> 時間　·　時間應用題　·　練習冊第 14 頁　·　IMG_6676</div>
+  <h3>題 1　時鐘顯示熙熙離家步行上學和到達學校的時間。</h3>
+  <p class="stem">(a) 熙熙步行上學用了 ____ 分鐘。
+(b) 已知熙熙到達學校的時間比課堂的開始時間早了 10 分鐘，即課堂在 ____ 時 ____ 分開始。</p>
+  <div class="box stu"><span class="lab">學生作答</span>(a) 22　(b) 8 時 20 分（卷面有勾）</div>
+  <div class="box why"><span class="lab">說明</span>(b) 8 時 20 分較明確。(a) 學生寫 22 分鐘；若鐘面為 7:40 至 8:10，則應為 30 分鐘。請對照原圖鐘面。</div>
+</article>
+
+<article class="item" id="r4">
+  <div class="meta"><span class="badge review">待覆核</span> 時間　·　單元概念短測 2（續）　·　練習冊第 19 頁　·　IMG_6679</div>
+  <h3>題 7　媽媽把牛肉串起，思思用手錶計時。</h3>
+  <p class="stem">圖中有兩隻手錶，分別標示「開始」和「結束」。
+(a) 媽媽做一串牛肉用了 ____ 秒。
+(b) 媽媽連續做 6 串牛肉，共須用 ____ 秒，即 ____ 分鐘。</p>
+  <div class="box stu"><span class="lab">學生作答</span>(a) 20　(b) 120 秒，2 分鐘（卷面均有勾號）</div>
+  <div class="box why"><span class="lab">說明</span>若鐘面確是 10:10 至 10:20，則應為 600 秒和 3 600 秒（60 分鐘），與學生答案及卷面勾號不符。請對照原圖鐘面後再決定。</div>
+</article>
+
+<footer class="note">
+  本錯題本依練習照片整理，供複習用。個別量圖題或鐘面讀數，請以原卷為準。
+</footer>
+</div>
+</body>
+</html>

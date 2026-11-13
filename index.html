@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>E_learning Hub</title>
+<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+<div class="elh-wrap">
+  <header class="elh-top">
+    <h1>📚 E_learning Hub</h1>
+    <span class="spacer"></span>
+    <div id="backup"></div>
+  </header>
+  <div id="app"><p class="elh-empty">載入中…</p></div>
+</div>
+<script src="assets/js/common.js"></script>
+<script>
+(async () => {
+  const app = document.getElementById('app');
+  try {
+    const d = await ELH.loadAll();
+    document.getElementById('backup').innerHTML = ELH.backupTools();
+    ELH.bindBackup(() => location.reload());
+    const render = () => {
+      const students = d.students.map((s) => {
+        const total = d.items.filter((i) => i.student === s.id).length;
+        return `<a class="elh-student" href="student.html?s=${encodeURIComponent(s.id)}" style="--accent:${s.color}">
+          <div class="icon">${ELH.esc(s.icon)}</div>
+          <div class="name">${ELH.esc(s.name)}</div>
+          <div class="pts">⭐ ${ELH.points(s.id)} 分</div>
+          <div class="stats">已完成 ${ELH.doneCount(s.id)} / ${total} 份教材</div>
+        </a>`;
+      }).join('');
+      const cards = (list) => list.map((i) => ELH.card(d, i, { showStudent: true })).join('');
+      app.innerHTML =
+        `<div class="elh-students">${students}</div>` +
+        ELH.section('最近學習', cards(ELH.recent(d, null, 6)), '還沒有學習記錄，從上面選一位開始吧。') +
+        ELH.section('待複習', cards(ELH.reviewList(d, null, 6)), '沒有待複習的教材。') +
+        ELH.section('最新教材', cards(ELH.latest(d, null, 6)), '暫無教材。');
+    };
+    render();
+  } catch (e) { ELH.fail(app, e); }
+})();
+</script>
+</body>
+</html>
