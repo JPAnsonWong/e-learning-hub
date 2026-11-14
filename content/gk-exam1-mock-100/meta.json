@@ -1,0 +1,15 @@
+{
+  "id": "gk-exam1-mock-100",
+  "student": "daughter",
+  "subject": "general",
+  "stage": "g3-3d-exam1",
+  "type": "quiz",
+  "title": "第一次評估 常識模擬題 100（投屏）",
+  "unit": "第一次評估",
+  "tags": [],
+  "difficulty": 2,
+  "minutes": 45,
+  "version": 1,
+  "date": "2026-11-14",
+  "description": "100 道投屏模擬題，一次一題、答案預設隱藏；左右鍵換題，空白鍵顯示或隱藏答案。不含時事、不含植物萬花筒。"
+}
