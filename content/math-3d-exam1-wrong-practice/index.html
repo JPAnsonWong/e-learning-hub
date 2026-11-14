@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>第一次評估　錯題投屏練習</title>
+<style>
+  :root {
+    --bg: #f4efe6;
+    --ink: #1c2430;
+    --muted: #5a6573;
+    --card: #fffdf8;
+    --line: #e2d8c8;
+    --accent: #1f6f8b;
+    --accent-2: #d97706;
+    --good: #157a3a;
+    --good-bg: #dff6e8;
+    --bad: #b42318;
+    --bad-bg: #fde8e6;
+    --pick: #1f6f8b;
+    --shadow: 0 10px 30px rgba(28,36,48,.08);
+  }
+  html.dark {
+    --bg: #101826;
+    --ink: #f3efe6;
+    --muted: #b7c0cc;
+    --card: #1a2536;
+    --line: #2c3a50;
+    --accent: #5ec8e6;
+    --accent-2: #f0b429;
+    --good: #5ee09a;
+    --good-bg: #163528;
+    --bad: #ff8d85;
+    --bad-bg: #3a1d1c;
+    --pick: #5ec8e6;
+    --shadow: 0 10px 30px rgba(0,0,0,.35);
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+    overflow: hidden;
+    user-select: none;
+  }
+  #app { height: 100%; display: flex; flex-direction: column; padding: 1.8vmin 2.6vmin 1.4vmin; }
+  header.top {
+    display: flex; align-items: center; gap: 1.4vmin;
+    flex: 0 0 auto;
+  }
+  .brand { font-weight: 800; font-size: 2.2vmin; color: var(--accent); white-space: nowrap; }
+  .unit {
+    font-size: 1.9vmin; color: var(--muted);
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 999px; padding: .25vmin 1.3vmin;
+  }
+  .spacer { flex: 1; }
+  .progress { font-weight: 800; font-size: 2.3vmin; letter-spacing: .04em; }
+  button.icon, button.nav, button.act { font-family: inherit; cursor: pointer; border: 0; }
+  button.icon {
+    background: var(--card); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 1.1vmin;
+    font-size: 2vmin; padding: .5vmin 1.1vmin;
+    min-height: 3rem; min-width: 3rem;
+  }
+  main {
+    flex: 1; min-height: 0;
+    display: flex; flex-direction: column;
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 2vmin; box-shadow: var(--shadow);
+    padding: 2vmin 2.6vmin; margin: 1.2vmin 0;
+  }
+  main.split { flex-direction: row; gap: 2.2vmin; align-items: stretch; }
+  .col-q { flex: 1.25; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+  .prompt {
+    font-size: 3.5vmin; font-weight: 800; line-height: 1.35;
+    margin: 0 0 1.4vmin; letter-spacing: .01em; flex: 0 0 auto;
+  }
+  .prompt .em { color: var(--accent); }
+  .visual { flex: 1 1 auto; min-height: 0; display: flex; align-items: center; justify-content: center; }
+  .options {
+    display: grid; gap: 1.1vmin;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 1.4vmin; flex: 0 0 auto;
+  }
+  .options.one-col { grid-template-columns: 1fr; }
+  .opt {
+    display: flex; align-items: center; gap: 1.3vmin;
+    background: transparent; color: var(--ink);
+    border: 2px solid var(--line); border-radius: 1.4vmin;
+    padding: 1vmin 1.4vmin; text-align: left;
+    font-size: 3vmin; font-weight: 700; min-height: max(3rem, 7.2vmin);
+  }
+  main.split .opt { min-height: max(3rem, 6.2vmin); font-size: 2.6vmin; padding: .7vmin 1.2vmin; }
+  .opt:hover, .opt:focus-visible, .opt:active { border-color: var(--accent); }
+  .opt:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .opt .tag {
+    flex: 0 0 4.8vmin; height: 4.8vmin; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--bg); font-size: 2.4vmin; font-weight: 800;
+  }
+  .opt.picked { border-color: var(--pick); border-width: 3px; box-shadow: 0 0 0 3px color-mix(in srgb, var(--pick) 25%, transparent); }
+  .opt.correct { border-color: var(--good); background: var(--good-bg); }
+  .opt.wrong { border-color: var(--bad); background: var(--bad-bg); }
+  .blank-list { margin-top: 1.2vmin; display: flex; flex-direction: column; gap: 1.1vmin; flex: 0 0 auto; }
+  .blank-row { display: flex; align-items: center; flex-wrap: wrap; gap: .6vmin 0; font-size: 2.9vmin; font-weight: 700; }
+  .blank {
+    min-width: 14vmin; min-height: 5.6vmin; padding: 0 1.2vmin; margin: 0 .4vmin;
+    border-bottom: 4px solid var(--accent);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--muted); letter-spacing: .04em;
+  }
+  .blank.show { color: var(--good); font-weight: 800; }
+  .explain {
+    display: none; flex: 0.95; min-width: 0;
+    padding: 1.6vmin 2vmin; overflow: auto;
+    background: var(--bg); border-radius: 1.6vmin; border: 1px solid var(--line);
+  }
+  main.split .explain { display: block; }
+  .explain h3 { margin: 0 0 1vmin; font-size: 2.4vmin; color: var(--accent-2); }
+  .explain li { margin: 0 0 .8vmin; font-size: 2.5vmin; line-height: 1.45; font-weight: 600; }
+  .explain ol { margin: 0; padding-left: 3vmin; }
+  .verdict { font-size: 2.7vmin; font-weight: 800; margin: 0 0 1vmin; }
+  .verdict.ok { color: var(--good); }
+  .verdict.no { color: var(--bad); }
+  .last { font-size: 2.1vmin; color: var(--muted); font-weight: 600; margin-top: 1.2vmin; }
+  footer.bar { flex: 0 0 auto; display: flex; align-items: center; gap: 1.1vmin; }
+  button.nav, button.act {
+    font-size: 2.4vmin; font-weight: 800; border-radius: 1.3vmin;
+    padding: 1vmin 2vmin; min-height: max(3rem, 6vmin);
+  }
+  button.nav { background: var(--card); color: var(--ink); border: 1px solid var(--line); }
+  button.act { background: var(--accent); color: #fff; }
+  html.dark button.act { color: #102018; }
+  button.act.ready { background: var(--accent-2); }
+  button:disabled { opacity: .35; cursor: default; }
+  .dots { display: flex; gap: .65vmin; margin: 0 auto; }
+  .dot { width: 1.3vmin; height: 1.3vmin; border-radius: 50%; background: var(--line); }
+  .dot.now { background: var(--accent); transform: scale(1.25); }
+  .dot.done { background: var(--good); }
+  .cover, .end {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; gap: 1.5vmin;
+  }
+  .cover h1, .end h1 { font-size: 7vmin; margin: 0; letter-spacing: .04em; }
+  .cover p, .end p { font-size: 3vmin; color: var(--muted); margin: 0; font-weight: 600; }
+  .hint { font-size: 2vmin; color: var(--muted); margin-top: 1.6vmin; }
+  .num-huge { font-size: 7vmin; font-weight: 900; letter-spacing: .12em; text-align: center; }
+  .places { display: flex; justify-content: center; gap: 1.1vmin; margin-top: 1vmin; }
+  .place { width: 10.5vmin; text-align: center; }
+  .place .d { font-size: 5vmin; font-weight: 900; background: var(--bg); border-radius: 1.1vmin; border: 2px solid var(--line); }
+  .place .l { font-size: 1.9vmin; color: var(--muted); margin-top: .2vmin; font-weight: 700; }
+  .place .v { font-size: 2vmin; font-weight: 800; color: var(--accent); min-height: 2.4vmin; }
+  .place.hi .d { border-color: var(--accent-2); background: color-mix(in srgb, var(--accent-2) 18%, var(--card)); }
+  .cards { display: flex; justify-content: center; gap: 1.3vmin; }
+  .ncard {
+    width: 8.6vmin; height: 10.4vmin; border-radius: 1.3vmin;
+    display: grid; place-items: center; font-size: 4.8vmin; font-weight: 900;
+    background: #1f6f8b; color: #fff; box-shadow: var(--shadow);
+  }
+  .turtles { display: flex; justify-content: center; gap: 2.2vmin; flex-wrap: wrap; }
+  .turtle { width: 15vmin; text-align: center; }
+  .turtle .shell {
+    height: 9.4vmin; border-radius: 50% 50% 42% 42%;
+    background: #2a9d8f; color: #fff; font-size: 4vmin; font-weight: 900;
+    display: grid; place-items: center;
+  }
+  .map, .ribbon, .ruler-svg { width: 100%; display: block; }
+  .ruler-svg { max-height: 32vmin; }
+  .map { max-height: 34vmin; }
+  .clocks { display: flex; justify-content: center; gap: 3.4vmin; align-items: center; }
+  .clock-face { width: 20vmin; height: 20vmin; }
+  main.split .clock-face { width: 16vmin; height: 16vmin; }
+  .digital { font-size: 4.6vmin; font-weight: 900; letter-spacing: .06em; }
+  .prods { display: grid; grid-template-columns: 1fr 1fr; gap: 1vmin; font-size: 2.5vmin; font-weight: 800; width: 100%; }
+  .prods span { background: var(--bg); border-radius: 1vmin; padding: .7vmin 1vmin; border: 1px solid var(--line); text-align: center; }
+  .eq { text-align: center; font-size: 4vmin; font-weight: 900; letter-spacing: .05em; }
+  .eq-sub { text-align: center; font-size: 2.6vmin; font-weight: 700; margin-top: .8vmin; }
+  .note { font-size: 2.6vmin; font-weight: 800; line-height: 1.45; }
+
+  .klist {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 1vmin;
+    max-width: 92vmin; margin: 1.2vmin auto 0;
+  }
+  .kchip {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 999px; padding: .5vmin 1.5vmin;
+    font-size: 2.1vmin; font-weight: 700; color: var(--ink);
+  }
+  .cover .count { font-size: 3.4vmin; font-weight: 800; margin: 0; color: var(--accent); }
+  .cover h1 { font-size: 6.2vmin; }
+  .opt-note { font-size: 2.2vmin; color: var(--muted); font-weight: 700; }
+  .clock-cap { text-align: center; font-size: 2.2vmin; font-weight: 800; margin-top: .6vmin; color: var(--muted); }
+  .split-clocks { display: flex; justify-content: center; gap: 5vmin; align-items: center; }
+</style>
+</head>
+
+<body>
+<div id="app"></div>
+<script>
+const letters = ["A","B","C","D"];
+let i = -1;
+let picked = null;
+let revealed = false;
+let dark = false;
+const CORE = 18;
+
+function clockSVG(h, m) {
+  const cx=110, cy=110, r=100;
+  const ha = ((h%12)+m/60)*30;
+  const ma = m*6;
+  const hx = cx + 50*Math.sin(ha*Math.PI/180);
+  const hy = cy - 50*Math.cos(ha*Math.PI/180);
+  const mx = cx + 70*Math.sin(ma*Math.PI/180);
+  const my = cy - 70*Math.cos(ma*Math.PI/180);
+  let ticks="";
+  for (let k=0;k<12;k++){
+    const a=k*30*Math.PI/180;
+    ticks += `<line x1="${cx+88*Math.sin(a)}" y1="${cy-88*Math.cos(a)}" x2="${cx+96*Math.sin(a)}" y2="${cy-96*Math.cos(a)}" stroke="currentColor" stroke-width="3"/>`;
+  }
+  return `<svg class="clock-face" viewBox="0 0 220 220" aria-hidden="true">
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="var(--card)" stroke="currentColor" stroke-width="6"/>
+    ${ticks}
+    <line x1="${cx}" y1="${cy}" x2="${hx}" y2="${hy}" stroke="currentColor" stroke-width="7" stroke-linecap="round"/>
+    <line x1="${cx}" y1="${cy}" x2="${mx}" y2="${my}" stroke="#d97706" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="${cx}" cy="${cy}" r="6" fill="currentColor"/>
+  </svg>`;
+}
+
+function rulerSVG(maxCm, markCm, markMm) {
+  const unit = 90;
+  const x0 = 40, y = 70, len = maxCm * unit;
+  let t = `<rect x="${x0}" y="${y}" width="${len}" height="40" rx="4" fill="#f3e6c8" stroke="#8a6d3b"/>`;
+  for (let cm=0; cm<=maxCm; cm++){
+    const xx = x0 + cm*unit;
+    t += `<line x1="${xx}" y1="${y}" x2="${xx}" y2="${y+32}" stroke="#333" stroke-width="2"/>
+          <text x="${xx+3}" y="${y+38}" font-size="16" font-weight="700" fill="#333">${cm}</text>`;
+    if (cm<maxCm){
+      for (let mm=1;mm<10;mm++){
+        const hh = mm===5?20:11;
+        t += `<line x1="${xx+mm*unit/10}" y1="${y}" x2="${xx+mm*unit/10}" y2="${y+hh}" stroke="#333" stroke-width="1"/>`;
+      }
+    }
+  }
+  t += `<text x="${x0+len-36}" y="${y+36}" font-size="16" font-weight="700" fill="#333">cm</text>`;
+  const end = x0 + markCm*unit + markMm*unit/10;
+  t += `<rect x="${x0}" y="${y-36}" width="${end-x0}" height="22" rx="6" fill="#2a9d8f"/>
+        <polygon points="${end},${y-36} ${end+18},${y-25} ${end},${y-14}" fill="#2a9d8f"/>
+        <line x1="${x0}" y1="${y-8}" x2="${x0}" y2="${y}" stroke="#1f6f8b" stroke-width="2"/>
+        <line x1="${end}" y1="${y-8}" x2="${end}" y2="${y}" stroke="#d97706" stroke-width="2"/>`;
+  return `<svg class="ruler-svg" viewBox="0 0 ${x0+len+50} 140">${t}</svg>`;
+}
+
+const slides = [
+  {
+    unit: "三數連乘",
+    prompt: "計算：<span class='em'>6 × 47 × 5</span> ＝ ？",
+    kind: "fill",
+    blanks: [{ before: "答案：", after: "", answer: "1 410" }],
+    last: "上次同類題 8 × 29 × 5 算錯了。可以先把容易的兩個數乘起來。",
+    visual: "eq645",
+    explain: [
+      "三個數連乘，可以先乘容易的：6 × 5 ＝ 30。",
+      "再算 30 × 47 ＝ 1 410。",
+      "也可以先算 6 × 47 ＝ 282，再算 282 × 5 ＝ 1 410。兩種次序結果相同。",
+      "不要做成 6 ＋ 47，也不要乘完兩個數就停下來。"
+    ]
+  },
+  {
+    unit: "讀尺　厘米和毫米",
+    prompt: "鉛筆的左端對齊 <span class='em'>0</span>，右端指着 <span class='em'>7 厘米</span>，再過去 <span class='em'>6 小格</span>（每一小格是 1 毫米）。這枝鉛筆有多長？",
+    kind: "fill",
+    blanks: [
+      { before: "", mid: " 厘米 ", after: " 毫米", answer: "7", answer2: "6" },
+      { before: "等於 ", after: " 毫米", answer: "76" }
+    ],
+    last: "上次自己做時，不理解「再過去幾小格」是甚麼意思。",
+    visual: "ruler76",
+    explain: [
+      "從 0 量到 7 厘米，就是 7 厘米。",
+      "再過去 6 小格，每一小格是 1 毫米，所以還有 6 毫米。",
+      "長度是 7 厘米 6 毫米。因為 1 厘米 ＝ 10 毫米，所以等於 76 毫米。"
+    ]
+  },
+  {
+    unit: "經過時間",
+    prompt: "音樂課<span class='em'>下午 2 時 35 分</span>開始，<span class='em'>下午 3 時 20 分</span>結束。這節課進行了多久？",
+    kind: "mcq",
+    options: ["15 分鐘", "45 分鐘", "55 分鐘", "85 分鐘"],
+    answer: 1,
+    last: "上次從下午 3 時 25 分到下午 4 時 10 分，經過時間算錯了。",
+    visual: "elapsed",
+    explain: [
+      "先從下午 2 時 35 分數到 3 時正，過了 25 分鐘。",
+      "再從 3 時正數到 3 時 20 分，是 20 分鐘。",
+      "25 ＋ 20 ＝ 45 分鐘。也可以：3 時 20 分不夠減 35 分，向小時借 60 分，變成 2 時 80 分減 2 時 35 分，得 45 分。",
+      "不要做成 20 － 35，或把借來的 60 分用錯。"
+    ]
+  },
+  {
+    unit: "結束時間　跨中午",
+    prompt: "美術課<span class='em'>上午 11 時 25 分</span>開始，進行了 <span class='em'>50 分鐘</span>。這節課何時結束？（要寫上午或下午）",
+    kind: "fill",
+    blanks: [{ before: "", after: "", answer: "下午 12 時 15 分" }],
+    last: "上次上午 11 時 40 分加 50 分鐘，結束時間算錯了。",
+    visual: "end1215",
+    explain: [
+      "上午 11 時 25 分再過 35 分鐘，就是中午 12 時正。",
+      "50 分鐘還剩下 15 分鐘，所以結束是下午 12 時 15 分。",
+      "跨過中午之後，要改寫「下午」，不要寫成上午 12 時 15 分，也不要寫成上午 11 時 75 分。"
+    ]
+  },
+  {
+    unit: "倒推開始時間　【較難】",
+    prompt: "話劇在<span class='em'>下午 1 時 10 分</span>結束，一共進行了 <span class='em'>2 小時 40 分</span>。話劇何時開始？（要寫上午或下午）",
+    kind: "fill",
+    blanks: [{ before: "", after: "", answer: "上午 10 時 30 分" }],
+    last: "上次倒推開始時間，又要跨中午、又要借 60 分，做錯了。",
+    visual: "back1030",
+    explain: [
+      "求開始時間，要用「結束時間 － 經過時間」，可以分兩步。",
+      "先減 2 小時：下午 1 時 10 分減 2 小時，是上午 11 時 10 分（已經跨過中午，改寫上午）。",
+      "再減 40 分：11 時 10 分不夠減 40 分，向小時借 60 分，變成 10 時 70 分 － 40 分 ＝ 上午 10 時 30 分。",
+      "驗算：上午 10 時 30 分 ＋ 2 小時 ＝ 下午 12 時 30 分，再 ＋ 40 分 ＝ 下午 1 時 10 分。"
+    ]
+  },
+  {
+    unit: "應用題　平均分（÷一位數）",
+    prompt: "女兒把 <span class='em'>72 本</span>簿平均分給 <span class='em'>8 個</span>同學。每人分得多少本？",
+    kind: "mcq",
+    options: ["9 本", "64 本", "80 本", "576 本"],
+    answer: 0,
+    last: "上次「平均分」的題，列成了乘法。這類題要用除法。本次評估除法只會是兩位數除以一位數，不會除以兩位數。",
+    visual: "div72",
+    explain: [
+      "「平均分給 8 個同學」是平均分，要用除法：72 ÷ 8。",
+      "72 ÷ 8 ＝ 9，所以每人分得 9 本。",
+      "64 是 72 － 8，80 是 72 ＋ 8，576 是 72 × 8，都不是「平均分」。",
+      "列式時先問自己：是分開、是合起來，還是同樣的幾份？"
+    ]
+  },
+  {
+    unit: "應用題　進一法（÷一位數）",
+    prompt: "郊遊有 <span class='em'>46 名</span>學生，每艘小船最多可坐 <span class='em'>6 人</span>。要讓全部學生都坐好，至少需要多少艘小船？",
+    kind: "mcq",
+    options: ["6 艘", "7 艘", "8 艘", "40 艘"],
+    answer: 2,
+    last: "上次「至少需要多少輛」也列成了乘法。有餘數時，剩下的人也要有位子，要用進一法。",
+    visual: "roundup",
+    explain: [
+      "這題也是「每艘坐幾人、全部都要坐好」，用除法：46 ÷ 6。",
+      "46 ÷ 6 ＝ 7 餘 4。7 艘只能坐 42 人，還有 4 人沒有位子。",
+      "剩下的人也要有船坐，所以要再多 1 艘，一共 8 艘。這就是進一法。",
+      "只答 7 艘就不夠；也不要做成 46 × 6。"
+    ]
+  },
+  {
+    unit: "三數連乘應用題",
+    prompt: "書架有 <span class='em'>2 層</span>，每層放 <span class='em'>5 本</span>故事書，每本有 <span class='em'>128 頁</span>。一共有多少頁？",
+    kind: "mcq",
+    options: ["256 頁", "640 頁", "1 280 頁", "135 頁"],
+    answer: 2,
+    last: "上次 2 層、每層 3 盒、每盒 148 張，少乘了「2 層」。三個條件都要用上。",
+    visual: "pages",
+    explain: [
+      "層數、本數、頁數都要用上，所以是 2 × 5 × 128。",
+      "先算 2 × 5 ＝ 10，再算 10 × 128 ＝ 1 280。",
+      "640 頁只算了 5 × 128，少乘了 2 層；256 頁只算了 2 × 128，少乘了每層 5 本。",
+      "列式前列出三個數，再檢查有沒有漏乘。"
+    ]
+  },
+  {
+    unit: "兩步應用題",
+    prompt: "女兒有 <span class='em'>47 顆</span>糖，每袋可裝 <span class='em'>6 顆</span>。<br>（a）可以裝滿多少袋？還剩多少顆？<br>（b）後來又得到 <span class='em'>7 顆</span>。現在一共可以裝滿多少袋？還剩多少顆？",
+    kind: "fill",
+    blanks: [
+      { before: "（a）裝滿 ", mid: " 袋，還剩 ", after: " 顆", answer: "7", answer2: "5" },
+      { before: "（b）現在裝滿 ", mid: " 袋，還剩 ", after: " 顆", answer: "9", answer2: "0" }
+    ],
+    last: "上次（b）「後來又多了一些，現在一共可以裝多少」不理解題意。要注意問的是現在的總量。",
+    visual: "bags",
+    explain: [
+      "（a）47 ÷ 6 ＝ 7 餘 5，所以裝滿 7 袋，還剩 5 顆。",
+      "（b）後來又得到 7 顆，現在一共有 47 ＋ 7 ＝ 54 顆。",
+      "54 ÷ 6 ＝ 9，剛好裝完，還剩 0 顆。",
+      "也可以：原來剩下 5 顆，再加 7 顆是 12 顆，12 ÷ 6 ＝ 2 袋，7 ＋ 2 ＝ 9 袋。不要只把後來的 7 顆拿去裝袋。"
+    ]
+  },
+  {
+    unit: "五位數讀法",
+    prompt: "用數卡 <span class='em'>0、0、4、4、4</span> 組成五位數。哪一個是<strong>讀出兩個「零」</strong>的五位數？",
+    kind: "mcq",
+    oneCol: true,
+    options: ["40 444", "44 044", "40 404", "44 400"],
+    answer: 2,
+    last: "上次用 0、0、3、3、3 組成「讀出幾個零」的五位數，還不熟。",
+    visual: "cards04444",
+    explain: [
+      "讀的時候，中間空着的數位才會讀「零」。",
+      "40 404 讀作「四萬零四百零四」，有兩個「零」。",
+      "40 444 是「四萬零四百四十四」，只有一個「零」；44 044 是「四萬四千零四十四」，也只有一個「零」。",
+      "44 400 讀作「四萬四千四百」，不讀「零」。"
+    ]
+  },
+  {
+    unit: "厘米和毫米比較",
+    prompt: "女兒把一條長 <span class='em'>88 mm</span> 的絲帶剪成兩段。以下哪一項<strong>可能</strong>是其中一段的長度？",
+    kind: "mcq",
+    options: ["90 mm", "9 cm", "8 cm", "98 mm"],
+    answer: 2,
+    last: "上次 95 mm 的絲帶，要提示才會判斷哪一段不可能更長。",
+    visual: "ribbon88",
+    explain: [
+      "剪出來的一段，一定要比整條絲帶短。",
+      "先統一單位：9 cm ＝ 90 mm，8 cm ＝ 80 mm。",
+      "90 mm、9 cm（90 mm）、98 mm 都已經長過 88 mm，不可能是其中一段。",
+      "只有 8 cm ＝ 80 mm，比 88 mm 短，所以有可能。"
+    ]
+  },
+  {
+    unit: "五位單數　審題",
+    prompt: "用這些數卡排成<strong>三個五位單數</strong>，由大至小排列。第三個數是 70 065，其餘兩個數是甚麼？",
+    kind: "fill",
+    blanks: [{ before: "", mid: " ＞ ", after: " ＞ 70 065", answer: "76 005", answer2: "70 605" }],
+    last: "上次第一次做時沒留意「單數」，填了個位是 0 的雙數。",
+    visual: "cards00567",
+    explain: [
+      "先圈出「單數」：個位必須是 1、3、5、7 或 9。這裏能用的個位只有 5 或 7。",
+      "用 0、0、5、6、7 排出比 70 065 大的五位單數，是 76 005 和 70 605。",
+      "所以排列是 76 005 ＞ 70 605 ＞ 70 065。",
+      "76 500、76 050 的個位是 0，是雙數，不合題意。"
+    ]
+  },
+  {
+    unit: "乘法　條件審題",
+    prompt: "從圖中選出適當的數，組成乘式：結果是<strong>最小而又是雙數</strong>　　□ × 3 ＝ □",
+    kind: "mcq",
+    options: ["46 × 3 ＝ 138", "33 × 3 ＝ 99", "21 × 3 ＝ 63", "28 × 3 ＝ 84"],
+    answer: 3,
+    last: "上次選了最小的積，但那是單數，沒有同時符合「又是雙數」。",
+    visual: "turtles2",
+    explain: [
+      "題目有兩個條件：結果要是雙數，還要是當中最小的。",
+      "33 × 3 ＝ 99、21 × 3 ＝ 63，都是單數，先淘汰。",
+      "剩下 46 × 3 ＝ 138 和 28 × 3 ＝ 84，都是雙數。",
+      "較小的是 84，所以選 28 × 3 ＝ 84。不要只挑看起來最小的 63。"
+    ]
+  },
+  {
+    unit: "時間　距離新一天",
+    prompt: "現在是 <span class='em'>11:42 p.m.</span>，距離<strong>新一天的開始</strong>還有多久？",
+    kind: "mcq",
+    options: ["18 min", "28 min", "42 min", "2 h"],
+    answer: 0,
+    last: "上次 11:37 p.m. 到午夜，算成 33 分而不是 23 分。",
+    visual: "clock1142",
+    explain: [
+      "新一天從晚上 12 時（午夜）開始。",
+      "從 11 時 42 分到 12 時，還差 18 分鐘。因為 42 ＋ 18 ＝ 60。",
+      "不是 28 分，也不是把 42 分直接寫成答案。一小時有 60 分鐘，不是 70 分鐘。"
+    ]
+  },
+  {
+    unit: "倒推開始時間",
+    prompt: "女兒花了 <span class='em'>35 分鐘</span>做作業，之後在<span class='em'>下午 5 時 20 分</span>完成。她何時開始做功課？",
+    kind: "fill",
+    blanks: [{ before: "下午 ", mid: " 時 ", after: " 分", answer: "4", answer2: "45" }],
+    last: "上次下午 8 時 10 分減 26 分鐘，寫成 7 時 42 分，應是 7 時 44 分。借 60 分時要算準。",
+    visual: "minus35",
+    explain: [
+      "開始時間 ＝ 完成時間 － 所用時間，也就是下午 5 時 20 分減 35 分鐘。",
+      "20 分不夠減 35 分，向小時借 60 分，變成 4 時 80 分 － 35 分 ＝ 下午 4 時 45 分。",
+      "驗算：下午 4 時 45 分 ＋ 35 分 ＝ 下午 5 時 20 分。",
+      "借走 1 小時後，分鐘是 20 ＋ 60 ＝ 80，不是 20。"
+    ]
+  },
+  {
+    unit: "厘米和毫米換算",
+    prompt: "一枝橙色蠟筆原來長 <span class='em'>58 mm</span>。後來量得它長 <span class='em'>3 cm</span>。它比原來短了多少毫米？",
+    kind: "mcq",
+    options: ["3 mm", "25 mm", "28 mm", "55 mm"],
+    answer: 2,
+    last: "上次後來長 4 cm，卻把「短了多少」寫成 4，沒有先換成毫米再相減。",
+    visual: "crayon58",
+    explain: [
+      "兩個長度的單位要先統一。3 cm ＝ 30 mm。",
+      "比原來短了：58 － 30 ＝ 28 mm。",
+      "不要直接把 3 寫成答案，也不要做成 58 － 3 ＝ 55。",
+      "題目問的是「短了多少毫米」，答句單位是毫米。"
+    ]
+  },
+  {
+    unit: "路程　多走多少",
+    prompt: "從圖書館經市場往車站，比<strong>直接</strong>從圖書館往車站，要多走多少公里？",
+    kind: "mcq",
+    options: ["2 km", "4 km", "5 km", "1 km"],
+    answer: 3,
+    last: "上次把「多走多少」寫成較長那條路的全長，沒有再減去直路。",
+    visual: "map2",
+    explain: [
+      "先算兩條路各有多長。",
+      "經市場：3 ＋ 2 ＝ 5 km。直接走：4 km。",
+      "多走的是兩條路的相差：5 － 4 ＝ 1 km。",
+      "5 km 是較長那條路的全長，不是「多走」的距離。題目問的是多了多少，不是那條路一共走多少。"
+    ]
+  },
+  {
+    unit: "時間應用題",
+    prompt: "時鐘顯示女兒離家步行上學和到達學校的時間。<br>（a）她步行上學用了多少分鐘？<br>（b）她到校比課堂開始早了 10 分鐘。課堂在何時開始？",
+    kind: "fill",
+    blanks: [
+      { before: "（a）用了 ", after: " 分鐘", answer: "30" },
+      { before: "（b）課堂在 ", mid: " 時 ", after: " 分開始", answer: "8", answer2: "25" }
+    ],
+    last: "這類「看兩個鐘、再求課堂開始」上次補充練習還沒做，現在補練。",
+    visual: "school",
+    explain: [
+      "離家是 7 時 45 分，到校是 8 時 15 分。",
+      "從 7 時 45 分到 8 時正是 15 分鐘，再加 15 分鐘，一共用了 30 分鐘。",
+      "到校比課堂開始早 10 分鐘，所以課堂開始是 8 時 15 分 ＋ 10 分 ＝ 8 時 25 分。",
+      "（a）問經過時間，（b）問再過 10 分鐘後的時刻，兩問不要混在一起。"
+    ]
+  },
+  {
+    unit: "選練（秒｜不在本次評估範圍）",
+    prompt: "女兒做一串水果用了 <span class='em'>15 秒</span>。她連續做 <span class='em'>4 串</span>，共用多少秒？即多少分鐘？",
+    kind: "fill",
+    blanks: [
+      { before: "共用 ", after: " 秒", answer: "60" },
+      { before: "即 ", after: " 分鐘", answer: "1" }
+    ],
+    last: "第 9 課「秒」不在本次評估範圍，這題只供有餘力時選練。記住 60 秒 ＝ 1 分鐘。",
+    visual: "seconds",
+    explain: [
+      "先算總秒數：15 × 4 ＝ 60 秒。",
+      "因為 60 秒 ＝ 1 分鐘，所以 60 秒即 1 分鐘。",
+      "這題屬第 9 課，本次第一次評估不考「秒」。"
+    ]
+  }
+];
+
+function visualHTML(key, isRevealed) {
+  if (key === "eq645") {
+    return `<div><div class="eq">6 × 47 × 5 ＝ ？</div>
+      ${isRevealed?`<div class="eq-sub">6 × 5 ＝ 30，再算 30 × 47 ＝ 1 410</div>`:""}</div>`;
+  }
+  if (key === "ruler76") {
+    return `<div>${rulerSVG(10,7,6)}
+      ${isRevealed?`<div class="eq-sub">7 厘米 6 毫米 ＝ 76 毫米</div>`:`<div class="eq-sub" style="color:var(--muted)">先數到 7 厘米，再數 6 小格</div>`}
+    </div>`;
+  }
+  if (key === "elapsed") {
+    return `<div class="clocks">
+      <div>${clockSVG(2,35)}<div class="clock-cap">開始　下午 2:35</div></div>
+      <div>${clockSVG(3,20)}<div class="clock-cap">結束　下午 3:20</div></div>
+    </div>`;
+  }
+  if (key === "end1215") {
+    return `<div class="clocks">
+      <div>${clockSVG(11,25)}<div class="clock-cap">開始　上午 11:25</div></div>
+      <div class="eq" style="font-size:3.2vmin">＋ 50 分</div>
+      ${isRevealed?`<div>${clockSVG(0,15)}<div class="clock-cap">結束　下午 12:15</div></div>`:""}
+    </div>`;
+  }
+  if (key === "back1030") {
+    return `<div><div class="eq">下午 1 時 10 分　－　2 小時 40 分　＝　？</div>
+      ${isRevealed?`<div class="eq-sub">先減 2 小時 → 上午 11:10　再減 40 分 → 上午 10:30</div>`:""}</div>`;
+  }
+  if (key === "div72") {
+    return `<div><div class="eq">72 本　平均分給　8 人</div>
+      ${isRevealed?`<div class="eq-sub">平均分用除法：72 ÷ 8 ＝ 9</div>`:`<div class="eq-sub" style="color:var(--muted)">是合起來，還是平均分開？</div>`}</div>`;
+  }
+  if (key === "roundup") {
+    return `<div><div class="eq">46 ÷ 6 ＝ ？</div>
+      ${isRevealed?`<div class="eq-sub">7 餘 4，剩下 4 人仍要一艘　→　8 艘</div>`:`<div class="eq-sub" style="color:var(--muted)">有餘數時，剩下的人怎麼辦？</div>`}</div>`;
+  }
+  if (key === "pages") {
+    return `<div><div class="eq">2 × 5 × 128 ＝ ？</div>
+      ${isRevealed?`<div class="eq-sub">2 × 5 ＝ 10，再 × 128 ＝ 1 280（三個數都要乘）</div>`:""}</div>`;
+  }
+  if (key === "bags") {
+    return `<div><div class="eq">每袋 6 顆</div>
+      ${isRevealed?`<div class="eq-sub">（a）47 ÷ 6 ＝ 7 餘 5<br>（b）47 ＋ 7 ＝ 54，54 ÷ 6 ＝ 9</div>`:`<div class="eq-sub" style="color:var(--muted)">（b）問的是「現在一共」</div>`}</div>`;
+  }
+  if (key === "cards04444") {
+    return `<div class="cards">${["0","0","4","4","4"].map(n=>`<div class="ncard">${n}</div>`).join("")}</div>`;
+  }
+  if (key === "ribbon88") {
+    const mark = isRevealed ? `
+      <rect x="20" y="28" width="440" height="16" rx="4" fill="#e07a5f"/>
+      <text x="20" y="22" font-size="16" font-weight="700" fill="currentColor">絲帶 88 mm</text>
+      <line x1="20" y1="62" x2="470" y2="62" stroke="#b42318" stroke-width="3"/>
+      <text x="20" y="82" font-size="15" font-weight="700" fill="currentColor">9 cm ＝ 90 mm（更長，不行）</text>
+      <line x1="20" y1="104" x2="420" y2="104" stroke="#157a3a" stroke-width="6"/>
+      <text x="20" y="126" font-size="15" font-weight="700" fill="currentColor">8 cm ＝ 80 mm（較短，可以）</text>`
+      : `<rect x="20" y="50" width="440" height="22" rx="6" fill="#e07a5f"/><text x="20" y="40" font-size="18" font-weight="700" fill="currentColor">整條絲帶 88 mm</text>`;
+    return `<svg class="ribbon" viewBox="0 0 560 140" style="max-height:22vmin">${mark}</svg>`;
+  }
+  if (key === "cards00567") {
+    return `<div class="cards">${["0","0","5","6","7"].map(n=>`<div class="ncard">${n}</div>`).join("")}</div>`;
+  }
+  if (key === "turtles2") {
+    return `<div class="turtles">${["46","33","21","28"].map(n=>`<div class="turtle"><div class="shell">${n}</div></div>`).join("")}</div>`;
+  }
+  if (key === "clock1142") {
+    return `<div class="clocks">
+      ${clockSVG(11,42)}
+      <div>
+        <div class="digital">11:42 p.m.</div>
+        ${isRevealed?`<div class="eq-sub">到 12:00 還有 18 分</div>`:`<div class="eq-sub" style="color:var(--muted)">新一天從幾點開始？</div>`}
+      </div>
+    </div>`;
+  }
+  if (key === "minus35") {
+    return `<div><div class="eq">下午 5 時 20 分　－　35 分鐘　＝　？</div>
+      ${isRevealed?`<div class="eq-sub">20 分不夠減，借 60 分：4 時 80 分 － 35 分 ＝ 4 時 45 分</div>`:""}</div>`;
+  }
+  if (key === "crayon58") {
+    return `<div><div class="eq">原來 58 mm，後來 3 cm</div>
+      ${isRevealed?`<div class="eq-sub">3 cm ＝ 30 mm，58 － 30 ＝ 28 mm</div>`:`<div class="eq-sub" style="color:var(--muted)">先把單位換成同一種</div>`}</div>`;
+  }
+  if (key === "map2") {
+    const note = isRevealed
+      ? `<text x="400" y="228" text-anchor="middle" font-size="18" font-weight="800" fill="currentColor">經市場 5 km，直路 4 km，多走 1 km</text>`
+      : "";
+    return `<svg class="map" viewBox="0 0 800 250" style="max-height:30vmin">
+      <line x1="80" y1="70" x2="260" y2="70" stroke="currentColor" stroke-width="5"/>
+      <line x1="260" y1="70" x2="480" y2="70" stroke="currentColor" stroke-width="5"/>
+      <line x1="480" y1="70" x2="700" y2="70" stroke="currentColor" stroke-width="5"/>
+      <path d="M260 90 C 400 210, 560 210, 700 90" fill="none" stroke="#1f6f8b" stroke-width="5" stroke-dasharray="10 8"/>
+      <circle cx="80" cy="70" r="36" fill="#2a9d8f"/><text x="80" y="76" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">家</text>
+      <circle cx="260" cy="70" r="44" fill="#1f6f8b"/><text x="260" y="76" text-anchor="middle" font-size="15" font-weight="800" fill="#fff">圖書館</text>
+      <circle cx="480" cy="70" r="36" fill="#d97706"/><text x="480" y="76" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">市場</text>
+      <circle cx="700" cy="70" r="36" fill="#b42318"/><text x="700" y="76" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">車站</text>
+      <text x="170" y="58" text-anchor="middle" font-size="18" font-weight="800" fill="currentColor">2 km</text>
+      <text x="370" y="58" text-anchor="middle" font-size="18" font-weight="800" fill="currentColor">3 km</text>
+      <text x="590" y="58" text-anchor="middle" font-size="18" font-weight="800" fill="currentColor">2 km</text>
+      <text x="500" y="175" text-anchor="middle" font-size="18" font-weight="800" fill="#1f6f8b">直路 4 km</text>
+      ${note}
+    </svg>`;
+  }
+  if (key === "school") {
+    return `<div class="split-clocks">
+      <div>${clockSVG(7,45)}<div class="clock-cap">離家　7:45</div></div>
+      <div>${clockSVG(8,15)}<div class="clock-cap">到校　8:15</div></div>
+    </div>`;
+  }
+  if (key === "seconds") {
+    return `<div><div class="eq">15 秒 × 4 串 ＝ ？</div>
+      ${isRevealed?`<div class="eq-sub">60 秒 ＝ 1 分鐘</div>`:`<div class="eq-sub" style="color:var(--muted)">選練題　·　60 秒 ＝ 1 分鐘</div>`}</div>`;
+  }
+  return "";
+}
+
+function qBody(s) {
+  if (s.kind === "mcq") {
+    return `<div class="options${s.oneCol?" one-col":""}">` + s.options.map((opt,idx)=>{
+      let cls = "opt";
+      if (picked === idx) cls += " picked";
+      if (revealed && idx === s.answer) cls += " correct";
+      if (revealed && picked !== null && idx === picked && idx !== s.answer) cls += " wrong";
+      return `<button class="${cls}" onclick="choose(${idx})"><span class="tag">${letters[idx]}</span><span>${opt}</span></button>`;
+    }).join("") + `</div>`;
+  }
+  return `<div class="blank-list">` + s.blanks.map(b => {
+    const cell = (val) => `<span class="blank${revealed?" show":""}">${revealed?val:"　"}</span>`;
+    const mid = b.answer2 ? `${cell(b.answer)}${b.mid||""}${cell(b.answer2)}${b.after}` : `${cell(b.answer)}${b.after}`;
+    return `<div class="blank-row">${b.before}${mid}</div>`;
+  }).join("") + `</div>`;
+}
+
+function explainBox(s) {
+  let verdict = "";
+  if (s.kind === "mcq" && picked !== null) {
+    verdict = picked === s.answer
+      ? `<div class="verdict ok">答對了！</div>`
+      : `<div class="verdict no">再看一看，正確答案是 ${letters[s.answer]}。</div>`;
+  }
+  return `<aside class="explain">
+      ${verdict}
+      <h3>講解</h3>
+      <ol>${s.explain.map(x=>`<li>${x}</li>`).join("")}</ol>
+      <div class="last">${s.last}</div>
+    </aside>`;
+}
+
+function coverHTML() {
+  const chips = [
+    "三數連乘（計算與應用）",
+    "讀尺、厘米與毫米",
+    "經過時間、結束時間",
+    "倒推開始時間（借 60 分、跨中午）",
+    "距離新一天",
+    "平均分與進一法（兩位數 ÷ 一位數）",
+    "兩步應用題",
+    "五位數讀法（幾個「零」）",
+    "五位單數審題",
+    "乘積條件：最小而又是雙數",
+    "路程「多走多少」"
+  ];
+  return `
+    <main>
+      <div class="cover">
+        <h1>第一次評估　錯題練習</h1>
+        <p class="count">共 18 題，另有 1 題選練</p>
+        <p>先自己想一想，再看答案和講解。</p>
+        <div class="klist">${chips.map(t=>`<span class="kchip">${t}</span>`).join("")}</div>
+        <p class="opt-note">選練題屬第 9 課「秒」，不在本次評估範圍，可按需要決定是否練習。</p>
+        <button class="act" style="font-size:3.4vmin;padding:1.4vmin 4vmin;margin-top:2vmin" onclick="start()">開始練習</button>
+        <div class="hint">快捷鍵：空白鍵開始　← → 換題　F 全螢幕　D 深色模式（適合關燈投影）</div>
+      </div>
+    </main>`;
+}
+
+function render() {
+  const app = document.getElementById("app");
+  if (i < 0) { app.innerHTML = coverHTML(); return; }
+  if (i >= slides.length) {
+    app.innerHTML = `
+      <main>
+        <div class="end">
+          <h1>今天練完了！</h1>
+          <p>如果還有不清楚的題，可以再走一遍。</p>
+          <button class="act" style="font-size:3.2vmin;padding:1.4vmin 4vmin;margin-top:2vmin" onclick="start()">再練習一次</button>
+        </div>
+      </main>
+      <footer class="bar">
+        <button class="nav" onclick="i=slides.length-1;picked=null;revealed=false;render()">回上一題</button>
+      </footer>`;
+    return;
+  }
+  const s = slides[i];
+  const vis = visualHTML(s.visual, revealed);
+  const prog = i < CORE
+    ? `第 ${i+1} 題／共 ${CORE} 題`
+    : `選練　第 ${i+1} 題`;
+  app.innerHTML = `
+    <header class="top">
+      <div class="brand">第一次評估　錯題練習</div>
+      <div class="unit">${s.unit}</div>
+      <div class="spacer"></div>
+      <div class="progress">${prog}</div>
+      <button class="icon" onclick="toggleDark()" title="深色模式">${dark?"淺色":"深色"}</button>
+      <button class="icon" onclick="goFull()" title="全螢幕">全螢幕</button>
+    </header>
+    <main class="${revealed?"split":""}">
+      <div class="col-q">
+        <p class="prompt">${s.prompt}</p>
+        <div class="visual">${vis}</div>
+        ${qBody(s)}
+      </div>
+      ${revealed ? explainBox(s) : ""}
+    </main>
+    <footer class="bar">
+      <button class="nav" ${i===0?"disabled":""} onclick="go(-1)">上一題</button>
+      <div class="dots">${slides.map((_,k)=>`<span class="dot${k===i?" now":k<i?" done":""}"></span>`).join("")}</div>
+      <button class="act${revealed?"":" ready"}" onclick="reveal()">${revealed?"已顯示答案":"顯示答案／講解"}</button>
+      <button class="nav" onclick="go(1)">${i===slides.length-1?"完成":"下一題"}</button>
+    </footer>`;
+}
+
+function start(){ i=0; picked=null; revealed=false; render(); }
+function go(d){
+  i = Math.min(slides.length, Math.max(0, i+d));
+  picked=null; revealed=false; render();
+}
+function choose(idx){
+  if (revealed) return;
+  picked = idx;
+  render();
+}
+function reveal(){ revealed = true; render(); }
+function toggleDark(){
+  dark = !dark;
+  document.documentElement.classList.toggle("dark", dark);
+  render();
+}
+function goFull(){
+  const el = document.documentElement;
+  if (!document.fullscreenElement) el.requestFullscreen?.();
+  else document.exitFullscreen?.();
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "d" || e.key === "D") { toggleDark(); return; }
+  if (e.key === "f" || e.key === "F") { goFull(); return; }
+  if (i < 0) { if (e.key === " " || e.key === "Enter") { e.preventDefault(); start(); } return; }
+  if (i >= slides.length) { if (e.key === "ArrowLeft") { i=slides.length-1; picked=null; revealed=false; render(); } return; }
+  if (e.key === "ArrowRight" || e.key === "PageDown") { e.preventDefault(); go(1); }
+  else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); go(-1); }
+  else if (e.key === " " || e.key === "Enter") { e.preventDefault(); if (!revealed) reveal(); else go(1); }
+  else if (["1","2","3","4","a","b","c","d","A","B","C","D"].includes(e.key)) {
+    const map = {a:0,b:1,c:2,d:3,A:0,B:1,C:2,D:3,"1":0,"2":1,"3":2,"4":3};
+    const s = slides[i];
+    if (s && s.kind === "mcq" && !revealed) choose(map[e.key]);
+  }
+});
+
+function applyHash() {
+  const h = (location.hash || "").replace("#","");
+  picked = null;
+  if (h === "dark") { dark = true; document.documentElement.classList.add("dark"); i = -1; revealed = false; }
+  else if (!h || h === "cover") { i = -1; revealed = false; }
+  else if (h === "end") { i = slides.length; revealed = false; }
+  else {
+    const m = h.match(/^(\\d+)(r)?(d)?$/);
+    if (m) {
+      i = Math.max(0, Math.min(slides.length-1, parseInt(m[1], 10)-1));
+      revealed = !!m[2];
+      dark = !!m[3];
+      document.documentElement.classList.toggle("dark", dark);
+    }
+  }
+  render();
+}
+window.addEventListener("hashchange", applyHash);
+applyHash();
+</script>
+</body>
+</html>
