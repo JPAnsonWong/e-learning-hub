@@ -1,0 +1,15 @@
+{
+  "id": "chi-exam1-listening-mock",
+  "student": "daughter",
+  "subject": "chinese",
+  "stage": "g3-3d-exam1",
+  "type": "practice",
+  "title": "第一次評估 中文聆聽模擬題兩篇",
+  "unit": "第一次評估",
+  "tags": [],
+  "difficulty": 2,
+  "minutes": 35,
+  "version": 1,
+  "date": "2026-11-14",
+  "description": "同一頁內兩份聆聽模擬卷（模擬卷一、模擬卷二），各兩段、16 題、50 分。點進練習預設隱藏文章，按「開始考試」後以普通話朗讀；提交後顯示分數，可查看文章和答案，並為相關句詞標色。屬題型練習，不是今年 3D 原卷。"
+}

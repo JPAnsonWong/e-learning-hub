@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>中文聆聽模擬練習｜3D</title>
+<style>
+:root{
+  --ink:#1b1b1b; --muted:#5c5c5c; --line:#d9d4c8; --paper:#fffdf8; --bg:#f3efe6;
+  --red:#b42318; --blue:#1d4e89; --ok:#157a3a; --bad:#b42318; --btn:#1d4e89;
+  --btn2:#8a3b12; --chip:#efe7d6;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+  font-family:"PingFang TC","Microsoft JhengHei",sans-serif;
+  line-height:1.65;}
+body{min-height:100%;}
+button,input{font:inherit}
+.wrap{max-width:860px;margin:0 auto;padding:20px 16px 64px;}
+.paper{background:var(--paper);border:1px solid var(--line);border-radius:16px;
+  padding:28px 26px 32px;box-shadow:0 8px 28px rgba(60,40,10,.06);}
+h1{font-size:1.55rem;text-align:center;margin:0 0 .2rem;letter-spacing:.08em}
+.school{text-align:center;color:var(--muted);font-size:.92rem;margin:0}
+.sub{text-align:center;font-size:1.12rem;font-weight:700;margin:.3rem 0 1rem}
+.note{background:#fff8e8;border:1px solid #ead8a8;border-radius:10px;padding:12px 14px;font-size:.92rem;color:#4a3b16;margin:0 0 18px}
+.note strong{color:#7a4a00}
+.row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+.btn{appearance:none;border:0;border-radius:10px;padding:10px 18px;cursor:pointer;
+  background:var(--btn);color:#fff;font-weight:700;letter-spacing:.04em;
+  min-height:3rem;min-width:3rem}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.alt{background:var(--btn2)}
+.btn.ghost{background:#fff;color:var(--btn);border:1.5px solid var(--btn)}
+.btn.ok{background:var(--ok)}
+.btn.wide{min-width:200px}
+.hidden{display:none !important}
+.header-line{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:.92rem;color:var(--muted);border-bottom:2px solid var(--ink);padding-bottom:8px;margin-bottom:16px}
+.part-title{font-weight:700;margin:1.1rem 0 .6rem;font-size:1.02rem}
+.q{border-top:1px dashed var(--line);padding:14px 0 6px}
+.q .stem{font-weight:700;margin:0 0 8px}
+.q .marks{font-weight:500;color:var(--muted);font-size:.9rem}
+.options{display:grid;gap:8px}
+.opt{display:flex;align-items:flex-start;gap:10px;border:1.5px solid var(--line);border-radius:10px;
+  padding:8px 10px;cursor:pointer;background:#fff;min-height:3rem}
+.opt:hover,.opt:focus-within,.opt:active{border-color:#9bb6d4}
+.opt input{margin-top:4px;accent-color:var(--btn);transform:scale(1.15)}
+.opt.picked{border-color:var(--btn);background:#eef4fb}
+.opt.correct{border-color:var(--ok);background:#eaf7ee}
+.opt.wrong{border-color:var(--bad);background:#fdecec}
+.pics{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pics .opt{flex-direction:column;align-items:center;text-align:center}
+.pics svg{width:100%;max-width:200px;height:140px;background:#fff;border:1px solid #eee;border-radius:8px}
+.player{position:sticky;top:0;z-index:5;background:var(--paper);border:1px solid var(--line);
+  border-radius:12px;padding:10px 12px;margin:0 0 14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.player .status{flex:1;min-width:180px;font-weight:700;color:var(--blue)}
+.scorebox{text-align:center;padding:10px 0 6px}
+.scorebox .big{font-size:2.4rem;font-weight:800;color:var(--blue);letter-spacing:.04em}
+.review-passage{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:12px 0 18px;font-size:1.05rem}
+.review-passage p{margin:.4rem 0 0}
+mark[data-q]{padding:0 2px;border-radius:3px;border-bottom:2px solid currentColor;color:inherit}
+.legend{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px}
+.legend span{font-size:.8rem;padding:1px 7px;border-radius:999px;border:1px solid rgba(0,0,0,.08)}
+.fb{font-size:.92rem;margin:4px 0 0}
+.fb .ok{color:var(--ok);font-weight:700}
+.fb .bad{color:var(--bad);font-weight:700}
+.card-choice{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
+.choice{border:1.5px solid var(--line);border-radius:14px;padding:18px 16px;background:#fff;cursor:pointer;text-align:left;min-height:3rem}
+.choice:hover,.choice:focus-visible,.choice:active{border-color:var(--btn);box-shadow:0 4px 14px rgba(29,78,137,.08)}
+.choice:focus-visible{outline:3px solid var(--btn);outline-offset:2px}
+.choice h2{margin:0 0 6px;font-size:1.15rem}
+.choice p{margin:0;color:var(--muted);font-size:.92rem}
+.tiny{font-size:.85rem;color:var(--muted);text-align:center;margin-top:16px}
+@media (max-width:640px){
+  .paper{padding:18px 14px 24px}
+  .card-choice,.pics{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="home" class="paper"></div>
+  <div id="intro" class="paper hidden"></div>
+  <div id="exam" class="paper hidden"></div>
+  <div id="result" class="paper hidden"></div>
+</div>
+<script>
+const COLORS = {
+  1:["#FDECEA","#C62828"], 2:["#FFF3E0","#EF6C00"], 3:["#FFF8E1","#F9A825"],
+  4:["#E8F5E9","#2E7D32"], 5:["#E0F7FA","#00838F"], 6:["#E3F2FD","#1565C0"],
+  7:["#EDE7F6","#6A1B9A"], 8:["#FCE4EC","#AD1457"],
+  9:["#FDECEA","#C62828"],10:["#FFF3E0","#EF6C00"],11:["#FFF8E1","#F9A825"],
+ 12:["#E8F5E9","#2E7D32"],13:["#E0F7FA","#00838F"],14:["#E3F2FD","#1565C0"],
+ 15:["#EDE7F6","#6A1B9A"],16:["#FCE4EC","#AD1457"]
+};
+function mark(n, text){
+  const [bg,bd]=COLORS[n];
+  return `<mark data-q="${n}" style="background:${bg};color:${bd}">${text}<sup style="font-size:.7em;margin-left:1px">${n}</sup></mark>`;
+}
+
+const treeSVG = (kind) => {
+  const fruits = {
+    A: `<circle cx="70" cy="70" r="6" fill="#c62828"/><circle cx="110" cy="78" r="6" fill="#c62828"/>`,
+    B: `<circle cx="70" cy="62" r="6" fill="#f9a825"/><circle cx="100" cy="70" r="6" fill="#f9a825"/><circle cx="82" cy="88" r="6" fill="#f9a825"/><circle cx="118" cy="86" r="6" fill="#f9a825"/>`,
+    C: `<circle cx="58" cy="58" r="6" fill="#c62828"/><circle cx="78" cy="50" r="6" fill="#c62828"/><circle cx="100" cy="56" r="6" fill="#c62828"/><circle cx="118" cy="66" r="6" fill="#c62828"/><circle cx="64" cy="78" r="6" fill="#c62828"/><circle cx="86" cy="72" r="6" fill="#c62828"/><circle cx="108" cy="84" r="6" fill="#c62828"/><circle cx="76" cy="92" r="6" fill="#c62828"/>`,
+    D: `<circle cx="58" cy="58" r="6" fill="#c62828"/><circle cx="78" cy="50" r="6" fill="#c62828"/><circle cx="100" cy="56" r="6" fill="#c62828"/><circle cx="118" cy="66" r="6" fill="#c62828"/><circle cx="64" cy="78" r="6" fill="#c62828"/><circle cx="86" cy="72" r="6" fill="#c62828"/>`
+  };
+  const ground = {
+    A: `<path d="M20 128 Q100 90 180 128" stroke="#8d6e63" fill="#c8e6c9" stroke-width="2"/>`,
+    B: `<rect x="10" y="118" width="180" height="16" fill="#c8e6c9"/><rect x="10" y="128" width="180" height="8" fill="#bdbdbd"/>`,
+    C: `<rect x="10" y="118" width="180" height="16" fill="#c8e6c9"/><rect x="10" y="128" width="180" height="8" fill="#bdbdbd"/>`,
+    D: `<rect x="10" y="118" width="180" height="16" fill="#c8e6c9"/><rect x="10" y="128" width="180" height="8" fill="#bdbdbd"/>`
+  };
+  const leaves = kind==="B"
+    ? `<ellipse cx="70" cy="44" rx="12" ry="7" fill="#2e7d32"/><ellipse cx="110" cy="48" rx="12" ry="7" fill="#2e7d32"/>`
+    : kind==="D"
+    ? `<path d="M48 46 l8 4 l-8 4" fill="#2e7d32"/><path d="M120 52 l8 4 l-8 4" fill="#2e7d32"/>`
+    : `<path d="M50 44 l10 5 l-10 5 z" fill="#2e7d32"/><path d="M118 50 l10 5 l-10 5 z" fill="#2e7d32"/><path d="M86 38 l9 5 l-9 5 z" fill="#2e7d32"/>`;
+  const extra = kind==="D" ? `<circle cx="150" cy="108" r="10" fill="#90caf9"/><rect x="144" y="116" width="12" height="16" fill="#42a5f5"/><text x="150" y="112" font-size="10" text-anchor="middle" fill="#0d47a1">摘</text>` : "";
+  return `<svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">${ground[kind]}
+    <rect x="92" y="88" width="12" height="36" fill="#6d4c41"/>
+    <circle cx="88" cy="70" r="36" fill="#43a047"/>
+    ${leaves}${fruits[kind]}${extra}</svg>`;
+};
+
+const kneeSVG = (kind) => {
+  const commonHead = `<circle cx="100" cy="28" r="14" fill="#ffe0b2" stroke="#5d4037" stroke-width="1.5"/>
+    <path d="M88 24 h8 M104 24 h8" stroke="#5d4037" stroke-width="1.5"/>
+    <circle cx="94" cy="30" r="1.4" fill="#5d4037"/><circle cx="106" cy="30" r="1.4" fill="#5d4037"/>`;
+  if(kind==="A") return `<svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">${commonHead}
+    <rect x="78" y="42" width="44" height="40" rx="8" fill="#90caf9"/>
+    <path d="M70 88 q15 18 30 0" fill="#ffe0b2" stroke="#5d4037"/><path d="M100 88 q15 18 30 0" fill="#ffe0b2" stroke="#5d4037"/>
+    <circle cx="78" cy="98" r="5" fill="#c62828"/><circle cx="122" cy="98" r="5" fill="#c62828"/></svg>`;
+  if(kind==="B") return `<svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+    <rect x="70" y="20" width="26" height="70" rx="8" fill="#ffe0b2" stroke="#5d4037"/>
+    <rect x="104" y="20" width="26" height="70" rx="8" fill="#ffe0b2" stroke="#5d4037"/>
+    <path d="M70 88 h26 v24 h-30 z" fill="#6d4c41"/><path d="M104 88 h26 v24 h-30 z" fill="#6d4c41"/>
+    <circle cx="83" cy="80" r="8" fill="#c62828"/></svg>`;
+  if(kind==="C") return `<svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">${commonHead}
+    <rect x="78" y="42" width="44" height="36" rx="8" fill="#90caf9"/>
+    <rect x="80" y="78" width="16" height="46" rx="6" fill="#ffe0b2" stroke="#5d4037"/>
+    <rect x="104" y="78" width="16" height="46" rx="6" fill="#ffe0b2" stroke="#5d4037"/>
+    <circle cx="88" cy="96" r="7" fill="#c62828"/><circle cx="112" cy="96" r="7" fill="#c62828"/></svg>`;
+  return `<svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">${commonHead}
+    <rect x="78" y="42" width="44" height="50" rx="8" fill="#90caf9"/>
+    <path d="M90 38 q4 8 0 10 M110 38 q-4 8 0 10" stroke="#1565c0" fill="none" stroke-width="2"/>
+    <path d="M92 36 q8 6 16 0" stroke="#5d4037" fill="none"/></svg>`;
+};
+
+const artSVG = (kind) => {
+  if(kind==="A") return `<svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+    <rect width="200" height="150" fill="#e3f2fd"/>
+    <rect x="60" y="70" width="80" height="50" fill="#ffe0b2" stroke="#6d4c41"/>
+    <polygon points="55,70 100,35 145,70" fill="#e53935"/></svg>`;
+  if(kind==="B") return `<svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+    <rect width="200" height="150" fill="#e8f5e9"/>
+    <polygon points="20,130 80,40 140,130" fill="#6d4c41"/>
+    <polygon points="80,130 140,50 190,130" fill="#8d6e63"/></svg>`;
+  if(kind==="C") return `<svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+    <rect width="200" height="150" fill="#1565c0"/>
+    <path d="M20 40 q20 30 0 70" stroke="#66bb6a" fill="none" stroke-width="6"/>
+    <path d="M50 30 q25 40 0 90" stroke="#43a047" fill="none" stroke-width="5"/>
+    <ellipse cx="90" cy="70" rx="16" ry="9" fill="#ffca28"/>
+    <ellipse cx="130" cy="100" rx="16" ry="9" fill="#ef5350"/>
+    <ellipse cx="160" cy="60" rx="16" ry="9" fill="#26c6da"/></svg>`;
+  return `<svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+    <rect width="200" height="150" fill="#fff8e1"/>
+    <rect x="20" y="90" width="50" height="40" fill="#8d6e63"/>
+    <circle cx="120" cy="70" r="18" fill="#42a5f5"/>
+    <rect x="110" y="88" width="20" height="42" fill="#1e88e5"/></svg>`;
+};
+
+const PAPERS = [
+{
+  id:"m1",
+  title:"模擬卷一",
+  blurb:"一段觀察故事，一段家裏的談話，題型靠近她小二評估三那份滿分卷。",
+  parts:[
+    {
+      heading:"一、細心聆聽錄音內容，然後回答問題。（25%＠3%）（第 6 題除外）",
+      audio:`今天是星期六的早上，小朗和幾個同學一起到郊外遠足。他們走在一條小路旁邊，一邊走，一邊說着話。忽然，有同學指着路旁的一棵小樹，樹上掛滿了紅紅的果實，看起來十分誘人。幾個同學立刻跑過去，想伸手去摘。小朗卻停下來，仔細看着那些果實和葉子。他發現，這棵樹雖然長在路旁，果實卻一顆也沒有被摘走；葉子的邊緣還有小小的鋸齒，跟他在圖書裏看過的可吃野莓並不一樣。小朗連忙對同學說：「先不要摘！這些果實可能不能吃。」這時，管理員伯伯走過來，親口告訴他們：「你們的同學觀察得很仔細。這棵樹上的果實是不能吃的，所以雖然長在路邊，卻還掛得滿滿的。」同學們都點頭，把伸出去的手收了回來。`,
+      passageHtml(){return `<p>今天是星期六的早上，${mark(1,"小朗和幾個同學一起到郊外遠足")}。他們走在一條小路旁邊，一邊走，一邊說着話。忽然，有同學指着路旁的一棵小樹，樹上掛滿了紅紅的果實，看起來十分誘人。${mark(2,"幾個同學立刻跑過去，想伸手去摘")}。小朗卻停下來，仔細看着那些果實和葉子。他發現，${mark(4,"這棵樹雖然長在路旁，果實卻一顆也沒有被摘走")}；${mark(3,"葉子的邊緣還有小小的鋸齒")}，跟他在圖書裏看過的可吃野莓並不一樣。小朗連忙對同學說：「先不要摘！${mark(5,"這些果實可能不能吃")}。」這時，管理員伯伯走過來，${mark(7,"親口告訴他們")}：「你們的同學觀察得很仔細。這棵樹上的果實是不能吃的，所以雖然長在路邊，卻還掛得滿滿的。」同學們都點頭，把伸出去的手收了回來。</p><p>${mark(6,"小朗停下來仔細看果實和葉子，又根據圖書裏的樣子比較，再勸同學先不要摘")}，可見他愛觀察，也愛思考。</p>`;},
+      toneQ:8,
+      toneAudio:"咦？小朋友，你是怎麼看出這些果實不能吃的？你觀察得真仔細，我倒想聽聽你是怎樣發現的。",
+      toneHtml(){return `<p>管理員伯伯說：「${mark(8,"咦？小朋友，你是怎麼看出這些果實不能吃的？你觀察得真仔細，我倒想聽聽你是怎樣發現的。")}」</p>`;},
+      toneRate:1.05, tonePitch:1.15,
+      questions:[
+        {n:1, marks:3, type:"single", stem:"小朗和同學到郊外去是為了做甚麼？", answer:["A"],
+          options:[{k:"A",t:"遠足"},{k:"B",t:"野餐"},{k:"C",t:"上繪畫課"},{k:"D",t:"買水果"}]},
+        {n:2, marks:3, type:"single", stem:"其他同學看見路旁的小樹後，怎樣做？", answer:["A"],
+          options:[{k:"A",t:"立刻跑過去，想摘果實。"},{k:"B",t:"站在原地討論。"},{k:"C",t:"先詢問管理員。"},{k:"D",t:"拉着小朗一起拍照。"}]},
+        {n:3, marks:3, type:"picture", stem:"下面哪一幅圖是同學看見的小樹？", answer:["C"],
+          options:[{k:"A",t:"長在山上，只有很少紅果"},{k:"B",t:"長在路旁，果實是黃色的，葉子較圓"},{k:"C",t:"長在路旁，掛滿紅果，葉子邊緣有鋸齒"},{k:"D",t:"長在路旁，有人正在摘果實"}],
+          svg: treeSVG},
+        {n:4, marks:3, type:"single", stem:"小朗留意到甚麼？", answer:["C"],
+          options:[{k:"A",t:"樹上的果實已經爛了。"},{k:"B",t:"果實散發出很香的味道。"},{k:"C",t:"小樹長在路旁，果實卻沒有被摘走。"},{k:"D",t:"過往的行人都不肯走近那棵樹。"}]},
+        {n:5, marks:3, type:"single", stem:"小朗為甚麼叫同學不要摘那些果實？", answer:["D"],
+          options:[{k:"A",t:"小朗不喜歡吃這種水果。"},{k:"B",t:"小朗以前吃過這棵樹的果實。"},{k:"C",t:"小朗覺得果實的顏色不漂亮。"},{k:"D",t:"小朗認為這些果實可能不能吃。"}]},
+        {n:6, marks:4, type:"multi", stem:"小朗是個怎樣的孩子？（請選擇兩個答案。）（4%＠2%）", answer:["C","D"],
+          options:[{k:"A",t:"謙遜有禮"},{k:"B",t:"不喜歡吃水果"},{k:"C",t:"愛觀察"},{k:"D",t:"愛思考"},{k:"E",t:"喜歡和別人不一樣"}]},
+        {n:7, marks:3, type:"single", stem:"管理員伯伯怎樣說明這些果實不能吃？", answer:["D"],
+          options:[{k:"A",t:"他問其他小朋友。"},{k:"B",t:"他讓小朗先吃一顆果實。"},{k:"C",t:"他摘下一顆果實帶回家。"},{k:"D",t:"他親口告訴同學，這些果實是不能吃的。"}]},
+        {n:8, marks:3, type:"single", tone:true, stem:"下面哪一項符合管理員伯伯說話的語氣？", answer:["B"],
+          options:[{k:"A",t:"溫柔"},{k:"B",t:"好奇"},{k:"C",t:"嘲笑"},{k:"D",t:"嚴厲"}]}
+      ]
+    },
+    {
+      heading:"二、細心聆聽錄音內容，然後回答問題。（25%＠3%）（第 13 題除外）",
+      audio:`星期六晚上，小晴坐在客廳裏，看上去悶悶不樂。媽媽問她發生了甚麼事。小晴說：「哥哥在社區游泳比賽得了冠軍，大家都稱讚他。我參加學校的繪畫比賽，只得了最佳創意獎，覺得自己一點也不出色。」媽媽拉着她走到陽台，指着花圃說：「你看，玫瑰有玫瑰的香，菊花有菊花的美。每種花都不一樣，可是每種都能讓花園更好看。每個人也一樣，都有自己的長處。」媽媽又說：「老師還說你畫裏的顏色用得很大膽，畫畫本來就是你的長處。媽媽提起這些，是希望你看見自己的優點，也希望你不要因為哥哥得獎，就事事拿自己跟他比較。」小晴想了想，心裏輕鬆了不少，也有了自信。`,
+      passageHtml(){return `<p>星期六晚上，小晴坐在客廳裏，看上去悶悶不樂。媽媽問她發生了甚麼事。小晴說：「${mark(9,"哥哥在社區游泳比賽得了冠軍")}，大家都稱讚他。我參加學校的繪畫比賽，${mark(11,"只得了最佳創意獎")}，覺得自己一點也不出色。」媽媽拉着她走到陽台，指着花圃說：「${mark(10,"你看，玫瑰有玫瑰的香，菊花有菊花的美。每種花都不一樣，可是每種都能讓花園更好看。")}每個人也一樣，都有自己的長處。」媽媽又說：「老師還說你畫裏的顏色用得很大膽，${mark(12,"畫畫本來就是你的長處")}。${mark(13,"媽媽提起這些，是希望你看見自己的優點，也希望你不要因為哥哥得獎，就事事拿自己跟他比較")}。」小晴想了想，${mark(14,"心裏輕鬆了不少，也有了自信")}。</p><p>這段對話帶出的道理是：${mark(15,"每個人都有自己的長處，不必事事跟別人比較")}。</p>`;},
+      toneQ:16,
+      toneAudio:"晴晴，你可別再這樣想了。媽媽是擔心你越比越沒有信心，連自己本來會的本領也看不見了啊。",
+      toneHtml(){return `<p>媽媽說：「${mark(16,"晴晴，你可別再這樣想了。媽媽是擔心你越比越沒有信心，連自己本來會的本領也看不見了啊。")}」</p>`;},
+      toneRate:0.92, tonePitch:0.85,
+      questions:[
+        {n:9, marks:3, type:"single", stem:"誰在游泳比賽中得了冠軍？", answer:["B"],
+          options:[{k:"A",t:"媽媽"},{k:"B",t:"哥哥"},{k:"C",t:"小晴"},{k:"D",t:"老師"}]},
+        {n:10, marks:3, type:"single", stem:"媽媽用甚麼來比喻每個人都有自己的長處？", answer:["C"],
+          options:[{k:"A",t:"月亮"},{k:"B",t:"星星"},{k:"C",t:"花"},{k:"D",t:"太陽"}]},
+        {n:11, marks:3, type:"single", stem:"小晴在繪畫比賽中獲得了甚麼獎項？", answer:["D"],
+          options:[{k:"A",t:"第一名"},{k:"B",t:"第二名"},{k:"C",t:"第三名"},{k:"D",t:"最佳創意獎"}]},
+        {n:12, marks:3, type:"single", stem:"小晴有哪一方面的長處？", answer:["A"],
+          options:[{k:"A",t:"繪畫"},{k:"B",t:"游泳"},{k:"C",t:"跑步"},{k:"D",t:"寫作"}]},
+        {n:13, marks:4, type:"multi", stem:"媽媽為甚麼要提起小晴得獎和被稱讚的事？（請選擇兩個答案。）（4%＠2%）", answer:["C","E"],
+          options:[{k:"A",t:"轉移話題，避免談論哥哥的成績。"},{k:"B",t:"批評小晴在繪畫方面不夠努力。"},{k:"C",t:"鼓勵小晴，讓她看到自己的優點。"},{k:"D",t:"告訴小晴不需要再參加比賽。"},{k:"E",t:"告訴小晴不要事事都和別人比較。"}]},
+        {n:14, marks:3, type:"single", stem:"小晴和媽媽聊天後，有甚麼感受？", answer:["A"],
+          options:[{k:"A",t:"自信"},{k:"B",t:"生氣"},{k:"C",t:"慚愧"},{k:"D",t:"害羞"}]},
+        {n:15, marks:3, type:"single", stem:"這段對話帶出了甚麼道理？", answer:["C"],
+          options:[{k:"A",t:"學習需要堅持不懈。"},{k:"B",t:"游泳訓練需要特定的方法。"},{k:"C",t:"每個人都有自己的長處，不必事事跟別人比較。"},{k:"D",t:"遇到困難時要想辦法，不能輕易放棄。"}]},
+        {n:16, marks:3, type:"single", tone:true, stem:"下面哪一項符合媽媽說話的語氣？", answer:["D"],
+          options:[{k:"A",t:"憤怒"},{k:"B",t:"高興"},{k:"C",t:"失望"},{k:"D",t:"擔心"}]}
+      ]
+    }
+  ]
+},
+{
+  id:"m2",
+  title:"模擬卷二",
+  blurb:"一段生活小事，一段課堂談話，特別練習「不正確／不符合」和語氣題。",
+  parts:[
+    {
+      heading:"一、細心聆聽錄音內容，然後回答問題。（25%＠3%）（第 6 題除外）",
+      audio:`星期日下午，小宇和爸爸在公園裏踢球。小宇跑得太快，在草地旁邊的石階上跌倒了，膝蓋擦破了皮，流出了一點血。他痛得一時間說不出話來。爸爸連忙蹲下來，用清水把傷口洗乾淨，再貼上膠布，並沒有帶他去醫院。小宇小聲說：「都是我自己跑得太快……」爸爸扶他起來，告訴他先回家休息，明天再來公園。`,
+      passageHtml(){return `<p>星期日下午，${mark(1,"小宇和爸爸在公園裏踢球")}。小宇跑得太快，${mark(2,"在草地旁邊的石階上跌倒了")}，${mark(3,"膝蓋擦破了皮，流出了一點血")}。他痛得${mark(4,"一時間說不出話來")}。爸爸連忙蹲下來，${mark(6,"用清水把傷口洗乾淨，再貼上膠布")}，${mark(5,"並沒有帶他去醫院")}。小宇小聲說：「都是我自己跑得太快……」爸爸扶他起來，告訴他先回家休息，明天再來公園。</p><p>${mark(7,"因此，「小宇被送到醫院治療」並不符合錄音內容，是不正確的。")}</p>`;},
+      toneQ:8,
+      toneAudio:"沒關係，我們先把傷口洗乾淨。回家好好休息，明天再來公園，好不好？",
+      toneHtml(){return `<p>爸爸說：「${mark(8,"沒關係，我們先把傷口洗乾淨。回家好好休息，明天再來公園，好不好？")}」</p>`;},
+      toneRate:0.9, tonePitch:0.9,
+      questions:[
+        {n:1, marks:3, type:"single", stem:"小宇和爸爸在公園裏做甚麼？", answer:["B"],
+          options:[{k:"A",t:"跑步"},{k:"B",t:"踢球"},{k:"C",t:"野餐"},{k:"D",t:"放風箏"}]},
+        {n:2, marks:3, type:"single", stem:"小宇是在哪裏跌倒的？", answer:["C"],
+          options:[{k:"A",t:"滑梯下面"},{k:"B",t:"沙池裏"},{k:"C",t:"草地旁邊的石階上"},{k:"D",t:"回家的路上"}]},
+        {n:3, marks:3, type:"picture", stem:"下面哪一幅圖是小宇受傷的部位？", answer:["C"],
+          options:[{k:"A",t:"雙手"},{k:"B",t:"腳踝"},{k:"C",t:"膝蓋"},{k:"D",t:"只看見他在哭，看不見傷口"}],
+          svg: kneeSVG},
+        {n:4, marks:3, type:"single", stem:"小宇跌倒後，有甚麼反應？", answer:["C"],
+          options:[{k:"A",t:"大哭起來"},{k:"B",t:"雙腿發軟"},{k:"C",t:"說不出話來"},{k:"D",t:"立刻向爸爸道歉"}]},
+        {n:5, marks:3, type:"single", stem:"爸爸怎樣處理小宇的傷口？", answer:["B"],
+          options:[{k:"A",t:"立刻帶他到醫院治療。"},{k:"B",t:"用清水清洗傷口，再貼上膠布。"},{k:"C",t:"叫小宇繼續踢球。"},{k:"D",t:"只讓小宇坐着，沒有幫忙。"}]},
+        {n:6, marks:4, type:"multi", stem:"爸爸為小宇做了哪兩件事？（請選擇兩個答案。）（4%＠2%）", answer:["B","D"],
+          options:[{k:"A",t:"帶他到醫院"},{k:"B",t:"用清水清洗傷口"},{k:"C",t:"責備他跑得太快"},{k:"D",t:"給他貼上膠布"},{k:"E",t:"讓他繼續踢球"}]},
+        {n:7, marks:3, type:"single", stem:"根據話語內容，下面哪一項不正確？", answer:["A"],
+          options:[{k:"A",t:"小宇被送到醫院治療。"},{k:"B",t:"小宇在石階上跌倒。"},{k:"C",t:"爸爸幫他清洗傷口。"},{k:"D",t:"他們本來在公園踢球。"}]},
+        {n:8, marks:3, type:"single", tone:true, stem:"下面哪一項符合爸爸說話的語氣？", answer:["A"],
+          options:[{k:"A",t:"溫柔"},{k:"B",t:"疑惑"},{k:"C",t:"憤怒"},{k:"D",t:"失望"}]}
+      ]
+    },
+    {
+      heading:"二、細心聆聽錄音內容，然後回答問題。（25%＠3%）（第 10 題除外）",
+      audio:`美術課上，周老師請同學先閉上眼睛，想像自己走到了海底，再把心裏看見的景象畫下來。小美一開始畫得很專心，後來偷看鄰座的畫，覺得自己的魚畫得不像，心裏很懊喪，就把筆放下了。周老師走過來，看見小美的畫紙上有藍色的海水、彎彎的水草，還有三條顏色不同的小魚，便笑着說：「你已經把心裏看見的畫出來了。」老師又對全班說：「畫畫不是要比誰畫得最像，最重要的是專心，把自己想像到的畫下來。」小美聽了，重新拿起筆，又畫了下去。`,
+      passageHtml(){return `<p>美術課上，周老師請同學先${mark(9,"閉上眼睛，想像自己走到了海底")}，再把心裏看見的景象畫下來。小美一開始畫得很專心，後來偷看鄰座的畫，覺得自己的魚畫得不像，${mark(12,"心裏很懊喪，就把筆放下了")}。周老師走過來，看見${mark(11,"小美的畫紙上有藍色的海水、彎彎的水草，還有三條顏色不同的小魚")}，便笑着說：「你已經把心裏看見的畫出來了。」老師又對全班說：「${mark(10,"畫畫不是要比誰畫得最像，最重要的是專心，把自己想像到的畫下來")}。」小美聽了，${mark(13,"重新拿起筆，又畫了下去")}。</p><p>${mark(14,"因此，「老師要求大家必須畫得跟別人一模一樣」並不符合話語內容。")}</p><p>這節課帶出的道理是：${mark(15,"畫畫最重要的是專心把自己的想像畫出來，不必跟別人比較")}。</p>`;},
+      toneQ:16,
+      toneAudio:"小美，你畫得已經很有意思了。老師不是要你們畫得一模一樣，只要專心把自己心裏看見的畫出來就好。",
+      toneHtml(){return `<p>周老師說：「${mark(16,"小美，你畫得已經很有意思了。老師不是要你們畫得一模一樣，只要專心把自己心裏看見的畫出來就好。")}」</p>`;},
+      toneRate:0.95, tonePitch:1.05,
+      questions:[
+        {n:9, marks:3, type:"single", stem:"周老師請同學先做甚麼？", answer:["B"],
+          options:[{k:"A",t:"到校園花圃寫生"},{k:"B",t:"閉上眼睛，想像自己走到了海底"},{k:"C",t:"先臨摹老師的範畫"},{k:"D",t:"分組討論顏色"}]},
+        {n:10, marks:4, type:"multi", stem:"周老師認為畫畫最重要的是甚麼？（請選擇兩個答案。）（4%＠2%）", answer:["C","E"],
+          options:[{k:"A",t:"畫得最快"},{k:"B",t:"畫得最像"},{k:"C",t:"專心"},{k:"D",t:"顏色用得最多"},{k:"E",t:"把自己想像到的畫下來"}]},
+        {n:11, marks:3, type:"picture", stem:"下面哪一幅圖最符合小美畫紙上的內容？", answer:["C"],
+          options:[{k:"A",t:"一間小屋"},{k:"B",t:"兩座山"},{k:"C",t:"海底：海水、水草和三條小魚"},{k:"D",t:"公園裏一個小朋友在玩耍"}],
+          svg: artSVG},
+        {n:12, marks:3, type:"single", stem:"小美為甚麼把筆放下？", answer:["B"],
+          options:[{k:"A",t:"她的筆沒有墨了。"},{k:"B",t:"她覺得自己畫得不像，心裏很懊喪。"},{k:"C",t:"老師叫她先不要畫。"},{k:"D",t:"鄰座請她幫忙改畫。"}]},
+        {n:13, marks:3, type:"single", stem:"小美聽了老師的話以後，怎樣做？", answer:["D"],
+          options:[{k:"A",t:"把畫撕掉"},{k:"B",t:"去畫鄰座那樣的山"},{k:"C",t:"離開課室"},{k:"D",t:"重新拿起筆，又畫了下去"}]},
+        {n:14, marks:3, type:"single", stem:"下面哪一項不符合話語內容？", answer:["B"],
+          options:[{k:"A",t:"老師請同學先想像再到海底的景象。"},{k:"B",t:"老師要求大家必須畫得跟別人一模一樣。"},{k:"C",t:"小美曾經因為比較而把筆放下。"},{k:"D",t:"小美畫紙上有海水、水草和小魚。"}]},
+        {n:15, marks:3, type:"single", stem:"這節課帶出了甚麼道理？", answer:["C"],
+          options:[{k:"A",t:"學畫畫一定要先學會畫山。"},{k:"B",t:"只有畫得像，才算畫得好。"},{k:"C",t:"畫畫最重要的是專心把自己的想像畫出來，不必跟別人比較。"},{k:"D",t:"遇到困難時應該立刻放棄。"}]},
+        {n:16, marks:3, type:"single", tone:true, stem:"下面哪一項符合周老師說話的語氣？", answer:["B"],
+          options:[{k:"A",t:"責備"},{k:"B",t:"鼓勵"},{k:"C",t:"生氣"},{k:"D",t:"開玩笑"}]}
+      ]
+    }
+  ]
+}
+];
+
+let current=null, answers={}, voice=null, playing=false;
+
+function loadVoice(){
+  const vs=speechSynthesis.getVoices();
+  voice = vs.find(v=>/zh-CN/i.test(v.lang)&&/female|Xiaoxiao|Xiaoyi|Tingting|Yaoyao|Huihui|Xiaoxuan/i.test(v.name))
+       || vs.find(v=>/zh-CN|cmn-Hans|zh_CN/i.test(v.lang))
+       || vs.find(v=>/^zh/i.test(v.lang))
+       || null;
+}
+loadVoice();
+speechSynthesis.onvoiceschanged=loadVoice;
+
+function speak(text, {rate=0.92, pitch=1}={}){
+  return new Promise((resolve)=>{
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang="zh-CN";
+    if(voice) u.voice=voice;
+    u.rate=rate; u.pitch=pitch;
+    u.onend=()=>resolve();
+    u.onerror=()=>resolve();
+    speechSynthesis.speak(u);
+  });
+}
+function stopSpeak(){ speechSynthesis.cancel(); playing=false; }
+
+function show(id){
+  ["home","intro","exam","result"].forEach(x=>document.getElementById(x).classList.toggle("hidden", x!==id));
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function renderHome(){
+  document.getElementById("home").innerHTML=`
+    <p class="school">三年級 D 班　練習用</p>
+    <h1>中國語文科</h1>
+    <p class="sub">聆聽模擬練習（兩卷）</p>
+    <div class="note">
+      <strong>請先讀這段：</strong>今年 3D 聆聽原卷我沒有見過，不能當成「預測原題」。這兩卷是依照女兒小二聆聽卷的格式自擬：每卷兩段錄音、十六題、五十分；多數題每題三分，雙選題四分（對一個得兩分）；每段結尾有一句話語考語氣，並有看圖、道理，以及「不正確／不符合」題。故事是新寫的，不是課文，也不是舊卷原題。<br>
+      請用 <strong>Chrome 或 Edge</strong> 開啟本頁，並打開聲量。錄音以<strong>普通話</strong>讀出，方便在家練習審題；學校考試的中文聆聽通常用粵語，答題策略相同，但臨場語感會不一樣。
+    </div>
+    <div class="card-choice">
+      ${PAPERS.map(p=>`<button class="choice" type="button" onclick="openIntro('${p.id}')"><h2>${p.title}</h2><p>${p.blurb}</p><p>16 題　／　50 分　／　約 15–20 分鐘</p></button>`).join("")}
+    </div>
+    <p class="tiny">Vivian｜中文　｜　2026-11-14　｜　給女兒 11/16 聆聽考前練習</p>`;
+  show("home");
+}
+
+function openIntro(id){
+  stopSpeak();
+  current=PAPERS.find(p=>p.id===id);
+  answers={};
+  document.getElementById("intro").innerHTML=`
+    <div class="header-line"><span>三年級 D 班　姓名：女兒</span><span>${current.title}</span><span>成績：　　／50</span></div>
+    <h1>聆聽模擬練習</h1>
+    <p class="sub">進入考試前，文章會隱藏</p>
+    <div class="note">
+      1. 點「開始考試」後，先看題目，再聽錄音。每段錄音會用普通話讀兩次；語氣題另有一句短錄音，也會讀兩次。<br>
+      2. 聽的時候不要翻看文章。雙選題要選兩個答案。見到「不正確」「不符合」先圈「不」字，再逐個選項想。<br>
+      3. 全部作答後按「提交」才會看到分數、文章和答案。跟答案有關的句子會用顏色標出。
+    </div>
+    <div class="row">
+      <button class="btn ghost" type="button" onclick="renderHome()">返回</button>
+      <button class="btn wide" type="button" onclick="startExam()">開始考試</button>
+    </div>`;
+  show("intro");
+}
+
+function optionHtml(q, review=false){
+  const picked=answers[q.n]||[];
+  const type=q.type==="multi"?"checkbox":"radio";
+  const pics=q.type==="picture";
+  const opts=q.options.map(o=>{
+    let cls="opt";
+    if(review){
+      if(q.answer.includes(o.k)) cls+=" correct";
+      else if(picked.includes(o.k)) cls+=" wrong";
+    } else if(picked.includes(o.k)) cls+=" picked";
+    const pic=pics && q.svg ? q.svg(o.k) : "";
+    const dis=review?"disabled":"";
+    return `<label class="${cls}">
+      <input type="${type}" name="q${q.n}" value="${o.k}" ${picked.includes(o.k)?"checked":""} ${dis}
+        onchange="pick(${q.n},'${o.k}','${q.type}')">
+      <span><strong>${o.k}.</strong> ${o.t}${pic}</span>
+    </label>`;
+  }).join("");
+  return `<div class="options${pics?" pics":""}">${opts}</div>`;
+}
+
+function renderQuestions(review=false){
+  return current.parts.map(part=>`
+    <div class="part-title">${part.heading}</div>
+    ${part.questions.map(q=>{
+      const toneTip=q.tone?`<div class="fb" style="color:var(--blue)">請聆聽下面話語內容，然後回答第 ${q.n} 題。</div>`:"";
+      let fb="";
+      if(review){
+        const got=gradeQ(q);
+        const you=(answers[q.n]||[]).join("、")||"未作答";
+        fb=`<div class="fb">${got.full?'<span class="ok">正確</span>':got.partial?'<span class="ok">部分正確</span>　<span class="bad">尚有錯漏</span>':'<span class="bad">不正確</span>'}
+          　你的答案：${you}　正確答案：${q.answer.join("、")}　（${got.score}/${q.marks}）</div>`;
+      }
+      return `<div class="q" id="q${q.n}">
+        <p class="stem">${q.n}. ${q.stem} <span class="marks">（${q.marks} 分）</span></p>
+        ${toneTip}${optionHtml(q,review)}${fb}
+      </div>`;
+    }).join("")}
+  `).join("");
+}
+
+function startExam(){
+  answers={};
+  document.getElementById("exam").innerHTML=`
+    <div class="header-line"><span>三年級 D 班　姓名：女兒</span><span>${current.title}</span><span>尚未提交</span></div>
+    <div class="player">
+      <div class="status" id="playStatus">請先看題。準備好後，按「播放錄音」。</div>
+      <button class="btn" type="button" id="btnPlay" onclick="playExamAudio()">播放錄音（普通話）</button>
+      <button class="btn ghost" type="button" onclick="stopSpeak();document.getElementById('playStatus').textContent='已停止。';">停止</button>
+    </div>
+    ${renderQuestions(false)}
+    <div class="row">
+      <button class="btn ghost" type="button" onclick="stopSpeak();openIntro(current.id)">離開</button>
+      <button class="btn alt wide" type="button" onclick="submitExam()">提交</button>
+    </div>`;
+  show("exam");
+}
+
+function pick(n,k,type){
+  if(type==="multi"){
+    const q=current.parts.flatMap(p=>p.questions).find(x=>x.n===n);
+    let cur=answers[n]?[...answers[n]]:[];
+    if(cur.includes(k)) cur=cur.filter(x=>x!==k);
+    else {
+      if(cur.length>=2){ cur=[cur[1],k]; }
+      else cur.push(k);
+    }
+    answers[n]=cur;
+  } else {
+    answers[n]=[k];
+  }
+  const q=current.parts.flatMap(p=>p.questions).find(x=>x.n===n);
+  const box=document.getElementById("q"+n);
+  if(box){
+    const stem=box.querySelector(".stem").outerHTML;
+    const toneTip=q.tone?`<div class="fb" style="color:var(--blue)">請聆聽下面話語內容，然後回答第 ${q.n} 題。</div>`:"";
+    box.innerHTML=stem+toneTip+optionHtml(q,false);
+  }
+}
+
+async function playExamAudio(){
+  if(playing) return;
+  const btn=document.getElementById("btnPlay");
+  const st=document.getElementById("playStatus");
+  playing=true; btn.disabled=true;
+  try{
+    for(let i=0;i<current.parts.length;i++){
+      const part=current.parts[i];
+      const label=i===0?"第一段":"第二段";
+      for(let t=1;t<=2;t++){
+        st.textContent=`正在以普通話讀出${label}錄音（第 ${t} 次）……`;
+        await speak(part.audio,{rate:0.9,pitch:1});
+        if(!playing) return;
+      }
+      st.textContent=`請聆聽下面話語內容（${label}語氣題，第 1 次）……`;
+      await speak(part.toneAudio,{rate:part.toneRate||0.95,pitch:part.tonePitch||1});
+      if(!playing) return;
+      st.textContent=`請聆聽下面話語內容（${label}語氣題，第 2 次）……`;
+      await speak(part.toneAudio,{rate:part.toneRate||0.95,pitch:part.tonePitch||1});
+      if(!playing) return;
+    }
+    st.textContent="錄音播放完畢。請檢查答案後提交。若需要，可再按「播放錄音」。";
+  } finally {
+    playing=false; if(btn) btn.disabled=false;
+  }
+}
+
+function gradeQ(q){
+  const got=new Set(answers[q.n]||[]);
+  const ans=new Set(q.answer);
+  if(q.type==="multi"){
+    let score=0;
+    ans.forEach(a=>{ if(got.has(a)) score+=2; });
+    return {score, full:score===q.marks, partial:score>0&&score<q.marks};
+  }
+  const ok=got.size===1 && ans.has([...got][0]);
+  return {score:ok?q.marks:0, full:ok, partial:false};
+}
+
+function submitExam(){
+  const all=current.parts.flatMap(p=>p.questions);
+  const missing=all.filter(q=>!(answers[q.n]&&answers[q.n].length));
+  if(missing.length && !confirm(`還有 ${missing.length} 題未作答（第 ${missing.map(q=>q.n).join("、")} 題）。確定提交嗎？`)) return;
+  stopSpeak();
+  const total=all.reduce((s,q)=>s+gradeQ(q).score,0);
+  renderResult(total,all);
+}
+
+function legend(){
+  return `<div class="legend">${Array.from({length:16},(_,i)=>{
+    const n=i+1,[bg,bd]=COLORS[n];
+    return `<span style="background:${bg};color:${bd};border-color:${bd}">第 ${n} 題</span>`;
+  }).join("")}</div>`;
+}
+
+function renderResult(total,all){
+  const max=50;
+  document.getElementById("result").innerHTML=`
+    <div class="header-line"><span>三年級 D 班　姓名：女兒</span><span>${current.title}</span><span>已提交</span></div>
+    <div class="scorebox">
+      <div>本次得分</div>
+      <div class="big">${total}／${max}</div>
+      <p>${total===50?"全對，審題很仔細。":total>=40?"不錯。請先看錯題，對照顏色標出的句子再聽一次。":"先別急。打開文章，對照顏色句子，看看是不是「不／不符合」或語氣題掉了分。"}</p>
+    </div>
+    <div class="row">
+      <button class="btn" type="button" onclick="document.getElementById('reviewBox').classList.remove('hidden');this.classList.add('hidden')">查看文章和答案</button>
+      <button class="btn ghost" type="button" onclick="openIntro(current.id)">再做一次</button>
+      <button class="btn ghost" type="button" onclick="renderHome()">返回目錄</button>
+    </div>
+    <div id="reviewBox" class="hidden">
+      <h2>錄音內容（與答案相關的句詞已標色）</h2>
+      ${legend()}
+      ${current.parts.map((p,i)=>`<div class="review-passage"><p><strong>${i===0?"第一段":"第二段"}</strong></p>${p.passageHtml()}${p.toneHtml()}</div>`).join("")}
+      <div class="row">
+        <button class="btn" type="button" onclick="replayReview()">再用普通話讀出全文</button>
+      </div>
+      <h2>題目與答案</h2>
+      ${renderQuestions(true)}
+    </div>`;
+  show("result");
+}
+
+async function replayReview(){
+  if(playing) return;
+  playing=true;
+  try{
+    for(const part of current.parts){
+      await speak(part.audio,{rate:0.9,pitch:1});
+      await speak(part.toneAudio,{rate:part.toneRate||0.95,pitch:part.tonePitch||1});
+    }
+  } finally { playing=false; }
+}
+
+renderHome();
+</script>
+</body>
+</html>
