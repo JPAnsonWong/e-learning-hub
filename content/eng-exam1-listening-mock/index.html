@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>3D 英文聆聽模擬練習（兩篇）</title>
+<style>
+  :root {
+    --bg: #f3f0ea;
+    --ink: #1c2430;
+    --muted: #5a6573;
+    --card: #fffdf8;
+    --line: #e2d8c8;
+    --accent: #1f6f8b;
+    --accent-soft: #e6f4f8;
+    --good: #157a3a;
+    --good-bg: #dff6e8;
+    --bad: #b42318;
+    --bad-bg: #fde8e6;
+    --shadow: 0 10px 30px rgba(28,36,48,.08);
+    --btn: #1f6f8b;
+    --btn-ink: #fff;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+    line-height: 1.5;
+    padding: 1.2rem 1.2rem 2rem;
+  }
+  h1, h2, h3 { line-height: 1.25; margin: 0 0 .6rem; }
+  h1 { font-size: clamp(1.25rem, 3.2vmin, 1.85rem); }
+  h2 { font-size: clamp(1.1rem, 2.6vmin, 1.45rem); color: var(--accent); }
+  p { margin: 0 0 .75rem; }
+  button, input[type="text"] { font-family: inherit; }
+  button {
+    cursor: pointer;
+    border: 0;
+    border-radius: .8rem;
+    min-height: 3rem;
+    min-width: 3rem;
+    padding: .6rem 1.15rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    background: var(--btn);
+    color: var(--btn-ink);
+  }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  button.secondary {
+    background: var(--card);
+    color: var(--ink);
+    border: 1px solid var(--line);
+  }
+  button.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+  button.danger { background: #8f1d18; }
+  .wrap { max-width: 58rem; margin: 0 auto; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 1.1rem;
+    box-shadow: var(--shadow);
+    padding: 1.1rem 1.2rem;
+    margin-bottom: 1rem;
+  }
+  .muted { color: var(--muted); }
+  .row { display: flex; flex-wrap: wrap; gap: .7rem; align-items: center; }
+  .paper-pick {
+    display: grid;
+    gap: .9rem;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  }
+  .paper-pick button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 1.1rem 1.2rem;
+    background: var(--card);
+    color: var(--ink);
+    border: 2px solid var(--line);
+  }
+  .paper-pick button strong { display: block; font-size: 1.25rem; color: var(--accent); margin-bottom: .25rem; }
+  .paper-pick button span { display: block; font-weight: 500; color: var(--muted); }
+  .note {
+    background: var(--accent-soft);
+    border-radius: .8rem;
+    padding: .8rem 1rem;
+    margin: .8rem 0;
+  }
+  .status {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: #173f50;
+    color: #fff;
+    border-radius: .9rem;
+    padding: .8rem 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem 1rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .status .now { font-weight: 800; }
+  .part { margin: 1.4rem 0 1.8rem; }
+  .q {
+    border: 1px solid var(--line);
+    border-radius: .9rem;
+    padding: .85rem 1rem;
+    margin: .7rem 0;
+    background: #fff;
+  }
+  .q.on { outline: 3px solid #f0b429; }
+  .q .qn { font-weight: 800; margin-bottom: .45rem; }
+  .opts { display: grid; gap: .45rem; }
+  label.opt {
+    display: flex;
+    gap: .65rem;
+    align-items: flex-start;
+    padding: .55rem .7rem;
+    border: 1px solid var(--line);
+    border-radius: .7rem;
+    min-height: 3rem;
+    cursor: pointer;
+  }
+  label.opt:has(input:checked) {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  label.opt input { width: 1.2rem; height: 1.2rem; margin-top: .25rem; flex: 0 0 auto; }
+  .pics { display: grid; gap: .7rem; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); }
+  .pic-opt {
+    border: 2px solid var(--line);
+    border-radius: .8rem;
+    padding: .45rem;
+    text-align: center;
+    cursor: pointer;
+    background: #fff;
+  }
+  .pic-opt:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+  .pic-opt svg { width: 100%; height: auto; display: block; }
+  .pic-opt .cap { font-weight: 700; margin: .3rem 0 .15rem; }
+  .blank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem .7rem;
+    align-items: center;
+    margin: .35rem 0;
+  }
+  .blank input[type="text"] {
+    min-height: 3rem;
+    min-width: 9rem;
+    flex: 1;
+    font-size: 1.15rem;
+    padding: .4rem .7rem;
+    border: 1px solid var(--line);
+    border-radius: .6rem;
+  }
+  .hint { font-size: .92rem; color: var(--muted); }
+  .score-box { text-align: center; padding: 1rem .5rem; }
+  .score-box .big { font-size: clamp(2rem, 7vmin, 3.4rem); font-weight: 800; color: var(--accent); }
+  .breakdown { display: grid; gap: .5rem; margin: 1rem 0; }
+  .breakdown div {
+    display: flex; justify-content: space-between; gap: 1rem;
+    padding: .55rem .8rem; border-radius: .6rem; background: #f7f3ec;
+  }
+  .ok { color: var(--good); font-weight: 800; }
+  .no { color: var(--bad); font-weight: 800; }
+  .script {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: .8rem;
+    padding: 1rem;
+    margin: .7rem 0 1.1rem;
+    white-space: pre-wrap;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+  .script p { margin: 0 0 .4rem; white-space: normal; }
+  .hk { padding: .05em .25em; border-radius: .3em; font-weight: 700; }
+  .legend { display: flex; flex-wrap: wrap; gap: .45rem; margin: .5rem 0 1rem; }
+  .legend span { font-size: .9rem; padding: .2rem .5rem; border-radius: .4rem; font-weight: 700; }
+  .ans-line { margin: .35rem 0; }
+  .hidden { display: none !important; }
+  .foot-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1rem; }
+  #parentScript {
+    background: #111827; color: #f8fafc;
+    padding: 1rem; border-radius: .8rem; margin-top: .8rem;
+    font-family: Georgia, "Times New Roman", serif; line-height: 1.7;
+  }
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+const MONTHS = {
+  january:1, jan:1, february:2, feb:2, march:3, mar:3, april:4, apr:4,
+  may:5, june:6, jun:6, july:7, jul:7, august:8, aug:8,
+  september:9, sept:9, sep:9, october:10, oct:10, november:11, nov:11,
+  december:12, dec:12
+};
+const ORDINALS = {
+  first:1, second:2, third:3, fourth:4, fifth:5, sixth:6, seventh:7,
+  eighth:8, ninth:9, tenth:10, eleventh:11, twelfth:12, thirteenth:13,
+  fourteenth:14, fifteenth:15, sixteenth:16, seventeenth:17, eighteenth:18,
+  nineteenth:19, twentieth:20, "twenty-first":21, twentyfirst:21,
+  "twenty-second":22, twentysecond:22, "twenty-third":23, twentythird:23,
+  "twenty-fourth":24, twentyfourth:24, "twenty-fifth":25, twentyfifth:25,
+  "twenty-sixth":26, twentysixth:26, "twenty-seventh":27, twentyseventh:27,
+  "twenty-eighth":28, twentyeighth:28, "twenty-ninth":29, twentyninth:29,
+  thirtieth:30, "thirty-first":31, thirtyfirst:31
+};
+const QCOLOR = {
+  1:"#ffe08a", 2:"#a8e6cf", 3:"#9ad0f5", 4:"#f5b7c8",
+  5:"#ffd4a3", 6:"#c5b4f0", 7:"#b5e48c", 8:"#f4a5ae",
+  9:"#ffe08a", 10:"#a8e6cf", 11:"#9ad0f5", 12:"#f5b7c8",
+  13:"#ffd4a3", 14:"#c5b4f0",
+  15:"#ffe08a", 16:"#a8e6cf", 17:"#9ad0f5", 18:"#f5b7c8",
+  19:"#ffd4a3", 20:"#c5b4f0", 21:"#b5e48c", 22:"#f4a5ae"
+};
+
+function hk(n, text) {
+  return `<span class="hk" style="background:${QCOLOR[n]||"#ffe08a"}" data-q="${n}">${text}</span>`;
+}
+
+function svgSeason(kind) {
+  if (kind === "winter") {
+    return `<svg viewBox="0 0 160 120" aria-hidden="true"><rect width="160" height="120" fill="#e8f1f6"/><rect y="95" width="160" height="25" fill="#c9d6b8"/><circle cx="30" cy="28" r="14" fill="#f4f7fb" stroke="#c5d0da"/><path d="M80 96 L80 50 M80 70 L62 58 M80 70 L98 58 M80 58 L66 46 M80 58 L94 46" stroke="#5a4636" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`;
+  }
+  if (kind === "autumn") {
+    return `<svg viewBox="0 0 160 120" aria-hidden="true"><rect width="160" height="120" fill="#f7efe3"/><rect y="95" width="160" height="25" fill="#c9d6b8"/><path d="M80 96 L80 58" stroke="#5a4636" stroke-width="4"/><ellipse cx="80" cy="46" rx="28" ry="22" fill="#d97706"/><circle cx="40" cy="88" r="6" fill="#c2410c"/><circle cx="118" cy="86" r="5" fill="#ea580c"/><circle cx="96" cy="92" r="5" fill="#d97706"/></svg>`;
+  }
+  return `<svg viewBox="0 0 160 120" aria-hidden="true"><rect width="160" height="120" fill="#c9e8ff"/><rect y="95" width="160" height="25" fill="#8fcd62"/><circle cx="28" cy="26" r="14" fill="#ffd166"/><path d="M80 96 L80 58" stroke="#5a4636" stroke-width="4"/><ellipse cx="80" cy="44" rx="30" ry="24" fill="#2f9e44"/></svg>`;
+}
+function svgEvent(kind) {
+  if (kind === "openDay") {
+    return `<svg viewBox="0 0 160 120" aria-hidden="true"><rect width="160" height="120" fill="#eef6fb"/><rect x="18" y="18" width="70" height="50" rx="4" fill="#f8fafc" stroke="#5a6573"/><rect x="26" y="26" width="18" height="14" fill="#9ad0f5"/><rect x="50" y="26" width="18" height="14" fill="#a8e6cf"/><rect x="26" y="44" width="42" height="14" fill="#ffe08a"/><circle cx="50" cy="90" r="10" fill="#e8b88a"/><circle cx="78" cy="90" r="10" fill="#c58b62"/><circle cx="108" cy="90" r="8" fill="#f0c8a0"/><rect x="42" y="100" width="16" height="16" fill="#1f6f8b"/><rect x="70" y="100" width="16" height="16" fill="#334155"/><rect x="100" y="98" width="16" height="18" fill="#be185d"/></svg>`;
+  }
+  if (kind === "sports") {
+    return `<svg viewBox="0 0 160 120" aria-hidden="true"><rect width="160" height="120" fill="#e5f6d8"/><rect y="88" width="160" height="32" fill="#7cbc4a"/><circle cx="48" cy="62" r="8" fill="#e8b88a"/><rect x="42" y="70" width="12" height="22" fill="#1d4ed8"/><circle cx="96" cy="52" r="8" fill="#c58b62"/><rect x="90" y="60" width="12" height="22" fill="#b91c1c"/><path d="M0 88 H160" stroke="#fff" stroke-width="3"/></svg>`;
+  }
+  if (kind === "christmas") {
+    return `<svg viewBox="0 0 160 120" aria-hidden="true"><rect width="160" height="120" fill="#e8eefc"/><polygon points="80,18 54,70 106,70" fill="#157a3a"/><polygon points="80,40 50,88 110,88" fill="#1b8f44"/><rect x="74" y="88" width="12" height="16" fill="#7c4a1e"/><circle cx="70" cy="50" r="4" fill="#e11d48"/><circle cx="92" cy="62" r="4" fill="#f0b429"/><circle cx="80" cy="74" r="4" fill="#2563eb"/></svg>`;
+  }
+  if (kind === "englishWeek") {
+    return `<svg viewBox="0 0 160 120" aria-hidden="true"><rect width="160" height="120" fill="#f3f7ff"/><rect x="30" y="28" width="100" height="64" rx="6" fill="#fff" stroke="#1f6f8b" stroke-width="3"/><text x="80" y="68" text-anchor="middle" font-size="28" font-weight="700" fill="#1f6f8b">ABC</text></svg>`;
+  }
+  if (kind === "examWeek") {
+    return `<svg viewBox="0 0 160 120" aria-hidden="true"><rect width="160" height="120" fill="#f6f3ee"/><rect x="36" y="24" width="88" height="64" fill="#fff" stroke="#5a6573"/><path d="M48 40 H100 M48 52 H96 M48 64 H88" stroke="#94a3b8" stroke-width="3"/><circle cx="58" cy="98" r="8" fill="#e8b88a"/><rect x="50" y="106" width="16" height="10" fill="#1f6f8b"/></svg>`;
+  }
+  return `<svg viewBox="0 0 160 120" aria-hidden="true"><rect width="160" height="120" fill="#eaf6d8"/><ellipse cx="80" cy="92" rx="54" ry="16" fill="#8fcd62"/><rect x="40" y="70" width="80" height="18" rx="6" fill="#f8e6b0" stroke="#c4a35a"/><circle cx="58" cy="60" r="8" fill="#e11d48"/><circle cx="80" cy="56" r="8" fill="#f0b429"/><rect x="100" y="52" width="22" height="16" rx="3" fill="#c4a35a"/></svg>`;
+}
+
+const papers = {
+  1: {
+    title: "模擬卷一",
+    total: 40,
+    parts: [
+      {
+        id: "A1", label: "Part A  Question 1–4", marks: 8,
+        intro: "Part A. Listen and tick the best answers. You will hear each recording twice. Now look at the questions.",
+        look: 8000,
+        lines: [
+          { role: "n", text: "Number 1 to Number 4." },
+          { role: "w", text: "Hello, Ken. What do you like doing in your free time?" },
+          { role: "k", text: "I like playing the violin and collecting stickers, but I do not like playing online games." },
+          { role: "w", text: "What about Mary?" },
+          { role: "k", text: "Mary likes doing ballet. She does not like making models or making crafts." },
+          { role: "w", text: "And Tom?" },
+          { role: "k", text: "Tom likes playing the drum and listening to music." }
+        ],
+        scriptHtml: `<p>Miss Wong: Hello, Ken. What do you like doing in your free time?</p>
+<p>Ken: I like ${hk(1,"playing the violin and collecting stickers")}, ${hk(1,"but I do not like playing online games")}.</p>
+<p>Miss Wong: What about Mary?</p>
+<p>Ken: Mary likes doing ballet. ${hk(2,"She does not like making models or making crafts")}.</p>
+<p>Miss Wong: And Tom?</p>
+<p>Ken: Tom likes ${hk(3,"playing the drum and listening to music")}.</p>
+<p>${hk(4,"Ken")}: I like playing the violin and ${hk(4,"collecting stickers")}...</p>`
+      },
+      {
+        id: "A2", label: "Part A  Question 5–8", marks: 8,
+        intro: "Number 5 to Number 8.",
+        look: 5000,
+        lines: [
+          { role: "s", text: "I like PE because I am good at playing sport." },
+          { role: "a", text: "I like Music because I am good at singing." },
+          { role: "p", text: "I like English because it is fun." },
+          { role: "l", text: "I like Visual Arts because I like making crafts." }
+        ],
+        scriptHtml: `<p>Sam: I like PE ${hk(5,"because I am good at playing sport")}.</p>
+<p>Amy: I like Music ${hk(6,"because I am good at singing")}.</p>
+<p>Peter: I like English ${hk(7,"because it is fun")}.</p>
+<p>Lily: I like Visual Arts ${hk(8,"because I like making crafts")}.</p>`
+      },
+      {
+        id: "A3", label: "Part A  Question 9–12", marks: 4,
+        intro: "Number 9 to Number 12. Listen and tick the word you hear.",
+        look: 4000,
+        phonics: [
+          { n: 9, word: "play" },
+          { n: 10, word: "rain" },
+          { n: 11, word: "king" },
+          { n: 12, word: "eat" }
+        ],
+        scriptHtml: `<p>9. ${hk(9,"play")}</p><p>10. ${hk(10,"rain")}</p><p>11. ${hk(11,"king")}</p><p>12. ${hk(12,"eat")}</p>`
+      },
+      {
+        id: "A4", label: "Part A  Question 13–14", marks: 4,
+        intro: "Number 13 and Number 14.",
+        look: 4000,
+        lines: [
+          { role: "j", text: "I like Chinese and Putonghua, but I do not like Computer Studies." },
+          { role: "b", text: "I like Maths. I do not like General Studies or Music." }
+        ],
+        scriptHtml: `<p>Jane: I like ${hk(13,"Chinese and Putonghua")}, but I do not like Computer Studies.</p>
+<p>Ben: I like Maths. ${hk(14,"I do not like General Studies or Music")}.</p>`
+      },
+      {
+        id: "B", label: "Part B  Question 15–22", marks: 16,
+        intro: "Part B. Listen and write or tick the answers. You will hear the recording twice. Now look at the questions.",
+        look: 8000,
+        lines: [
+          { role: "n", text: "Good morning, boys and girls. Here is the school news." },
+          { role: "n", text: "Open Day is on the twelfth of November. It is from nine o'clock in the morning to twelve o'clock noon." },
+          { role: "n", text: "The talent show is on the twenty-first of November." },
+          { role: "n", text: "Sports Day is from the third of December to the fifth of December." },
+          { role: "n", text: "The Christmas party is on the eighteenth of December. It starts at two thirty in the afternoon." },
+          { role: "n", text: "Parents' Day is in January." },
+          { role: "n", text: "It is winter now. Look at the trees in the playground. They have no leaves." }
+        ],
+        scriptHtml: `<p>Good morning, boys and girls. Here is the school news.</p>
+<p>Open Day is on ${hk(15,"the twelfth of November")}. It is ${hk(16,"from nine o'clock in the morning to twelve o'clock noon")}.</p>
+<p>The talent show is on ${hk(17,"the twenty-first of November")}.</p>
+<p>Sports Day is ${hk(18,"from the third of December to the fifth of December")}.</p>
+<p>The Christmas party is on ${hk(19,"the eighteenth of December")}. It starts at ${hk(19,"two thirty in the afternoon")}.</p>
+<p>Parents' Day is ${hk(20,"in January")}.</p>
+<p>${hk(21,"It is winter now")}. Look at the trees in the playground. ${hk(21,"They have no leaves")}.</p>
+<p>${hk(22,"Open Day")} is on the twelfth of November.</p>`
+      }
+    ],
+    questions: [
+      { id:"q1", part:"A1", n:1, marks:2, type:"mc", prompt:"1. What does Ken like doing?", options:[
+        "playing the violin and collecting stickers",
+        "playing the violin and playing online games",
+        "collecting stickers and playing online games"
+      ], answer:0 },
+      { id:"q2", part:"A1", n:2, marks:2, type:"mc", prompt:"2. What does Mary NOT like?", options:[
+        "doing ballet",
+        "making models or making crafts",
+        "listening to music"
+      ], answer:1 },
+      { id:"q3", part:"A1", n:3, marks:2, type:"mc", prompt:"3. What does Tom like?", options:[
+        "playing the violin and listening to music",
+        "playing the drum and playing online games",
+        "playing the drum and listening to music"
+      ], answer:2 },
+      { id:"q4", part:"A1", n:4, marks:2, type:"mc", prompt:"4. Who likes collecting stickers?", options:["Ken","Mary","Tom"], answer:0 },
+      { id:"q5", part:"A2", n:5, marks:2, type:"mc", prompt:"5. Why does Sam like PE?", options:[
+        "because he is good at singing",
+        "because he is good at playing sport",
+        "because it is fun"
+      ], answer:1 },
+      { id:"q6", part:"A2", n:6, marks:2, type:"mc", prompt:"6. Why does Amy like Music?", options:[
+        "because she is good at singing",
+        "because she likes making crafts",
+        "because it is fun"
+      ], answer:0 },
+      { id:"q7", part:"A2", n:7, marks:2, type:"mc", prompt:"7. Why does Peter like English?", options:[
+        "because he is good at playing sport",
+        "because it is fun",
+        "because he is good at singing"
+      ], answer:1 },
+      { id:"q8", part:"A2", n:8, marks:2, type:"mc", prompt:"8. Why does Lily like Visual Arts?", options:[
+        "because she is good at singing",
+        "because it is fun",
+        "because she likes making crafts"
+      ], answer:2 },
+      { id:"q9", part:"A3", n:9, marks:1, type:"mc", prompt:"9. Listen and tick the word you hear.", options:["play","plan","plain"], answer:0 },
+      { id:"q10", part:"A3", n:10, marks:1, type:"mc", prompt:"10. Listen and tick the word you hear.", options:["ran","rain","run"], answer:1 },
+      { id:"q11", part:"A3", n:11, marks:1, type:"mc", prompt:"11. Listen and tick the word you hear.", options:["kin","king","keen"], answer:1 },
+      { id:"q12", part:"A3", n:12, marks:1, type:"mc", prompt:"12. Listen and tick the word you hear.", options:["at","ate","eat"], answer:2 },
+      { id:"q13", part:"A4", n:13, marks:2, type:"mc", prompt:"13. What does Jane like?", options:[
+        "Chinese and Putonghua",
+        "Chinese and Computer Studies",
+        "Putonghua and Computer Studies"
+      ], answer:0 },
+      { id:"q14", part:"A4", n:14, marks:2, type:"mc", prompt:"14. What does Ben NOT like?", options:[
+        "Maths",
+        "General Studies or Music",
+        "Chinese or Putonghua"
+      ], answer:1 },
+      { id:"q15", part:"B", n:15, marks:2, type:"text", prompt:"15. Open Day is on ________.", hint:"請寫成 12/11 或 12th November", accept:"date", expect:{d:12,m:11}, show:"12/11" },
+      { id:"q16", part:"B", n:16, marks:2, type:"text", prompt:"16. Open Day is from ________ to ________.", hint:"時間，例如 9:00 a.m. to 12:00 noon", accept:"timerange", expect:{t1:"9:00am", t2:"12:00noon"}, show:"9:00 a.m. to 12:00 noon" },
+      { id:"q17", part:"B", n:17, marks:2, type:"text", prompt:"17. The talent show is on ________.", hint:"請寫成 21/11", accept:"date", expect:{d:21,m:11}, show:"21/11" },
+      { id:"q18", part:"B", n:18, marks:2, type:"text", prompt:"18. Sports Day is from ________ to ________.", hint:"請寫成 3/12 to 5/12", accept:"daterange", expect:[{d:3,m:12},{d:5,m:12}], show:"3/12 to 5/12" },
+      { id:"q19", part:"B", n:19, marks:2, type:"text", prompt:"19. The Christmas party is on ________. It starts at ________.", hint:"日期和時間，例如 18/12，2:30 p.m.", accept:"datetime", expect:{d:18,m:12,t:"2:30pm"}, show:"18/12, 2:30 p.m." },
+      { id:"q20", part:"B", n:20, marks:2, type:"text", prompt:"20. Parents' Day is in ________.", hint:"月份", accept:"month", expect:1, show:"January" },
+      { id:"q21", part:"B", n:21, marks:2, type:"pic", prompt:"21. What season is it now?", options:[
+        {key:"autumn", label:"Picture A", svg:"autumn"},
+        {key:"winter", label:"Picture B", svg:"winter"},
+        {key:"summer", label:"Picture C", svg:"summer"}
+      ], answer:1 },
+      { id:"q22", part:"B", n:22, marks:2, type:"pic", prompt:"22. Which event is on the twelfth of November?", options:[
+        {key:"sports", label:"Picture A", svg:"sports"},
+        {key:"christmas", label:"Picture B", svg:"christmas"},
+        {key:"openDay", label:"Picture C", svg:"openDay"}
+      ], answer:2 }
+    ]
+  },
+  2: {
+    title: "模擬卷二",
+    total: 40,
+    parts: [
+      {
+        id: "A1", label: "Part A  Question 1–4", marks: 8,
+        intro: "Part A. Listen and tick the best answers. You will hear each recording twice. Now look at the questions.",
+        look: 8000,
+        lines: [
+          { role: "n", text: "Number 1 to Number 4." },
+          { role: "t", text: "Hello, Ella. What do you like doing in your free time?" },
+          { role: "e", text: "I like collecting cards and making models, but I do not like playing the drum." },
+          { role: "t", text: "What about Jack?" },
+          { role: "e", text: "Jack likes playing online games. He does not like doing ballet or listening to music." },
+          { role: "t", text: "And Paula?" },
+          { role: "e", text: "Paula likes making crafts and playing the violin." }
+        ],
+        scriptHtml: `<p>Miss Lee: Hello, Ella. What do you like doing in your free time?</p>
+<p>Ella: I like ${hk(1,"collecting cards and making models")}, ${hk(1,"but I do not like playing the drum")}.</p>
+<p>Miss Lee: What about Jack?</p>
+<p>Ella: Jack likes playing online games. ${hk(2,"He does not like doing ballet or listening to music")}.</p>
+<p>Miss Lee: And Paula?</p>
+<p>Ella: Paula likes ${hk(3,"making crafts and playing the violin")}.</p>
+<p>${hk(4,"Ella")}: ... ${hk(4,"but I do not like playing the drum")}.</p>`
+      },
+      {
+        id: "A2", label: "Part A  Question 5–8", marks: 8,
+        intro: "Number 5 to Number 8.",
+        look: 5000,
+        lines: [
+          { role: "p", text: "I like Computer Studies because I am good at surfing the Internet." },
+          { role: "k", text: "I like PE because it is fun." },
+          { role: "h", text: "I like Music because I am good at playing the violin." },
+          { role: "n", text: "I like Chinese because I am good at reading." }
+        ],
+        scriptHtml: `<p>Paul: I like Computer Studies ${hk(5,"because I am good at surfing the Internet")}.</p>
+<p>Katy: I like PE ${hk(6,"because it is fun")}.</p>
+<p>Hugo: I like Music ${hk(7,"because I am good at playing the violin")}.</p>
+<p>Nina: I like Chinese ${hk(8,"because I am good at reading")}.</p>`
+      },
+      {
+        id: "A3", label: "Part A  Question 9–12", marks: 4,
+        intro: "Number 9 to Number 12. Listen and tick the word you hear.",
+        look: 4000,
+        phonics: [
+          { n: 9, word: "make" },
+          { n: 10, word: "day" },
+          { n: 11, word: "sing" },
+          { n: 12, word: "tea" }
+        ],
+        scriptHtml: `<p>9. ${hk(9,"make")}</p><p>10. ${hk(10,"day")}</p><p>11. ${hk(11,"sing")}</p><p>12. ${hk(12,"tea")}</p>`
+      },
+      {
+        id: "A4", label: "Part A  Question 13–14", marks: 4,
+        intro: "Number 13 and Number 14.",
+        look: 4000,
+        lines: [
+          { role: "m", text: "I like Maths and General Studies, but I do not like Visual Arts." },
+          { role: "u", text: "I like English. I do not like PE or Putonghua." }
+        ],
+        scriptHtml: `<p>Mark: I like ${hk(13,"Maths and General Studies")}, but I do not like Visual Arts.</p>
+<p>Sue: I like English. ${hk(14,"I do not like PE or Putonghua")}.</p>`
+      },
+      {
+        id: "B", label: "Part B  Question 15–22", marks: 16,
+        intro: "Part B. Listen and write or tick the answers. You will hear the recording twice. Now look at the questions.",
+        look: 8000,
+        lines: [
+          { role: "n", text: "Good morning, children. Please listen carefully." },
+          { role: "n", text: "Exam Week is on the fifteenth of November." },
+          { role: "n", text: "English Week is from the eighth of December to the twelfth of December. It starts at eight thirty in the morning." },
+          { role: "n", text: "The school picnic is on the second of December. We go at nine o'clock in the morning." },
+          { role: "n", text: "The talent show is on the twentieth of November. It starts at one thirty in the afternoon." },
+          { role: "n", text: "Sports Day is in February." },
+          { role: "n", text: "It is autumn now. Look at the trees. The leaves are yellow and they are falling." }
+        ],
+        scriptHtml: `<p>Good morning, children. Please listen carefully.</p>
+<p>Exam Week is on ${hk(15,"the fifteenth of November")}.</p>
+<p>English Week is ${hk(16,"from the eighth of December to the twelfth of December")}. It starts at ${hk(17,"eight thirty in the morning")}.</p>
+<p>The school picnic is on ${hk(18,"the second of December")}. We go at nine o'clock in the morning.</p>
+<p>The talent show is on ${hk(19,"the twentieth of November")}. It starts at ${hk(19,"one thirty in the afternoon")}.</p>
+<p>Sports Day is ${hk(20,"in February")}.</p>
+<p>${hk(21,"It is autumn now")}. Look at the trees. ${hk(21,"The leaves are yellow and they are falling")}.</p>
+<p>${hk(22,"English Week")} is from the eighth of December to the twelfth of December.</p>`
+      }
+    ],
+    questions: [
+      { id:"q1", part:"A1", n:1, marks:2, type:"mc", prompt:"1. What does Ella like doing?", options:[
+        "collecting cards and making models",
+        "collecting cards and playing the drum",
+        "making models and playing the drum"
+      ], answer:0 },
+      { id:"q2", part:"A1", n:2, marks:2, type:"mc", prompt:"2. What does Jack NOT like?", options:[
+        "playing online games",
+        "doing ballet or listening to music",
+        "making crafts or playing the violin"
+      ], answer:1 },
+      { id:"q3", part:"A1", n:3, marks:2, type:"mc", prompt:"3. What does Paula like?", options:[
+        "collecting cards and making models",
+        "playing online games and playing the violin",
+        "making crafts and playing the violin"
+      ], answer:2 },
+      { id:"q4", part:"A1", n:4, marks:2, type:"mc", prompt:"4. Who does not like playing the drum?", options:["Ella","Jack","Paula"], answer:0 },
+      { id:"q5", part:"A2", n:5, marks:2, type:"mc", prompt:"5. Why does Paul like Computer Studies?", options:[
+        "because he is good at surfing the Internet",
+        "because it is fun",
+        "because he is good at reading"
+      ], answer:0 },
+      { id:"q6", part:"A2", n:6, marks:2, type:"mc", prompt:"6. Why does Katy like PE?", options:[
+        "because she is good at playing the violin",
+        "because it is fun",
+        "because she is good at reading"
+      ], answer:1 },
+      { id:"q7", part:"A2", n:7, marks:2, type:"mc", prompt:"7. Why does Hugo like Music?", options:[
+        "because it is fun",
+        "because he is good at surfing the Internet",
+        "because he is good at playing the violin"
+      ], answer:2 },
+      { id:"q8", part:"A2", n:8, marks:2, type:"mc", prompt:"8. Why does Nina like Chinese?", options:[
+        "because she is good at reading",
+        "because it is fun",
+        "because she is good at playing the violin"
+      ], answer:0 },
+      { id:"q9", part:"A3", n:9, marks:1, type:"mc", prompt:"9. Listen and tick the word you hear.", options:["make","mike","mack"], answer:0 },
+      { id:"q10", part:"A3", n:10, marks:1, type:"mc", prompt:"10. Listen and tick the word you hear.", options:["die","dad","day"], answer:2 },
+      { id:"q11", part:"A3", n:11, marks:1, type:"mc", prompt:"11. Listen and tick the word you hear.", options:["sing","sin","seen"], answer:0 },
+      { id:"q12", part:"A3", n:12, marks:1, type:"mc", prompt:"12. Listen and tick the word you hear.", options:["tea","tee","ten"], answer:0 },
+      { id:"q13", part:"A4", n:13, marks:2, type:"mc", prompt:"13. What does Mark like?", options:[
+        "Maths and Visual Arts",
+        "Maths and General Studies",
+        "General Studies and Visual Arts"
+      ], answer:1 },
+      { id:"q14", part:"A4", n:14, marks:2, type:"mc", prompt:"14. What does Sue NOT like?", options:[
+        "English",
+        "Maths or General Studies",
+        "PE or Putonghua"
+      ], answer:2 },
+      { id:"q15", part:"B", n:15, marks:2, type:"text", prompt:"15. Exam Week is on ________.", hint:"請寫成 15/11", accept:"date", expect:{d:15,m:11}, show:"15/11" },
+      { id:"q16", part:"B", n:16, marks:2, type:"text", prompt:"16. English Week is from ________ to ________.", hint:"請寫成 8/12 to 12/12", accept:"daterange", expect:[{d:8,m:12},{d:12,m:12}], show:"8/12 to 12/12" },
+      { id:"q17", part:"B", n:17, marks:2, type:"text", prompt:"17. English Week starts at ________.", hint:"時間，例如 8:30 a.m.", accept:"time", expect:"8:30am", show:"8:30 a.m." },
+      { id:"q18", part:"B", n:18, marks:2, type:"text", prompt:"18. The school picnic is on ________.", hint:"請寫成 2/12", accept:"date", expect:{d:2,m:12}, show:"2/12" },
+      { id:"q19", part:"B", n:19, marks:2, type:"text", prompt:"19. The talent show is on ________. It starts at ________.", hint:"日期和時間，例如 20/11，1:30 p.m.", accept:"datetime", expect:{d:20,m:11,t:"1:30pm"}, show:"20/11, 1:30 p.m." },
+      { id:"q20", part:"B", n:20, marks:2, type:"text", prompt:"20. Sports Day is in ________.", hint:"月份", accept:"month", expect:2, show:"February" },
+      { id:"q21", part:"B", n:21, marks:2, type:"pic", prompt:"21. What season is it now?", options:[
+        {key:"winter", label:"Picture A", svg:"winter"},
+        {key:"summer", label:"Picture B", svg:"summer"},
+        {key:"autumn", label:"Picture C", svg:"autumn"}
+      ], answer:2 },
+      { id:"q22", part:"B", n:22, marks:2, type:"pic", prompt:"22. Which event is from the eighth of December to the twelfth of December?", options:[
+        {key:"examWeek", label:"Picture A", svg:"examWeek"},
+        {key:"englishWeek", label:"Picture B", svg:"englishWeek"},
+        {key:"picnic", label:"Picture C", svg:"picnic"}
+      ], answer:1 }
+    ]
+  }
+};
+
+const PITCH = { n:1, w:1.15, t:1.15, k:0.95, s:0.9, a:1.2, p:0.85, l:1.18, j:1.16, b:0.9, e:1.18, h:0.88, m:0.92, u:1.14 };
+
+let state = "home";
+let paperId = 1;
+let plays = {};
+let speaking = false;
+let cancelled = false;
+let showReview = false;
+let showParent = false;
+let voiceReady = false;
+
+function getVoice() {
+  const voices = window.speechSynthesis ? speechSynthesis.getVoices() : [];
+  const gb = voices.find(v => /en-GB/i.test(v.lang) && /female|woman|Kate|Serena|Google UK English Female/i.test(v.name))
+    || voices.find(v => /en-GB/i.test(v.lang))
+    || voices.find(v => /^en/i.test(v.lang) && /female|woman|Samantha|Karen/i.test(v.name))
+    || voices.find(v => /^en/i.test(v.lang));
+  return gb || null;
+}
+function unlockSpeech() {
+  if (!window.speechSynthesis) return;
+  try {
+    const u = new SpeechSynthesisUtterance(" ");
+    u.lang = "en-GB";
+    u.volume = 0;
+    speechSynthesis.speak(u);
+    speechSynthesis.cancel();
+  } catch (e) {}
+  speechSynthesis.getVoices();
+  if (speechSynthesis.onvoiceschanged !== undefined) {
+    speechSynthesis.onvoiceschanged = () => { voiceReady = true; };
+  }
+  voiceReady = true;
+}
+function speak(text, pitch) {
+  return new Promise((resolve) => {
+    if (cancelled) return resolve(false);
+    if (!window.speechSynthesis) return resolve(false);
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "en-GB";
+    u.rate = 0.9;
+    u.pitch = pitch || 1;
+    u.volume = 1;
+    const v = getVoice();
+    if (v) u.voice = v;
+    u.onend = () => resolve(true);
+    u.onerror = () => resolve(false);
+    speechSynthesis.speak(u);
+  });
+}
+function silence(ms) {
+  return new Promise((resolve) => {
+    const t = setTimeout(() => resolve(), ms);
+    const iv = setInterval(() => {
+      if (cancelled) { clearTimeout(t); clearInterval(iv); resolve(); }
+    }, 120);
+    setTimeout(() => clearInterval(iv), ms + 50);
+  });
+}
+function stopSpeech() {
+  cancelled = true;
+  speaking = false;
+  if (window.speechSynthesis) speechSynthesis.cancel();
+}
+
+function compact(s) {
+  return String(s || "")
+    .toLowerCase()
+    .replace(/[’']/g, "")
+    .replace(/a\.?\s*m\.?/g, "am")
+    .replace(/p\.?\s*m\.?/g, "pm")
+    .replace(/o'?clock/g, "")
+    .replace(/in the morning/g, "am")
+    .replace(/in the afternoon/g, "pm")
+    .replace(/midday|noon/g, "noon")
+    .replace(/to|–|—|~/g, "-")
+    .replace(/(\d)\.(\d)/g, "$1:$2")
+    .replace(/[,.]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+function parseDate(str) {
+  const raw = compact(str).replace(/(\d)(st|nd|rd|th)/g, "$1");
+  let m = raw.match(/^(\d{1,2})\s*[\/\-]\s*(\d{1,2})$/);
+  if (m) return { d:+m[1], m:+m[2] };
+  m = raw.match(/^the\s+([a-z\-]+)\s+of\s+([a-z]+)$/);
+  if (m && ORDINALS[m[1]] && MONTHS[m[2]]) return { d:ORDINALS[m[1]], m:MONTHS[m[2]] };
+  m = raw.match(/^(\d{1,2})\s+([a-z]+)$/);
+  if (m && MONTHS[m[2]]) return { d:+m[1], m:MONTHS[m[2]] };
+  m = raw.match(/^([a-z]+)\s+(\d{1,2})$/);
+  if (m && MONTHS[m[1]]) return { d:+m[2], m:MONTHS[m[1]] };
+  const ord = raw.match(/^the\s+([a-z\-]+)\s+of\s+([a-z]+)/);
+  if (ord && ORDINALS[ord[1]] && MONTHS[ord[2]]) return { d:ORDINALS[ord[1]], m:MONTHS[ord[2]] };
+  return null;
+}
+function parseMonth(str) {
+  const raw = compact(str).replace(/^in\s+/, "");
+  return MONTHS[raw] || null;
+}
+function parseTime(str) {
+  let raw = compact(str);
+  raw = raw.replace(/half past two/g, "2:30pm").replace(/half past one/g, "1:30pm")
+    .replace(/two thirty/g, "2:30").replace(/one thirty/g, "1:30")
+    .replace(/eight thirty/g, "8:30").replace(/nine\s*(am)?$/g, "9:00am")
+    .replace(/twelve\s*(noon)?/g, "12:00noon");
+  let m = raw.match(/(\d{1,2})\s*[:.]\s*(\d{2})\s*(am|pm|noon)?/);
+  if (m) {
+    const h = +m[1], min = m[2], ap = m[3] || "";
+    return `${h}:${min}${ap}`;
+  }
+  m = raw.match(/(\d{1,2})\s+(\d{2})\s*(am|pm|noon)?/);
+  if (m) {
+    const h = +m[1], min = m[2], ap = m[3] || "";
+    return `${h}:${min}${ap}`;
+  }
+  m = raw.match(/\b(\d{1,2})\s*(am|pm)\b/);
+  if (m) return `${m[1]}:00${m[2]}`;
+  if (/12:00noon|12noon|noon/.test(raw)) return "12:00noon";
+  return raw.replace(/\s+/g, "");
+}
+function timeEq(a, b) {
+  const na = parseTime(a), nb = parseTime(b);
+  const norm = (t) => {
+    const m = String(t).match(/(\d{1,2}):(\d{2})(am|pm|noon)?/);
+    if (!m) return t;
+    return `${+m[1]}:${m[2]}${m[3]||""}`;
+  };
+  return norm(na) === norm(nb);
+}
+function dateEq(val, expect) {
+  const got = parseDate(val);
+  return got && got.d === expect.d && got.m === expect.m;
+}
+function checkText(q, val) {
+  const s = compact(val);
+  if (!s) return false;
+  if (q.accept === "date") return dateEq(s, q.expect);
+  if (q.accept === "month") return parseMonth(s) === q.expect;
+  if (q.accept === "time") return timeEq(s, q.expect);
+  if (q.accept === "daterange") {
+    const parts = s.split("-").map(x => x.trim()).filter(Boolean);
+    if (parts.length < 2) {
+      const all = s.match(/(\d{1,2}\s*[\/\-]\s*\d{1,2}|the\s+[a-z\-]+\s+of\s+[a-z]+|\d{1,2}\s+[a-z]+)/g) || [];
+      if (all.length >= 2) return dateEq(all[0], q.expect[0]) && dateEq(all[1], q.expect[1]);
+      return false;
+    }
+    return dateEq(parts[0], q.expect[0]) && dateEq(parts[1], q.expect[1]);
+  }
+  if (q.accept === "timerange") {
+    const parts = s.split("-").map(x => x.trim()).filter(Boolean);
+    if (parts.length < 2) return false;
+    const end = /noon/.test(parts[1]) ? "12:00noon" : parts[1];
+    return timeEq(parts[0], q.expect.t1) && (timeEq(end, q.expect.t2) || (q.expect.t2 === "12:00noon" && /noon|12:00/.test(parts[1])));
+  }
+  if (q.accept === "datetime") {
+    let got = parseDate(s);
+    if (!got) {
+      const m = s.match(/(\d{1,2}\s*[\/\-]\s*\d{1,2}|the\s+[a-z\-]+\s+of\s+[a-z]+|\d{1,2}\s+[a-z]+|[a-z]+\s+\d{1,2})/);
+      if (m) got = parseDate(m[0]);
+    }
+    const okDate = got && got.d === q.expect.d && got.m === q.expect.m;
+    const okTime = timeEq(s, q.expect.t);
+    return !!(okDate && okTime);
+  }
+  return false;
+}
+function getVal(id) {
+  const picked = document.querySelector('input[name="'+id+'"]:checked');
+  if (picked) return picked.value;
+  const el = document.getElementById(id);
+  return el ? String(el.value || "") : "";
+}
+function unanswered(paper) {
+  return paper.questions.filter(q => {
+    if (q.type === "text") return !String(getVal(q.id)).trim();
+    return getVal(q.id) === "";
+  }).length;
+}
+function grade(paper) {
+  let score = 0;
+  const detail = [];
+  for (const q of paper.questions) {
+    let ok = false;
+    let you = "";
+    if (q.type === "text") {
+      you = String(getVal(q.id)).trim();
+      ok = checkText(q, you);
+    } else {
+      you = getVal(q.id);
+      ok = you !== "" && +you === q.answer;
+    }
+    if (ok) score += q.marks;
+    detail.push({ q, ok, you });
+  }
+  return { score, detail };
+}
+
+function renderHome() {
+  stopSpeech();
+  cancelled = false;
+  document.getElementById("app").innerHTML = `
+    <div class="card">
+      <h1>3D 英文聆聽模擬練習</h1>
+      <p>兩篇都按第一次評估的範圍來出：Unit 1 至 Unit 3 的嗜好、科目、學校活動，以及聽 <b>and / or / but</b>、<b>because</b>、日期時間，和一小部分 Phonics。題型參考二年級聆聽卷（選擇、填日期、看圖細節），<b>不是</b>校方原卷。每篇 40 分，建議約 30 分鐘。</p>
+      <div class="note">開考後，題目會顯示，錄音稿會隱藏。系統只用英文朗讀，每段讀兩次。做完交卷後才看分數；再點「查看錄音稿和答案」，正確答案相關的詞會用顏色標出。</div>
+      <div class="paper-pick">
+        <button type="button" data-go="1"><strong>模擬卷一</strong><span>嗜好配對、because、日期 12/11、冬天圖細節</span></button>
+        <button type="button" data-go="2"><strong>模擬卷二</strong><span>另一組人物與活動、日期 15/11 與 8/12–12/12、秋天圖細節</span></button>
+      </div>
+    </div>`;
+  document.querySelectorAll("[data-go]").forEach(btn => {
+    btn.onclick = () => { paperId = +btn.dataset.go; renderIntro(); };
+  });
+}
+function renderIntro() {
+  const p = papers[paperId];
+  document.getElementById("app").innerHTML = `
+    <div class="card">
+      <h1>${p.title}</h1>
+      <p class="muted">40 分　｜　約 30 分鐘　｜　朗讀只有英文</p>
+      <div class="note">
+        <p>按「開始考試」後，請先看題，然後仔細聽。每段錄音會自動用英文讀兩次。</p>
+        <p>可以一邊聽一邊作答。全部做完再按「交卷」。</p>
+        <p>錄音稿預設隱藏，交卷後才可以查看。</p>
+      </div>
+      <div class="row">
+        <button type="button" id="startBtn">開始考試</button>
+        <button type="button" class="secondary" id="backBtn">返回</button>
+      </div>
+    </div>`;
+  document.getElementById("backBtn").onclick = renderHome;
+  document.getElementById("startBtn").onclick = () => startExam();
+}
+function qBlock(q) {
+  if (q.type === "mc") {
+    const opts = q.options.map((op, i) =>
+      `<label class="opt"><input type="radio" name="${q.id}" value="${i}"><span>${String.fromCharCode(65+i)}. ${op}</span></label>`
+    ).join("");
+    return `<div class="q" id="box-${q.id}"><div class="qn">${q.prompt}</div><div class="opts">${opts}</div></div>`;
+  }
+  if (q.type === "pic") {
+    const opts = q.options.map((op, i) =>
+      `<label class="pic-opt"><input type="radio" name="${q.id}" value="${i}" class="hidden">${svgSeasonOrEvent(op.svg)}<div class="cap">${op.label}</div></label>`
+    ).join("");
+    return `<div class="q" id="box-${q.id}"><div class="qn">${q.prompt}</div><div class="pics">${opts}</div></div>`;
+  }
+  return `<div class="q" id="box-${q.id}"><div class="qn">${q.prompt}</div><div class="blank"><input type="text" id="${q.id}" autocomplete="off" spellcheck="false"></div><div class="hint">${q.hint||""}</div></div>`;
+}
+function svgSeasonOrEvent(kind) {
+  if (kind === "winter" || kind === "autumn" || kind === "summer") return svgSeason(kind);
+  return svgEvent(kind);
+}
+function renderExam() {
+  const p = papers[paperId];
+  const groups = {};
+  p.questions.forEach(q => { (groups[q.part] ||= []).push(q); });
+  const body = p.parts.map(part => `
+    <section class="part" id="part-${part.id}">
+      <h2>${part.label}　（${part.marks} marks）</h2>
+      ${groups[part.id].map(qBlock).join("")}
+    </section>`).join("");
+  document.getElementById("app").innerHTML = `
+    <div class="status" id="statusBar">
+      <div class="now" id="nowText">Look at the questions now.</div>
+      <div class="row">
+        <button type="button" class="secondary" id="pauseBtn">Pause</button>
+        <button type="button" class="danger" id="submitBtn">交卷</button>
+      </div>
+    </div>
+    <div class="card">
+      <h1>${p.title}</h1>
+      <p class="muted">Listen and answer. The recording is in English only. You will hear each part twice.</p>
+      ${body}
+      <div class="foot-actions">
+        <button type="button" class="secondary" id="parentBtn">沒有聲音？改由家長朗讀</button>
+        <button type="button" class="danger" id="submitBtn2">交卷</button>
+      </div>
+      <div id="parentBox" class="hidden"></div>
+    </div>`;
+  document.getElementById("submitBtn").onclick = trySubmit;
+  document.getElementById("submitBtn2").onclick = trySubmit;
+  document.getElementById("pauseBtn").onclick = togglePause;
+  document.getElementById("parentBtn").onclick = toggleParent;
+}
+function togglePause() {
+  if (!window.speechSynthesis) return;
+  const btn = document.getElementById("pauseBtn");
+  if (speechSynthesis.paused) { speechSynthesis.resume(); if (btn) btn.textContent = "Pause"; }
+  else { speechSynthesis.pause(); if (btn) btn.textContent = "Resume"; }
+}
+function plainScript(part) {
+  if (part.phonics) return part.phonics.map(x => `${x.n}. ${x.word}`).join("\n");
+  return (part.lines || []).map(l => l.text).join("\n");
+}
+function toggleParent() {
+  showParent = !showParent;
+  const box = document.getElementById("parentBox");
+  if (!box) return;
+  if (!showParent) { box.className = "hidden"; box.innerHTML = ""; return; }
+  const p = papers[paperId];
+  box.className = "";
+  box.innerHTML = `<div id="parentScript"><p style="font-weight:800">For the parent: please read this aloud in English. The student should look at the questions, not this script.</p>${
+    p.parts.map(part => `<p><b>${part.label}</b></p><p>${plainScript(part).replace(/\n/g,"<br>")}</p>`).join("")
+  }</div>`;
+}
+function setNow(text, partId) {
+  const el = document.getElementById("nowText");
+  if (el) el.textContent = text;
+  document.querySelectorAll(".q").forEach(n => n.classList.remove("on"));
+  const p = papers[paperId];
+  p.questions.filter(q => q.part === partId).forEach(q => {
+    const box = document.getElementById("box-" + q.id);
+    if (box) box.classList.add("on");
+  });
+  const sec = document.getElementById("part-" + partId);
+  if (sec) sec.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+async function playPart(part, roundLabel) {
+  setNow(`${part.label}  ·  ${roundLabel}`, part.id);
+  const okIntro = await speak(part.intro, 1);
+  if (cancelled) return okIntro;
+  await silence(part.look || 4000);
+  if (cancelled) return okIntro;
+  if (part.phonics) {
+    for (const item of part.phonics) {
+      if (cancelled) return false;
+      await speak("Number " + item.n + ".", 1);
+      await silence(400);
+      await speak(item.word, 1);
+      await silence(700);
+      await speak(item.word, 1);
+      await silence(800);
+    }
+    return true;
+  }
+  for (const line of part.lines || []) {
+    if (cancelled) return false;
+    await speak(line.text, PITCH[line.role] || 1);
+    await silence(350);
+  }
+  return true;
+}
+async function runExamAudio() {
+  speaking = true;
+  cancelled = false;
+  const p = papers[paperId];
+  for (const part of p.parts) {
+    if (cancelled) break;
+    await playPart(part, "first time");
+    if (cancelled) break;
+    await silence(1200);
+    await playPart(part, "second time");
+    if (cancelled) break;
+    await silence(1000);
+  }
+  if (!cancelled) {
+    await speak("This is the end of the listening test. Please check your answers and submit.", 1);
+    setNow("This is the end of the listening test. Please check your answers and submit.");
+  }
+  speaking = false;
+}
+function startExam() {
+  unlockSpeech();
+  showParent = false;
+  showReview = false;
+  plays = {};
+  renderExam();
+  runExamAudio();
+}
+function trySubmit() {
+  const p = papers[paperId];
+  const left = unanswered(p);
+  if (left > 0) {
+    const yes = confirm(`還有 ${left} 題未作答。確定要交卷嗎？`);
+    if (!yes) return;
+  }
+  stopSpeech();
+  state = "result";
+  renderResult();
+}
+function correctLabel(q) {
+  if (q.type === "text") return q.show;
+  if (q.type === "pic") return q.options[q.answer].label;
+  return String.fromCharCode(65 + q.answer) + ". " + q.options[q.answer];
+}
+function yourLabel(q, you) {
+  if (you === "" || you == null) return "（未作答）";
+  if (q.type === "text") return you;
+  if (q.type === "pic") return q.options[+you] ? q.options[+you].label : you;
+  return q.options[+you] ? String.fromCharCode(65 + +you) + ". " + q.options[+you] : you;
+}
+function renderResult() {
+  const p = papers[paperId];
+  const { score, detail } = grade(p);
+  const byPart = {};
+  p.parts.forEach(part => {
+    const items = detail.filter(d => d.q.part === part.id);
+    const got = items.reduce((s, d) => s + (d.ok ? d.q.marks : 0), 0);
+    byPart[part.id] = { got, max: part.marks, wrong: items.filter(d => !d.ok).length };
+  });
+  const pct = Math.round(score / p.total * 100);
+  const review = showReview ? renderReview(p, detail) : "";
+  document.getElementById("app").innerHTML = `
+    <div class="card score-box">
+      <h1>${p.title}　成績</h1>
+      <div class="big">${score}／${p.total}</div>
+      <p>${pct} 分（百分計）</p>
+      <div class="breakdown">
+        ${p.parts.map(part => `<div><span>${part.label}</span><span>${byPart[part.id].got}／${part.marks}</span></div>`).join("")}
+      </div>
+      <div class="row" style="justify-content:center">
+        <button type="button" id="viewBtn">${showReview ? "收起錄音稿和答案" : "查看錄音稿和答案"}</button>
+        <button type="button" class="secondary" id="retryBtn">再做同一篇</button>
+        <button type="button" class="secondary" id="homeBtn">返回選擇</button>
+      </div>
+    </div>
+    ${review}`;
+  document.getElementById("viewBtn").onclick = () => { showReview = !showReview; renderResult(); };
+  document.getElementById("retryBtn").onclick = () => { cancelled = false; renderIntro(); };
+  document.getElementById("homeBtn").onclick = renderHome;
+}
+function renderReview(p, detail) {
+  const legend = Object.keys(QCOLOR).filter(n => +n <= 22).map(n =>
+    `<span style="background:${QCOLOR[n]}">Q${n}</span>`
+  ).join("");
+  const scripts = p.parts.map(part => `
+    <h3>${part.label}</h3>
+    <div class="script">${part.scriptHtml}</div>
+  `).join("");
+  const ans = detail.map(d => `
+    <div class="ans-line">
+      <b>Q${d.q.n}</b>
+      ${d.ok ? '<span class="ok">正確</span>' : '<span class="no">不正確</span>'}
+      ｜ 你的答案：${yourLabel(d.q, d.you)}
+      ｜ 正確答案：${correctLabel(d.q)}
+    </div>`).join("");
+  return `<div class="card">
+    <h2>錄音稿和答案</h2>
+    <p class="muted">顏色標示的是跟該題答案相關的詞句。黃、綠、藍等色塊旁邊的題號見下圖例。</p>
+    <div class="legend">${legend}</div>
+    ${scripts}
+    <h2>逐題對照</h2>
+    ${ans}
+  </div>`;
+}
+
+if (window.speechSynthesis) {
+  speechSynthesis.getVoices();
+  speechSynthesis.onvoiceschanged = () => { voiceReady = true; };
+}
+renderHome();
+</script>
+</body>
+</html>
