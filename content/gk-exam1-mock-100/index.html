@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>常識模擬題 100　投屏練習（2026-11-17）</title>
+<style>
+
+  :root {
+    --bg: #f4efe6;
+    --ink: #1c2430;
+    --muted: #5a6573;
+    --card: #fffdf8;
+    --line: #e2d8c8;
+    --accent: #8b2e2e;
+    --accent-2: #c2781a;
+    --good: #157a3a;
+    --good-bg: #dff6e8;
+    --bad: #b42318;
+    --bad-bg: #fde8e6;
+    --pick: #1f6f8b;
+    --must: #8b2e2e;
+    --suggest: #1f5f4b;
+    --extra: #3d4f7a;
+    --easy: #8a5a12;
+    --shadow: 0 10px 30px rgba(28,36,48,.08);
+  }
+  html.dark {
+    --bg: #101826;
+    --ink: #f3efe6;
+    --muted: #b7c0cc;
+    --card: #1a2536;
+    --line: #2c3a50;
+    --accent: #e08b8b;
+    --accent-2: #f0b429;
+    --good: #5ee09a;
+    --good-bg: #163528;
+    --bad: #ff8d85;
+    --bad-bg: #3a1d1c;
+    --pick: #5ec8e6;
+    --must: #ffb4b0;
+    --suggest: #7ddec0;
+    --extra: #a8b8e8;
+    --easy: #f0c06a;
+    --shadow: 0 10px 30px rgba(0,0,0,.35);
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+    overflow: hidden;
+    user-select: none;
+  }
+  #app { height: 100%; display: flex; flex-direction: column; padding: 1.4vmin 2.2vmin 1.2vmin; position: relative; }
+  header.top {
+    display: flex; align-items: center; gap: 1.2vmin;
+    flex: 0 0 auto;
+  }
+  .brand { font-weight: 800; font-size: 2.1vmin; color: var(--accent); white-space: nowrap; }
+  .chip {
+    font-size: 1.8vmin; font-weight: 800;
+    border-radius: 999px; padding: .25vmin 1.3vmin;
+    border: 1px solid var(--line); background: var(--card);
+    white-space: nowrap;
+  }
+  .chip.must { color: var(--must); }
+  .chip.suggest { color: var(--suggest); }
+  .chip.extra { color: var(--extra); }
+  .chip.easy { color: var(--easy); }
+  .spacer { flex: 1; }
+  .progress { font-weight: 800; font-size: 2.6vmin; letter-spacing: .04em; }
+  button.icon, button.nav, button.act, button.jump { font-family: inherit; cursor: pointer; border: 0; }
+  button.icon {
+    background: var(--card); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 1.1vmin;
+    font-size: 2vmin; padding: .5vmin 1.1vmin; font-weight: 700;
+    min-height: 3rem; min-width: 3rem;
+  }
+  main {
+    flex: 1; min-height: 0;
+    display: flex; flex-direction: column;
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 2vmin; box-shadow: var(--shadow);
+    padding: 2.2vmin 2.8vmin; margin: 1.1vmin 0;
+  }
+  main.split { flex-direction: row; gap: 2.2vmin; align-items: stretch; }
+  .col-q { flex: 1.2; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+  .prompt {
+    font-size: clamp(40px, 4.6vmin, 56px);
+    font-weight: 800; line-height: 1.35;
+    margin: 0 0 1.8vmin; letter-spacing: .01em; flex: 0 0 auto;
+    max-width: 22em;
+  }
+  .options {
+    display: grid; gap: 1.3vmin;
+    grid-template-columns: 1fr;
+    margin-top: auto; flex: 0 0 auto;
+  }
+  .options.four { grid-template-columns: 1fr 1fr; }
+  .opt {
+    display: flex; align-items: center; gap: 1.4vmin;
+    background: transparent; color: var(--ink);
+    border: 3px solid var(--line); border-radius: 1.5vmin;
+    padding: 1.1vmin 1.6vmin; text-align: left;
+    font-size: clamp(28px, 3.15vmin, 36px);
+    font-weight: 700; min-height: max(3rem, 8vmin);
+    line-height: 1.3;
+  }
+  main.split .opt { min-height: max(3rem, 6.4vmin); font-size: clamp(26px, 2.7vmin, 32px); padding: .8vmin 1.2vmin; }
+  .opt:hover, .opt:focus-visible, .opt:active { border-color: var(--accent); }
+  .opt:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .opt .tag {
+    flex: 0 0 5.2vmin; height: 5.2vmin; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--bg); font-size: 2.4vmin; font-weight: 800;
+  }
+  .opt.picked { border-color: var(--pick); box-shadow: 0 0 0 3px color-mix(in srgb, var(--pick) 25%, transparent); }
+  .opt.correct { border-color: var(--good); background: var(--good-bg); }
+  .opt.wrong { border-color: var(--bad); background: var(--bad-bg); }
+  .explain {
+    display: none; flex: 0.95; min-width: 0;
+    padding: 1.8vmin 2vmin; overflow: auto;
+    background: var(--bg); border-radius: 1.6vmin; border: 1px solid var(--line);
+  }
+  main.split .explain { display: flex; flex-direction: column; }
+  .explain h3 { margin: 0 0 .8vmin; font-size: 2.3vmin; color: var(--accent-2); }
+  .explain .body { font-size: clamp(22px, 2.5vmin, 30px); line-height: 1.5; font-weight: 700; margin: 0 0 1.2vmin; }
+  .verdict { font-size: 2.7vmin; font-weight: 800; margin: 0 0 1vmin; }
+  .verdict.ok { color: var(--good); }
+  .verdict.no { color: var(--bad); }
+  .speak {
+    margin-top: auto;
+    font-size: clamp(20px, 2.3vmin, 28px);
+    font-weight: 700; line-height: 1.45;
+    background: var(--card); border: 1px dashed var(--accent-2);
+    border-radius: 1.2vmin; padding: 1.2vmin 1.4vmin;
+  }
+  .speak b { color: var(--accent-2); display: block; font-size: 1.9vmin; margin-bottom: .3vmin; }
+  .src { font-size: 1.7vmin; color: var(--muted); font-weight: 600; margin-top: 1.1vmin; }
+  footer.bar { flex: 0 0 auto; display: flex; align-items: center; gap: 1.1vmin; }
+  button.nav, button.act {
+    font-size: 2.4vmin; font-weight: 800; border-radius: 1.3vmin;
+    padding: 1vmin 2vmin; min-height: max(3rem, 6.2vmin);
+  }
+  button.nav { background: var(--card); color: var(--ink); border: 1px solid var(--line); }
+  button.act { background: var(--accent); color: #fff; }
+  html.dark button.act { color: #102018; }
+  button.act.ready { background: var(--accent-2); color: #1c1408; }
+  button:disabled { opacity: .35; cursor: default; }
+  .bar-mid { flex: 1; display: flex; flex-direction: column; align-items: center; gap: .5vmin; }
+  .pbar { width: min(52vmin, 70%); height: .9vmin; background: var(--line); border-radius: 99px; overflow: hidden; }
+  .pbar > i { display: block; height: 100%; background: var(--accent); width: 0; }
+  .pbar-lab { font-size: 1.7vmin; color: var(--muted); font-weight: 700; }
+  .cover, .end {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; gap: 1.4vmin; padding: 2vmin;
+  }
+  .cover h1, .end h1 { font-size: 6.2vmin; margin: 0; letter-spacing: .04em; line-height: 1.2; }
+  .cover p, .end p { font-size: 2.6vmin; color: var(--muted); margin: 0; font-weight: 600; max-width: 28em; line-height: 1.5; }
+  .hint { font-size: 1.9vmin; color: var(--muted); margin-top: 1.2vmin; font-weight: 600; }
+  .fine { font-size: 1.7vmin; color: var(--muted); font-weight: 600; margin-top: 2vmin; max-width: 36em; line-height: 1.5; }
+  /* jump panel */
+  .drawer {
+    position: absolute; top: 0; right: 0; bottom: 0;
+    width: min(46vmin, 520px);
+    background: var(--card);
+    border-left: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    padding: 1.8vmin 1.8vmin 2vmin;
+    display: flex; flex-direction: column;
+    transform: translateX(105%);
+    transition: transform .2s ease;
+    z-index: 5;
+  }
+  .drawer.show { transform: none; }
+  .drawer h2 { margin: 0 0 1vmin; font-size: 2.3vmin; }
+  .drawer .sub { font-size: 1.6vmin; color: var(--muted); font-weight: 600; margin: 0 0 1.2vmin; }
+  .jgrid {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: .7vmin;
+    overflow: auto; flex: 1;
+  }
+  button.jump {
+    min-height: max(3rem, 5.2vmin);
+    border-radius: 1vmin; font-size: 2vmin; font-weight: 800;
+    background: var(--bg); color: var(--ink); border: 2px solid var(--line);
+  }
+  button.jump.must { border-color: color-mix(in srgb, var(--must) 45%, var(--line)); }
+  button.jump.suggest { border-color: color-mix(in srgb, var(--suggest) 45%, var(--line)); }
+  button.jump.extra { border-color: color-mix(in srgb, var(--extra) 45%, var(--line)); }
+  button.jump.easy { border-color: color-mix(in srgb, var(--easy) 45%, var(--line)); }
+  button.jump.now { background: var(--accent); color: #fff; border-color: var(--accent); }
+  html.dark button.jump.now { color: #102018; }
+  button.jump.seen { opacity: .85; }
+  .legend { font-size: 1.6vmin; color: var(--muted); font-weight: 600; margin-top: 1vmin; }
+  .mask {
+    position: absolute; inset: 0; background: rgba(16,20,28,.35);
+    display: none; z-index: 4;
+  }
+  .mask.show { display: block; }
+
+  /* Static PDF-like cover: visible in WPS even without JS */
+  #wps-gate {
+    position: absolute;
+    left: 0; top: 0; right: 0; bottom: 0;
+    width: 100%;
+    min-height: 100%;
+    z-index: 9999;
+    background: #5c5c5c;
+    overflow: auto;
+    user-select: text;
+    font-family: "PingFang TC", "Microsoft JhengHei", "SimSun", serif;
+  }
+  #wps-gate a { cursor: pointer; }
+  body.in-practice #wps-gate { display: none !important; }
+  #app { display: none; }
+  body.in-practice #app { display: flex; flex-direction: column; height: 100%; }
+  body.in-practice { overflow: hidden; background: var(--bg); }
+  body { background: #5c5c5c; }
+  .pdf-stage {
+    min-height: 100%;
+    padding: 24px 0 40px;
+    text-align: center;
+  }
+  .pdf-page {
+    width: 800px;
+    width: min(94vw, 240mm);
+    min-height: 600px;
+    min-height: min(88%, 297mm);
+    margin: 0 auto;
+    text-align: left;
+    background: #fff;
+    color: #111;
+    box-shadow: 0 8px 28px rgba(0,0,0,.35);
+    padding: 48px 56px 56px;
+    box-sizing: border-box;
+    display: inline-block;
+  }
+  .pdf-kicker {
+    font-size: 22px;
+    letter-spacing: .12em;
+    color: #666;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 12px;
+    margin: 0 0 32px;
+  }
+  .pdf-page h1 {
+    font-size: 52px;
+    line-height: 1.3;
+    margin: 0 0 16px;
+    font-weight: 800;
+    color: #111;
+  }
+  .pdf-page .pdf-sub {
+    font-size: 26px;
+    color: #333;
+    margin: 0 0 28px;
+    line-height: 1.55;
+  }
+  .pdf-note {
+    font-size: 24px;
+    line-height: 1.65;
+    color: #222;
+    margin: 0 0 18px;
+  }
+  .pdf-link {
+    display: block;
+    font-size: 36px;
+    font-weight: 700;
+    color: #0563c1;
+    text-decoration: underline;
+    line-height: 1.45;
+    margin: 16px 0;
+    padding: 16px 0;
+    border: 0;
+    background: transparent;
+    font-family: inherit;
+    cursor: pointer;
+    text-align: inherit;
+    width: 100%;
+  }
+  .pdf-link:visited { color: #0563c1; }
+  .pdf-alt {
+    display: block;
+    font-size: 24px;
+    color: #0563c1;
+    text-decoration: underline;
+    margin: 4px 0 28px;
+    padding: 10px 0;
+  }
+  .pdf-start {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 26px;
+    font-weight: 800;
+    font-family: inherit;
+    color: #fff;
+    background: #8b2e2e;
+    border: 0;
+    border-radius: 12px;
+    padding: 16px 32px;
+    cursor: pointer;
+  }
+  .pdf-foot {
+    margin-top: 40px;
+    font-size: 18px;
+    color: #666;
+    line-height: 1.5;
+    border-top: 1px solid #eee;
+    padding-top: 16px;
+  }
+
+  .ans-banner {
+    font-size: clamp(22px, 2.7vmin, 34px);
+    font-weight: 800;
+    line-height: 1.45;
+    background: #14532d;
+    color: #ecfdf5;
+    border-radius: 1.2vmin;
+    padding: 1.2vmin 1.4vmin;
+    margin: 0 0 1.2vmin;
+  }
+  html.dark .ans-banner {
+    background: #052e16;
+    color: #d1fae5;
+    box-shadow: inset 0 0 0 2px #4ade80;
+  }
+  .ans-banner .letter {
+    display: inline-block;
+    background: #facc15;
+    color: #14532d;
+    font-size: 1.08em;
+    border-radius: .5vmin;
+    padding: 0 .35em;
+    margin-right: .25em;
+  }
+  .explain h3 { margin: 0 0 .6vmin; font-size: 2.2vmin; color: var(--accent-2); }
+  .explain .body { font-size: clamp(20px, 2.35vmin, 28px); line-height: 1.55; font-weight: 650; margin: 0 0 1.1vmin; }
+  .hl-name { color: #0b5f8a; font-weight: 800; font-size: 1.06em; }
+  .hl-num  { color: #c2410c; font-weight: 800; font-size: 1.12em; }
+  .hl-date { color: #5b21b6; font-weight: 800; }
+  .hl-org  { color: #147a3a; font-weight: 800; }
+  .hl-event{ color: #8b2e2e; font-weight: 800; font-size: 1.05em; }
+  .hl-place{ color: #1d4ed8; font-weight: 800; }
+  html.dark .hl-name { color: #7dd3fc; }
+  html.dark .hl-num  { color: #fdba74; }
+  html.dark .hl-date { color: #e9d5ff; }
+  html.dark .hl-org  { color: #86efac; }
+  html.dark .hl-event{ color: #fca5a5; }
+  html.dark .hl-place{ color: #93c5fd; }
+  .src a { color: inherit; text-decoration: underline; }
+
+
+  .hl-key { color: #9a3412; font-weight: 800; font-size: 1.06em; }
+  html.dark .hl-key { color: #fcd34d; }
+  .type-chip { color: var(--extra); }
+  .lesson-chip { color: var(--suggest); }
+  .prompt { max-width: 28em; font-size: clamp(32px, 4.1vmin, 52px); }
+  .qtype-hint { font-size: 2vmin; color: var(--muted); font-weight: 700; margin: 0 0 1vmin; }
+  .visual { margin: 0 0 1.6vmin; flex: 0 0 auto; }
+  .label-card {
+    display: inline-block; background: #fff7ed; color: #1c1917;
+    border: 3px solid #c2410c; border-radius: 1.2vmin;
+    padding: 1.2vmin 1.6vmin; font-weight: 700; font-size: 2.1vmin;
+    min-width: 36vmin; line-height: 1.45;
+  }
+  html.dark .label-card { background: #3f1d0b; color: #ffedd5; border-color: #fdba74; }
+  .lc-top { font-size: 2.4vmin; font-weight: 800; color: #9a3412; }
+  html.dark .lc-top { color: #fdba74; }
+  .lc-sub { font-size: 1.7vmin; margin-bottom: .6vmin; }
+  .lc-row.hl { color: #c2410c; font-size: 2.3vmin; }
+  html.dark .lc-row.hl { color: #fdba74; }
+  .storage { display: flex; gap: 1vmin; flex-wrap: wrap; }
+  .st { padding: 1vmin 1.4vmin; border-radius: 1.1vmin; font-weight: 800; font-size: 2.2vmin; border: 2px solid var(--line); }
+  .st.bad { background: var(--bad-bg); }
+  .st.good { background: var(--good-bg); }
+  .milk-box { font-size: 3.4vmin; font-weight: 800; line-height: 1.3; }
+  .bank {
+    background: var(--bg); border: 1px dashed var(--accent-2);
+    border-radius: 1.2vmin; padding: 1vmin 1.3vmin;
+    font-size: 2.2vmin; font-weight: 700; margin-bottom: 1vmin;
+  }
+  .think {
+    font-size: 2.3vmin; font-weight: 700; color: var(--muted);
+    border: 2px dashed var(--line); border-radius: 1.2vmin;
+    padding: 1.6vmin; margin-top: auto;
+  }
+  .pairs { display: grid; grid-template-columns: 1fr 1fr; gap: .8vmin 1.6vmin; font-size: 2.4vmin; font-weight: 700; }
+  .pairs div { padding: .6vmin .8vmin; border: 2px solid var(--line); border-radius: 1vmin; }
+
+</style>
+</head>
+<body>
+<div id="wps-gate">
+  <div class="pdf-stage">
+    <div class="pdf-page">
+      <p class="pdf-kicker">常識科　第一次評估溫習　｜　模擬練習</p>
+      <h1>女兒的常識模擬題 100</h1>
+      <p class="pdf-sub">圖文投屏練習　·　2026 年 11 月 17 日評估　·　範圍預測，非試題</p>
+      <p class="pdf-note">請先把本檔下載到電腦或 USB，再用 Google Chrome 打開，然後投到客廳電視。若這一頁是用 WPS 打開的，請直接點下面的藍色連結，改用 Chrome 打開：</p>
+      <button class="pdf-link" type="button" onclick="start()">請點這裡開始練習</button>
+      <p class="pdf-note">已經在瀏覽器裏了，即可開始：</p>
+      <button class="pdf-start" type="button" onclick="start()">已經在瀏覽器裡了，開始練習</button>
+      <p class="pdf-foot">查核日期：2026 年 11 月 14 日（香港時間）。本頁是模擬練習、範圍預測，並非試題或標準答案卷。<br>署名：Janet｜常識<br>請把本檔下載後用 Chrome 打開再投電視。左右鍵換題，空白鍵顯示或隱藏答案。</p>
+    </div>
+  </div>
+</div>
+<div id="app"></div>
+<script>
+const QUESTIONS = [{"id":1,"lesson":"藥到病除","type":"cloze","prompt":"供詞：陰涼／乾爽／小孩／變質。藥物應該儲存在____、____，並且____觸碰不到的地方。","options":null,"answer":"陰涼、乾爽；小孩","explain":"範圍寫明：儲存藥物的地方要陰涼、小孩觸碰不到、乾爽、太陽或燈光照射不到。正確儲存可避免藥物<span class=\"hl-key\">變質</span>或<span class=\"hl-key\">誤服</span>。","source":"範圍冊1／印頁2–3；作業p-02、p-05","correct_text":"陰涼、乾爽；小孩","visual":"","speak":"陰涼、乾爽；小孩。"},{"id":2,"lesson":"藥到病除","type":"mcq","prompt":"子文生病了，妹妹建議把「剩下的藥物」給哥哥吃。這樣做對嗎？","options":["對，因為藥還有剩餘","對，家人的藥可以共用","不對，不可以服用別人的藥物","不對，因為藥已經過期了"],"answer":2,"correct_text":"不對，不可以服用別人的藥物。","explain":"範圍寫明：病人不可以服用別人的藥物。作業裏正確建議是媽媽說「趕快請醫生診治」。","source":"範圍冊1／印頁2（P.7）；作業p-01","visual":"","speak":"不對，不可以服用別人的藥物。"},{"id":3,"lesson":"藥到病除","type":"mcq","prompt":"陳子文的藥物標籤寫着：每日服幾次？每隔幾小時服一次？每次幾粒？","options":["每日 3 次，每隔 3 小時，每次 2 粒","每日 4 次，每隔 4 小時，每次 1 粒","每日 2 次，每隔 6 小時，每次 1 粒","每日 4 次，每隔 2 小時，每次 2 粒"],"answer":1,"correct_text":"每日服 4 次；每隔 4 小時；每次 1 粒。","explain":"作業藥物標籤：每日服 <span class=\"hl-num\">4</span> 次、每隔 <span class=\"hl-num\">4</span> 小時服 1 次、每次服 <span class=\"hl-num\">1</span> 粒、飯後。","source":"作業p-01 藥物標籤","visual":"\n<div class=\"visual label-card\" aria-hidden=\"true\">\n  <div class=\"lc-top\">王永一醫務所</div>\n  <div class=\"lc-sub\">旺角上海街 446 號</div>\n  <div class=\"lc-row\"><b>姓名</b> 陳子文</div>\n  <div class=\"lc-row\"><b>藥名</b> Coritab　<span>效用：防敏感</span></div>\n  <div class=\"lc-row hl\"><b>每日服</b> 4 次　<b>每隔</b> 4 小時</div>\n  <div class=\"lc-row hl\"><b>每次</b> 1 粒　☑ 飯後</div>\n  <div class=\"lc-foot\">2019 年 9 月 18 日</div>\n</div>","speak":"每日服 4 次；每隔 4 小時；每次 1 粒。"},{"id":4,"lesson":"藥到病除","type":"mcq","prompt":"子文上午十時服了藥，標籤寫每隔 4 小時服一次。他下午何時要再服？","options":["下午一時","下午二時","下午三時","晚上十時"],"answer":1,"correct_text":"下午二時。","explain":"上午十時加 <span class=\"hl-num\">4</span> 小時＝下午 <span class=\"hl-num\">2</span> 時。","source":"作業p-01","visual":"","speak":"下午二時。"},{"id":5,"lesson":"藥到病除","type":"judge","prompt":"判斷：用牛奶送服藥丸是正確的服藥方法。","options":["✓ 正確","✗ 不正確"],"answer":1,"correct_text":"✗ 不正確。","explain":"作業看圖判斷：用牛奶送藥丸是不正確的做法。","source":"作業p-02 ①","visual":"\n<div class=\"visual milk\" aria-hidden=\"true\">\n  <div class=\"milk-box\">🥛 ＋ 💊<br><small>這樣送服對嗎？</small></div>\n</div>","speak":"✗ 不正確。"},{"id":6,"lesson":"藥到病除","type":"judge","prompt":"判斷：病情改善了，但仍要按照醫生的指示服藥。","options":["✓ 正確","✗ 不正確"],"answer":0,"correct_text":"✓ 正確。","explain":"不可以胡亂更改服用分量或停服。病情改善仍要依醫生指示服藥。","source":"範圍冊1／印頁2；作業p-02 ②","visual":"","speak":"✓ 正確。"},{"id":7,"lesson":"藥到病除","type":"judge","prompt":"判斷：吃藥後皮膚出現紅疹，應繼續吃藥，因為要治好病。","options":["✓ 正確","✗ 不正確"],"answer":1,"correct_text":"✗ 不正確。","explain":"出現<span class=\"hl-key\">不良反應</span>（如皮膚紅疹）時，不應繼續吃藥，要儘快告訴醫生／去看醫生。","source":"範圍冊1／印頁3；作業p-02 ③","visual":"","speak":"✗ 不正確。"},{"id":8,"lesson":"藥到病除","type":"judge","prompt":"判斷：想儘快治好咳嗽，所以多喝一茶匙藥水。","options":["✓ 正確","✗ 不正確"],"answer":1,"correct_text":"✗ 不正確。","explain":"不可以胡亂更改服用分量。","source":"範圍冊1／印頁2；作業p-02 ④","visual":"","speak":"✗ 不正確。"},{"id":9,"lesson":"藥到病除","type":"mcq","prompt":"美恩應該把藥物放在哪裏才恰當？","options":["窗邊（有陽光）","茶几上（小朋友可碰到）","魚缸旁邊","高櫃裏（小孩觸碰不到）"],"answer":3,"correct_text":"高櫃裏。","explain":"適當的是小孩觸碰不到、陰涼乾爽的地方。窗邊陽光、茶几、魚缸都不當。","source":"作業p-02；範圍冊1／印頁2","visual":"\n<div class=\"visual storage\" aria-hidden=\"true\">\n  <div class=\"st bad\">☀️ 窗邊</div>\n  <div class=\"st bad\">🧸 茶几</div>\n  <div class=\"st bad\">🐠 魚缸</div>\n  <div class=\"st good\">🗄️ 高櫃</div>\n</div>","speak":"高櫃裏。"},{"id":10,"lesson":"藥到病除","type":"short","prompt":"簡答：把藥物儲存在不適當的地方，可能有甚麼後果？（寫完整句，至少兩點）","options":null,"answer":"藥物容易變質，也有機會被別人誤服。","explain":"示範句：把藥物儲存在不適當的地方，藥物容易<span class=\"hl-key\">變質</span>，也有機會被別人<span class=\"hl-key\">誤服</span>。","source":"作業p-02；範圍冊1／印頁3","correct_text":"藥物容易變質，也有機會被別人誤服。","visual":"","speak":"藥物容易變質，也有機會被別人誤服。"},{"id":11,"lesson":"藥到病除","type":"mcq","prompt":"藥物標籤上，Coritab 的效用是甚麼？應該飯前還是飯後服用？","options":["止咳；飯前","防敏感；飯後","退燒；飯前","防敏感；飯前"],"answer":1,"correct_text":"防敏感；飯後。","explain":"標籤寫藥名 Coritab，效用：<span class=\"hl-key\">防敏感</span>；並勾選<span class=\"hl-key\">飯後</span>。診所是<span class=\"hl-name\">王永一醫務所</span>。","source":"作業p-01","visual":"\n<div class=\"visual label-card\" aria-hidden=\"true\">\n  <div class=\"lc-top\">王永一醫務所</div>\n  <div class=\"lc-sub\">旺角上海街 446 號</div>\n  <div class=\"lc-row\"><b>姓名</b> 陳子文</div>\n  <div class=\"lc-row\"><b>藥名</b> Coritab　<span>效用：防敏感</span></div>\n  <div class=\"lc-row hl\"><b>每日服</b> 4 次　<b>每隔</b> 4 小時</div>\n  <div class=\"lc-row hl\"><b>每次</b> 1 粒　☑ 飯後</div>\n  <div class=\"lc-foot\">2019 年 9 月 18 日</div>\n</div>","speak":"防敏感；飯後。"},{"id":12,"lesson":"藥到病除","type":"mcq","prompt":"服藥後出現不良反應，應該怎樣做？","options":["不理會，繼續吃藥","自行減少分量","自行停止服藥就好","儘快告訴醫生"],"answer":3,"correct_text":"儘快告訴醫生。","explain":"範圍總結：服藥後假如身體出現不良反應，要儘快告訴醫生。作業：應告知醫生。","source":"範圍冊1／印頁3；作業p-06","visual":"","speak":"儘快告訴醫生。"},{"id":13,"lesson":"藥到病除","type":"cloze","prompt":"供詞：休息／開水／營養／消化。生病時應多____、多喝____，吃有____和容易____的食物。","options":null,"answer":"休息；開水；營養；消化","explain":"範圍：多休息、多喝<span class=\"hl-key\">開水</span>，吃有營養和容易消化的食物；並保持室內空氣流通。","source":"範圍冊1／印頁3（P.8）；作業p-05","correct_text":"休息；開水；營養；消化","visual":"","speak":"休息；開水；營養；消化。"},{"id":14,"lesson":"藥到病除","type":"short","prompt":"簡答：別人生病了，我們應該怎樣做？（完整句）","options":null,"answer":"我們要表達關懷和慰問。","explain":"示範句：別人生病了，我們要表達<span class=\"hl-key\">關懷</span>和<span class=\"hl-key\">慰問</span>。","source":"範圍冊1／印頁3；作業p-05","correct_text":"我們要表達關懷和慰問。","visual":"","speak":"我們要表達關懷和慰問。"},{"id":15,"lesson":"藥到病除","type":"mcq","prompt":"身體不適時，下列哪一項是正確的做法？","options":["自己隨便買藥吃","及早求醫，並清楚說出病情","病情輕微就不用聽醫生指示","把藥分給家人和同學吃"],"answer":1,"correct_text":"及早求醫，並清楚說出病情。","explain":"及早求醫；看病時清楚說出病情、小心聆聽指示；按醫生指示定時定量服藥。","source":"範圍冊1／印頁2–3","visual":"","speak":"及早求醫，並清楚說出病情。"},{"id":16,"lesson":"藥到病除","type":"order","prompt":"排序：生病求診與服藥的正確步驟。請把正確順序排出。","options":["按照醫生指示定時定量服藥","身體不適，及早求醫","仔細閱讀藥物標籤","清楚說出病情，小心聆聽指示"],"answer_order":["B","D","C","A"],"correct_text":"B → D → C → A","explain":"先及早求醫 → 說病情聽指示 → 讀標籤 → 定時定量服藥。","source":"範圍冊1／印頁2–3","visual":"","speak":"B → D → C → A。"},{"id":17,"lesson":"藥到病除","type":"judge","prompt":"判斷：我們可以向中醫或西醫求診。","options":["✓ 正確","✗ 不正確"],"answer":0,"correct_text":"✓ 正確。","explain":"範圍本課總結寫明：可以向中醫或西醫求診。","source":"範圍冊1／印頁3","visual":"","speak":"✓ 正確。"},{"id":18,"lesson":"遠離煙酒和毒品","type":"mcq","prompt":"面對別人遞來的煙或酒，我們應該怎樣做？","options":["試一口看看","為了面子先接受","堅決拒絕","等長大再決定，現在隨便"],"answer":2,"correct_text":"堅決拒絕。","explain":"吸煙和喝酒都會損害健康，我們要<span class=\"hl-key\">堅決拒絕</span>。","source":"範圍冊1／印頁4","visual":"","speak":"堅決拒絕。"},{"id":19,"lesson":"遠離煙酒和毒品","type":"cloze","prompt":"供詞：判斷力／儀容／嚴重疾病。吸煙會危害健康，並影響____；喝酒容易使人失去____；長期吸煙和喝酒會增加患上____的機會。","options":null,"answer":"儀容；判斷力；嚴重疾病","explain":"總結：吸煙影響<span class=\"hl-key\">儀容</span>；喝酒失去<span class=\"hl-key\">判斷力</span>；長期吸煙喝酒增加患上<span class=\"hl-key\">嚴重疾病</span>的機會，甚至引致死亡。","source":"範圍冊1／印頁4","correct_text":"儀容；判斷力；嚴重疾病","visual":"","speak":"儀容；判斷力；嚴重疾病。"},{"id":20,"lesson":"遠離煙酒和毒品","type":"mcq","prompt":"下列哪一項不是範圍所列「吸食毒品」的禍害？","options":["使人情緒和行為失控","嚴重損害健康，甚至失去生命","影響學習、工作和儀容","增強記憶力和抵抗力"],"answer":3,"correct_text":"增強記憶力和抵抗力（這不是禍害，也不是事實）。","explain":"範圍五點：情緒和行為失控、嚴重損害健康、失去生命、影響學習和工作、影響儀容。作業亦否定「增強記憶力／抵抗力」。","source":"範圍冊1／印頁4；作業p-04","visual":"","speak":"增強記憶力和抵抗力（這不是禍害，也不是事實）。"},{"id":21,"lesson":"遠離煙酒和毒品","type":"judge","prompt":"判斷：嘗試吸一口煙是沒有問題的。","options":["✓ 正確","✗ 不正確"],"answer":1,"correct_text":"✗ 不正確。","explain":"即使「嘗一口」也不對，要堅決拒絕。","source":"作業p-04 ①","visual":"","speak":"✗ 不正確。"},{"id":22,"lesson":"遠離煙酒和毒品","type":"judge","prompt":"判斷：吸煙和喝酒都是危害健康的行為。","options":["✓ 正確","✗ 不正確"],"answer":0,"correct_text":"✓ 正確。","explain":"範圍與作業均確認。","source":"範圍冊1／印頁4；作業p-04 ②","visual":"","speak":"✓ 正確。"},{"id":23,"lesson":"遠離煙酒和毒品","type":"judge","prompt":"判斷：吸毒可以令人忘記不開心的事情，所以有時可以試一下。","options":["✓ 正確","✗ 不正確"],"answer":1,"correct_text":"✗ 不正確。","explain":"吸毒禍害很大，不能用來「忘記不開心」；要堅決拒絕。","source":"作業p-04 ③","visual":"","speak":"✗ 不正確。"},{"id":24,"lesson":"遠離煙酒和毒品","type":"judge","prompt":"判斷：吸毒會引致死亡。","options":["✓ 正確","✗ 不正確"],"answer":0,"correct_text":"✓ 正確。","explain":"範圍：失去生命；作業判斷亦 ✓。","source":"範圍冊1／印頁4；作業p-04 ④","visual":"","speak":"✓ 正確。"},{"id":25,"lesson":"遠離煙酒和毒品","type":"short","prompt":"簡答：海明叫芳芳「試吃一次無妨」。芳芳應該怎樣做？為甚麼？（完整句）","options":null,"answer":"芳芳應該堅決拒絕，因為吸毒會嚴重損害健康，甚至使人情緒和行為失控、失去生命。","explain":"示範：芳芳應該<span class=\"hl-key\">堅決拒絕</span>。若依從，可能嚴重損害健康、情緒和行為失控等。","source":"作業p-04；範圍冊1／印頁4","correct_text":"芳芳應該堅決拒絕，因為吸毒會嚴重損害健康，甚至使人情緒和行為失控、失去生命。","visual":"","speak":"芳芳應該堅決拒絕，因為吸毒會嚴重損害健康，甚至使人情緒和行為失控、失去生命。"},{"id":26,"lesson":"遠離煙酒和毒品","type":"mcq","prompt":"文浩對表弟說「我們嘗一口啤酒吧！」表弟應該怎樣做？","options":["先嘗一口再決定","堅決拒絕","只喝一點點不要緊","叫文浩喝給自己看"],"answer":1,"correct_text":"堅決拒絕。","explain":"文浩的建議不對；喝酒損害健康，表弟應堅決拒絕。","source":"作業p-06","visual":"","speak":"堅決拒絕。"},{"id":27,"lesson":"遠離煙酒和毒品","type":"mcq","prompt":"喝酒容易使人出現下列哪一項問題？（以本年範圍為準）","options":["失去判斷力，行為不受控制","牙齒變得更潔白","記憶力立刻增強","儀容變得更好"],"answer":0,"correct_text":"失去判斷力，行為不受控制。","explain":"範圍總結特別指出喝酒使人失去<span class=\"hl-key\">判斷力</span>。","source":"範圍冊1／印頁4；作業p-06","visual":"","speak":"失去判斷力，行為不受控制。"},{"id":28,"lesson":"遠離煙酒和毒品","type":"match","prompt":"配對：把行為與範圍所述的主要禍害連起來。","options":["1. 吸煙 → ?","2. 喝酒 → ?","3. 吸毒 → ?","A. 影響儀容、危害健康","B. 失去判斷力、行為不受控制","C. 情緒和行為失控、嚴重損害健康、甚至失去生命"],"answer_match":{"1":"A","2":"B","3":"C"},"correct_text":"1-A；2-B；3-C","explain":"不要張冠李戴：儀容多與吸煙並列總結；判斷力對喝酒；情緒失控等對吸毒（吸毒亦列影響儀容）。","source":"範圍冊1／印頁4","visual":"","speak":"1-A；2-B；3-C。"},{"id":29,"lesson":"遠離煙酒和毒品","type":"mcq","prompt":"下列哪些是吸毒的禍害？","options":["只會影響儀容，不會影響生命","只會令身體更強壯","影響儀容、影響學習和工作、失去生命等","只會蛀牙"],"answer":2,"correct_text":"影響儀容、影響學習和工作、失去生命等。","explain":"作業選擇：以上多項都是；對應範圍五點。","source":"範圍冊1／印頁4；作業p-06","visual":"","speak":"影響儀容、影響學習和工作、失去生命等。"},{"id":30,"lesson":"遠離煙酒和毒品","type":"short","prompt":"簡答：舉出兩項吸食毒品的禍害。（完整句）","options":null,"answer":"吸食毒品會使人情緒和行為失控，並嚴重損害健康，甚至失去生命。（亦可寫影響學習和工作、影響儀容。）","explain":"任選範圍五點中兩項，寫完整句。","source":"範圍冊1／印頁4","correct_text":"吸食毒品會使人情緒和行為失控，並嚴重損害健康，甚至失去生命。（亦可寫影響學習和工作、影響儀容。）","visual":"","speak":"吸食毒品會使人情緒和行為失控，並嚴重損害健康，甚至失去生命。（亦可寫影響學習和工作、影響儀容。）"},{"id":31,"lesson":"遠離煙酒和毒品","type":"judge","prompt":"判斷：我們要堅決拒絕吸毒，也不要接受別人遞來的不明物品。","options":["✓ 正確","✗ 不正確"],"answer":0,"correct_text":"✓ 正確。","explain":"範圍圖示與總結：堅決拒絕吸毒。","source":"範圍冊1／印頁4（P.14）","visual":"","speak":"✓ 正確。"},{"id":32,"lesson":"遠離煙酒和毒品","type":"mcq","prompt":"長期吸煙和喝酒，可能帶來甚麼後果？","options":["完全沒有影響","增加患上嚴重疾病的機會，甚至引致死亡","只會短暫頭痛","一定會令成績進步"],"answer":1,"correct_text":"增加患上嚴重疾病的機會，甚至引致死亡。","explain":"範圍本課總結原文。","source":"範圍冊1／印頁4","visual":"","speak":"增加患上嚴重疾病的機會，甚至引致死亡。"},{"id":33,"lesson":"我的情緒","type":"mcq","prompt":"下列哪一組是正面情緒？","options":["傷心、生氣","開心、興奮","害怕、失望","緊張、生氣"],"answer":1,"correct_text":"開心、興奮。","explain":"範圍：開心、興奮是<span class=\"hl-key\">正面</span>情緒；傷心、生氣是<span class=\"hl-key\">負面</span>情緒。","source":"範圍冊1／印頁7","visual":"","speak":"開心、興奮。"},{"id":34,"lesson":"我的情緒","type":"match","prompt":"配對：情境與可能產生的情緒。","options":["1. 下雨取消野餐","2. 弟弟弄髒圖書","3. 大狗突然吠叫","4. 老師稱讚彈琴進步","A. 失望","B. 生氣","C. 害怕","D. 開心"],"answer_match":{"1":"A","2":"B","3":"C","4":"D"},"correct_text":"1-A；2-B；3-C；4-D","explain":"對應作業p-07 配對。失望、生氣、害怕屬負面；開心屬正面。","source":"作業p-07；範圍冊1／印頁7","visual":"","speak":"1-A；2-B；3-C；4-D。"},{"id":35,"lesson":"我的情緒","type":"judge","prompt":"判斷：不快樂時，做運動是其中一個放鬆心情的方法。","options":["✓ 正確","✗ 不正確"],"answer":0,"correct_text":"✓ 正確。","explain":"範圍：大哭一場、向別人傾訴、做運動；總結亦有聽音樂。","source":"範圍冊1／印頁7–8；作業p-08","visual":"","speak":"✓ 正確。"},{"id":36,"lesson":"我的情緒","type":"judge","prompt":"判斷：生氣時可以踢壞玩具來發洩。","options":["✓ 正確","✗ 不正確"],"answer":1,"correct_text":"✗ 不正確。","explain":"不要破壞物件；不要胡亂發脾氣。","source":"範圍冊1／印頁8；作業p-08","visual":"","speak":"✗ 不正確。"},{"id":37,"lesson":"我的情緒","type":"judge","prompt":"判斷：向別人傾訴、聽音樂，都是放鬆心情的恰當方法。","options":["✓ 正確","✗ 不正確"],"answer":0,"correct_text":"✓ 正確。","explain":"範圍與作業均支持。","source":"範圍冊1／印頁7–8；作業p-08","visual":"","speak":"✓ 正確。"},{"id":38,"lesson":"我的情緒","type":"order","prompt":"排序：生氣時較恰當的做法。","options":["先冷靜下來","然後表達自己的感受","以正面的態度思考"],"answer_order":["A","B","C"],"correct_text":"A → B → C","explain":"生氣時要先冷靜下來，然後才表達自己的感受，並以正面的態度去思考。","source":"範圍冊1／印頁7–8；作業p-08","visual":"","speak":"A → B → C。"},{"id":39,"lesson":"我的情緒","type":"short","prompt":"簡答：美恩溫習時，弟弟又跑又叫，令她不快樂。她應該怎樣做？（完整句）","options":null,"answer":"美恩應該先冷靜下來，然後向媽媽說出事情的經過。","explain":"示範：先<span class=\"hl-key\">冷靜</span>下來，再向媽媽說明，不要先發脾氣或責罵。","source":"作業p-08；範圍冊1／印頁7","correct_text":"美恩應該先冷靜下來，然後向媽媽說出事情的經過。","visual":"","speak":"美恩應該先冷靜下來，然後向媽媽說出事情的經過。"},{"id":40,"lesson":"我的情緒","type":"mcq","prompt":"圖畫比賽沒有入選。下列哪一句是積極的想法？","options":["以後不再畫畫了","努力練習，下次要畫得更好","永遠不理繪畫老師","把畫撕掉出氣"],"answer":1,"correct_text":"努力練習，下次要畫得更好。","explain":"積極面對困難，尋求解決方法；消極是「以後不再畫畫」。","source":"作業p-11；範圍冊1／印頁7–8","visual":"","speak":"努力練習，下次要畫得更好。"},{"id":41,"lesson":"我的情緒","type":"mcq","prompt":"爸爸忘記買生日蛋糕。下列哪一句是積極的態度？","options":["不再理會爸爸","體諒爸爸下班已經很累","立刻大發脾氣摔門","整天不說話懲罰他"],"answer":1,"correct_text":"體諒爸爸下班已經很累。","explain":"以正面／積極態度面對不如意事情。","source":"作業p-11","visual":"","speak":"體諒爸爸下班已經很累。"},{"id":42,"lesson":"我的情緒","type":"cloze","prompt":"供詞：負面／正面。遇到不如意事情，我們可能產生____情緒，應該以____的態度面對，嘗試解決問題。","options":null,"answer":"負面；正面（或積極）","explain":"作業單元加油站填充與範圍一致。","source":"作業p-11；範圍冊1／印頁7","correct_text":"負面；正面（或積極）","visual":"","speak":"負面；正面（或積極）。"},{"id":43,"lesson":"我的情緒","type":"judge","prompt":"判斷：胡亂發脾氣只會傷害別人，不會傷害自己。","options":["✓ 正確","✗ 不正確"],"answer":1,"correct_text":"✗ 不正確。","explain":"胡亂發脾氣會傷害自己和別人。","source":"範圍冊1／印頁7（P.22）","visual":"","speak":"✗ 不正確。"},{"id":44,"lesson":"我的情緒","type":"mcq","prompt":"下列哪一項不是恰當的紓緩方法？","options":["大哭一場","做運動","暴飲暴食","向別人傾訴"],"answer":2,"correct_text":"暴飲暴食。","explain":"作業：吃大量雪糕薯片屬不恰當；大哭在範圍有舉例。","source":"範圍冊1／印頁7；作業p-08","visual":"","speak":"暴飲暴食。"},{"id":45,"lesson":"我的情緒","type":"short","prompt":"簡答：舉出兩種放鬆心情的方法。（完整句）","options":null,"answer":"我們可以大哭一場、向別人傾訴、做運動或聽音樂來放鬆心情。","explain":"任選兩項以上，寫完整句。","source":"範圍冊1／印頁7–8","correct_text":"我們可以大哭一場、向別人傾訴、做運動或聽音樂來放鬆心情。","visual":"","speak":"我們可以大哭一場、向別人傾訴、做運動或聽音樂來放鬆心情。"},{"id":46,"lesson":"我的情緒","type":"mcq","prompt":"「害怕」屬於哪一類情緒？","options":["正面情緒","負面情緒","不是情緒","只有大人會有"],"answer":1,"correct_text":"負面情緒。","explain":"預習與作業把害怕、失望、緊張、生氣等歸入負面。","source":"範圍冊1／印頁6–7；作業p-07","visual":"","speak":"負面情緒。"},{"id":47,"lesson":"我的情緒","type":"judge","prompt":"判斷：遇到困難時，要積極面對，努力尋求解決方法。","options":["✓ 正確","✗ 不正確"],"answer":0,"correct_text":"✓ 正確。","explain":"範圍 P.24 與本課總結。","source":"範圍冊1／印頁7–8","visual":"","speak":"✓ 正確。"},{"id":48,"lesson":"我的情緒","type":"mcq","prompt":"生氣時，下列哪一項做法較好？","options":["先冷靜，再表達感受","立刻破壞物件","傷害自己出氣","不理後果大吵大鬧"],"answer":0,"correct_text":"先冷靜，再表達感受。","explain":"範圍與腦圖：先冷靜才表達；正面態度思考。","source":"範圍冊1／印頁7–8、11","visual":"","speak":"先冷靜，再表達感受。"},{"id":49,"lesson":"我的好朋友","type":"cloze","prompt":"供詞：分享／關心／支持／幫助。朋友之間要互相____、____、____和____。","options":null,"answer":"分享、關心、支持、幫助","explain":"範圍 P.27 四點；作業填圖亦反覆練習。","source":"範圍冊1／印頁9；作業p-09","correct_text":"分享、關心、支持、幫助","visual":"","speak":"分享、關心、支持、幫助。"},{"id":50,"lesson":"我的好朋友","type":"match","prompt":"配對：志文和好朋友的行為。","options":["1. 操場一起玩","2. 跑道旁喊加油","3. 一齊做功課","4. 借書給對方","5. 教導對方明白題目","6. 問對方為甚麼悶悶不樂","A. 玩耍","B. 支持","C. 學習","D. 分享","E. 幫助","F. 關心"],"answer_match":{"1":"A","2":"B","3":"C","4":"D","5":"E","6":"F"},"correct_text":"1A 2B 3C 4D 5E 6F","explain":"對應作業p-09 字庫填圖。","source":"作業p-09","visual":"","speak":"1A 2B 3C 4D 5E 6F。"},{"id":51,"lesson":"我的好朋友","type":"mcq","prompt":"心惠要欣欣抄她的功課。欣欣應該怎樣做？","options":["立刻抄寫","告訴心惠自己不會抄她的功課","完全不理會，假裝沒聽見","把功課拍下來再抄"],"answer":1,"correct_text":"告訴心惠自己不會抄她的功課。","explain":"堅決拒絕朋友不當的要求，並可提醒對方做得不對。","source":"作業p-10；範圍冊1／印頁10","visual":"","speak":"告訴心惠自己不會抄她的功課。"},{"id":52,"lesson":"我的好朋友","type":"mcq","prompt":"家宜說：「剛才你取笑我胖，我很不開心！」欣欣應該怎樣做？","options":["說「這是小事」","說「對不起」","繼續取笑","不理會她"],"answer":1,"correct_text":"說「對不起」。","explain":"做錯事要向朋友說對不起。","source":"作業p-10；範圍冊1／印頁10","visual":"","speak":"說「對不起」。"},{"id":53,"lesson":"我的好朋友","type":"short","prompt":"簡答：朋友提出不當的要求時，我們應該怎樣做？（完整句）","options":null,"answer":"我們應該堅決拒絕，並提醒他做得不對的地方。","explain":"範圍與交友小貼士原文方向一致。","source":"範圍冊1／印頁10–11；作業p-10","correct_text":"我們應該堅決拒絕，並提醒他做得不對的地方。","visual":"","speak":"我們應該堅決拒絕，並提醒他做得不對的地方。"},{"id":54,"lesson":"我的好朋友","type":"cloze","prompt":"供詞：坦白／尊重／商量。有不同意見時，可以____說出來，互相____，心平氣和地____。","options":null,"answer":"坦白；尊重；商量","explain":"範圍 P.29–30；腦圖印頁11。","source":"範圍冊1／印頁10–11","correct_text":"坦白；尊重；商量","visual":"","speak":"坦白；尊重；商量。"},{"id":55,"lesson":"我的好朋友","type":"judge","prompt":"判斷：比賽時為朋友打氣，是互相支持的表現。","options":["✓ 正確","✗ 不正確"],"answer":0,"correct_text":"✓ 正確。","explain":"作業看圖判斷。","source":"作業p-12；範圍冊1／印頁9","visual":"","speak":"✓ 正確。"},{"id":56,"lesson":"我的好朋友","type":"judge","prompt":"判斷：好朋友不會介意我偷看她的日記。","options":["✓ 正確","✗ 不正確"],"answer":1,"correct_text":"✗ 不正確。","explain":"偷看日記是不尊重、不當的行為。","source":"作業p-12","visual":"","speak":"✗ 不正確。"},{"id":57,"lesson":"我的好朋友","type":"judge","prompt":"判斷：作弄朋友還取笑他，是關心朋友的表現。","options":["✓ 正確","✗ 不正確"],"answer":1,"correct_text":"✗ 不正確。","explain":"作業判斷為不正確。","source":"作業p-12","visual":"","speak":"✗ 不正確。"},{"id":58,"lesson":"我的好朋友","type":"mcq","prompt":"子欣在走廊追逐奔跑，小美應該怎樣做？","options":["一起追逐更好玩","勸止他們","只在旁邊責備，不阻止","不理會，繼續走路"],"answer":1,"correct_text":"勸止他們。","explain":"作業選擇：勸止。","source":"作業p-12","visual":"","speak":"勸止他們。"},{"id":59,"lesson":"我的好朋友","type":"mcq","prompt":"子欣不會做數學作業，小美應該怎樣幫助她？","options":["把答案告訴她","借功課給她抄","教導她怎樣做","取笑她不會做"],"answer":2,"correct_text":"教導她怎樣做。","explain":"互相幫助≠代做或給答案抄寫。","source":"作業p-12","visual":"","speak":"教導她怎樣做。"},{"id":60,"lesson":"我的好朋友","type":"mcq","prompt":"子欣游泳比賽前很緊張，小美應該怎樣做？","options":["勸她退出比賽","鼓勵她","取笑她緊張","不理會"],"answer":1,"correct_text":"鼓勵她。","explain":"互相支持。","source":"作業p-12","visual":"","speak":"鼓勵她。"},{"id":61,"lesson":"我的好朋友","type":"short","prompt":"簡答：跟朋友一起學習和玩耍，有甚麼好處？（完整句）","options":null,"answer":"跟朋友一起學習和玩耍，可以讓我們感到更快樂。","explain":"範圍 P.25。亦可補：既分享快樂，也分擔憂愁。","source":"範圍冊1／印頁9","correct_text":"跟朋友一起學習和玩耍，可以讓我們感到更快樂。","visual":"","speak":"跟朋友一起學習和玩耍，可以讓我們感到更快樂。"},{"id":62,"lesson":"我的好朋友","type":"judge","prompt":"判斷：朋友之間既分享快樂，也分擔憂愁。","options":["✓ 正確","✗ 不正確"],"answer":0,"correct_text":"✓ 正確。","explain":"範圍 P.26。","source":"範圍冊1／印頁9","visual":"","speak":"✓ 正確。"},{"id":63,"lesson":"我的好朋友","type":"mcq","prompt":"發覺自己誤會了朋友，應該怎樣做？","options":["假裝沒事","誠懇地道歉，說對不起","反而責怪對方","就此絕交"],"answer":1,"correct_text":"誠懇地道歉，說對不起。","explain":"做錯事要說對不起；交友小貼士亦寫道歉。","source":"範圍冊1／印頁10；作業p-10","visual":"","speak":"誠懇地道歉，說對不起。"},{"id":64,"lesson":"我的好朋友","type":"cloze","prompt":"供詞：友誼。想法不同應互相尊重，儘量取得一致意見，不要破壞大家的____。","options":null,"answer":"友誼","explain":"作業p-11 填充；範圍：這樣友誼才會長久。","source":"作業p-11；範圍冊1／印頁10","correct_text":"友誼","visual":"","speak":"友誼。"},{"id":65,"lesson":"我的好朋友","type":"judge","prompt":"判斷：邀請朋友參加生日會，是關心朋友的一種表現。","options":["✓ 正確","✗ 不正確"],"answer":0,"correct_text":"✓ 正確。","explain":"作業看圖判斷為正確。","source":"作業p-12","visual":"","speak":"✓ 正確。"},{"id":66,"lesson":"香港的動物","type":"diagram","prompt":"填圖分類：蝴蝶身體分頭胸腹、有三對腳、兩對翅膀。牠屬於____類；是脊椎還是無脊椎動物？","options":["哺乳類／脊椎","昆蟲類／無脊椎","鳥類／脊椎","魚類／無脊椎"],"answer":1,"correct_text":"昆蟲類；無脊椎動物。","explain":"昆蟲：頭胸腹、三對腳、觸角、部分有翅；無脊柱。","source":"範圍冊2／印頁2；作業p-13","visual":"","speak":"昆蟲類；無脊椎動物。"},{"id":67,"lesson":"香港的動物","type":"diagram","prompt":"填圖分類：水牛用母乳餵養幼兒、用肺呼吸、身體有毛髮。牠屬於____類。","options":["昆蟲類","魚類","哺乳類","鳥類"],"answer":2,"correct_text":"哺乳類。","explain":"哺乳類三大特徵；屬脊椎動物。","source":"範圍冊2／印頁2；作業p-13","visual":"","speak":"哺乳類。"},{"id":68,"lesson":"香港的動物","type":"diagram","prompt":"填圖分類：鷺全身羽毛、用喙取食、有一對翅膀和一對腳、用肺呼吸。牠屬於____類。","options":["魚類","昆蟲類","哺乳類","鳥類"],"answer":3,"correct_text":"鳥類。","explain":"鳥類特徵；脊椎動物。米埔濕地為鳥類等提供棲息和覓食環境。","source":"範圍冊2／印頁2；作業p-13","visual":"","speak":"鳥類。"},{"id":69,"lesson":"香港的動物","type":"diagram","prompt":"填圖分類：海魚有鱗片、用鰭游動、用鰓呼吸。牠屬於____類。","options":["鳥類","魚類","昆蟲類","哺乳類"],"answer":1,"correct_text":"魚類。","explain":"魚類特徵；脊椎動物。","source":"範圍冊2／印頁3；作業p-13","visual":"","speak":"魚類。"},{"id":70,"lesson":"香港的動物","type":"mcq","prompt":"下列哪一項是哺乳類的特徵？","options":["用鰓呼吸","有三對腳","用母乳餵養幼兒","全身長有羽毛"],"answer":2,"correct_text":"用母乳餵養幼兒。","explain":"另：用肺呼吸、身體表面長有毛髮。","source":"範圍冊2／印頁2","visual":"","speak":"用母乳餵養幼兒。"},{"id":71,"lesson":"香港的動物","type":"mcq","prompt":"下列哪一項是昆蟲類的特徵？","options":["用母乳餵養幼兒","身體分為頭、胸和腹，有三對腳","用鰭游動","全身羽毛"],"answer":1,"correct_text":"身體分為頭、胸和腹，有三對腳。","explain":"還有一對觸角；部分有一對或兩對翅膀；無脊椎。","source":"範圍冊2／印頁2","visual":"","speak":"身體分為頭、胸和腹，有三對腳。"},{"id":72,"lesson":"香港的動物","type":"mcq","prompt":"魚類用甚麼呼吸？用甚麼游動？","options":["肺；腳","鰓；鰭","皮膚；翅膀","喙；觸角"],"answer":1,"correct_text":"用鰓呼吸；用鰭游動。","explain":"通常有鱗片保護身體。","source":"範圍冊2／印頁3","visual":"","speak":"用鰓呼吸；用鰭游動。"},{"id":73,"lesson":"香港的動物","type":"judge","prompt":"判斷：昆蟲是無脊椎動物；魚類、鳥類、哺乳類是脊椎動物。","options":["✓ 正確","✗ 不正確"],"answer":0,"correct_text":"✓ 正確。","explain":"範圍總結與作業分類一致。","source":"範圍冊2／印頁2–3；作業p-13","visual":"","speak":"✓ 正確。"},{"id":74,"lesson":"香港的動物","type":"mcq","prompt":"位於甚麼地方的濕地，為許多野生動物（例如鳥類）提供棲息和覓食的環境？","options":["維多利亞港中心","米埔","山頂纜車","尖沙咀鐘樓"],"answer":1,"correct_text":"米埔。","explain":"範圍寫明<span class=\"hl-place\">米埔</span>濕地。","source":"範圍冊2／印頁2","visual":"","speak":"米埔。"},{"id":75,"lesson":"香港的動物","type":"short","prompt":"簡答：舉出兩種在香港數量變得稀少、正面對威脅的動物例子。（完整句）","options":null,"answer":"例如盧氏小樹蛙和穿山甲。","explain":"範圍原文例子。","source":"範圍冊2／印頁3","correct_text":"例如盧氏小樹蛙和穿山甲。","visual":"","speak":"例如盧氏小樹蛙和穿山甲。"},{"id":76,"lesson":"香港的動物","type":"judge","prompt":"判斷：在香港，生活在樹林裏的動物都是哺乳類動物。","options":["✓ 正確","✗ 不正確"],"answer":1,"correct_text":"✗ 不正確。","explain":"範圍只說樹林裏有許多動物，例如哺乳類；並非全部都是哺乳類。","source":"作業p-18；範圍冊2／印頁2–3","visual":"","speak":"✗ 不正確。"},{"id":77,"lesson":"香港的動物","type":"judge","prompt":"判斷：所有海洋動物都是無脊椎動物。","options":["✓ 正確","✗ 不正確"],"answer":1,"correct_text":"✗ 不正確。","explain":"魚類是脊椎動物，也生活在海洋。","source":"作業p-18；範圍冊2／印頁3","visual":"","speak":"✗ 不正確。"},{"id":78,"lesson":"香港的動物","type":"mcq","prompt":"子琪想抱抱小松鼠。這樣做對嗎？為甚麼？","options":["對，因為松鼠很可愛","不對，我們要愛護野生動物，不要隨便捉抱","對，野生動物都喜歡被抱","不對，只因為松鼠會咬人"],"answer":1,"correct_text":"不對，要愛護野生動物。","explain":"範圍：愛護野生動物，保護生活環境。","source":"作業p-14；範圍冊2／印頁3","visual":"","speak":"不對，要愛護野生動物。"},{"id":79,"lesson":"香港的動物","type":"mcq","prompt":"弟弟想抱起地上的蝙蝠查看。較恰當的做法是？","options":["立刻抱起仔細檢查","不要隨便觸碰野生動物，應告訴成人／離開並保護動物","把蝙蝠帶回家飼養","用水潑牠趕牠走"],"answer":1,"correct_text":"不要隨便觸碰野生動物，告訴成人。","explain":"愛護野生動物；不隨意觸碰。","source":"作業p-14；範圍冊2／印頁3","visual":"","speak":"不要隨便觸碰野生動物，告訴成人。"},{"id":80,"lesson":"香港的動物","type":"match","prompt":"配對：特徵與類別。","options":["1. 母乳、毛髮、肺","2. 頭胸腹、三對腳、觸角","3. 羽毛、喙、翅膀和腳","4. 鱗片、鰭、鰓","A. 哺乳類","B. 昆蟲類","C. 鳥類","D. 魚類"],"answer_match":{"1":"A","2":"B","3":"C","4":"D"},"correct_text":"1A 2B 3C 4D","explain":"四類基本特徵對照。","source":"範圍冊2／印頁2–3；作業p-17","visual":"","speak":"1A 2B 3C 4D。"},{"id":81,"lesson":"香港的動物","type":"mcq","prompt":"下列哪一種動物是無脊椎動物？","options":["水牛","鷺","蝴蝶","海魚"],"answer":2,"correct_text":"蝴蝶。","explain":"昆蟲無脊柱。","source":"範圍冊2／印頁2；作業p-13","visual":"","speak":"蝴蝶。"},{"id":82,"lesson":"香港的動物","type":"short","prompt":"簡答：舉出一項鳥類的特徵。（完整句）","options":null,"answer":"鳥類全身長有羽毛／用喙取食／有一對翅膀和一對腳／用肺呼吸。（任一句）","explain":"3C 簡答風格；內容取自本年範圍。","source":"範圍冊2／印頁2","correct_text":"鳥類全身長有羽毛／用喙取食／有一對翅膀和一對腳／用肺呼吸。（任一句）","visual":"","speak":"鳥類全身長有羽毛／用喙取食／有一對翅膀和一對腳／用肺呼吸。（任一句）"},{"id":83,"lesson":"動物與生活","type":"match","prompt":"配對：誰需要哪一種動物幫忙？","options":["1. 失明人士出外","2. 長期住院感到沉悶","3. 警察偵緝毒品","A. 警犬","B. 導盲犬","C. 動物醫生（動物協助照顧）"],"answer_match":{"1":"B","2":"C","3":"A"},"correct_text":"1-B；2-C；3-A","explain":"作業p-15 配對；範圍亦有警犬、導盲犬。","source":"作業p-15；範圍冊2／印頁4–5","visual":"","speak":"1-B；2-C；3-A。"},{"id":84,"lesson":"動物與生活","type":"mcq","prompt":"軍人迷彩服裝的發明意念來自甚麼？","options":["魚的鱗片","動物的保護色","鳥的羽毛顏色隨便塗","昆蟲的觸角"],"answer":1,"correct_text":"動物的保護色。","explain":"範圍：迷彩服參考保護色；作業判斷亦有此句。","source":"範圍冊2／印頁4；作業p-18","visual":"","speak":"動物的保護色。"},{"id":85,"lesson":"動物與生活","type":"mcq","prompt":"子彈火車的外形靈感來自哪一種動物的哪一部分？","options":["普通翠鳥的喙","水牛的角","蝴蝶的翅膀","魚的鰓"],"answer":0,"correct_text":"普通翠鳥的喙。","explain":"範圍原文。","source":"範圍冊2／印頁4","visual":"","speak":"普通翠鳥的喙。"},{"id":86,"lesson":"動物與生活","type":"cloze","prompt":"供詞：觀察力／知識。觀賞動物可以培養____，也可以增長____（例如動物習性和保育方法）。","options":null,"answer":"觀察力；知識","explain":"亦可寫啟發創意。作業：培養觀察力，增長知識。","source":"範圍冊2／印頁4–5；作業p-18","correct_text":"觀察力；知識","visual":"","speak":"觀察力；知識。"},{"id":87,"lesson":"動物與生活","type":"mcq","prompt":"農場裏的動物可以為我們提供甚麼？","options":["只有玩具","食物、生活用品等","只有電腦遊戲","只有汽車"],"answer":1,"correct_text":"食物、生活用品等。","explain":"範圍 P.18–19。","source":"範圍冊2／印頁4–5","visual":"","speak":"食物、生活用品等。"},{"id":88,"lesson":"動物與生活","type":"match","prompt":"配對：農場資源（舉例）。","options":["1. 蛋","2. 奶","3. 毛","4. 肉","A. 雞","B. 牛（或羊）","C. 羊","D. 豬／牛／羊等"],"answer_match":{"1":"A","2":"B","3":"C","4":"D"},"correct_text":"1-A；2-B；3-C；4-D","explain":"作業p-16 農場圖；舉一合理例子即可。","source":"作業p-16；範圍冊2／印頁5","visual":"","speak":"1-A；2-B；3-C；4-D。"},{"id":89,"lesson":"動物與生活","type":"short","prompt":"簡答：我們應該怎樣珍惜動物資源？（完整句，至少兩點）","options":null,"answer":"我們不要濫用、不要浪費；避免食用野生動物，也不使用由野生動物或稀有動物製成的產品；並珍惜養殖動物提供的資源。","explain":"範圍 P.20 總結。","source":"範圍冊2／印頁5；作業p-18","correct_text":"我們不要濫用、不要浪費；避免食用野生動物，也不使用由野生動物或稀有動物製成的產品；並珍惜養殖動物提供的資源。","visual":"","speak":"我們不要濫用、不要浪費；避免食用野生動物，也不使用由野生動物或稀有動物製成的產品；並珍惜養殖動物提供的資源。"},{"id":90,"lesson":"動物與生活","type":"mcq","prompt":"導盲犬可以幫助誰？","options":["只幫助警察搜毒","幫助失明人士照顧起居生活","只幫助醫院的醫生開刀","只幫助農場耕田"],"answer":1,"correct_text":"幫助失明人士照顧起居生活。","explain":"範圍總結。","source":"範圍冊2／印頁5","visual":"","speak":"幫助失明人士照顧起居生活。"},{"id":91,"lesson":"動物與生活","type":"mcq","prompt":"警犬可以協助警察做甚麼？","options":["替警察寫報告","執行搜尋任務（例如偵緝毒品）","替警察煮飯","照顧失明人士過馬路"],"answer":1,"correct_text":"執行搜尋任務。","explain":"範圍：協助警察執行搜尋任務；作業：偵緝毒品。","source":"範圍冊2／印頁4；作業p-15","visual":"","speak":"執行搜尋任務。"},{"id":92,"lesson":"動物與生活","type":"judge","prompt":"判斷：軍人迷彩服裝的發明意念來自動物的保護色。","options":["✓ 正確","✗ 不正確"],"answer":0,"correct_text":"✓ 正確。","explain":"範圍與作業判斷。","source":"範圍冊2／印頁4；作業p-18","visual":"","speak":"✓ 正確。"},{"id":93,"lesson":"動物與生活","type":"mcq","prompt":"吸盤這類用品的設計，較接近哪一種動物的特徵？","options":["松鼠的爪","八爪魚的吸盤","鳥的喙","牛的蹄"],"answer":1,"correct_text":"八爪魚的吸盤。","explain":"作業看圖選擇。","source":"作業p-15","visual":"","speak":"八爪魚的吸盤。"},{"id":94,"lesson":"動物與生活","type":"short","prompt":"簡答：大熊貓為甚麼常被用作增長知識的例子？（完整句）","options":null,"answer":"我們可以認識大熊貓成為中國國寶的原因和保育方法。","explain":"範圍腦圖例子。","source":"範圍冊2／印頁6","correct_text":"我們可以認識大熊貓成為中國國寶的原因和保育方法。","visual":"","speak":"我們可以認識大熊貓成為中國國寶的原因和保育方法。"},{"id":95,"lesson":"動物與生活","type":"mcq","prompt":"有些公園飼養動物，主要可以讓我們？","options":["隨便捉回家","認識各種動物並瞭解保育方法","練習傷害野生動物","購買象牙製品"],"answer":1,"correct_text":"認識動物並瞭解保育方法。","explain":"範圍總結。","source":"範圍冊2／印頁5","visual":"","speak":"認識動物並瞭解保育方法。"},{"id":96,"lesson":"動物與生活","type":"judge","prompt":"判斷：我們應該避免食用野生動物，也不使用稀有動物製成的產品。","options":["✓ 正確","✗ 不正確"],"answer":0,"correct_text":"✓ 正確。","explain":"範圍珍惜資源要點。","source":"範圍冊2／印頁5","visual":"","speak":"✓ 正確。"},{"id":97,"lesson":"動物與生活","type":"mcq","prompt":"農場管理人說這個農場支持「少吃肉」。這與哪一項態度最接近？","options":["儘量浪費食物","珍惜動物資源，不要濫用浪費","鼓勵多用野生動物製品","把所有動物都放生到馬路"],"answer":1,"correct_text":"珍惜動物資源，不要濫用浪費。","explain":"作業p-18 情境與範圍珍惜資源一致。","source":"作業p-18；範圍冊2／印頁5","visual":"","speak":"珍惜動物資源，不要濫用浪費。"},{"id":98,"lesson":"動物與生活","type":"cloze","prompt":"供詞：警犬／導盲犬。____會協助警察搜尋；____可以幫助失明人士。","options":null,"answer":"警犬；導盲犬","explain":"兩者工作不同，不要混淆。","source":"範圍冊2／印頁4–5；作業p-15","correct_text":"警犬；導盲犬","visual":"","speak":"警犬；導盲犬。"},{"id":99,"lesson":"動物與生活","type":"short","prompt":"簡答：舉出一項「從動物得到啟發」的發明例子。（完整句）","options":null,"answer":"例如迷彩服參考動物的保護色；又或子彈火車外形源自普通翠鳥的喙。","explain":"兩例皆出自範圍。","source":"範圍冊2／印頁4","correct_text":"例如迷彩服參考動物的保護色；又或子彈火車外形源自普通翠鳥的喙。","visual":"","speak":"例如迷彩服參考動物的保護色；又或子彈火車外形源自普通翠鳥的喙。"},{"id":100,"lesson":"動物與生活","type":"mcq","prompt":"下列哪一項做法符合「珍惜動物資源」？","options":["濫用動物產品","浪費食物","珍惜養殖動物提供的資源，不濫用不浪費","使用象牙製品"],"answer":2,"correct_text":"珍惜養殖動物提供的資源，不濫用不浪費。","explain":"範圍總結原文方向。","source":"範圍冊2／印頁5","visual":"","speak":"珍惜養殖動物提供的資源，不濫用不浪費。"}];
+
+const letters = ["A","B","C","D","E","F"];
+const TYPE_NAME = {
+  cloze: "供詞填充", diagram: "填圖／分類", mcq: "四選一",
+  match: "配對", order: "排序", judge: "判斷", picture: "看圖", short: "簡答"
+};
+
+let i = -1;
+let picked = null;
+let revealed = false;
+let dark = false;
+let showJump = false;
+let orderClicks = [];
+const seen = new Set();
+
+function hideJump(){ showJump = false; }
+function start(){ i = 0; picked = null; revealed = false; orderClicks = []; showJump = false; location.hash = "1"; render(); }
+function go(d){
+  const n = i + d;
+  if (n < 0) return;
+  if (n > QUESTIONS.length) return;
+  i = n; picked = null; revealed = false; orderClicks = []; showJump = false;
+  if (i >= 0 && i < QUESTIONS.length) location.hash = String(i+1);
+  else if (i >= QUESTIONS.length) location.hash = "end";
+  render();
+}
+function jumpTo(k){ i = k; picked = null; revealed = false; orderClicks = []; showJump = false; location.hash = String(i+1); render(); }
+function toggleJump(force){
+  showJump = (typeof force === "boolean") ? force : !showJump;
+  render();
+}
+function toggleDark(){
+  dark = !dark;
+  document.documentElement.classList.toggle("dark", dark);
+}
+function goFull(){
+  const el = document.documentElement;
+  if (!document.fullscreenElement) el.requestFullscreen?.();
+  else document.exitFullscreen?.();
+}
+function toggleReveal(){
+  if (i < 0 || i >= QUESTIONS.length) return;
+  revealed = !revealed;
+  if (revealed) seen.add(i);
+  render();
+}
+function choose(idx){
+  const s = QUESTIONS[i];
+  if (!s || revealed) return;
+  if (s.type === "order") {
+    const lab = letters[idx];
+    if (orderClicks.includes(lab)) return;
+    orderClicks.push(lab);
+    picked = orderClicks.slice();
+    if (orderClicks.length === (s.answer_order || []).length) {
+      /* wait for reveal */
+    }
+    render();
+    return;
+  }
+  picked = idx;
+  render();
+}
+
+function jumpPanel() {
+  const items = QUESTIONS.map((q,k) => {
+    const cls = ["jump", k===i?"now":"", seen.has(k)?"seen":""].join(" ");
+    return `<button class="${cls}" onclick="jumpTo(${k})">${k+1}</button>`;
+  }).join("");
+  return `
+    <div class="mask${showJump?" show":""}" onclick="toggleJump(false)"></div>
+    <aside class="drawer${showJump?" show":""}" role="dialog" aria-label="跳題目錄">
+      <h2>跳到題目</h2>
+      <p class="sub">共 100 題。按課題練習亦可跳題；跳題後答案會重新隱藏。</p>
+      <div class="jgrid">${items}</div>
+      <div class="legend">← → 換題　空白鍵顯示／隱藏答案　F 全螢幕　D 深色　M 目錄</div>
+    </aside>`;
+}
+
+function qInteractive(s) {
+  if (s.type === "short" || s.type === "cloze" || s.type === "match") {
+    const extra = s.type === "match"
+      ? `<div class="pairs">${(s.options||[]).map(o=>`<div>${o}</div>`).join("")}</div>`
+      : "";
+    return `${extra}<div class="think">先自己想／說出來，再按「顯示答案」。簡答要用完整句子。</div>`;
+  }
+  if (s.type === "order") {
+    return `<div class="qtype-hint">請按正確順序點選步驟（可再按「顯示答案」核對）</div>` + optButtons(s, true);
+  }
+  if (s.options && s.options.length) {
+    return optButtons(s, false);
+  }
+  return `<div class="think">先自己想，再按「顯示答案」。</div>`;
+}
+
+function optButtons(s, isOrder) {
+  const four = (!isOrder && s.options.length >= 4) ? " four" : "";
+  const ans = s.answer;
+  const ao = s.answer_order || [];
+  return `<div class="options${four}">` + s.options.map((opt,idx)=>{
+    let cls = "opt";
+    const lab = letters[idx];
+    if (!isOrder) {
+      if (picked === idx) cls += " picked";
+      if (revealed && typeof ans === "number" && idx === ans) cls += " correct";
+      if (revealed && picked !== null && typeof ans === "number" && idx === picked && idx !== ans) cls += " wrong";
+    } else {
+      const pos = orderClicks.indexOf(lab);
+      if (pos >= 0) cls += " picked";
+      if (revealed && ao.includes(lab)) cls += " correct";
+      if (revealed && orderClicks.includes(lab) && ao[orderClicks.indexOf(lab)] !== lab) cls += " wrong";
+    }
+    const prefix = isOrder && orderClicks.indexOf(lab) >= 0
+      ? `<span class="tag">${orderClicks.indexOf(lab)+1}</span>`
+      : `<span class="tag">${lab}</span>`;
+    return `<button class="${cls}" onclick="choose(${idx})">${prefix}<span>${opt}</span></button>`;
+  }).join("") + `</div>`;
+}
+
+function explainBox(s) {
+  let verdict = "";
+  if (s.type === "mcq" || s.type === "diagram" || s.type === "judge") {
+    if (picked !== null && typeof s.answer === "number") {
+      verdict = picked === s.answer
+        ? `<div class="verdict ok">答對了！</div>`
+        : `<div class="verdict no">先看清楚正確答案，再記一遍。</div>`;
+    }
+  }
+  if (s.type === "order" && orderClicks.length) {
+    const ok = JSON.stringify(orderClicks) === JSON.stringify(s.answer_order || []);
+    verdict = ok ? `<div class="verdict ok">順序正確！</div>` : `<div class="verdict no">順序不對，看下面的正確排法。</div>`;
+  }
+  let letter = "";
+  if (typeof s.answer === "number") letter = letters[s.answer] || "";
+  const bannerInner = letter
+    ? `正確是 <span class="letter">${letter}</span>　${s.correct_text}`
+    : `答案：${s.correct_text}`;
+  return `<aside class="explain">
+      ${verdict}
+      <div class="ans-banner">${bannerInner}</div>
+      <h3>記住這一點</h3>
+      <p class="body">${s.explain}</p>
+      <div class="speak"><b>請用完整句子講一次</b>${s.speak || s.correct_text}</div>
+      <div class="src">出處：${s.source}</div>
+    </aside>`;
+}
+
+function render() {
+  const app = document.getElementById("app");
+  document.body.classList.toggle("in-practice", i >= 0);
+  if (i < 0) return;
+  if (i >= QUESTIONS.length) {
+    app.innerHTML = `
+      <main>
+        <div class="end">
+          <h1>今天練完 100 題了！</h1>
+          <p>可以再走一遍，或按「目錄」跳回還想溫的題。</p>
+          <button class="act" style="font-size:3vmin;padding:1.3vmin 3.6vmin;margin-top:1.6vmin" onclick="jumpTo(0)">再練一次</button>
+        </div>
+      </main>
+      <footer class="bar">
+        <button class="nav" onclick="go(-1)">上一題</button>
+        <div class="bar-mid"><div class="pbar"><i style="width:100%"></i></div><div class="pbar-lab">100／100</div></div>
+        <button class="icon" onclick="toggleJump()">目錄</button>
+      </footer>
+      ${jumpPanel()}`;
+    return;
+  }
+  const s = QUESTIONS[i];
+  const pct = ((i+1) / QUESTIONS.length * 100).toFixed(1);
+  const split = revealed ? " split" : "";
+  app.innerHTML = `
+    <header class="top">
+      <div class="brand">女兒常識模擬練習</div>
+      <span class="chip type-chip">${TYPE_NAME[s.type]||s.type}</span>
+      <span class="chip lesson-chip">${s.lesson}</span>
+      <span class="spacer"></span>
+      <button class="icon" onclick="toggleDark()">深色</button>
+      <button class="icon" onclick="goFull()">全螢幕</button>
+      <button class="icon" onclick="toggleJump()">目錄</button>
+      <div class="progress">${i+1}／${QUESTIONS.length}</div>
+    </header>
+    <main class="${split}">
+      <div class="col-q">
+        ${s.visual || ""}
+        <p class="qtype-hint">模擬練習，範圍預測，非試題。答案預設隱藏。</p>
+        <h1 class="prompt">${s.prompt}</h1>
+        ${qInteractive(s)}
+      </div>
+      ${revealed ? explainBox(s) : ""}
+    </main>
+    <footer class="bar">
+      <button class="nav" onclick="go(-1)" ${i===0?"disabled":""}>上一題</button>
+      <div class="bar-mid">
+        <div class="pbar"><i style="width:${pct}%"></i></div>
+        <div class="pbar-lab">${i+1}／${QUESTIONS.length}　空白鍵顯示答案　方向鍵換題</div>
+      </div>
+      <button class="act${revealed?" ready":""}" onclick="toggleReveal()">${revealed?"隱藏答案":"顯示答案"}</button>
+      <button class="nav" onclick="go(1)">下一題</button>
+    </footer>
+    ${jumpPanel()}`;
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "d" || e.key === "D") { toggleDark(); return; }
+  if (e.key === "f" || e.key === "F") { goFull(); return; }
+  if (e.key === "m" || e.key === "M") { if (i >= 0) toggleJump(); return; }
+  if (e.key === "Escape" && showJump) { toggleJump(false); return; }
+  if (i < 0) { if (e.key === " " || e.key === "Enter") { e.preventDefault(); start(); } return; }
+  if (showJump) return;
+  if (i >= QUESTIONS.length) {
+    if (e.key === "ArrowLeft") { i=QUESTIONS.length-1; picked=null; revealed=false; orderClicks=[]; render(); }
+    return;
+  }
+  if (e.key === "ArrowRight" || e.key === "PageDown") { e.preventDefault(); go(1); }
+  else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); go(-1); }
+  else if (e.key === " " || e.key === "Enter") { e.preventDefault(); toggleReveal(); }
+  else if (["1","2","3","4","a","b","c","d","A","B","C","D"].includes(e.key)) {
+    const map = {a:0,b:1,c:2,d:3,A:0,B:1,C:2,D:3,"1":0,"2":1,"3":2,"4":3};
+    const s = QUESTIONS[i];
+    if (s && !revealed && s.options && map[e.key] < s.options.length && s.type !== "match") choose(map[e.key]);
+  }
+});
+
+function applyHash() {
+  const h = (location.hash || "").replace("#","");
+  picked = null; orderClicks = []; showJump = false;
+  if (h === "dark") { dark = true; document.documentElement.classList.add("dark"); i = -1; revealed = false; }
+  else if (!h || h === "cover") { i = -1; revealed = false; }
+  else if (h === "end") { i = QUESTIONS.length; revealed = false; }
+  else if (h === "menu") { i = 0; revealed = false; showJump = true; }
+  else {
+    const m = h.match(/^(\d+)(r)?(d)?$/);
+    if (m) {
+      i = Math.max(0, Math.min(QUESTIONS.length-1, parseInt(m[1], 10)-1));
+      revealed = !!m[2];
+      dark = !!m[3] || dark;
+      document.documentElement.classList.toggle("dark", dark);
+    }
+  }
+  render();
+}
+window.addEventListener("hashchange", applyHash);
+applyHash();
+
+</script>
+</body>
+</html>

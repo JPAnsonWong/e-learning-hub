@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>常識溫習　圖文寫字（2026-11-17）</title>
+<style>
+  :root {
+    --ink:#1c2430; --muted:#5a6573; --paper:#fffdf8; --bg:#f3efe6;
+    --l1:#0f766e; --l2:#9a3412; --l3:#6d28d9; --l4:#be185d; --l5:#166534; --l6:#1d4ed8;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: "PingFang TC","Microsoft JhengHei",sans-serif;
+    line-height: 1.55;
+  }
+  .banner {
+    background: #fff; color: #111; border-bottom: 3px solid #ddd;
+    padding: 18px 22px 16px; text-align: center;
+  }
+  .banner .kicker { letter-spacing:.18em; color:#666; font-weight:700; font-size:13px; margin:0 0 6px; }
+  .banner h1 { margin:0 0 6px; font-size: clamp(28px, 4.2vw, 44px); }
+  .banner p { margin: 4px auto; max-width: 46em; font-size: 16px; color:#333; }
+  .warn { background:#fff7ed; border:2px solid #c2410c; color:#9a3412; font-weight:800;
+           display:inline-block; padding:6px 14px; border-radius:999px; margin-top:8px; }
+  nav.toc {
+    position: sticky; top: 0; z-index: 20;
+    background: #1c2430; display:flex; flex-wrap:wrap; gap:6px; justify-content:center;
+    padding: 8px 10px;
+  }
+  nav.toc a {
+    color:#fff; text-decoration:none; font-weight:800; font-size:1rem;
+    padding:0.6rem 1rem; border-radius:999px; background:#334155;
+    min-height: 3rem; display:inline-flex; align-items:center;
+  }
+  nav.toc a.c1 { background: var(--l1); }
+  nav.toc a.c2 { background: var(--l2); }
+  nav.toc a.c3 { background: var(--l3); }
+  nav.toc a.c4 { background: var(--l4); }
+  nav.toc a.c5 { background: var(--l5); }
+  nav.toc a.c6 { background: var(--l6); }
+  nav.toc a.c7 { background:#334155; }
+  section.lesson {
+    max-width: 1100px; margin: 22px auto; background: var(--paper);
+    border-radius: 22px; padding: 22px 24px 28px;
+    box-shadow: 0 10px 28px rgba(28,36,48,.07);
+    border-top: 10px solid #ccc;
+  }
+  section.l1 { border-top-color: var(--l1); }
+  section.l2 { border-top-color: var(--l2); }
+  section.l3 { border-top-color: var(--l3); }
+  section.l4 { border-top-color: var(--l4); }
+  section.l5 { border-top-color: var(--l5); }
+  section.l6 { border-top-color: var(--l6); }
+  section.lesson h2 {
+    margin: 0 0 12px; font-size: clamp(26px, 3.4vw, 36px);
+  }
+  .l1 h2 { color: var(--l1); }
+  .l2 h2 { color: var(--l2); }
+  .l3 h2 { color: var(--l3); }
+  .l4 h2 { color: var(--l4); }
+  .l5 h2 { color: var(--l5); }
+  .l6 h2 { color: var(--l6); }
+  h3.subh { margin: 22px 0 10px; font-size: 20px; }
+  .cards { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:12px; }
+  .card {
+    background:#f8fafc; border:1px solid #e2e8f0; border-radius:16px; padding:14px 16px;
+  }
+  .card h4 { margin:0 0 6px; font-size:18px; }
+  .card p, .card li { margin:0; font-size:16px; }
+  .card ol, .card ul { margin:6px 0 0; padding-left:1.2em; }
+  .k { color:#c2410c; font-weight:800; }
+  .good { color:#157a3a; font-weight:800; }
+  .bad { color:#b42318; font-weight:800; }
+  .mix {
+    background:#fff1f2; border-left:6px solid #e11d48; border-radius:12px; padding:12px 16px; margin-top:10px;
+  }
+  .life {
+    background:#ecfeff; border-left:6px solid #0e7490; border-radius:12px; padding:12px 16px; margin-top:10px;
+  }
+  .mind {
+    display:flex; flex-wrap:wrap; gap:10px; justify-content:center; align-items:stretch; margin:12px 0;
+  }
+  .bubble {
+    min-width: 140px; max-width: 220px; flex:1;
+    border-radius: 20px; padding: 12px 14px; color:#fff; font-weight:800;
+    text-align:center; font-size:15px;
+  }
+  .hero {
+    display:flex; gap:16px; flex-wrap:wrap; align-items:center; margin: 8px 0 16px;
+  }
+  .illo {
+    font-size: 52px; line-height:1; background:#fff; border-radius:20px;
+    padding:10px 14px; border:2px dashed #cbd5e1;
+  }
+  /* redrawn medicine label */
+  .rx {
+    background:#fff7ed; border:3px solid #c2410c; border-radius:14px;
+    padding:10px 14px; min-width:240px; font-weight:700; font-size:15px;
+  }
+  .rx .t { color:#9a3412; font-size:18px; font-weight:800; }
+  .animals { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px; }
+  .ani { border-radius:16px; padding:12px; color:#fff; font-weight:700; }
+  .ani.m { background:#9a3412; }
+  .ani.i { background:#7c3aed; }
+  .ani.b { background:#0369a1; }
+  .ani.f { background:#0f766e; }
+  .ani .em { font-size:36px; display:block; }
+  /* 田字格 */
+  .word {
+    border:1px solid #e2e8f0; border-radius:16px; padding:14px; margin:12px 0; background:#fff;
+    break-inside: avoid;
+  }
+  .word-big {
+    font-size: 42px; font-weight:800; letter-spacing:.12em;
+    font-family: "Kaiti TC","STKaiti","KaiTi","DFKai-SB",serif;
+  }
+  .word-meta, .ciyu { margin:4px 0; color:#334155; }
+  .tip { margin:6px 0; color:#9a3412; font-weight:800; }
+  .grids { display:flex; flex-wrap:wrap; gap:12px 24px; align-items:flex-end; }
+  .lab { display:block; font-size:12px; color:#64748b; font-weight:700; margin-bottom:4px; }
+  .tian-row { display:flex; gap:0; }
+  .tian {
+    width: 64px; height: 64px; border: 2px solid #334155;
+    margin-left: -2px; position: relative;
+    background:
+      linear-gradient(#94a3b8 1px, transparent 1px) 0 50% / 100% 1px no-repeat,
+      linear-gradient(90deg, #94a3b8 1px, transparent 1px) 50% 0 / 1px 100% no-repeat,
+      #fff;
+  }
+  .tian:first-child { margin-left:0; }
+  .tian i {
+    position:absolute; inset:0; display:grid; place-items:center;
+    font-style:normal; font-size: 44px; font-weight:700;
+    font-family: "Kaiti TC","STKaiti","KaiTi","DFKai-SB",serif;
+    color: rgba(190, 24, 93, .38);
+    line-height:1;
+  }
+  .tian:not(.fade) i { display:none; }
+  footer.sign {
+    max-width:1100px; margin: 10px auto 40px; text-align:center; color:#64748b; font-size:14px;
+  }
+  #print-sheet { max-width:1100px; margin:22px auto 40px; background:#fff; border-radius:22px; padding:22px; }
+  .print-word { margin: 0 0 16px; break-inside: avoid; }
+  .pw-name { font-weight:800; font-size:20px; margin-bottom:4px; }
+  .pw-name span { font-size:13px; color:#64748b; font-weight:700; }
+  @media print {
+    nav.toc, .banner .chrome { display:none; }
+    body { background:#fff; }
+    section.lesson { box-shadow:none; page-break-before: always; }
+    #print-sheet { page-break-before: always; }
+  }
+  .chrome { font-size:15px; color:#334155; }
+  table.qa { width:100%; border-collapse:collapse; font-size:16px; }
+  table.qa th, table.qa td { border:1px solid #e2e8f0; padding:8px 10px; vertical-align:top; }
+  table.qa th { background:#f1f5f9; text-align:left; width:38%; }
+</style>
+</head>
+<body>
+<div class="banner">
+  <p class="kicker">3D　常識科第一次評估溫習</p>
+  <h1>女兒的常識溫習　圖文＋寫字</h1>
+  <p>評估日期：2026 年 11 月 17 日（星期二）　·　查核日期：2026 年 11 月 14 日（香港時間）</p>
+  <p class="chrome">請先把本檔下載，用 Google Chrome 打開，再投到電視或用平板看。本頁可逐課點選，也可以列印寫字紙。</p>
+  <div class="warn">範圍預測溫習，非試題</div>
+  <p>署名：Janet｜常識</p>
+</div>
+<nav class="toc">
+  <a class="c1" href="#l1">1 藥到病除</a>
+  <a class="c2" href="#l2">2 遠離煙酒和毒品</a>
+  <a class="c3" href="#l3">3 我的情緒</a>
+  <a class="c4" href="#l4">4 我的好朋友</a>
+  <a class="c5" href="#l5">5 香港的動物</a>
+  <a class="c6" href="#l6">6 動物與生活</a>
+  <a class="c7" href="#print-sheet">列印寫字紙</a>
+</nav>
+
+<section class="lesson l1" id="l1">
+  <h2>第1課　藥到病除</h2>
+  <div class="hero">
+    <div class="illo" aria-hidden="true">💊🌡️</div>
+    <div class="rx">
+      <div class="t">王永一醫務所</div>
+      旺角上海街 446 號<br>
+      姓名：陳子文<br>
+      藥名：Coritab（防敏感）<br>
+      <span class="k">每日服 4 次　每隔 4 小時　每次 1 粒　飯後</span>
+    </div>
+    <p>這是作業裏子文的藥物標籤（重繪，不是掃描）。考試很愛考這些<span class="k">數字</span>和「<span class="k">飯後</span>」。</p>
+  </div>
+  <h3 class="subh">要記重點</h3>
+  <table class="qa">
+    <tr><th>身體不適怎麼辦？</th><td>應該<span class="k">及早求醫</span>。可以向<span class="k">中醫或西醫</span>求診。</td></tr>
+    <tr><th>看病時要注意甚麼？</th><td>清楚說出病情，小心聆聽指示。服藥前要仔細閱讀<span class="k">藥物標籤</span>。</td></tr>
+    <tr><th>怎樣服藥？</th><td>按照醫生指示，<span class="k">定時定量</span>。不可以胡亂更改<span class="k">分量</span>或停服，也不可以服用別人的藥物。</td></tr>
+    <tr><th>出現不良反應呢？</th><td>要儘快<span class="k">告訴醫生</span>，不要自己加減藥或繼續硬吃。</td></tr>
+    <tr><th>藥物怎樣儲存？</th><td><span class="k">陰涼</span>、<span class="k">乾爽</span>、小孩<span class="k">觸碰不到</span>、太陽或燈光照射不到。這樣可避免<span class="k">變質</span>或<span class="k">誤服</span>。</td></tr>
+    <tr><th>生病怎樣照顧自己？</th><td>立即求診、按指示服藥、保持空氣流通、多休息、多喝<span class="k">開水</span>，吃有營養和容易消化的食物。</td></tr>
+    <tr><th>別人生病了？</th><td>我們要表達<span class="k">關懷</span>和<span class="k">慰問</span>。</td></tr>
+  </table>
+  <div class="life">
+    <h3 class="subh" style="margin-top:0">生活例子（子文、美恩、敏兒）</h3>
+    <ul>
+      <li>妹妹叫子文吃「剩下的藥物」→ <span class="bad">不對</span>。媽媽說「趕快請醫生診治」→ <span class="good">對</span>。</li>
+      <li>上午十時服藥，每隔 4 小時，下次是<span class="k">下午 2 時</span>。</li>
+      <li>用牛奶送藥丸 <span class="bad">✗</span>；病情改善仍按指示服藥 <span class="good">✓</span>；皮膚出紅疹要看醫生 <span class="good">✓</span>；多喝一茶匙藥水 <span class="bad">✗</span>。</li>
+      <li>美恩儲存：窗邊陽光、茶几（小朋友碰到）、魚缸 → 不當；<span class="good">高櫃</span>才適當。</li>
+      <li>敏兒生病，媽媽帶她到西醫診所求診；藥物放在<span class="k">陰涼</span>、<span class="k">乾爽</span>的櫃內，避免變質；吃藥後多休息、多喝開水。</li>
+    </ul>
+  </div>
+  <div class="mix"><b>易混：</b>藥給別人吃 ≠ 按醫生指示服藥。病情好轉 ≠ 可以自行停藥。想快點好 ≠ 可以自己加多一點藥。</div>
+  <h3 class="subh">寫字引導　藥到病除</h3>
+
+    <article class="word">
+      <div class="word-big">藥物標籤</div>
+      <div class="word-meta"><b>部首／結構：</b>籤：竹字頭　·　出處：範圍冊1／印頁2</div>
+      <p class="tip">⚠ 易錯：「籤」不是「簽」</p>
+      <p class="ciyu">組詞／造句：藥物標籤、閱讀標籤</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>藥</i></span><span class="tian fade"><i>物</i></span><span class="tian fade"><i>標</i></span><span class="tian fade"><i>籤</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">陰涼</div>
+      <div class="word-meta"><b>部首／結構：</b>陰：左阜（阝）　·　出處：範圍冊1／印頁2</div>
+      <p class="tip">⚠ 易錯：不要和「陽」搞混邊旁</p>
+      <p class="ciyu">組詞／造句：陰涼的櫃子</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>陰</i></span><span class="tian fade"><i>涼</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">乾爽</div>
+      <div class="word-meta"><b>部首／結構：</b>乾：乙部　·　出處：範圍冊1／印頁2</div>
+      <p class="tip">⚠ 易錯：不要簡寫成「干」</p>
+      <p class="ciyu">組詞／造句：乾爽的地方</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>乾</i></span><span class="tian fade"><i>爽</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">變質</div>
+      <div class="word-meta"><b>部首／結構：</b>質：貝部　·　出處：範圍冊1／印頁3；作業p-02</div>
+      <p class="tip">⚠ 易錯：中間筆畫不要漏</p>
+      <p class="ciyu">組詞／造句：藥物變質</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>變</i></span><span class="tian fade"><i>質</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">誤服</div>
+      <div class="word-meta"><b>部首／結構：</b>誤：言字旁　·　出處：範圍冊1／印頁3；作業p-02</div>
+      <p class="tip">⚠ 易錯：「誤」不是「吳」單用</p>
+      <p class="ciyu">組詞／造句：避免誤服</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>誤</i></span><span class="tian fade"><i>服</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">慰問</div>
+      <div class="word-meta"><b>部首／結構：</b>慰：心字底；問：口門　·　出處：範圍冊1／印頁3</div>
+      <p class="tip">⚠ 易錯：「慰」不是「蔚」；「問」不要寫成「間」</p>
+      <p class="ciyu">組詞／造句：慰問病人</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>慰</i></span><span class="tian fade"><i>問</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">關懷</div>
+      <div class="word-meta"><b>部首／結構：</b>懷：豎心旁　·　出處：範圍冊1／印頁3</div>
+      <p class="tip">⚠ 易錯：右邊筆畫較多，慢慢寫</p>
+      <p class="ciyu">組詞／造句：表達關懷</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>關</i></span><span class="tian fade"><i>懷</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">分量</div>
+      <div class="word-meta"><b>部首／結構：</b>量：裡有一「里」　·　出處：範圍冊1／印頁2</div>
+      <p class="tip">⚠ 易錯：中間不要少一橫</p>
+      <p class="ciyu">組詞／造句：不可更改分量</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>分</i></span><span class="tian fade"><i>量</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">觸碰</div>
+      <div class="word-meta"><b>部首／結構：</b>觸：角字旁　·　出處：範圍冊1／印頁2</div>
+      <p class="tip">⚠ 易錯：不要寫成「獨」</p>
+      <p class="ciyu">組詞／造句：小孩觸碰不到</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>觸</i></span><span class="tian fade"><i>碰</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+</section>
+
+<section class="lesson l2" id="l2">
+  <h2>第2課　遠離煙酒和毒品</h2>
+  <div class="hero"><div class="illo" aria-hidden="true">🚭</div><p>煙、酒、毒品都會傷害身體。聽到「試一次無妨」「嘗一口」，都要<span class="k">堅決拒絕</span>。</p></div>
+  <h3 class="subh">要記重點（不要張冠李戴）</h3>
+  <div class="mind">
+    <div class="bubble" style="background:var(--l2)">吸煙<br>危害健康<br>影響<span class="k" style="color:#fde68a">儀容</span></div>
+    <div class="bubble" style="background:#b45309">喝酒<br>失去<span style="color:#fde68a">判斷力</span><br>行為不受控制</div>
+    <div class="bubble" style="background:#7f1d1d">吸毒<br>情緒和行為失控、嚴重損害健康、失去生命、影響學習和工作、影響儀容</div>
+  </div>
+  <p>長期吸煙和喝酒，會增加患上<span class="k">嚴重疾病</span>的機會，甚至引致死亡。</p>
+  <p>吸毒的五項禍害都要記：①情緒和行為失控　②嚴重損害健康　③失去生命　④影響學習和工作　⑤影響儀容。</p>
+  <div class="life">
+    <b>生活例子：</b>海明叫芳芳「試吃一次」→ 芳芳應堅決拒絕。文浩叫表弟嘗一口啤酒 → 建議不對，表弟應堅決拒絕。嘗試吸一口煙「沒問題」→ <span class="bad">錯</span>。吸毒能忘記不開心 → <span class="bad">錯</span>。
+  </div>
+  <div class="mix"><b>易混：</b>不要把「失去判斷力」寫到吸煙上，也不要把「增強記憶力／抵抗力」當成吸毒的好處——那些都不是事實。</div>
+  <h3 class="subh">寫字引導　遠離煙酒和毒品</h3>
+
+    <article class="word">
+      <div class="word-big">儀容</div>
+      <div class="word-meta"><b>部首／結構：</b>儀：人字旁　·　出處：範圍冊1／印頁4</div>
+      <p class="tip">⚠ 易錯：「儀」不是「義」</p>
+      <p class="ciyu">組詞／造句：影響儀容</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>儀</i></span><span class="tian fade"><i>容</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">判斷力</div>
+      <div class="word-meta"><b>部首／結構：</b>斷：左邊是「㡭」形　·　出處：範圍冊1／印頁4</div>
+      <p class="tip">⚠ 易錯：「斷」左邊易錯</p>
+      <p class="ciyu">組詞／造句：失去判斷力</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>判</i></span><span class="tian fade"><i>斷</i></span><span class="tian fade"><i>力</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">堅決拒絕</div>
+      <div class="word-meta"><b>部首／結構：</b>絕：絲字旁；拒：提手旁　·　出處：範圍冊1／印頁4、10</div>
+      <p class="tip">⚠ 易錯：「拒絕」的「絕」不是「決」；兩詞不要寫成同一個字</p>
+      <p class="ciyu">組詞／造句：堅決拒絕</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>堅</i></span><span class="tian fade"><i>決</i></span><span class="tian fade"><i>拒</i></span><span class="tian fade"><i>絕</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">吸煙</div>
+      <div class="word-meta"><b>部首／結構：</b>煙：火字旁　·　出處：範圍冊1／印頁4</div>
+      <p class="tip">⚠ 易錯：「煙」不是「胭」</p>
+      <p class="ciyu">組詞／造句：拒絕吸煙</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>吸</i></span><span class="tian fade"><i>煙</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">毒品</div>
+      <div class="word-meta"><b>部首／結構：</b>毒：母部　·　出處：範圍冊1／印頁4</div>
+      <p class="tip">⚠ 易錯：筆畫要寫完整</p>
+      <p class="ciyu">組詞／造句：遠離毒品</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>毒</i></span><span class="tian fade"><i>品</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+</section>
+
+<section class="lesson l3" id="l3">
+  <h2>第3課　我的情緒</h2>
+  <div class="hero"><div class="illo" aria-hidden="true">😊😢😠</div><p><span class="good">正面</span>：開心、興奮。<span class="bad">負面</span>：傷心、生氣；還有害怕、失望、緊張。</p></div>
+  <h3 class="subh">要記重點</h3>
+  <table class="qa">
+    <tr><th>不快樂時怎樣放鬆？</th><td>例如大哭一場、向別人<span class="k">傾訴</span>、做運動、聽音樂。</td></tr>
+    <tr><th>生氣時怎麼辦？</th><td>要<span class="k">先冷靜下來</span>，然後才表達感受，並以正面態度思考。不要胡亂發脾氣，不要破壞物件，不要傷害自己和別人。</td></tr>
+    <tr><th>遇到困難呢？</th><td>要積極面對，努力尋求解決方法。</td></tr>
+  </table>
+  <div class="life">
+    <b>生活例子：</b>取消野餐→失望；弄髒圖書→生氣；大狗吠→害怕；老師稱讚→開心。<br>
+    紓緩：游泳／運動、傾訴、大哭、音樂 <span class="good">✓</span>；暴飲暴食、踢壞玩具 <span class="bad">✗</span>。<br>
+    美恩溫習時弟弟吵鬧：先冷靜，再向媽媽說出經過。<br>
+    畫沒入選：積極＝努力練習畫得更好。爸爸忘買蛋糕：積極＝體諒他已經很累。
+  </div>
+  <div class="mix"><b>易混：</b>大哭可以是紓緩方法，砸東西不是。生氣不是立刻發脾氣，而是先冷靜再表達。</div>
+  <h3 class="subh">寫字引導　我的情緒</h3>
+
+    <article class="word">
+      <div class="word-big">情緒</div>
+      <div class="word-meta"><b>部首／結構：</b>緒：絲字旁　·　出處：範圍冊1／印頁7</div>
+      <p class="tip">⚠ 易錯：右邊是「者」</p>
+      <p class="ciyu">組詞／造句：負面情緒</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>情</i></span><span class="tian fade"><i>緒</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">正面</div>
+      <div class="word-meta"><b>部首／結構：</b>正：止上一橫　·　出處：範圍冊1／印頁7</div>
+      <p class="tip">⚠ 易錯：端正寫好「正」</p>
+      <p class="ciyu">組詞／造句：正面情緒、正面態度</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>正</i></span><span class="tian fade"><i>面</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">負面</div>
+      <div class="word-meta"><b>部首／結構：</b>負：刀貝　·　出處：範圍冊1／印頁7</div>
+      <p class="tip">⚠ 易錯：不要漏「貝」</p>
+      <p class="ciyu">組詞／造句：負面情緒</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>負</i></span><span class="tian fade"><i>面</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">冷靜</div>
+      <div class="word-meta"><b>部首／結構：</b>冷：兩點水　·　出處：範圍冊1／印頁7–8</div>
+      <p class="tip">⚠ 易錯：是「冷」不是「泠」；「靜」左邊青右邊爭</p>
+      <p class="ciyu">組詞／造句：先冷靜下來</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>冷</i></span><span class="tian fade"><i>靜</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">傾訴</div>
+      <div class="word-meta"><b>部首／結構：</b>傾：人字旁　·　出處：範圍冊1／印頁7–8</div>
+      <p class="tip">⚠ 易錯：「訴」是言字旁</p>
+      <p class="ciyu">組詞／造句：向別人傾訴</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>傾</i></span><span class="tian fade"><i>訴</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+</section>
+
+<section class="lesson l4" id="l4">
+  <h2>第4課　我的好朋友</h2>
+  <div class="hero"><div class="illo" aria-hidden="true">🤝📚</div><p>跟朋友一起學習和玩耍會更快樂。既<span class="k">分享快樂</span>，也<span class="k">分擔憂愁</span>。</p></div>
+  <div class="mind">
+    <div class="bubble" style="background:var(--l4)">互相分享</div>
+    <div class="bubble" style="background:#9d174d">互相關心</div>
+    <div class="bubble" style="background:#db2777">互相支持</div>
+    <div class="bubble" style="background:#f472b6;color:#4a044e">互相幫助</div>
+  </div>
+  <table class="qa">
+    <tr><th>朋友提出不當要求？</th><td><span class="k">堅決拒絕</span>，並提醒他做得不對的地方。</td></tr>
+    <tr><th>意見不同？</th><td><span class="k">坦白</span>說出來，互相<span class="k">尊重</span>，<span class="k">心平氣和</span>地<span class="k">商量</span>。</td></tr>
+    <tr><th>做錯了事？</th><td>向朋友說：「<span class="k">對不起。</span>」這樣友誼才會長久。</td></tr>
+  </table>
+  <div class="life">
+    <b>志文填圖：</b>一同玩耍、互相支持（加油）、一同學習、互相分享（借書）、互相幫助、互相關心（悶悶不樂）。<br>
+    <b>欣欣：</b>心惠要她抄功課 → 告訴對方自己不會抄。取笑了家宜 → 說對不起。<br>
+    <b>小美：</b>走廊追逐要勸止；不會做功課要教導怎樣做（不是給答案或給她抄）；比賽緊張要鼓勵。<br>
+    偷看日記、作弄別人 <span class="bad">不對</span>；為朋友打氣、一起上學、邀請生日會、一起玩 <span class="good">對</span>。
+  </div>
+  <div class="mix"><b>易混：</b>幫助做作業 ≠ 把答案告訴他或借功課抄。為了繼續玩耍就依從不當要求 ≠ 真正的好朋友。</div>
+  <h3 class="subh">寫字引導　我的好朋友</h3>
+
+    <article class="word">
+      <div class="word-big">憂愁</div>
+      <div class="word-meta"><b>部首／結構：</b>憂：心字底；愁：心字底　·　出處：範圍冊1／印頁9</div>
+      <p class="tip">⚠ 易錯：「憂」筆畫多，易漏；曾經寫錯難字時要一筆一畫對</p>
+      <p class="ciyu">組詞／造句：分擔憂愁</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>憂</i></span><span class="tian fade"><i>愁</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">分享</div>
+      <div class="word-meta"><b>部首／結構：</b>享：口＋子　·　出處：範圍冊1／印頁9</div>
+      <p class="tip">⚠ 易錯：「享」中間是口</p>
+      <p class="ciyu">組詞／造句：互相分享</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>分</i></span><span class="tian fade"><i>享</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">坦白</div>
+      <div class="word-meta"><b>部首／結構：</b>坦：土字旁　·　出處：範圍冊1／印頁10</div>
+      <p class="tip">⚠ 易錯：「坦」不是「但」</p>
+      <p class="ciyu">組詞／造句：坦白說出來</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>坦</i></span><span class="tian fade"><i>白</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">尊重</div>
+      <div class="word-meta"><b>部首／結構：</b>尊：寸字底　·　出處：範圍冊1／印頁10</div>
+      <p class="tip">⚠ 易錯：「尊」不是「遵」（遵有走之底）</p>
+      <p class="ciyu">組詞／造句：互相尊重</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>尊</i></span><span class="tian fade"><i>重</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">商量</div>
+      <div class="word-meta"><b>部首／結構：</b>商：口在內　·　出處：範圍冊1／印頁10</div>
+      <p class="tip">⚠ 易錯：「商」裡面不要少口</p>
+      <p class="ciyu">組詞／造句：心平氣和地商量</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>商</i></span><span class="tian fade"><i>量</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">對不起</div>
+      <div class="word-meta"><b>部首／結構：</b>對：寸；起：走　·　出處：範圍冊1／印頁10；作業p-10</div>
+      <p class="tip">⚠ 易錯：三個字都要寫對，句子才完整</p>
+      <p class="ciyu">組詞／造句：說對不起</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>對</i></span><span class="tian fade"><i>不</i></span><span class="tian fade"><i>起</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+</section>
+
+<section class="lesson l5" id="l5">
+  <h2>第2冊第1課　香港的動物</h2>
+  <div class="hero"><div class="illo" aria-hidden="true">🐄🦋🐦🐟</div><p>香港有樹林、濕地、海洋等環境。動物可分為哺乳類、昆蟲類、鳥類、魚類，也可分為<span class="k">脊椎動物</span>和<span class="k">無脊椎動物</span>。</p></div>
+  <div class="animals">
+    <div class="ani m"><span class="em">🐄</span>哺乳類（脊椎）<br>母乳餵養　用肺呼吸　身體有毛髮<br>例：水牛、兔子、松鼠</div>
+    <div class="ani i"><span class="em">🦋</span>昆蟲類（無脊椎）<br>頭、胸、腹　三對腳　一對觸角<br>部分有一對或兩對翅膀</div>
+    <div class="ani b"><span class="em">🐦</span>鳥類（脊椎）<br>全身羽毛　用喙取食<br>一對翅膀和一對腳　用肺呼吸</div>
+    <div class="ani f"><span class="em">🐟</span>魚類（脊椎）<br>常有鱗片　用鰭游動<br>用鰓呼吸</div>
+  </div>
+  <div class="life">
+    <b><span class="k">米埔</span>濕地</b>為許多野生動物（例如鳥類）提供<span class="k">棲息和覓食</span>的環境。<br>
+    有些物種數量變得稀少，例如<span class="k">盧氏小樹蛙</span>和<span class="k">穿山甲</span>。我們要愛護野生動物，保護牠們的生活環境。<br>
+    子琪想抱小松鼠、弟弟想抱地上的蝙蝠 → 都不對，不要隨便觸碰野生動物。
+  </div>
+  <div class="mix"><b>易混：</b>樹林裏的動物<span class="bad">不都是</span>哺乳類。海洋動物<span class="bad">不都是</span>無脊椎（魚有脊柱）。昆蟲沒有脊柱；魚用鰓不是肺；「鰓」負責呼吸，「鰭」負責游動。</div>
+  <h3 class="subh">寫字引導　香港的動物</h3>
+
+    <article class="word">
+      <div class="word-big">脊柱</div>
+      <div class="word-meta"><b>部首／結構：</b>脊：中間是「人」形加兩點　·　出處：範圍冊2／印頁2–3</div>
+      <p class="tip">⚠ 易錯：「脊」不是「背」；「椎」不是「推」</p>
+      <p class="ciyu">組詞／造句：有沒有脊柱</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>脊</i></span><span class="tian fade"><i>柱</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">脊椎動物</div>
+      <div class="word-meta"><b>部首／結構：</b>椎：木字旁　·　出處：範圍冊2／印頁2–3</div>
+      <p class="tip">⚠ 易錯：「椎」不要寫成提手旁的「推」</p>
+      <p class="ciyu">組詞／造句：脊椎動物／無脊椎動物</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>脊</i></span><span class="tian fade"><i>椎</i></span><span class="tian fade"><i>動</i></span><span class="tian fade"><i>物</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">哺乳類</div>
+      <div class="word-meta"><b>部首／結構：</b>哺：口字旁；乳：爪乙　·　出處：範圍冊2／印頁2</div>
+      <p class="tip">⚠ 易錯：「哺」是口字旁</p>
+      <p class="ciyu">組詞／造句：哺乳類動物</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>哺</i></span><span class="tian fade"><i>乳</i></span><span class="tian fade"><i>類</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">昆蟲類</div>
+      <div class="word-meta"><b>部首／結構：</b>昆：日比；蟲：蟲字　·　出處：範圍冊2／印頁2</div>
+      <p class="tip">⚠ 易錯：「昆蟲」兩個字都要寫清楚</p>
+      <p class="ciyu">組詞／造句：昆蟲類</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>昆</i></span><span class="tian fade"><i>蟲</i></span><span class="tian fade"><i>類</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">鱗片</div>
+      <div class="word-meta"><b>部首／結構：</b>鱗：魚字旁　·　出處：範圍冊2／印頁3</div>
+      <p class="tip">⚠ 易錯：筆畫多，先寫魚再寫右半</p>
+      <p class="ciyu">組詞／造句：長有鱗片</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>鱗</i></span><span class="tian fade"><i>片</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">鰓</div>
+      <div class="word-meta"><b>部首／結構：</b>鰓：魚字旁　·　出處：範圍冊2／印頁3</div>
+      <p class="tip">⚠ 易錯：魚用「鰓」呼吸，不是「腮」單獨當魚的器官名來混</p>
+      <p class="ciyu">組詞／造句：用鰓呼吸</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>鰓</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">鰭</div>
+      <div class="word-meta"><b>部首／結構：</b>鰭：魚字旁　·　出處：範圍冊2／印頁3</div>
+      <p class="tip">⚠ 易錯：用「鰭」游動，不要和「鰓」對調</p>
+      <p class="ciyu">組詞／造句：用鰭游動</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>鰭</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">米埔</div>
+      <div class="word-meta"><b>部首／結構：</b>埔：土字旁　·　出處：範圍冊2／印頁2</div>
+      <p class="tip">⚠ 易錯：「埔」不是三點水的「浦」</p>
+      <p class="ciyu">組詞／造句：米埔濕地</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>米</i></span><span class="tian fade"><i>埔</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">濕地</div>
+      <div class="word-meta"><b>部首／結構：</b>濕：三點水　·　出處：範圍冊2／印頁2</div>
+      <p class="tip">⚠ 易錯：「濕」右邊筆畫多</p>
+      <p class="ciyu">組詞／造句：濕地環境</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>濕</i></span><span class="tian fade"><i>地</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">棲息</div>
+      <div class="word-meta"><b>部首／結構：</b>棲：木字旁　·　出處：範圍冊2／印頁2</div>
+      <p class="tip">⚠ 易錯：「棲」不是「妻」單用</p>
+      <p class="ciyu">組詞／造句：棲息和覓食</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>棲</i></span><span class="tian fade"><i>息</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">盧氏小樹蛙</div>
+      <div class="word-meta"><b>部首／結構：</b>盧：虎頭；蛙：蟲字旁　·　出處：範圍冊2／印頁3</div>
+      <p class="tip">⚠ 易錯：「盧」筆畫多，慢慢寫；「蛙」是蟲字旁</p>
+      <p class="ciyu">組詞／造句：盧氏小樹蛙和穿山甲</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>盧</i></span><span class="tian fade"><i>氏</i></span><span class="tian fade"><i>小</i></span><span class="tian fade"><i>樹</i></span><span class="tian fade"><i>蛙</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">穿山甲</div>
+      <div class="word-meta"><b>部首／結構：</b>穿：穴寶蓋　·　出處：範圍冊2／印頁3</div>
+      <p class="tip">⚠ 易錯：三個字都常見，但「甲」不要寫成「田」</p>
+      <p class="ciyu">組詞／造句：穿山甲</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>穿</i></span><span class="tian fade"><i>山</i></span><span class="tian fade"><i>甲</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+</section>
+
+<section class="lesson l6" id="l6">
+  <h2>第2冊第2課　動物與生活</h2>
+  <div class="hero"><div class="illo" aria-hidden="true">🦮🚓</div><p>動物可以是人類的朋友和好幫手。</p></div>
+  <table class="qa">
+    <tr><th>警犬</th><td>協助警察執行<span class="k">搜尋</span>任務（例如偵緝毒品）。</td></tr>
+    <tr><th>導盲犬</th><td>幫助<span class="k">失明人士</span>照顧起居生活。</td></tr>
+    <tr><th>發明靈感</th><td><span class="k">迷彩服</span>參考動物的<span class="k">保護色</span>；<span class="k">子彈火車</span>外形源自<span class="k">普通翠鳥的喙</span>。</td></tr>
+    <tr><th>觀賞動物</th><td>培養<span class="k">觀察力</span>、啟發創意、增長知識（習性和保育方法；例如大熊貓成為中國國寶的原因和保育方法）。</td></tr>
+    <tr><th>農場動物</th><td>提供食物、生活用品（肉、蛋、毛、奶、皮等）。</td></tr>
+    <tr><th>怎樣珍惜？</th><td>不要<span class="k">濫用</span>、不要<span class="k">浪費</span>；避免食用野生動物；不使用野生或稀有動物製成的產品；珍惜<span class="k">養殖</span>動物提供的資源。</td></tr>
+  </table>
+  <div class="life">
+    作業配對：失明人士→導盲犬；住院沉悶→動物醫生；警察偵緝毒品→警犬。<br>
+    吸盤的設計較接近八爪魚的吸盤。農場「大花白豬」推廣「少吃肉」，也是珍惜資源的態度。
+  </div>
+  <div class="mix"><b>易混：</b>警犬和導盲犬工作不同。迷彩服來自保護色，不是隨便一個部位。珍惜資源不是多用象牙、魚翅這類製品。</div>
+  <h3 class="subh">寫字引導　動物與生活</h3>
+
+    <article class="word">
+      <div class="word-big">保護色</div>
+      <div class="word-meta"><b>部首／結構：</b>護：言字旁　·　出處：範圍冊2／印頁4</div>
+      <p class="tip">⚠ 易錯：「護」右邊筆畫多</p>
+      <p class="ciyu">組詞／造句：動物的保護色</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>保</i></span><span class="tian fade"><i>護</i></span><span class="tian fade"><i>色</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">迷彩服</div>
+      <div class="word-meta"><b>部首／結構：</b>迷：走之底　·　出處：範圍冊2／印頁4</div>
+      <p class="tip">⚠ 易錯：「彩」是三撇，不是「採」</p>
+      <p class="ciyu">組詞／造句：迷彩服</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>迷</i></span><span class="tian fade"><i>彩</i></span><span class="tian fade"><i>服</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">導盲犬</div>
+      <div class="word-meta"><b>部首／結構：</b>導：寸字底；盲：亡目　·　出處：範圍冊2／印頁5</div>
+      <p class="tip">⚠ 易錯：「導」不是「道」；「盲」下面是目</p>
+      <p class="ciyu">組詞／造句：導盲犬</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>導</i></span><span class="tian fade"><i>盲</i></span><span class="tian fade"><i>犬</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">觀察力</div>
+      <div class="word-meta"><b>部首／結構：</b>察：宀＋祭　·　出處：範圍冊2／印頁4</div>
+      <p class="tip">⚠ 易錯：「察」不是「查」</p>
+      <p class="ciyu">組詞／造句：培養觀察力</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>觀</i></span><span class="tian fade"><i>察</i></span><span class="tian fade"><i>力</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">珍惜</div>
+      <div class="word-meta"><b>部首／結構：</b>珍：王字旁　·　出處：範圍冊2／印頁5</div>
+      <p class="tip">⚠ 易錯：「惜」是豎心旁</p>
+      <p class="ciyu">組詞／造句：珍惜動物資源</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>珍</i></span><span class="tian fade"><i>惜</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">濫用</div>
+      <div class="word-meta"><b>部首／結構：</b>濫：三點水　·　出處：範圍冊2／印頁5</div>
+      <p class="tip">⚠ 易錯：「濫」不是「監」單用</p>
+      <p class="ciyu">組詞／造句：不要濫用</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>濫</i></span><span class="tian fade"><i>用</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">浪費</div>
+      <div class="word-meta"><b>部首／結構：</b>費：貝部　·　出處：範圍冊2／印頁5</div>
+      <p class="tip">⚠ 易錯：「浪」三點水</p>
+      <p class="ciyu">組詞／造句：不要浪費</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>浪</i></span><span class="tian fade"><i>費</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+
+    <article class="word">
+      <div class="word-big">養殖</div>
+      <div class="word-meta"><b>部首／結構：</b>殖：歹字旁　·　出處：範圍冊2／印頁5</div>
+      <p class="tip">⚠ 易錯：「殖」不是「植」（植是木字旁，本年植物不考，更要分清）</p>
+      <p class="ciyu">組詞／造句：養殖動物</p>
+      <div class="grids">
+        <div><span class="lab">描紅</span><div class="tian-row"><span class="tian fade"><i>養</i></span><span class="tian fade"><i>殖</i></span></div></div>
+        <div><span class="lab">臨寫</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+        <div><span class="lab">再寫一次</span><div class="tian-row"><span class="tian"></span><span class="tian"></span></div></div>
+      </div>
+    </article>
+</section>
+
+<section id="print-sheet">
+  <h2>列印用寫字紙</h2>
+  <p>先描紅，再在空格臨寫。女兒寫字是弱項，難字請一筆一畫對，不要急。署名練習用，範圍預測溫習，非試題。Janet｜常識</p>
+  
+    <div class="print-word">
+      <div class="pw-name">藥物標籤　<span>藥到病除</span></div>
+      <div class="tian-row"><span class="tian fade"><i>藥</i></span><span class="tian fade"><i>物</i></span><span class="tian fade"><i>標</i></span><span class="tian fade"><i>籤</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">陰涼　<span>藥到病除</span></div>
+      <div class="tian-row"><span class="tian fade"><i>陰</i></span><span class="tian fade"><i>涼</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">乾爽　<span>藥到病除</span></div>
+      <div class="tian-row"><span class="tian fade"><i>乾</i></span><span class="tian fade"><i>爽</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">變質　<span>藥到病除</span></div>
+      <div class="tian-row"><span class="tian fade"><i>變</i></span><span class="tian fade"><i>質</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">誤服　<span>藥到病除</span></div>
+      <div class="tian-row"><span class="tian fade"><i>誤</i></span><span class="tian fade"><i>服</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">慰問　<span>藥到病除</span></div>
+      <div class="tian-row"><span class="tian fade"><i>慰</i></span><span class="tian fade"><i>問</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">關懷　<span>藥到病除</span></div>
+      <div class="tian-row"><span class="tian fade"><i>關</i></span><span class="tian fade"><i>懷</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">分量　<span>藥到病除</span></div>
+      <div class="tian-row"><span class="tian fade"><i>分</i></span><span class="tian fade"><i>量</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">觸碰　<span>藥到病除</span></div>
+      <div class="tian-row"><span class="tian fade"><i>觸</i></span><span class="tian fade"><i>碰</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">儀容　<span>遠離煙酒和毒品</span></div>
+      <div class="tian-row"><span class="tian fade"><i>儀</i></span><span class="tian fade"><i>容</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">判斷力　<span>遠離煙酒和毒品</span></div>
+      <div class="tian-row"><span class="tian fade"><i>判</i></span><span class="tian fade"><i>斷</i></span><span class="tian fade"><i>力</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">堅決拒絕　<span>遠離煙酒和毒品</span></div>
+      <div class="tian-row"><span class="tian fade"><i>堅</i></span><span class="tian fade"><i>決</i></span><span class="tian fade"><i>拒</i></span><span class="tian fade"><i>絕</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">吸煙　<span>遠離煙酒和毒品</span></div>
+      <div class="tian-row"><span class="tian fade"><i>吸</i></span><span class="tian fade"><i>煙</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">毒品　<span>遠離煙酒和毒品</span></div>
+      <div class="tian-row"><span class="tian fade"><i>毒</i></span><span class="tian fade"><i>品</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">情緒　<span>我的情緒</span></div>
+      <div class="tian-row"><span class="tian fade"><i>情</i></span><span class="tian fade"><i>緒</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">正面　<span>我的情緒</span></div>
+      <div class="tian-row"><span class="tian fade"><i>正</i></span><span class="tian fade"><i>面</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">負面　<span>我的情緒</span></div>
+      <div class="tian-row"><span class="tian fade"><i>負</i></span><span class="tian fade"><i>面</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">冷靜　<span>我的情緒</span></div>
+      <div class="tian-row"><span class="tian fade"><i>冷</i></span><span class="tian fade"><i>靜</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">傾訴　<span>我的情緒</span></div>
+      <div class="tian-row"><span class="tian fade"><i>傾</i></span><span class="tian fade"><i>訴</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">憂愁　<span>我的好朋友</span></div>
+      <div class="tian-row"><span class="tian fade"><i>憂</i></span><span class="tian fade"><i>愁</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">分享　<span>我的好朋友</span></div>
+      <div class="tian-row"><span class="tian fade"><i>分</i></span><span class="tian fade"><i>享</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">坦白　<span>我的好朋友</span></div>
+      <div class="tian-row"><span class="tian fade"><i>坦</i></span><span class="tian fade"><i>白</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">尊重　<span>我的好朋友</span></div>
+      <div class="tian-row"><span class="tian fade"><i>尊</i></span><span class="tian fade"><i>重</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">商量　<span>我的好朋友</span></div>
+      <div class="tian-row"><span class="tian fade"><i>商</i></span><span class="tian fade"><i>量</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">對不起　<span>我的好朋友</span></div>
+      <div class="tian-row"><span class="tian fade"><i>對</i></span><span class="tian fade"><i>不</i></span><span class="tian fade"><i>起</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">脊柱　<span>香港的動物</span></div>
+      <div class="tian-row"><span class="tian fade"><i>脊</i></span><span class="tian fade"><i>柱</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">脊椎動物　<span>香港的動物</span></div>
+      <div class="tian-row"><span class="tian fade"><i>脊</i></span><span class="tian fade"><i>椎</i></span><span class="tian fade"><i>動</i></span><span class="tian fade"><i>物</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">哺乳類　<span>香港的動物</span></div>
+      <div class="tian-row"><span class="tian fade"><i>哺</i></span><span class="tian fade"><i>乳</i></span><span class="tian fade"><i>類</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">昆蟲類　<span>香港的動物</span></div>
+      <div class="tian-row"><span class="tian fade"><i>昆</i></span><span class="tian fade"><i>蟲</i></span><span class="tian fade"><i>類</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">鱗片　<span>香港的動物</span></div>
+      <div class="tian-row"><span class="tian fade"><i>鱗</i></span><span class="tian fade"><i>片</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">鰓　<span>香港的動物</span></div>
+      <div class="tian-row"><span class="tian fade"><i>鰓</i></span></div>
+      <div class="tian-row"><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">鰭　<span>香港的動物</span></div>
+      <div class="tian-row"><span class="tian fade"><i>鰭</i></span></div>
+      <div class="tian-row"><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">米埔　<span>香港的動物</span></div>
+      <div class="tian-row"><span class="tian fade"><i>米</i></span><span class="tian fade"><i>埔</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">濕地　<span>香港的動物</span></div>
+      <div class="tian-row"><span class="tian fade"><i>濕</i></span><span class="tian fade"><i>地</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">棲息　<span>香港的動物</span></div>
+      <div class="tian-row"><span class="tian fade"><i>棲</i></span><span class="tian fade"><i>息</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">盧氏小樹蛙　<span>香港的動物</span></div>
+      <div class="tian-row"><span class="tian fade"><i>盧</i></span><span class="tian fade"><i>氏</i></span><span class="tian fade"><i>小</i></span><span class="tian fade"><i>樹</i></span><span class="tian fade"><i>蛙</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">穿山甲　<span>香港的動物</span></div>
+      <div class="tian-row"><span class="tian fade"><i>穿</i></span><span class="tian fade"><i>山</i></span><span class="tian fade"><i>甲</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">保護色　<span>動物與生活</span></div>
+      <div class="tian-row"><span class="tian fade"><i>保</i></span><span class="tian fade"><i>護</i></span><span class="tian fade"><i>色</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">迷彩服　<span>動物與生活</span></div>
+      <div class="tian-row"><span class="tian fade"><i>迷</i></span><span class="tian fade"><i>彩</i></span><span class="tian fade"><i>服</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">導盲犬　<span>動物與生活</span></div>
+      <div class="tian-row"><span class="tian fade"><i>導</i></span><span class="tian fade"><i>盲</i></span><span class="tian fade"><i>犬</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">觀察力　<span>動物與生活</span></div>
+      <div class="tian-row"><span class="tian fade"><i>觀</i></span><span class="tian fade"><i>察</i></span><span class="tian fade"><i>力</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">珍惜　<span>動物與生活</span></div>
+      <div class="tian-row"><span class="tian fade"><i>珍</i></span><span class="tian fade"><i>惜</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">濫用　<span>動物與生活</span></div>
+      <div class="tian-row"><span class="tian fade"><i>濫</i></span><span class="tian fade"><i>用</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">浪費　<span>動物與生活</span></div>
+      <div class="tian-row"><span class="tian fade"><i>浪</i></span><span class="tian fade"><i>費</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+    <div class="print-word">
+      <div class="pw-name">養殖　<span>動物與生活</span></div>
+      <div class="tian-row"><span class="tian fade"><i>養</i></span><span class="tian fade"><i>殖</i></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+      <div class="tian-row"><span class="tian"></span><span class="tian"></span></div>
+    </div>
+</section>
+
+<footer class="sign">
+  查核日期：2026 年 11 月 14 日（香港時間）　·　署名：Janet｜常識<br>
+  本頁依據《3D常識第一次考試溫習範圍》及《3D常識作業》整理，範圍預測溫習，並非試題。
+</footer>
+</body>
+</html>
