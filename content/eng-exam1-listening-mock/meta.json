@@ -1,0 +1,17 @@
+{
+  "id": "eng-exam1-listening-mock",
+  "student": "daughter",
+  "subject": "english",
+  "stage": "g3-3d-exam1",
+  "type": "practice",
+  "title": "第一次評估 英文聆聽模擬題兩篇",
+  "unit": "Unit 1–3",
+  "tags": [
+    "key"
+  ],
+  "difficulty": 2,
+  "minutes": 30,
+  "version": 1,
+  "date": "2026-11-14",
+  "description": "兩篇貼近第一次評估聆聽卷的模擬練習。開考後以英文朗讀，交卷後顯示分數，並可查看錄音稿與答案（關鍵句已標色）。"
+}
