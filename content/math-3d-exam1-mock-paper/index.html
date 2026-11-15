@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>小三數學 第一次評估 考前模擬卷（3D）</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;font-family:"PingFang TC","Microsoft JhengHei",sans-serif;background:#eef3f8;color:#1d2b3a;touch-action:manipulation}
+button{font-family:inherit;touch-action:manipulation;cursor:pointer}
+#app{display:flex;height:100%;gap:1.6vmin;padding:1.6vmin}
+.col{background:#fff;border-radius:2vmin;box-shadow:0 .4vmin 1.2vmin rgba(0,0,0,.08);padding:2.2vmin 2.6vmin;overflow:auto;display:flex;flex-direction:column}
+#left{flex:58}#right{flex:42}
+.meta{display:flex;justify-content:space-between;align-items:center;font-size:clamp(14px,2.6vmin,40px);color:#557;gap:1vmin;flex-wrap:wrap}
+.tag{background:#dbeafe;color:#1e40af;border-radius:1vmin;padding:.3vmin 1.2vmin;font-weight:bold}
+.tag.b{background:#fde68a;color:#7c4a03}
+.qno{font-size:clamp(20px,4.4vmin,64px);font-weight:bold;margin:1.2vmin 0 .6vmin}
+.qtext{font-size:clamp(18px,4vmin,60px);line-height:1.5}
+.fig{margin-top:1.6vmin;display:flex;justify-content:center;align-items:center;gap:2vmin;flex-wrap:wrap}
+.fig svg{max-width:100%;height:auto}
+.digi{background:#111;color:#4ade80;font-family:monospace;font-size:clamp(22px,6vmin,90px);padding:1vmin 2.4vmin;border-radius:1.4vmin;letter-spacing:.3vmin}
+.fig table{border-collapse:collapse;font-size:clamp(16px,3.4vmin,50px)}
+.fig td,.fig th{border:.25vmin solid #789;padding:.8vmin 2.2vmin;text-align:center}
+.fig th{background:#e0ecf8}
+.arrow{font-size:clamp(16px,3.2vmin,48px);text-align:center;color:#c2410c;font-weight:bold}
+.rows{font-size:clamp(18px,4.2vmin,64px);line-height:1.2}
+.row{display:flex;align-items:center;flex-wrap:wrap;gap:1vmin;margin:.8vmin 0}
+.blank{min-width:14vmin;min-height:max(3rem,8vmin);border:.4vmin solid #94a3b8;border-radius:1.2vmin;display:inline-flex;align-items:center;justify-content:center;padding:0 1.4vmin;background:#f8fafc;font-size:clamp(18px,4.4vmin,66px);font-weight:bold;color:#0f3d7a}
+.blank.small{min-width:9vmin}
+.blank.active{border-color:#2563eb;background:#dbeafe;box-shadow:0 0 0 .5vmin #93c5fd}
+.blank.ok{border-color:#16a34a;background:#dcfce7}
+.blank.bad{border-color:#dc2626;background:#fee2e2}
+.opts{display:flex;flex-wrap:wrap;gap:1.4vmin;margin-top:1.2vmin}
+.opt{min-height:max(3rem,7.5vmin);min-width:14vmin;font-size:clamp(16px,3.6vmin,54px);border:.35vmin solid #94a3b8;border-radius:1.2vmin;background:#fff;padding:0 2vmin}
+.opt.sel{background:#2563eb;color:#fff;border-color:#2563eb}
+.mc{display:flex;flex-direction:column;gap:1.4vmin}
+.mc .opt{text-align:left;width:100%}
+.opt.right{background:#16a34a;color:#fff;border-color:#16a34a}
+.opt.wrong{background:#dc2626;color:#fff;border-color:#dc2626}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2vmin;margin-top:1.6vmin}
+.pad.cn{grid-template-columns:repeat(5,1fr)}
+.pad button{min-height:max(3rem,8vmin);font-size:clamp(18px,4.4vmin,64px);border:none;border-radius:1.2vmin;background:#e2e8f0;font-weight:bold}
+.pad button.fn{background:#fde2c4;font-size:clamp(14px,3vmin,44px)}
+.nav{display:flex;gap:1.2vmin;margin-top:1.6vmin;flex-wrap:wrap}
+.nav button{flex:1;min-height:max(3rem,7.5vmin);font-size:clamp(15px,3.2vmin,48px);border:none;border-radius:1.2vmin;background:#cbd5e1;font-weight:bold;min-width:15vmin}
+.nav .go{background:#2563eb;color:#fff}.nav .sub{background:#ea580c;color:#fff}
+.hint{font-size:clamp(13px,2.5vmin,38px);color:#667;margin-top:1vmin}
+.res{font-size:clamp(14px,2.8vmin,42px);margin-top:1.6vmin;padding:1.2vmin 1.6vmin;border-radius:1.2vmin;line-height:1.5}
+.res.ok{background:#dcfce7}.res.bad{background:#fee2e2}
+#ov{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:flex-start;justify-content:center;padding-top:4vh;z-index:9}
+#ovb{background:#fff;border-radius:2vmin;padding:2.6vmin;width:min(94vw,150vmin);max-height:90%;overflow:auto}
+.grid{display:grid;grid-template-columns:repeat(9,1fr);gap:1vmin;margin:1.6vmin 0}
+.grid button{min-height:max(2.6rem,7vmin);font-size:clamp(14px,3vmin,44px);border:.3vmin solid #94a3b8;border-radius:1vmin;background:#fff;font-weight:bold}
+.grid .done{background:#bfdbfe}.grid .g{background:#16a34a;color:#fff;border-color:#16a34a}.grid .r{background:#dc2626;color:#fff;border-color:#dc2626}
+.big{font-size:clamp(28px,9vmin,140px);font-weight:bold;color:#1d4ed8;text-align:center}
+.ovt{font-size:clamp(18px,4vmin,60px);font-weight:bold}
+.ovp{font-size:clamp(14px,3vmin,44px);line-height:1.5}
+@media (max-width:900px),(orientation:portrait){#app{flex-direction:column;height:auto;min-height:100%}.grid{grid-template-columns:repeat(5,1fr)}}
+</style></head><body>
+<div id="app"><div class="col" id="left"></div><div class="col" id="right"></div></div>
+<div id="ov"><div id="ovb"></div></div>
+<script>
+// ---- E_learning Hub 回報（只在被網站 iframe 載入時有效，單獨打開頁面時無任何作用）----
+function elhReport(m){
+  try{
+    if(location.search.indexOf("elhdebug")>=0)console.log("ELH",JSON.stringify(m));
+    if(window.parent!==window)window.parent.postMessage(Object.assign({elh:1},m),location.origin);
+  }catch(e){}
+}
+function elhText(h){return String(h==null?"":h).replace(/<[^>]*>/g,"").replace(/\s+/g," ").trim().slice(0,200);}
+
+var Q=[{"text": "計算：832 − 457 ＝ ?", "rows": [["832 − 457 = ", {"b": 0}]], "blanks": [{"t": "num", "a": ["375"]}], "ans": "375"}, {"text": "計算：326 + 518 − 609 ＝ ?", "rows": [["326 + 518 − 609 = ", {"b": 0}]], "blanks": [{"t": "num", "a": ["235"]}], "ans": "235"}, {"text": "計算：42 ÷ 6 ＝ ?", "rows": [["42 ÷ 6 = ", {"b": 0}]], "blanks": [{"t": "num", "a": ["7"]}], "ans": "7"}, {"text": "計算：59 ÷ 7 ＝ ?", "rows": [["59 ÷ 7 = ", {"b": 0}, " … ", {"b": 1}]], "blanks": [{"t": "num", "a": ["8"]}, {"t": "num", "a": ["3"]}], "ans": "8 … 3"}, {"text": "計算：37 × 4 ＝ ?", "rows": [["37 × 4 = ", {"b": 0}]], "blanks": [{"t": "num", "a": ["148"]}], "ans": "148"}, {"text": "計算：16 × 6 ＝ ?", "rows": [["16 × 6 = ", {"b": 0}]], "blanks": [{"t": "num", "a": ["96"]}], "ans": "96"}, {"text": "計算：89 × 7 ＝ ?", "rows": [["89 × 7 = ", {"b": 0}]], "blanks": [{"t": "num", "a": ["623"]}], "ans": "623"}, {"text": "計算：312 × 3 ＝ ?", "rows": [["312 × 3 = ", {"b": 0}]], "blanks": [{"t": "num", "a": ["936"]}], "ans": "936"}, {"text": "計算：586 × 4 ＝ ?", "rows": [["586 × 4 = ", {"b": 0}]], "blanks": [{"t": "num", "a": ["2344"]}], "ans": "2344"}, {"text": "計算：34 × 5 × 6 ＝ ?", "rows": [["34 × 5 × 6 = ", {"b": 0}]], "blanks": [{"t": "num", "a": ["1020"]}], "ans": "1020"}, {"text": "根據下圖，回答第 11–12 題。<br>小傑在上午幾時幾分<b>等候</b>巴士？", "fig": "FIG_BUS", "rows": [["上午 ", {"b": 0}, " 時 ", {"b": 1}, " 分"]], "blanks": [{"t": "num", "a": ["8"]}, {"t": "num", "a": ["50"]}], "ans": "上午 8 時 50 分"}, {"text": "根據下圖，回答第 11–12 題。<br>小傑在上午幾時幾分<b>登上</b>巴士？", "fig": "FIG_BUS", "rows": [["上午 ", {"b": 0}, " 時 ", {"b": 1}, " 分"]], "blanks": [{"t": "num", "a": ["9"]}, {"t": "num", "a": ["5"]}], "ans": "上午 9 時 05 分"}, {"text": "小雅在公園逗留了 <b>26 分鐘</b>，於右圖鐘面的時間離開。即她於幾時幾分進入公園？", "fig": "CLOCK_9_5", "rows": [[{"b": 0}, " 時 ", {"b": 1}, " 分"]], "blanks": [{"t": "num", "a": ["8"]}, {"t": "num", "a": ["39"]}], "ans": "8 時 39 分"}, {"text": "下面的數字鐘顯示香港現在的時間。某城市的時間比香港<b>快 2 小時</b>。該城市現在是甚麼時間？", "fig": "DIGI_11:25 PM", "rows": [["", {"b": 0}], [{"b": 1}, " 時 ", {"b": 2}, " 分"]], "blanks": [{"t": "opt", "o": ["上午", "下午"], "a": ["上午"]}, {"t": "num", "a": ["1"]}, {"t": "num", "a": ["25"]}], "ans": "上午 1 時 25 分"}, {"text": "把 53 418、53 481、50 984 <b>由大至小</b>排列。", "rows": [[{"b": 0}], ["＞ ", {"b": 1}], ["＞ ", {"b": 2}]], "blanks": [{"t": "num", "a": ["53481"]}, {"t": "num", "a": ["53418"]}, {"t": "num", "a": ["50984"]}], "ans": "53 481 ＞ 53 418 ＞ 50 984"}, {"text": "依順數填一填。<br>39 998，___，___，___，40 002", "rows": [["39 998，", {"b": 0}], ["，", {"b": 1}], ["，", {"b": 2}, "，40 002"]], "blanks": [{"t": "num", "a": ["39999"]}, {"t": "num", "a": ["40000"]}, {"t": "num", "a": ["40001"]}], "ans": "39 999、40 000、40 001"}, {"text": "在空格上選出適當的度量單位。<br>子軒將參加 400 ___ 賽跑。", "rows": [["400 ", {"b": 0}, " 賽跑"]], "blanks": [{"t": "opt", "o": ["毫米", "厘米", "米", "公里"], "a": ["米"]}], "ans": "米"}, {"text": "在空格上選出適當的度量單位。<br>子軒在緩跑徑用 12 分鐘跑了 2 ___。", "rows": [["跑了 2 ", {"b": 0}]], "blanks": [{"t": "opt", "o": ["毫米", "厘米", "米", "公里"], "a": ["公里"]}], "ans": "公里"}, {"text": "在空格上選出適當的度量單位。<br>一個 1 元硬幣的厚度約是 2 ___。", "rows": [["約是 2 ", {"b": 0}]], "blanks": [{"t": "opt", "o": ["毫米", "厘米", "米", "公里"], "a": ["毫米"]}], "ans": "毫米"}, {"text": "選出最適合的量度工具。<br>利用 ___ 量得腰圍的長度約是 60 cm。", "rows": [["利用 ", {"b": 0}]], "blanks": [{"t": "opt", "o": ["間尺", "米尺", "軟尺"], "a": ["軟尺"]}], "ans": "軟尺"}, {"text": "子晴排隊買雪糕用了 28 分鐘，終於在下午 3 時 15 分買到。子晴在何時開始排隊？", "mc": ["下午 2 時 43 分", "下午 2 時 47 分", "下午 2 時 53 分", "下午 3 時 43 分"], "a": 1}, {"text": "如果 120 × ◆ ＝ 40 × ▼，那麼 ▼ ＝ ？", "mc": ["3", "80", "3 × ◆", "4 × ◆"], "a": 2}, {"text": "以下是三場電影的放映時間。<br>志明買了<b>第二場</b>戲票，他在電影放映前 25 分鐘到達戲院，當時是甚麼時候？", "fig": "TABLE_FILM", "mc": ["下午 11 時 45 分", "上午 11 時 45 分", "下午 12 時 35 分", "上午 12 時 45 分"], "a": 1}, {"text": "下列哪一個長度最長？", "mc": ["7046 m", "7406 m", "7 km 64 m", "7 km 460 m"], "a": 3}, {"text": "學校要準備 25 份禮物包，每包有 8 盒，每盒有 6 粒朱古力。學校共須準備朱古力多少粒？", "mc": ["150", "200", "1200", "1250"], "a": 2}, {"text": "根據路徑圖，回答第 26–28 題。<br>從圖書館出發往學校，最短的路程要走多少 km？", "fig": "MAP", "rows": [[{"b": 0}, " km"]], "blanks": [{"t": "num", "a": ["14"]}], "ans": "14 km"}, {"text": "根據路徑圖，回答第 26–28 題。<br>由家經公園及學校去商場，全程共走多少 km？", "fig": "MAP", "rows": [[{"b": 0}, " km"]], "blanks": [{"t": "num", "a": ["15"]}], "ans": "15 km"}, {"text": "根據路徑圖，回答第 26–28 題。<br>叔叔駕車從家出發往商場，共行駛了 22 km，比最短的路程多行駛了多少 km？", "fig": "MAP", "rows": [[{"b": 0}, " km"]], "blanks": [{"t": "num", "a": ["8"]}], "ans": "8 km"}, {"text": "根據下圖，回答第 29–30 題。<br>用尺子量度，書籤的長度是多少毫米？", "fig": "RULER", "rows": [[{"b": 0}, " 毫米"]], "blanks": [{"t": "num", "a": ["126"]}], "ans": "126 毫米"}, {"text": "根據下圖，回答第 29–30 題。<br>書籤的長度與闊度相差多少毫米？", "fig": "RULER", "rows": [[{"b": 0}, " 毫米"]], "blanks": [{"t": "num", "a": ["88"]}], "ans": "88 毫米"}, {"text": "用中文數字寫出「50 306」。", "rows": [[{"b": 0}]], "blanks": [{"t": "cn", "a": ["五萬零三百零六"]}], "ans": "五萬零三百零六"}, {"text": "用 2、4、6、8 四張數卡，組成一道「三位數 × 一位數」的乘式，令<b>積最大</b>。每張數卡只用一次。", "rows": [[{"b": 0}, {"b": 1}, {"b": 2}, " × ", {"b": 3}], ["＝ ", {"b": 4}]], "blanks": [{"t": "num", "a": ["6"]}, {"t": "num", "a": ["4"]}, {"t": "num", "a": ["2"]}, {"t": "num", "a": ["8"]}, {"t": "num", "a": ["5136"]}], "ans": "642 × 8 ＝ 5136"}, {"text": "在「47 935」這個數中，數字「7」代表的數值是甚麼？", "rows": [[{"b": 0}]], "blanks": [{"t": "num", "a": ["7000"]}], "ans": "7000"}, {"text": "下面的數字鐘顯示卡通開始和結束播放的時間。如果播放期間有 4 分鐘廣告時間，卡通實際長多少分鐘？", "fig": "DIGI2", "rows": [[{"b": 0}, " 分鐘"]], "blanks": [{"t": "num", "a": ["26"]}], "ans": "26 分鐘"}, {"text": "下表是晚會三場表演的時間。小欣在下午 7 時 25 分趕到場地。當時第幾場表演已開始？這場表演開始了多久？距離結束還有多久？", "fig": "TABLE_SHOW", "rows": [["第 ", {"b": 0}, " 場表演已開始了"], [{"b": 1}, " 分鐘，"], ["還有 ", {"b": 2}, " 分鐘才結束。"]], "blanks": [{"t": "num", "a": ["2"]}, {"t": "num", "a": ["25"]}, {"t": "num", "a": ["15"]}], "ans": "第 2 場；已開始 25 分鐘；還有 15 分鐘"}, {"text": "比最大的四位數多 1 的數是甚麼？", "rows": [[{"b": 0}]], "blanks": [{"t": "num", "a": ["10000"]}], "ans": "10000"}, {"text": "爸爸工作需時 3 小時，他在上午 10 時 45 分開始工作，爸爸在何時能完成工作？", "rows": [["", {"b": 0}], [{"b": 1}, " 時 ", {"b": 2}, " 分"]], "blanks": [{"t": "opt", "o": ["上午", "下午"], "a": ["下午"]}, {"t": "num", "a": ["1"]}, {"t": "num", "a": ["45"]}], "ans": "下午 1 時 45 分"}, {"text": "35 cm 8 mm ＝ ? mm", "rows": [[{"b": 0}, " mm"]], "blanks": [{"t": "num", "a": ["358"]}], "ans": "358 mm"}, {"text": "52 km 76 m ＝ ? m", "rows": [[{"b": 0}, " m"]], "blanks": [{"t": "num", "a": ["52076"]}], "ans": "52076 m"}, {"text": "小美把貼紙放進盒子，剛好放滿 3 盒。如果每盒可放貼紙 128 張，小美有貼紙多少張？", "rows": [[{"b": 0}, " 張"]], "blanks": [{"t": "num", "a": ["384"]}], "ans": "384 張"}, {"text": "根據過去半年的記錄，書店平均每月賣出故事書 126 本。在過去半年內，書店共賣出故事書多少本？", "rows": [["答案：", {"b": 0}, " 本"]], "blanks": [{"t": "num", "a": ["756"]}], "ans": "126 × 6 ＝ 756，共 756 本", "partB": true}, {"text": "學校安排 75 名學生乘車去旅行，每輛車最多可坐 6 名學生。最少需要多少輛車？", "rows": [["答案：", {"b": 0}, " 輛"]], "blanks": [{"t": "num", "a": ["13"]}], "ans": "75 ÷ 6 ＝ 12 … 3，要多 1 輛：12 + 1 ＝ 13 輛", "partB": true}, {"text": "叔叔駕車上班，每次經過大橋須付過橋費 $15。他每星期工作 4 天，每天往返家和公司，每星期共須付過橋費多少元？", "rows": [["答案：", {"b": 0}, " 元"]], "blanks": [{"t": "num", "a": ["120"]}], "ans": "15 × 2 × 4 ＝ 120，共 $120", "partB": true}, {"text": "三人接力賽中，每人須沿跑道跑 4 圈。如果跑道一圈長 150 米，全隊共須跑多少米？", "rows": [["答案：", {"b": 0}, " 米"]], "blanks": [{"t": "num", "a": ["1800"]}], "ans": "150 × 4 × 3 ＝ 1800，共 1800 米", "partB": true}, {"text": "文具店上月賣出鉛筆 6 箱，每箱有 4 盒，每盒有 15 枝。上月共賣出鉛筆多少枝？", "rows": [["答案：", {"b": 0}, " 枝"]], "blanks": [{"t": "num", "a": ["360"]}], "ans": "15 × 4 × 6 ＝ 360，共 360 枝", "partB": true}];
+var TOTAL=Q.length;
+elhReport({type:"init",total:TOTAL});
+var cur=0,ans={},act=0,submitted=false,res={},t0=Date.now(),tEnd=0;
+function $(id){return document.getElementById(id)}
+function pts(i){return Q[i].partB?4:2}
+
+function clock(h,m,q){
+  var s='<svg viewBox="-110 -110 220 220" width="300" style="width:30vmin"><circle r="104" fill="#fff" stroke="#334" stroke-width="5"/>';
+  for(var k=0;k<60;k++){var a=k*6*Math.PI/180,r1=k%5?94:88;s+='<line x1="'+(Math.sin(a)*r1)+'" y1="'+(-Math.cos(a)*r1)+'" x2="'+(Math.sin(a)*100)+'" y2="'+(-Math.cos(a)*100)+'" stroke="#334" stroke-width="'+(k%5?1.5:3)+'"/>';}
+  for(var n=1;n<=12;n++){var b=n*30*Math.PI/180;s+='<text x="'+(Math.sin(b)*74)+'" y="'+(-Math.cos(b)*74+7)+'" font-size="20" text-anchor="middle" font-weight="bold">'+n+'</text>';}
+  if(q){s+='<text x="0" y="22" font-size="64" text-anchor="middle" fill="#c2410c" font-weight="bold">?</text>';}
+  else{var ha=((h%12)+m/60)*30,ma=m*6;
+  s+='<line x1="0" y1="0" x2="0" y2="-48" stroke="#111" stroke-width="8" stroke-linecap="round" transform="rotate('+ha+')"/>';
+  s+='<line x1="0" y1="0" x2="0" y2="-80" stroke="#111" stroke-width="5" stroke-linecap="round" transform="rotate('+ma+')"/>';}
+  return s+'<circle r="6" fill="#111"/></svg>';
+}
+function mapSvg(){
+  var P={"家":[110,80],"學校":[440,80],"商場":[720,190],"公園":[130,330],"圖書館":[520,340]};
+  var E=[["家","學校",9,0,-14],["家","公園",4,-24,0],["公園","學校",6,-18,-10],["學校","商場",5,18,-12],["公園","圖書館",8,0,26],["圖書館","商場",11,26,14]];
+  var s='<svg viewBox="0 0 840 400" width="840" style="width:100%;max-width:90vmin">';
+  E.forEach(function(e){var a=P[e[0]],b=P[e[1]];s+='<line x1="'+a[0]+'" y1="'+a[1]+'" x2="'+b[0]+'" y2="'+b[1]+'" stroke="#64748b" stroke-width="6"/>';
+    s+='<text x="'+((a[0]+b[0])/2+e[3])+'" y="'+((a[1]+b[1])/2+e[4])+'" font-size="28" font-weight="bold" fill="#b45309" text-anchor="middle">'+e[2]+' km</text>';});
+  for(var k in P){var p=P[k];s+='<rect x="'+(p[0]-62)+'" y="'+(p[1]-26)+'" width="124" height="52" rx="12" fill="#dbeafe" stroke="#1e40af" stroke-width="3"/><text x="'+p[0]+'" y="'+(p[1]+10)+'" font-size="28" text-anchor="middle" font-weight="bold">'+k+'</text>';}
+  return s+'</svg>';
+}
+function rulerSvg(){
+  var x0=40,u=40,s='<svg viewBox="0 0 700 330" width="700" style="width:100%;max-width:90vmin">';
+  s+='<rect x="'+x0+'" y="40" width="'+(12.6*u)+'" height="152" fill="#fef3c7" stroke="#92400e" stroke-width="3"/>';
+  s+='<circle cx="'+(x0+30)+'" cy="116" r="12" fill="#fff" stroke="#92400e" stroke-width="3"/>';
+  s+='<text x="'+(x0+260)+'" y="128" font-size="34" text-anchor="middle" fill="#92400e">✿ 書籤 ✿</text>';
+  var xr=x0+12.6*u+14;s+='<line x1="'+xr+'" y1="40" x2="'+xr+'" y2="192" stroke="#111" stroke-width="2"/><text x="'+(xr+10)+'" y="124" font-size="26">38 毫米</text>';
+  s+='<rect x="'+(x0-14)+'" y="200" width="'+(15*u+28)+'" height="90" fill="#e0f2fe" stroke="#0369a1" stroke-width="2"/>';
+  for(var k=0;k<=150;k++){var x=x0+k*u/10,l=k%10==0?34:(k%5==0?24:14);s+='<line x1="'+x+'" y1="200" x2="'+x+'" y2="'+(200+l)+'" stroke="#111" stroke-width="'+(k%10==0?2:1)+'"/>';
+    if(k%10==0)s+='<text x="'+x+'" y="'+(260)+'" font-size="20" text-anchor="middle">'+(k/10)+'</text>';}
+  s+='<text x="'+(x0+15*u)+'" y="284" font-size="18" text-anchor="end">厘米(cm)</text>';
+  s+='<line x1="'+x0+'" y1="40" x2="'+x0+'" y2="200" stroke="#dc2626" stroke-dasharray="6 5" stroke-width="2"/><line x1="'+(x0+12.6*u)+'" y1="40" x2="'+(x0+12.6*u)+'" y2="200" stroke="#dc2626" stroke-dasharray="6 5" stroke-width="2"/>';
+  return s+'</svg>';
+}
+function fig(f){
+  if(!f)return "";
+  if(f=="FIG_BUS")return '<div>'+clock(8,50)+'<div class="arrow">等候巴士</div></div><div class="arrow">過了 15 分鐘 ➜</div><div>'+clock(0,0,1)+'<div class="arrow">登上巴士</div></div>';
+  if(f=="CLOCK_9_5")return '<div>'+clock(9,5)+'<div class="arrow">離開公園</div></div>';
+  if(f.indexOf("DIGI_")==0)return '<div><div class="digi">'+f.slice(5)+'</div><div class="arrow">香港現在時間</div></div>';
+  if(f=="DIGI2")return '<div><div class="digi">2:50</div><div class="arrow">開始</div></div><div class="arrow">➜</div><div><div class="digi">3:20</div><div class="arrow">結束</div></div>';
+  if(f=="TABLE_FILM")return '<table><tr><th>場次</th><th>放映時間</th></tr><tr><td>第一場</td><td>9:30 a.m.</td></tr><tr><td>第二場</td><td>12:10 p.m.</td></tr><tr><td>第三場</td><td>4:50 p.m.</td></tr></table>';
+  if(f=="TABLE_SHOW")return '<table><tr><th>場次</th><th>開始</th><th>結束</th></tr><tr><td>第一場</td><td>下午 6:00</td><td>下午 6:40</td></tr><tr><td>第二場</td><td>下午 7:00</td><td>下午 7:40</td></tr><tr><td>第三場</td><td>下午 8:00</td><td>下午 8:40</td></tr></table>';
+  if(f=="MAP")return mapSvg();
+  if(f=="RULER")return rulerSvg();
+  return "";
+}
+function norm(v,t){v=String(v==null?"":v).replace(/[\s,，]/g,"");if(t=="num"&&/^\d+$/.test(v))v=String(parseInt(v,10));return v;}
+function isAnswered(i){var q=Q[i],a=ans[i];if(a==null)return false;if(q.mc)return a!=null;return a.some(function(x){return x!=null&&x!==""});}
+function blankOk(q,a,k){var b=q.blanks[k];return b.a.some(function(x){return norm(x,b.t)===norm(a&&a[k],b.t)});}
+function grade(i){var q=Q[i],a=ans[i];if(!isAnswered(i))return false;if(q.mc)return a===q.a;return q.blanks.every(function(_,k){return blankOk(q,a,k)});}
+function ansText(i){var q=Q[i];return q.mc?String.fromCharCode(65+q.a)+". "+q.mc[q.a]:q.ans;}
+function pickedText(i){var q=Q[i],a=ans[i];if(!isAnswered(i))return null;if(q.mc)return String.fromCharCode(65+a)+". "+q.mc[a];return a.map(function(x){return x==null||x===""?"（空）":x}).join(" / ");}
+
+function render(){
+  var q=Q[cur],L=$("left"),R=$("right");
+  var el=submitted?Math.round((tEnd-t0)/60000):Math.floor((Date.now()-t0)/60000);
+  L.innerHTML='<div class="meta"><span class="tag'+(q.partB?' b':'')+'">'+(q.partB?'乙部 列式計算（每題 4 分）':'甲部（每題 2 分）')+'</span><span>已答 '+Q.filter(function(_,i){return isAnswered(i)}).length+' / '+TOTAL+'　⏱ '+el+' 分鐘</span></div>'
+   +'<div class="qno">第 '+(cur+1)+' 題</div><div class="qtext">'+q.text+'</div>'
+   +(q.partB?'<div class="hint">請在紙上寫出橫式、直式和答句，再把答案數字輸入右邊。</div>':'')
+   +'<div class="fig">'+fig(q.fig)+'</div>';
+  var h='';
+  if(q.mc){
+    h+='<div class="mc">';q.mc.forEach(function(o,k){var c='opt';
+      if(submitted){if(k===q.a)c+=' right';else if(ans[cur]===k)c+=' wrong';}else if(ans[cur]===k)c+=' sel';
+      h+='<button class="'+c+'" onclick="pickMc('+k+')">'+String.fromCharCode(65+k)+'.　'+o+'</button>';});
+    h+='</div>';
+  }else{
+    var a=ans[cur]||[];
+    if(act>=q.blanks.length)act=0;
+    h+='<div class="rows">';q.rows.forEach(function(r){h+='<div class="row">';r.forEach(function(p){
+      if(typeof p=="string"){if(p)h+='<span>'+p+'</span>';}
+      else{var k=p.b,b=q.blanks[k],c='blank'+(b.t=="num"&&String(b.a[0]).length<=2?' small':'');
+        if(submitted)c+=blankOk(q,a,k)?' ok':' bad';else if(k===act)c+=' active';
+        h+='<span class="'+c+'" onclick="setAct('+k+')">'+(a[k]!=null&&a[k]!==""?a[k]:'&nbsp;')+'</span>';}
+    });h+='</div>';});h+='</div>';
+    if(!submitted){var b=q.blanks[act];
+      if(b.t=="opt"){h+='<div class="opts">';b.o.forEach(function(o){h+='<button class="opt'+(a[act]===o?' sel':'')+'" onclick="pickOpt(\''+o+'\')">'+o+'</button>';});h+='</div>';}
+      else if(b.t=="cn"){h+='<div class="pad cn">';"零一二三四五六七八九十百千萬".split("").forEach(function(c){h+='<button onclick="key(\''+c+'\')">'+c+'</button>';});h+='<button class="fn" onclick="key(\'BS\')">⌫ 退格</button><div></div><div></div><div></div><button class="fn" onclick="key(\'CL\')">清除</button></div>';}
+      else{h+='<div class="pad">';[1,2,3,4,5,6,7,8,9].forEach(function(n){h+='<button onclick="key(\''+n+'\')">'+n+'</button>';});h+='<button class="fn" onclick="key(\'CL\')">清除</button><button onclick="key(\'0\')">0</button><button class="fn" onclick="key(\'BS\')">⌫ 退格</button></div>';}
+      if(q.blanks.length>1)h+='<div class="hint">點選空格，再輸入答案。</div>';}
+  }
+  if(submitted){var ok=res[cur];h+='<div class="res '+(ok?'ok':'bad')+'">'+(ok?'✔ 答對了！':'✘ 答錯了')+'<br>你的答案：'+(pickedText(cur)||'未作答')+'<br>正確答案：'+ansText(cur)+'</div>';}
+  h+='<div class="nav"><button onclick="go(-1)">◀ 上一題</button><button class="go" onclick="go(1)">下一題 ▶</button></div>';
+  h+='<div class="nav"><button onclick="showGrid()">▦ 題目一覽</button>'+(submitted?'<button class="sub" onclick="showScore()">成績</button>':'<button class="sub" onclick="askSubmit()">交卷</button>')+'</div>';
+  R.innerHTML=h;
+}
+function setAct(k){if(submitted)return;act=k;render();}
+function ensure(){if(!ans[cur])ans[cur]=Q[cur].blanks.map(function(){return ""});return ans[cur];}
+function pickMc(k){if(submitted)return;ans[cur]=k;render();}
+function nextBlank(){var q=Q[cur];if(act<q.blanks.length-1)act++;}
+function pickOpt(o){var a=ensure();a[act]=o;nextBlank();render();}
+function key(c){var a=ensure(),v=String(a[act]||"");
+  if(c=="BS")v=v.slice(0,-1);else if(c=="CL")v="";else if(v.length<10)v+=c;a[act]=v;render();}
+function go(d){var n=cur+d;if(n<0||n>=TOTAL)return;cur=n;act=0;render();}
+function closeOv(){$("ov").style.display="none";}
+function openOv(h){$("ovb").innerHTML=h;$("ov").style.display="flex";}
+function gridHtml(){var h='<div class="grid">';Q.forEach(function(_,i){var c=submitted?(res[i]?'g':'r'):(isAnswered(i)?'done':'');h+='<button class="'+c+'" onclick="cur='+i+';act=0;closeOv();render()">'+(i+1)+'</button>';});return h+'</div>';}
+function showGrid(){openOv('<div class="ovt">題目一覽</div><div class="ovp">'+(submitted?'綠色＝答對，紅色＝答錯。點題號看詳情。':'藍色＝已作答。點題號跳到該題。')+'</div>'+gridHtml()+'<div class="nav"><button onclick="closeOv()">關閉</button></div>');}
+function askSubmit(){var un=Q.filter(function(_,i){return !isAnswered(i)}).length;
+  openOv('<div class="ovt">確定交卷？</div><div class="ovp">'+(un?'還有 <b>'+un+'</b> 題未作答。':'全部題目已作答。')+'交卷後會顯示對錯和分數，不能再修改。</div><div class="nav"><button onclick="closeOv()">返回檢查</button><button class="sub" onclick="doSubmit()">確定交卷</button></div>');}
+function doSubmit(){submitted=true;tEnd=Date.now();
+  Q.forEach(function(q,i){res[i]=grade(i);var a=ans[i],ch=null;
+    if(isAnswered(i))ch=q.mc?a:a.join("|");
+    elhReport({type:"answer",q:i+1,choice:ch,correct:res[i],text:elhText(q.text),picked:pickedText(i),answer:elhText(ansText(i))});});
+  showScore();render();}
+function showScore(){var A=0,Bs=0,ca=0,cb=0;Q.forEach(function(q,i){if(res[i]){if(q.partB){Bs+=4;cb++}else{A+=2;ca++}}});
+  openOv('<div class="ovt">成績</div><div class="big">'+(A+Bs)+' / 100 分</div><div class="ovp" style="text-align:center">甲部 '+A+' / 80 分（答對 '+ca+' / 40 題）　乙部 '+Bs+' / 20 分（答對 '+cb+' / 5 題）<br>用時約 '+Math.max(1,Math.round((tEnd-t0)/60000))+' 分鐘。乙部只核對答案；橫式、直式和答句請爸爸看紙上作答。</div>'+gridHtml()+'<div class="nav"><button onclick="closeOv()">逐題看答案</button></div>');}
+setInterval(function(){if(!submitted&&$("ov").style.display!="flex")render();},60000);
+render();
+</script></body></html>

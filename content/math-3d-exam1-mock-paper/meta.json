@@ -1,0 +1,15 @@
+{
+  "id": "math-3d-exam1-mock-paper",
+  "student": "daughter",
+  "subject": "math",
+  "stage": "g3-3d-exam1",
+  "type": "quiz",
+  "title": "第一次評估 數學考前模擬卷",
+  "unit": "第一次評估",
+  "tags": [],
+  "difficulty": 2,
+  "minutes": 50,
+  "version": 1,
+  "date": "2026-11-15",
+  "description": "考前模擬卷，共 45 題：甲部 40 題各 2 分，乙部 5 題各 4 分，滿分 100 分，約 50 分鐘。左右分欄，內建數字鍵盤，交卷後逐題記錄對錯。"
+}
