@@ -36,7 +36,7 @@ const ELH = (() => {
     memory = db;
     try { localStorage.setItem(KEY, JSON.stringify(db)); } catch { /* 忽略 */ }
   }
-  const emptyItem = () => ({ started: null, last: null, completions: [], review: false, reviewAt: 0 });
+  const emptyItem = () => ({ started: null, last: null, completions: [], review: false, reviewAt: 0, resume: null });
   function normItem(it) {
     const o = Object.assign(emptyItem(), it || {});
     o.completions = (o.completions || []).map((c) => (c.undone ? { t: c.t, undone: true } : { t: c.t }));
@@ -83,6 +83,19 @@ const ELH = (() => {
     it.last = Date.now();
     write(db); changed(sid, id);
   }
+  // ---------- 斷點續做 ----------
+  // 教材頁回報進度快照 → 存成 resume；下次打開時網站問「繼續／重新開始」，再把快照交還給頁面
+  const RESUME_DAYS = 30;
+  function getResume(sid, id) {
+    const r = normItem(read()[sid]?.items?.[id]).resume;
+    return r && !r.cleared && r.dataJson && Date.now() - r.at < RESUME_DAYS * 86400000 ? r : null;
+  }
+  function setResume(sid, id, obj) { // obj 為 null 表示清除（也會同步到其他裝置）
+    const db = read(); const it = slot(db, sid, id);
+    it.resume = obj ? { ...obj, at: Date.now() } : { at: Date.now(), cleared: true };
+    write(db); changed(sid, id);
+  }
+  function sessionById(id) { return readSessions()[id] || null; }
   function toggleReview(sid, id) {
     const db = read(); const it = slot(db, sid, id);
     it.review = !it.review; it.reviewAt = Date.now();
@@ -103,6 +116,7 @@ const ELH = (() => {
       last: Math.max(a.last || 0, b.last || 0) || null,
       completions: [...byT.values()].sort((x, y) => x.t - y.t),
       review: newer.review, reviewAt: newer.reviewAt || 0,
+      resume: (b.resume?.at || 0) > (a.resume?.at || 0) ? b.resume : (a.resume || null), // 斷點續做快照：以較新者為準
     };
   }
   function getRaw(sid, id) { return normItem(read()[sid]?.items?.[id]); }
@@ -163,6 +177,7 @@ const ELH = (() => {
     const out = [];
     const n = completedTimes(item.student, item.id);
     if (n) out.push(['done', `已完成 ×${n}`]);
+    if (getResume(item.student, item.id)) out.push(['resume', '可繼續']);
     if (st.review) out.push(['review', '待複習']);
     if (isNew(item)) out.push(['new', '新教材']);
     for (const t of item.tags || []) out.push(['key', d.tags.find((x) => x.id === t)?.label || t]);
@@ -206,7 +221,7 @@ const ELH = (() => {
     el.innerHTML = `<p class="elh-empty">載入失敗：${esc(e.message)}。請確認是透過網址（不是直接雙擊檔案）打開。</p>`;
   }
 
-  return { loadAll, hooks, itemState, getRaw, mergeItem, applyRemote, points, pointsInfo, completedTimes, doneCount, markStart, complete, toggleReview,
+  return { loadAll, hooks, itemState, getRaw, mergeItem, applyRemote, points, pointsInfo, completedTimes, doneCount, markStart, complete, toggleReview, getResume, setResume, sessionById,
     saveSession, mergeSession, sessionsOf, summarize,
     esc, stageLabel, typeLabel, student, subject, badges, isNew, card, recent, reviewList, latest, section, fail };
 })();

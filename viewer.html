@@ -43,17 +43,41 @@
 
     await ELH_SYNC.init();          // 需要時先登入
     await ELH_SYNC.pull(sid);       // 先取雲端最新進度（離線時略過）
+
+    // ----- 斷點續做：有上次的進度快照時，先問繼續或重新開始 -----
+    const agoText = (t) => { const m = Math.max(1, Math.round((Date.now() - t) / 60000)); return m < 60 ? m + ' 分鐘前' : m < 1440 ? Math.round(m / 60) + ' 小時前' : Math.round(m / 1440) + ' 天前'; };
+    const askResume = (data, at) => new Promise((resolve) => {
+      const ov = document.createElement('div'); ov.className = 'elh-login';
+      const where = typeof data.i === 'number' ? '第 ' + (data.i + 1) + ' 題' : '上次的位置';
+      ov.innerHTML = '<div class="elh-login-box"><h2>⏯ 繼續上次的進度？</h2><p>上次做到 ' + where + '（' + agoText(at) + '）。</p>' +
+        '<div class="row-btns"><button class="btn btn-primary" id="rs-go">繼續</button><button class="btn btn-outline-secondary" id="rs-new">重新開始</button></div></div>';
+      document.body.appendChild(ov);
+      ov.querySelector('#rs-go').onclick = () => { ov.remove(); resolve(true); };
+      ov.querySelector('#rs-new').onclick = () => { ov.remove(); resolve(false); };
+    });
+    let resumeData = null, sess = null;
+    const rs = ELH.getResume(sid, id);
+    if (rs && rs.ver === item.version) {
+      let parsed = null; try { parsed = JSON.parse(rs.dataJson); } catch { /* 快照損壞就當沒有 */ }
+      if (parsed && await askResume(parsed, rs.at)) {
+        resumeData = parsed;
+        const prev = ELH.sessionById(rs.sessionId);
+        if (prev && prev.student === sid && prev.material === id) sess = { ...prev }; // 接續同一個場次：已答題目和累計用時都保留
+      } else ELH.setResume(sid, id, null);
+    } else if (rs) ELH.setResume(sid, id, null); // 教材已改版，舊快照作廢
     $('frame').src = item.path;
     ELH.markStart(sid, id);
 
     // ----- 作答場次：用時與每題對錯 -----
-    const startedAt = Date.now();
-    const sess = {
-      id: [sid, id, startedAt.toString(36), Math.random().toString(36).slice(2, 6)].join('-'),
-      student: sid, material: id, title: item.title, startedAt, endedAt: startedAt, activeSeconds: 0,
-      totalQ: 0, answers: [], completed: false,
-      device: (navigator.userAgentData?.platform || navigator.platform || '?') + ' ' + screen.width + 'x' + screen.height,
-    };
+    if (!sess) {
+      const startedAt = Date.now();
+      sess = {
+        id: [sid, id, startedAt.toString(36), Math.random().toString(36).slice(2, 6)].join('-'),
+        student: sid, material: id, title: item.title, startedAt, endedAt: startedAt, activeSeconds: 0,
+        totalQ: 0, answers: [], completed: false,
+        device: (navigator.userAgentData?.platform || navigator.platform || '?') + ' ' + screen.width + 'x' + screen.height,
+      };
+    }
     let dirty = false, lastAct = Date.now();
     const IDLE_MS = 60000; // 超過 60 秒沒有操作就不計時
     const persist = () => {
@@ -69,12 +93,37 @@
     addEventListener('pagehide', persist);
     document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') persist(); });
 
+    // 進度快照：頁面每次換題或作答後回報 {elh:1, type:'state', data}，防抖後存起來
+    let latestState = null, resumeTimer = null, resumeCleared = false;
+    const saveResume = () => {
+      clearTimeout(resumeTimer); resumeTimer = null;
+      if (!latestState) return;
+      const sum = ELH.summarize(sess);
+      if (sess.totalQ > 0 && sum.answered >= sess.totalQ) { // 已全部作答：不需要續做
+        if (!resumeCleared) { resumeCleared = true; if (ELH.getResume(sid, id)) ELH.setResume(sid, id, null); }
+        return;
+      }
+      resumeCleared = false;
+      const json = JSON.stringify(latestState);
+      if (json.length > 8000) return;
+      persist();
+      ELH.setResume(sid, id, { sessionId: sess.id, dataJson: json, ver: item.version });
+    };
+    const scheduleResume = () => { clearTimeout(resumeTimer); resumeTimer = setTimeout(saveResume, 3000); };
+    addEventListener('pagehide', saveResume);
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') saveResume(); });
+
     // 教材頁回報：{elh:1, type:'init', total} / {elh:1, type:'answer', q, choice, correct, text, picked, answer}
     addEventListener('message', (e) => {
       const m = e.data;
       if (e.source !== $('frame').contentWindow || !m || m.elh !== 1) return;
       lastAct = Date.now();
-      if (m.type === 'init') { sess.totalQ = Math.max(0, Math.min(1000, Number(m.total) || 0)); persist(); refresh(); }
+      if (m.type === 'init') {
+        sess.totalQ = Math.max(0, Math.min(1000, Number(m.total) || 0)); persist(); refresh();
+        if (resumeData) { e.source.postMessage({ elh: 1, type: 'restore', data: resumeData }, location.origin); resumeData = null; }
+      } else if (m.type === 'state') {
+        latestState = m.data; scheduleResume();
+      }
       else if (m.type === 'answer' && sess.answers.length < 500) {
         sess.answers.push({ q: m.q, choice: m.choice ?? null, correct: m.choice == null ? null : !!m.correct,
           text: clip(m.text), picked: clip(m.picked, 120), answer: clip(m.answer, 120), t: Date.now() });

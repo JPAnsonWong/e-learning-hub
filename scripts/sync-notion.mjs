@@ -6,7 +6,7 @@ import { createHash } from 'node:crypto';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { initializeApp, cert } from 'firebase-admin/app';
-import { getFirestore, FieldValue } from 'firebase-admin/firestore';
+import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { buildModel, SCHEMAS } from './lib/model.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -50,6 +50,24 @@ const meta = (await metaRef.get()).data() || {};
 meta.dbs ||= {};
 meta.pages ||= {};
 const hash = (o) => createHash('sha1').update(JSON.stringify(o)).digest('hex');
+
+// ---- 沒有新活動就直接略過（每 30 分鐘執行一次，絕大多數時候只花 3 次 Firestore 讀取）----
+const runStart = Timestamp.now();           // 用開始時間當作「上次同步」，同步期間新增的資料下一輪會再處理
+const cfgStudents = readJson('config/students.json').students;
+const force = process.env.FORCE === 'true';
+async function plan() {
+  const last = meta.lastSync, lastFull = meta.lastFull;
+  if (force) return { go: true, full: true, why: '手動要求完整同步' };
+  if (!last || !lastFull) return { go: true, full: true, why: '第一次同步' };
+  if (Date.now() - lastFull.toMillis() > 12 * 3600e3) return { go: true, full: true, why: '距離上次完整同步超過 12 小時' };
+  const qs = [db.collection('sessions').where('updatedAt', '>', last).limit(1)];
+  for (const s of cfgStudents) qs.push(db.collection(`students/${s.id}/materials`).where('updatedAt', '>', last).limit(1));
+  const rs = await Promise.all(qs.map((q) => q.get()));
+  return rs.some((r) => !r.empty) ? { go: true, full: false, why: '有新的學習活動' } : { go: false };
+}
+const decision = await plan();
+if (!decision.go) { console.log('沒有新活動，略過同步。'); process.exit(0); }
+console.log('開始同步：' + decision.why);
 
 // 舊資料庫補上新增的欄位（已存在的欄位不受影響）
 async function migrate(id, schema) {
@@ -100,7 +118,7 @@ async function upsert(dbId, prev, key, props, createOnly = {}) {
 
 // ---- 讀資料並同步 ----
 const model = buildModel({
-  students: readJson('config/students.json').students,
+  students: cfgStudents,
   stages: readJson('config/stages.json').stages,
   types: readJson('config/types.json').types,
   catalog: readJson('catalog.json').items,
@@ -137,5 +155,5 @@ for (const s of model.sessions) {
   await ref.update({ notion: { page: row.page, hash: row.hash, wrongPages } }); // 只寫 notion 欄位，不動 updatedAt
 }
 
-await metaRef.set({ dbs: meta.dbs, pages: meta.pages, lastSync: FieldValue.serverTimestamp() }, { merge: true });
+await metaRef.set({ dbs: meta.dbs, pages: meta.pages, lastSync: runStart, lastFull: decision.full ? runStart : meta.lastFull }, { merge: true });
 console.log(`完成：新增 ${stats.created}、更新 ${stats.updated}、略過（無變化）${stats.skipped}、移除 ${stats.archived}`);
