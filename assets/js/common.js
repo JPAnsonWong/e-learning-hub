@@ -217,11 +217,35 @@ const ELH = (() => {
     return `<section class="elh-section"><h2>${esc(title)}</h2>${html
       ? `<div class="elh-grid">${html}</div>` : `<p class="elh-empty">${esc(emptyText)}</p>`}</section>`;
   }
+  // ---------- 右上角「連結」選單（資料來自 config/links.json） ----------
+  let linksP = null;
+  const loadLinks = () => (linksP ||= fetch('config/links.json', { cache: 'no-cache' })
+    .then((r) => (r.ok ? r.json() : { links: [] })).then((j) => (j.links || []).filter((l) => l && l.name && /^https?:\/\//i.test(l.url || '')))
+    .catch(() => []));
+  // 在頁首（.elh-top）最右邊加上「🔗 連結」按鈕；重複呼叫不會重複加入
+  async function mountLinks() {
+    const bar = document.querySelector('.elh-top');
+    if (!bar || bar.querySelector('.elh-links')) return;
+    const links = await loadLinks();
+    if (!links.length || bar.querySelector('.elh-links')) return;
+    const box = document.createElement('div');
+    box.className = 'elh-links';
+    box.innerHTML = '<button type="button" class="btn btn-outline-secondary elh-btn" aria-haspopup="true" aria-expanded="false">🔗 連結</button>' +
+      '<div class="elh-links-menu" hidden>' + links.map((l) =>
+        '<a href="' + esc(l.url) + '" target="_blank" rel="noopener noreferrer">' + esc(l.name) + '</a>').join('') + '</div>';
+    bar.appendChild(box);
+    const btn = box.querySelector('button'), menu = box.querySelector('.elh-links-menu');
+    const setOpen = (v) => { menu.hidden = !v; btn.setAttribute('aria-expanded', String(v)); };
+    btn.addEventListener('click', (e) => { e.stopPropagation(); setOpen(menu.hidden); });
+    menu.addEventListener('click', () => setOpen(false)); // 點了連結後收起選單（連結本身在新分頁開啟）
+    document.addEventListener('click', (e) => { if (!box.contains(e.target)) setOpen(false); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+  }
   function fail(el, e) {
     el.innerHTML = `<p class="elh-empty">載入失敗：${esc(e.message)}。請確認是透過網址（不是直接雙擊檔案）打開。</p>`;
   }
 
   return { loadAll, hooks, itemState, getRaw, mergeItem, applyRemote, points, pointsInfo, completedTimes, doneCount, markStart, complete, toggleReview, getResume, setResume, sessionById,
     saveSession, mergeSession, sessionsOf, summarize,
-    esc, stageLabel, typeLabel, student, subject, badges, isNew, card, recent, reviewList, latest, section, fail };
+    esc, stageLabel, typeLabel, student, subject, badges, isNew, card, recent, reviewList, latest, section, mountLinks, fail };
 })();

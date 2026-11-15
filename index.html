@@ -42,6 +42,7 @@
         ELH.section('最新教材', cards(ELH.latest(d, null, 6)), '暫無教材。');
     };
     render();
+    ELH.mountLinks();
     ELH_SYNC.init().then((on) => on && ELH_SYNC.pullAll(d.students)).then((got) => got && render());
   } catch (e) { ELH.fail(app, e); }
 })();

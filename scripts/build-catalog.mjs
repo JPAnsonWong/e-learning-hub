@@ -23,6 +23,17 @@ const REQUIRED = ['id', 'student', 'subject', 'stage', 'type', 'title', 'date', 
 const ID_RE = /^[a-z0-9][a-z0-9-]*$/;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
+// 連結選單 config/links.json
+try {
+  const links = readJson('config/links.json').links;
+  if (!Array.isArray(links)) err('config/links.json', 'links 必須是陣列');
+  else links.forEach((l, k) => {
+    const where = `config/links.json 第 ${k + 1} 項`;
+    if (!l || typeof l.name !== 'string' || !l.name.trim()) err(where, '缺少 name（顯示名稱）');
+    if (!l || typeof l.url !== 'string' || !/^https?:\/\/\S+$/i.test(l.url)) err(where, 'url 必須以 http:// 或 https:// 開頭，且不含空格');
+  });
+} catch (e) { err('config/links.json', `不是有效的 JSON：${e.message}`); }
+
 const items = [];
 const seen = new Set();
 const contentDir = join(root, 'content');
