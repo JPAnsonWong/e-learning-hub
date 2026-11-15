@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>中一中文 單元一 細說今昔事：記敘的要素和方法｜測驗</title>
+<style>
+*{box-sizing:border-box;}
+html,body{height:100%;margin:0;overflow:hidden;}
+body{font-family:"PingFang TC","Microsoft JhengHei",sans-serif;background:#e9eef5;color:#1c2733;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;}
+#app{position:relative;height:100%;display:flex;flex-direction:column;}
+main{flex:1;display:flex;min-height:0;overflow:hidden;}
+#left{width:55%;min-width:0;overflow:auto;background:#ffffff;padding:2.5vmin 3vmin;border-right:0.4vmin solid #d5dee8;}
+#right{width:45%;min-width:0;overflow:auto;background:#f4f8fb;padding:2.5vmin 3vmin;}
+button{font-family:inherit;touch-action:manipulation;cursor:pointer;border:none;border-radius:1.2vmin;}
+button:disabled{opacity:.4;}
+button:focus{outline:0.5vmin solid #f59e0b;}
+.unit{font-size:clamp(1.2rem,3.2vmin,3.2rem);margin:0 0 1vmin;color:#1e3a5f;}
+.meta{font-size:max(1rem,2.6vmin);color:#374151;margin-bottom:1vmin;}
+.type{display:inline-block;background:#e2e8f0;border-radius:1vmin;padding:0.2vmin 1.5vmin;font-weight:700;color:#1d4ed8;}
+.qtext{white-space:pre-line;font-size:clamp(1.4rem,4.2vmin,5rem);line-height:1.45;font-weight:600;margin:1.5vmin 0;}
+.timer{font-size:clamp(1.2rem,3.6vmin,3.4rem);font-weight:800;color:#0f766e;margin:1vmin 0;}
+.timer.low{color:#b91c1c;}
+.navrow{display:flex;gap:1.5vmin;margin:2vmin 0;flex-wrap:wrap;}
+.nav{min-height:max(3rem,7vmin);font-size:clamp(1.1rem,3vmin,2.6rem);font-weight:700;padding:0 3.5vmin;background:#2b6cb0;color:#fff;}
+.nav.warn{background:#b45309;}
+.qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(max(3rem,7vmin),1fr));gap:1.2vmin;margin-top:1vmin;}
+.qbtn{min-height:max(3rem,7vmin);font-size:clamp(1rem,2.8vmin,2.2rem);font-weight:700;background:#e2e8f0;color:#1c2733;border:0.3vmin solid #cbd5e1;}
+.qbtn.done{background:#bfdbfe;border-color:#2563eb;}
+.qbtn.cur{box-shadow:0 0 0 0.5vmin #f59e0b;}
+.qbtn.g{background:#bbf7d0;border-color:#16a34a;}
+.qbtn.r{background:#fecaca;border-color:#dc2626;}
+.opts{display:flex;flex-direction:column;gap:1.5vmin;}
+.opt{min-height:max(3rem,7vmin);width:100%;text-align:left;font-size:clamp(1.1rem,3.4vmin,4rem);line-height:1.4;padding:1.5vmin 2.5vmin;background:#fff;border:0.5vmin solid #b9c6d4;color:#1c2733;}
+.opt.sel{border-color:#1d4ed8;background:#dbeafe;box-shadow:0 0 0 0.5vmin #1d4ed8;}
+.opt.big{text-align:center;font-weight:700;}
+.hint{font-size:max(1rem,2.4vmin);color:#475569;margin-top:1.5vmin;line-height:1.5;}
+.boxes{display:flex;gap:1.5vmin;flex-wrap:wrap;}
+.box{flex:1;min-width:22vmin;border:0.5vmin dashed #94a3b8;border-radius:1.5vmin;padding:1.5vmin;min-height:18vmin;background:#fff;}
+.box.tgt{border-color:#d97706;background:#fffbeb;}
+.boxname{font-size:clamp(1.1rem,3vmin,3rem);font-weight:800;text-align:center;margin-bottom:1vmin;color:#1d4ed8;}
+.cards{display:flex;flex-wrap:wrap;gap:1.5vmin;margin-top:2vmin;}
+.card{min-height:max(3rem,7vmin);font-size:clamp(1.1rem,3.2vmin,3.4rem);padding:1vmin 2.5vmin;background:#fff;border:0.5vmin solid #b9c6d4;border-radius:1.2vmin;color:#1c2733;}
+.card.sel{box-shadow:0 0 0 0.6vmin #f59e0b;border-color:#d97706;background:#fef3c7;}
+.card.placed{background:#e0f2fe;border-color:#0284c7;}
+.tokens{display:flex;flex-wrap:wrap;gap:1.5vmin;}
+.tok{min-height:max(3rem,7vmin);font-size:clamp(1.2rem,3.6vmin,4rem);padding:1vmin 2.5vmin;background:#fff;border:0.5vmin solid #b9c6d4;border-radius:1.2vmin;color:#1c2733;}
+.tok.sel{box-shadow:0 0 0 0.6vmin #dc2626;border-color:#dc2626;background:#fee2e2;}
+.fixopts{display:flex;flex-direction:column;gap:1.5vmin;margin-top:2vmin;}
+.status{font-size:max(1rem,2.8vmin);margin-top:1.5vmin;background:#fef9c3;padding:1.2vmin 2vmin;border-radius:1vmin;line-height:1.5;}
+.score{font-size:clamp(1.6rem,6vmin,7rem);font-weight:800;color:#1d4ed8;margin:1vmin 0;}
+.verdict{font-size:clamp(1.4rem,4.5vmin,5rem);font-weight:800;margin:1vmin 0;}
+.verdict.ok{color:#15803d;}
+.verdict.no{color:#b91c1c;}
+.resrow{font-size:clamp(1.1rem,3vmin,3.4rem);margin:1vmin 0;line-height:1.5;}
+.resrow span{font-weight:800;color:#334155;}
+.explain{font-size:max(1.1rem,2.8vmin);background:#f1f5f9;border-left:0.8vmin solid #2b6cb0;padding:1.5vmin 2vmin;margin-top:1.5vmin;line-height:1.6;}
+.page{font-size:max(1rem,2.6vmin);color:#475569;margin-top:1.5vmin;}
+#dlg{position:absolute;inset:0;background:rgba(15,23,42,.5);display:flex;align-items:center;justify-content:center;z-index:10;}
+#dlg[hidden]{display:none;}
+.panel{background:#fff;border-radius:2vmin;padding:4vmin;width:min(80vmin,92%);text-align:center;box-shadow:0 1vmin 4vmin rgba(0,0,0,.3);}
+.dlgtitle{font-size:clamp(1.4rem,4.5vmin,5rem);font-weight:800;margin-bottom:2vmin;color:#b45309;}
+.dlgtext{font-size:clamp(1.1rem,3.2vmin,3.6rem);margin-bottom:3vmin;line-height:1.6;}
+@media (max-width:900px),(orientation:portrait){
+  main{flex-direction:column;overflow:auto;}
+  #left,#right{width:auto;height:auto;overflow:visible;border-right:none;border-bottom:0.4vmin solid #d5dee8;}
+}
+.box .card{margin:0.7vmin}
+</style>
+</head>
+<body>
+<div id="app">
+  <main>
+    <section id="left" aria-label="題目區"></section>
+    <section id="right" aria-label="作答區"></section>
+  </main>
+  <div id="dlg" hidden>
+    <div class="panel">
+      <div class="dlgtitle">確認交卷</div>
+      <div class="dlgtext" id="dlgtext"></div>
+      <div class="navrow">
+        <button class="nav warn" id="dlgOk">確認交卷</button>
+        <button class="nav" id="dlgCancel">返回作答</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+// ---- E_learning Hub 回報（只在被網站 iframe 載入時有效，單獨打開頁面時無任何作用）----
+function elhReport(m){
+  try{
+    if(location.search.indexOf("elhdebug")>=0)console.log("ELH",JSON.stringify(m));
+    if(window.parent!==window)window.parent.postMessage(Object.assign({elh:1},m),location.origin);
+  }catch(e){}
+}
+function elhText(h){return String(h==null?"":h).replace(/<[^>]*>/g,"").replace(/\s+/g," ").trim().slice(0,200);}
+
+const QUIZ = {"title": "中一中文 單元一「細說今昔事」測驗", "unit": "《語文》中一上 單元一 記敘的要素和方法", "audience": "兒子（中一）", "minutes": 30, "items": [{"id": "q1", "type": "single", "q": "《楊修之死》第1段中，曹操因見碗中有雞肋而有感於懷，當時他心中怎樣？", "explain": "課文p1.7段1寫「心中猶豫不決」，故「猶豫不決」是原文直接依據。", "page": "p1.7", "options": ["心中大喜", "心中猶豫不決", "心中大怒", "心中悲痛"], "answer": 1}, {"id": "q2", "type": "single", "q": "《楊修之死》第3段中，曹操以甚麼罪名斬殺楊修？", "explain": "課文p1.8段3寫曹操說「汝怎敢造言亂我軍心」，並「喝刀斧手推出斬之」；p1.46也寫「曹操以惑亂軍心的罪名斬殺楊修」。", "page": "p1.8、p1.46", "options": ["惑亂軍心", "謀反", "洩漏軍機", "偷盜"], "answer": 0}, {"id": "q3", "type": "single", "q": "《楊修之死》第4段「闊門事件」中，曹操在花園門上寫了哪一個字？", "explain": "課文p1.8段4寫曹操「只取筆於門上書一『活』字而去」，楊修解作「門內添『活』字，乃『闊』字也」。", "page": "p1.8", "options": ["活", "門", "闊", "合"], "answer": 0}, {"id": "q4", "type": "single", "q": "《桑中生李》中，張助把李核種在哪裏？", "explain": "課文p1.20寫「顧見空桑中有土，因植種」，即種在空桑（桑樹洞）中。", "page": "p1.20", "options": ["家中庭院", "空桑中有土", "田中", "山下"], "answer": 1}, {"id": "q5", "type": "single", "q": "《桑中生李》中，張助回來後說了哪一句話，表示李樹並非神靈？", "explain": "課文p1.20原文：「此有何神？乃我所種耳。」p1.19預習也提示此句。", "page": "p1.20、p1.19", "options": ["此有何神？乃我所種耳。", "李君令我目愈，謝以一豚。", "後人見桑中反復生李，轉相告語。", "眾犬吠聲，盲者得視。"], "answer": 0}, {"id": "q6", "type": "single", "q": "《歪兒》一文中，作者用哪一個明喻來描寫歪兒站在街中央尋着空鐵罐的樣子？", "explain": "課文p1.28段3原文：「歪兒站在街中央，尋着空鐵罐左盼右盼，活像一個蒸熟了的小紅薯。」p1.36也以「活像一個蒸熟了的小紅薯」為明喻例。", "page": "p1.28、p1.36", "options": ["真像騎摩托送電報的郵差那樣風馳電掣", "活像一個蒸熟了的小紅薯", "像晨星一樣光亮", "像個脫了軌而瞎撞的破車"], "answer": 1}, {"id": "q7", "type": "single", "q": "《歪兒》的朗讀建議指出，哪一段是全文的高潮，點出題旨？", "options": ["第3段", "第5段", "第6段", "第8段"], "answer": 3, "explain": "課本 p1.31 朗讀建議：「第8段：本段為全文的高潮，點出題旨。」", "page": "p1.31"}, {"id": "q8", "type": "single", "q": "課本以《兩角錢》示範哪一種記敘方法？", "options": ["只寫經過，不寫結果", "順敘法", "先寫結果，再寫原因", "倒敘法"], "answer": 1, "explain": "課本 p1.46 以《兩角錢》示範順敘法：事件原因→事件經過→事件結果→事件體會，作用是清楚交代事情的來龍去脈。", "page": "p1.46"}, {"id": "q9", "type": "single", "q": "《兩角錢》中，作者破開一百元後回到郵局，見到男孩子時怎樣做？", "options": ["送男孩子一份禮物", "沒有跟男孩子說話便離開", "打消了還錢的念頭，再次鄭重地向他道謝", "把兩角錢還給男孩子"], "answer": 2, "explain": "課文第9段：「走到他的身邊，我打消了還那兩角錢的念頭。……我再次鄭重地向他說了聲：『謝謝你啊！』」（p1.39）；p1.46 事件結果亦寫「沒有把錢歸還給男孩子，改而再次鄭重地向他道謝」。", "page": "p1.39、p1.46"}, {"id": "q10", "type": "single", "q": "下列哪一項不是課本所說的記敘要素？", "explain": "課本 p1.3 寫「認識記敘要素：時間、地點、人物和事件（原因、經過和結果）」；p1.45 寫作指導亦列出時間、地點、人物、事情的原因、經過和結果。「中心句」是閱讀策略（尋找文章的中心句），不是記敘要素。", "page": "p1.3、p1.45", "options": ["中心句", "經過", "原因", "結果"], "answer": 0}, {"id": "q11", "type": "single", "q": "下列哪一項是「倒敘法」的特點？", "explain": "課本p1.45寫「倒敘法：以事情的結局或某個重要的情節開展文章，然後順序記述事情的始末，以吸引讀者追看。」", "page": "p1.45", "options": ["先寫原因，再寫經過，最後寫結果", "按照事情發生的經過順序記述", "以時間先後依次記述事情的來龍去脈", "以事情的結局或某個重要的情節開展文章，然後順序記述事情的始末"], "answer": 3}, {"id": "q12", "type": "single", "q": "《楊修之死》一文採用哪一種記敘方法？", "explain": "課本p1.16比較閱讀表格寫「楊修之死＝倒敘法」；p1.46也把《楊修之死》列在倒敘法之下，先寫結果再寫原因、經過。", "page": "p1.16、p1.46", "options": ["補敘法", "插敘法", "順敘法", "倒敘法"], "answer": 3}, {"id": "q13", "type": "multi", "q": "根據課文概覽，下列哪些是間接導致楊修被殺的事件（遠因）？（可選多於一項）", "explain": "課本 p1.13 課文概覽把雞肋事件（第1–3段）列為近因，闊門、一合酥、夢中殺人、吳質、鄴門、答教列為遠因；p1.46 倒敘圖亦把這六件事列為「事件經過」，曹操對楊修的厭惡程度逐漸加深。", "page": "p1.13、p1.46", "options": ["答教事件", "闊門事件", "雞肋事件", "一合酥事件", "夢中殺人事件"], "answer": [0, 1, 3, 4]}, {"id": "q14", "type": "multi", "q": "根據課本，下列哪些是名詞的類別？（可選多於一項）", "explain": "課本p1.43名詞部分列出四類：表示人或具體事物、表示抽象事物、表示時間、表示方位。p1.44動詞部分另有七類動詞，「表示使令」屬動詞類別，不是名詞類別。", "page": "p1.43、p1.44", "options": ["表示時間", "表示抽象事物", "表示使令", "表示人或具體事物", "表示方位"], "answer": [0, 1, 3, 4]}, {"id": "q15", "type": "multi", "q": "根據課本p1.44，下列哪些動詞屬於「表示心理活動」？（可選多於一項）", "explain": "課本p1.44動詞分類中，「表示心理活動：如愛、想、忘記、感到、希望等」；「保護」屬表示動作、行為；「增加」屬表示存在、變化。", "page": "p1.44", "options": ["愛", "保護", "想", "忘記", "希望"], "answer": [0, 2, 3, 4]}, {"id": "q16", "type": "multi", "q": "根據課本p1.25文言知識庫，下列哪些句子中的「之」作代詞用？（可選多於一項）", "explain": "課本 p1.25：「之」作代詞用，可代人、物或處所，例「見之驚云」「因就斫之」（《桑中生李》p1.20）；「操躍起拔劍斬之」（p1.9）的「之」代那個近侍。「愛修之才」（p1.25 例句）、「數犯曹操之忌」（p1.26 語譯為「曹操的忌諱」）中的「之」作結構助詞，譯作「的」。", "page": "p1.25、p1.26、p1.9、p1.20", "options": ["數犯曹操之忌", "操躍起拔劍斬之", "因就斫之", "愛修之才", "張助遠出來還，見之驚云"], "answer": [1, 2, 4]}, {"id": "q17", "type": "multi", "q": "根據課本「文學點滴」，下列哪些是四部中國古典小說名著？（可選多於一項）", "explain": "課本p1.11文學點滴寫「《三國演義》《西遊記》《水滸傳》《紅樓夢》是四部中國古典小說名著」；p1.12逐一介紹這四部。《搜神記》是志怪小說（p1.18），《世說新語》是比較閱讀材料（p1.16），均非四大名著。", "page": "p1.11、p1.12", "options": ["《三國演義》", "《西遊記》", "《水滸傳》", "《搜神記》", "《紅樓夢》"], "answer": [0, 1, 2, 4]}, {"id": "q18", "type": "multi", "q": "《歪兒》第3段怎樣描寫歪兒的樣貌？（可選多於一項）", "options": ["個子比同齡的孩子高一頭", "腿也幾乎長一截", "耳朵明顯的一大一小", "細小，軟綿綿，歪歪扭扭", "眼睛總像睜不開"], "answer": [2, 3, 4], "explain": "課文第3段：「他細小，軟綿綿，歪歪扭扭；眼睛總像睜不開，薄薄的嘴脣有點斜，更奇怪的是他的耳朵，明顯的一大一小」（p1.28）。「個子比同齡的孩子高一頭，腿也幾乎長一截」是第5段寫「我」的（p1.29）。", "page": "p1.28、p1.29"}, {"id": "q19", "type": "multi", "q": "根據課本，下列哪些標點符號的用法說明是正確的？（可選多於一項）", "explain": "課本 p1.42：頓號（、）表示句中並列的詞語或短語之間的停頓；逗號（，）表示句子內部一般的停頓；句號（。）表示陳述句完結的停頓。", "page": "p1.42", "options": ["逗號表示句子內部一般的停頓", "句號表示陳述句完結的停頓", "逗號表示句中並列的詞語之間的停頓", "頓號表示句中並列的詞語或短語之間的停頓", "頓號表示陳述句完結的停頓"], "answer": [0, 1, 3]}, {"id": "q20", "type": "multi", "q": "根據課本p1.21，中國民間信仰的三類崇拜對象是哪些？（可選多於一項）", "explain": "課本p1.21原文：「三類崇拜對象——俗神、靈物和符號。」並分別介紹俗神信仰、靈物信仰、符號信仰。", "page": "p1.21", "options": ["符號", "仙人", "靈物", "俗神", "精靈"], "answer": [0, 2, 3]}, {"id": "q21", "type": "classify", "q": "把下列句子中的「之」按用法分類。", "explain": "課本 p1.25：「之」作代詞用，可代人、物或處所，例「見之驚云」「因就斫之」（《桑中生李》p1.20）；「操躍起拔劍斬之」（p1.9）的「之」代那個近侍。「愛修之才」（p1.25 例句）、「數犯曹操之忌」（p1.26 語譯為「曹操的忌諱」）中的「之」作結構助詞，譯作「的」。", "page": "p1.25、p1.26、p1.9、p1.20", "boxes": ["作結構助詞（的）", "作代詞"], "cards": ["操躍起拔劍斬之", "因就斫之", "愛修之才", "數犯曹操之忌", "見之驚云"], "answer": [1, 1, 0, 0, 1]}, {"id": "q22", "type": "classify", "q": "把下列詞語按詞性分類（例子取自課本名詞、動詞說明）。", "explain": "課本p1.43名詞定義「表示人或事物名稱的詞語」，例「同學、鉛筆」；p1.44動詞定義「表示動作、行為：如走、讀、寫、看」等。「同學」「鉛筆」是名詞；「走」「讀」「寫」是動詞。", "page": "p1.43、p1.44", "boxes": ["名詞", "動詞"], "cards": ["同學", "寫", "鉛筆", "走", "讀"], "answer": [0, 1, 0, 1, 1]}, {"id": "q23", "type": "classify", "q": "把下列說法分到正確的記敘方法。", "explain": "課本 p1.45：順敘法「按照事情發生的經過順序記述，能清楚交代事情的來龍去脈」；倒敘法「以事情的結局或某個重要的情節開展文章，然後順序記述事情的始末，以吸引讀者追看」。p1.46 以《兩角錢》示範順敘法、《楊修之死》示範倒敘法。", "page": "p1.45、p1.46", "boxes": ["順敘法", "倒敘法"], "cards": ["以事情的結局或某個重要的情節開展文章", "能清楚交代事情的來龍去脈", "《兩角錢》", "以吸引讀者追看", "按照事情發生的經過順序記述", "《楊修之死》"], "answer": [1, 0, 0, 1, 0, 1]}, {"id": "q24", "type": "classify", "q": "把下列名詞（課本例子）分到正確的類別。", "explain": "課本p1.43名詞四類：表示人或具體事物（如同學、鉛筆）、表示抽象事物（如年齡、宇宙、原因、狀況）、表示時間（如明天、晚上、冬季、去年）、表示方位（如上、下、左、右、東、西、外面、旁邊）。「同學」屬人或具體事物；「原因」屬抽象事物；「晚上」屬時間；「旁邊」屬方位。", "page": "p1.43", "boxes": ["表示人或具體事物", "表示抽象事物", "表示時間", "表示方位"], "cards": ["晚上", "旁邊", "原因", "同學"], "answer": [2, 3, 1, 0]}, {"id": "q25", "type": "classify", "q": "根據課文概覽，把《楊修之死》的事件分為近因和遠因。", "explain": "課本 p1.13 課文概覽：楊修之死的近因是雞肋事件（第1–3段）；遠因是闊門（第4段）、一合酥（第5段）、夢中殺人（第6段）、吳質（第7段）、鄴城門（第8段）、答教（第9段）等事件。", "page": "p1.13", "boxes": ["近因（直接導致楊修被殺）", "遠因（間接導致楊修被殺）"], "cards": ["夢中殺人事件", "一合酥事件", "雞肋事件", "答教事件", "吳質事件", "闊門事件"], "answer": [1, 1, 0, 1, 1, 1]}, {"id": "q26", "type": "circlefix", "q": "下面句子有一個錯別字。先點出寫錯的詞，再選出正確寫法。\n「原來楊修為人，持才放曠，數犯曹操之忌。」", "tokens": ["原來", "楊修", "為人，", "持才放曠，", "數犯", "曹操", "之忌。"], "wrong": 3, "options": ["恃才放曠", "侍才放曠", "持才放曠"], "answer": 0, "explain": "課文第4段：「原來楊修為人，恃才放曠，數犯曹操之忌。」（p1.8）p1.26 語譯：恃着自己有才華而行為放恣。", "page": "p1.8、p1.26"}, {"id": "q27", "type": "circlefix", "q": "下面句子有一個錯別字。先點出寫錯的詞，再選出正確寫法。\n「眾犬吠聲，盲者得視，遠近翕嚇。」", "tokens": ["眾犬", "吠聲，", "盲者", "得視，", "遠近", "翕嚇。"], "wrong": 5, "options": ["翕嚇", "翕赫", "吸赫"], "answer": 1, "explain": "課文：「眾犬吠聲，盲者得視，遠近翕赫。」註6：翕赫——翕，聚集。赫，盛貌。這裏指轟動、驚動。（p1.20）", "page": "p1.20"}, {"id": "q28", "type": "circlefix", "q": "下面句子有一個錯別字。先點出寫錯的詞，再選出正確寫法。\n「終於有一天，歪兒一屁股坐在白粉圈裏，快快無奈地痛哭不止」", "tokens": ["終於", "有一天，", "歪兒", "一屁股", "坐在", "白粉圈裏，", "快快", "無奈地", "痛哭不止"], "wrong": 6, "options": ["快快", "秧秧", "怏怏"], "answer": 2, "explain": "課文第5段：「歪兒一屁股坐在白粉圈裏，怏怏無奈地痛哭不止」（p1.30）。註9：怏怏——不快樂、不滿意的樣子（p1.31）。", "page": "p1.30、p1.31"}, {"id": "q29", "type": "circlefix", "q": "下面句子有一個錯別字。先點出寫錯的詞，再選出正確寫法。\n「我們對好多舉手之勞的事情卻總是熟視無賭，而不願意伸出手來」", "tokens": ["我們", "對好多", "舉手之勞", "的事情", "卻總是", "熟視無賭，", "而不願意", "伸出手來"], "wrong": 5, "options": ["熟視無睹", "熟視無賭", "熟是無睹"], "answer": 0, "explain": "《兩角錢》第1段：「但我們對好多舉手之勞的事情卻總是熟視無睹，而不願意伸出手來。」（p1.37）", "page": "p1.37"}, {"id": "q30", "type": "circlefix", "q": "下面句子有一個錯別字。先點出寫錯的詞，再選出正確寫法。\n「跑起來真像騎摩托送電報的郵差那樣風馳電擊，誰也甭想逃脫」", "tokens": ["跑起來", "真像", "騎摩托", "送電報的", "郵差那樣", "風馳電擊，", "誰也", "甭想", "逃脫"], "wrong": 5, "options": ["風弛電掣", "風馳電掣", "風馳電擊"], "answer": 1, "explain": "《歪兒》第5段：「跑起來真像騎摩托送電報的郵差那樣風馳電掣，誰也甭想逃脫我的追逐。」（p1.29）這是課本 p1.36 修辭運用所舉的明喻例句。", "page": "p1.29、p1.36"}]};
+
+var ITEMS=(QUIZ&&QUIZ.items)?QUIZ.items:[];
+var TITLE=(QUIZ&&QUIZ.title)?QUIZ.title:"語文單元測驗";
+var MINUTES=(QUIZ&&QUIZ.minutes)?QUIZ.minutes:30;
+var S={idx:0,ans:{},selCard:null,locked:false,view:"quiz",results:null,score:0,remain:MINUTES*60,used:0,timerId:null};
+
+function el(id){return document.getElementById(id);}
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function fmt(s){s=Math.max(0,Math.floor(s));var m=Math.floor(s/60),ss=s%60;return (m<10?"0":"")+m+":"+(ss<10?"0":"")+ss;}
+function typeLabel(t){return t==="single"?"單選題":t==="multi"?"多選題（全對才得分）":t==="classify"?"分類題":t==="circlefix"?"圈選改錯":"題目";}
+function getAns(it){return S.ans[it.id];}
+function isAnswered(it){
+  var a=S.ans[it.id];
+  if(it.type==="single")return typeof a==="number";
+  if(it.type==="multi")return Array.isArray(a)&&a.length>0;
+  if(it.type==="classify")return Array.isArray(a)&&a.some(function(v){return v>=0;});
+  if(it.type==="circlefix")return !!a&&(a.t!=null||a.o!=null);
+  return false;
+}
+function grade(it,a){
+  var i;
+  if(it.type==="single"){
+    var c=(typeof a==="number")?a:null;
+    return {choice:c,picked:c==null?null:it.options[c],correct:c===it.answer,atext:it.options[it.answer]};
+  }
+  if(it.type==="multi"){
+    var arr=(Array.isArray(a)?a:[]).slice().sort(function(x,y){return x-y;});
+    var sa=it.answer.slice().sort(function(x,y){return x-y;});
+    var ok=arr.length===sa.length&&arr.every(function(v,k){return v===sa[k];});
+    return {choice:arr.length?arr.join(","):null,
+      picked:arr.length?arr.map(function(k){return it.options[k];}).join(" / "):null,
+      correct:ok,atext:sa.map(function(k){return it.options[k];}).join(" / ")};
+  }
+  if(it.type==="classify"){
+    var pl=Array.isArray(a)?a:[];
+    var any=pl.some(function(v){return v>=0;});
+    var okc=pl.length===it.cards.length&&pl.every(function(v,k){return v===it.answer[k];});
+    return {choice:any?pl.map(function(v){return v<0?"-":String(v);}).join(","):null,
+      picked:any?pl.map(function(v,k){return it.cards[k]+"→"+(v<0?"未分類":it.boxes[v]);}).join(" / "):null,
+      correct:okc,atext:it.cards.map(function(cd,k){return cd+"→"+it.boxes[it.answer[k]];}).join(" / ")};
+  }
+  var t=(a&&a.t!=null)?a.t:null,o=(a&&a.o!=null)?a.o:null,done=(t!=null)||(o!=null);
+  return {choice:done?(t==null?"-":String(t))+"|"+(o==null?"-":String(o)):null,
+    picked:done?"圈："+(t==null?"未圈":it.tokens[t])+"；改："+(o==null?"未選":it.options[o]):null,
+    correct:(t===it.wrong)&&(o===it.answer),
+    atext:"圈："+it.tokens[it.wrong]+"；改："+it.options[it.answer]};
+}
+function gridHtml(res){
+  var h="";
+  for(var i=0;i<ITEMS.length;i++){
+    var cls="qbtn";
+    if(res)cls+=S.results[i].correct?" g":" r";
+    else if(isAnswered(ITEMS[i]))cls+=" done";
+    if(i===S.idx)cls+=" cur";
+    h+='<button class="'+cls+'" data-i="'+i+'">'+(i+1)+'</button>';
+  }
+  return h;
+}
+function bindGrid(){
+  var bs=el("left").querySelectorAll(".qbtn");
+  for(var k=0;k<bs.length;k++)(function(b){b.onclick=function(){S.idx=+b.dataset.i;S.selCard=null;render();};})(bs[k]);
+}
+function renderRight(it,a,R){
+  var h="",i;
+  if(it.type==="single"){
+    h='<div class="opts">';
+    for(i=0;i<it.options.length;i++)h+='<button class="opt'+(a===i?" sel":"")+'" data-i="'+i+'">'+String.fromCharCode(65+i)+'. '+esc(it.options[i])+'</button>';
+    h+='</div>';
+  }else if(it.type==="multi"){
+    h='<div class="hint">可選多項，全部答對才得分。</div><div class="opts">';
+    var ma=Array.isArray(a)?a:[];
+    for(i=0;i<it.options.length;i++)h+='<button class="opt'+(ma.indexOf(i)>=0?" sel":"")+'" data-i="'+i+'">'+String.fromCharCode(65+i)+'. '+esc(it.options[i])+'</button>';
+    h+='</div>';
+  }else if(it.type==="classify"){
+    var pl=Array.isArray(a)?a:it.cards.map(function(){return -1;});
+    h='<div class="boxes">';
+    for(var b=0;b<it.boxes.length;b++){
+      h+='<div class="box'+(S.selCard!=null?" tgt":"")+'" data-b="'+b+'"><div class="boxname">'+esc(it.boxes[b])+'</div>';
+      for(var c=0;c<it.cards.length;c++)if(pl[c]===b)h+='<button class="card placed" data-c="'+c+'">'+esc(it.cards[c])+'</button>';
+      h+='</div>';
+    }
+    h+='</div><div class="cards">';
+    for(var c2=0;c2<it.cards.length;c2++)if(pl[c2]<0)h+='<button class="card'+(S.selCard===c2?" sel":"")+'" data-c="'+c2+'">'+esc(it.cards[c2])+'</button>';
+    h+='</div><div class="hint">先點選卡片，再點分類框；點已放入的卡片可收回。</div>';
+  }else if(it.type==="circlefix"){
+    var cf=a||{t:null,o:null};
+    h='<div class="tokens">';
+    for(var t=0;t<it.tokens.length;t++)h+='<button class="tok'+(cf.t===t?" sel":"")+'" data-t="'+t+'">'+esc(it.tokens[t])+'</button>';
+    h+='</div><div class="fixopts">';
+    for(var o=0;o<it.options.length;o++)h+='<button class="opt big'+(cf.o===o?" sel":"")+'" data-o="'+o+'">'+esc(it.options[o])+'</button>';
+    h+='</div><div class="hint">先圈出錯誤的字，再點選正確寫法。</div>';
+    if(cf.t!=null||cf.o!=null)h+='<div class="status">已圈：'+(cf.t==null?"未圈":esc(it.tokens[cf.t]))+'；改正：'+(cf.o==null?"未選":esc(it.options[cf.o]))+'</div>';
+  }
+  R.innerHTML=h;
+  bindRight(it,R);
+}
+function bindRight(it,R){
+  var a=getAns(it),i;
+  if(it.type==="single"){
+    var os=R.querySelectorAll(".opt");
+    for(i=0;i<os.length;i++)(function(b){b.onclick=function(){S.ans[it.id]=+b.dataset.i;render();};})(os[i]);
+  }else if(it.type==="multi"){
+    if(!Array.isArray(a)){a=[];S.ans[it.id]=a;}
+    var ms=R.querySelectorAll(".opt");
+    for(i=0;i<ms.length;i++)(function(b){b.onclick=function(){var x=+b.dataset.i,p=a.indexOf(x);if(p>=0)a.splice(p,1);else a.push(x);render();};})(ms[i]);
+  }else if(it.type==="classify"){
+    if(!Array.isArray(a)){a=it.cards.map(function(){return -1;});S.ans[it.id]=a;}
+    var bx=R.querySelectorAll(".box");
+    for(i=0;i<bx.length;i++)(function(box){box.onclick=function(){if(S.selCard!=null){a[S.selCard]=+box.dataset.b;S.selCard=null;render();}};})(bx[i]);
+    var cd=R.querySelectorAll(".card");
+    for(i=0;i<cd.length;i++)(function(card){card.onclick=function(e){e.stopPropagation();var ci=+card.dataset.c;if(card.classList.contains("placed")){if(S.selCard!=null){a[S.selCard]=a[ci];S.selCard=null;}else{a[ci]=-1;}}else{S.selCard=(S.selCard===ci?null:ci);}render();};})(cd[i]);
+  }else if(it.type==="circlefix"){
+    if(!a||typeof a!=="object"){a={t:null,o:null};S.ans[it.id]=a;}
+    var tk=R.querySelectorAll(".tok");
+    for(i=0;i<tk.length;i++)(function(tk2){tk2.onclick=function(){a.t=+tk2.dataset.t;render();};})(tk[i]);
+    var op=R.querySelectorAll(".opt");
+    for(i=0;i<op.length;i++)(function(op2){op2.onclick=function(){a.o=+op2.dataset.o;render();};})(op[i]);
+  }
+}
+function renderQuiz(){
+  var it=ITEMS[S.idx];if(!it)return;
+  var L=el("left"),R=el("right");
+  L.innerHTML=
+    '<h1 class="unit">'+esc(TITLE)+'</h1>'+
+    '<div class="meta">第 '+(S.idx+1)+' / '+ITEMS.length+' 題　<span class="type">'+typeLabel(it.type)+'</span></div>'+
+    '<div class="qtext">'+esc(it.q)+'</div>'+
+    '<div class="timer" id="timer">剩餘時間 '+fmt(S.remain)+'</div>'+
+    '<div class="navrow">'+
+    '<button class="nav" id="prevBtn"'+(S.idx===0?" disabled":"")+'>上一題</button>'+
+    '<button class="nav" id="nextBtn"'+(S.idx===ITEMS.length-1?" disabled":"")+'>下一題</button>'+
+    '<button class="nav warn" id="subBtn">交卷</button></div>'+
+    '<div class="qgrid">'+gridHtml(false)+'</div>';
+  el("prevBtn").onclick=function(){if(S.idx>0){S.idx--;S.selCard=null;render();}};
+  el("nextBtn").onclick=function(){if(S.idx<ITEMS.length-1){S.idx++;S.selCard=null;render();}};
+  el("subBtn").onclick=openDlg;
+  bindGrid();
+  renderRight(it,getAns(it),R);
+}
+function renderResult(){
+  var it=ITEMS[S.idx],r=S.results[S.idx];if(!it||!r)return;
+  var L=el("left"),R=el("right");
+  L.innerHTML=
+    '<h1 class="unit">'+esc(TITLE)+' · 結果</h1>'+
+    '<div class="score">得分 '+S.score+' / '+ITEMS.length+'</div>'+
+    '<div class="meta">作答時間 '+fmt(S.used)+'</div>'+
+    '<div class="qgrid">'+gridHtml(true)+'</div>'+
+    '<div class="navrow"><button class="nav" id="prevBtn"'+(S.idx===0?" disabled":"")+'>上一題</button>'+
+    '<button class="nav" id="nextBtn"'+(S.idx===ITEMS.length-1?" disabled":"")+'>下一題</button>'+
+    '<button class="nav warn" id="redoBtn">重新作答</button></div>';
+  el("prevBtn").onclick=function(){if(S.idx>0){S.idx--;render();}};
+  el("nextBtn").onclick=function(){if(S.idx<ITEMS.length-1){S.idx++;render();}};
+  el("redoBtn").onclick=redo;
+  bindGrid();
+  R.innerHTML=
+    '<div class="qtext">'+esc(it.q)+'</div>'+
+    '<div class="verdict '+(r.correct?"ok":"no")+'">'+(r.correct?"✔ 答對":"✘ 答錯")+'</div>'+
+    '<div class="resrow"><span>你的答案：</span>'+(r.picked?esc(r.picked):"未作答")+'</div>'+
+    '<div class="resrow"><span>正確答案：</span>'+esc(r.atext)+'</div>'+
+    '<div class="explain">解析：'+esc(it.explain)+'</div>'+
+    '<div class="page">課本頁碼：'+esc(it.page)+'</div>';
+}
+function render(){if(S.view==="result")renderResult();else renderQuiz();}
+function updateTimer(){var t=el("timer");if(t){t.textContent="剩餘時間 "+fmt(S.remain);t.classList.toggle("low",S.remain<=60);}}
+function startTimer(){
+  stopTimer();S.remain=MINUTES*60;updateTimer();
+  S.timerId=setInterval(function(){S.remain--;if(S.remain<=0){S.remain=0;updateTimer();doSubmit(true);}else updateTimer();},1000);
+}
+function stopTimer(){if(S.timerId){clearInterval(S.timerId);S.timerId=null;}}
+function openDlg(){
+  if(S.locked)return;
+  var un=0;for(var i=0;i<ITEMS.length;i++)if(!isAnswered(ITEMS[i]))un++;
+  el("dlgtext").textContent=un>0?("還有 "+un+" 題未作答，確定要交卷嗎？"):"全部題目已作答，確定要交卷嗎？";
+  el("dlg").hidden=false;
+}
+function doSubmit(auto){
+  if(S.locked||!ITEMS.length)return;
+  S.locked=true;S.used=MINUTES*60-S.remain;stopTimer();el("dlg").hidden=true;
+  S.results=ITEMS.map(function(it){return grade(it,S.ans[it.id]);});
+  for(var i=0;i<ITEMS.length;i++){
+    elhReport({type:"answer",q:ITEMS[i].id,choice:S.results[i].choice,correct:S.results[i].correct,text:elhText(ITEMS[i].q),picked:S.results[i].picked,answer:elhText(S.results[i].atext)});
+  }
+  S.score=0;for(var j=0;j<S.results.length;j++)if(S.results[j].correct)S.score++;
+  S.view="result";S.idx=0;render();
+}
+function redo(){S.ans={};S.selCard=null;S.locked=false;S.results=null;S.score=0;S.view="quiz";S.idx=0;startTimer();render();}
+el("dlgOk").onclick=function(){el("dlg").hidden=true;doSubmit(false);};
+el("dlgCancel").onclick=function(){el("dlg").hidden=true;};
+
+elhReport({type:"init",total:ITEMS.length});
+if(ITEMS.length){startTimer();render();}
+else{el("left").innerHTML='<div class="qtext">題目資料載入中，請稍候…</div>';}
+</script>
+</body>
+</html>
