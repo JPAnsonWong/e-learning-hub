@@ -12,16 +12,17 @@
 <div class="elh-bar" id="bar">
   <a class="btn btn-outline-secondary" id="back" href="index.html">← 返回</a>
   <div class="title" id="title">載入中…</div>
+  <span class="pts hide-sm" id="prog"></span>
   <span class="pts hide-sm" id="pts"></span>
   <button class="btn btn-outline-danger" id="review">待複習</button>
-  <button class="btn btn-success" id="done">✓ 完成</button>
-  <button class="btn btn-outline-secondary hide-sm" id="undo" hidden>取消完成</button>
+  <button class="btn btn-success" id="done">✓ 我學完了</button>
   <a class="btn btn-outline-secondary hide-sm" id="newtab" target="_blank" rel="noopener">新分頁</a>
   <button class="btn btn-outline-secondary" id="collapse" title="收起工具列">▲</button>
 </div>
 <button class="elh-reopen" id="reopen" title="顯示工具列">▼</button>
 <iframe class="elh-frame" id="frame" title="教材內容" allow="fullscreen" allowfullscreen></iframe>
 <div class="elh-toast" id="toast"></div>
+<script src="assets/js/points.js"></script>
 <script src="assets/js/common.js"></script>
 <script src="assets/js/sync.js"></script>
 <script>
@@ -73,11 +74,14 @@
       const m = e.data;
       if (e.source !== $('frame').contentWindow || !m || m.elh !== 1) return;
       lastAct = Date.now();
-      if (m.type === 'init') { sess.totalQ = Math.max(0, Math.min(1000, Number(m.total) || 0)); persist(); }
+      if (m.type === 'init') { sess.totalQ = Math.max(0, Math.min(1000, Number(m.total) || 0)); persist(); refresh(); }
       else if (m.type === 'answer' && sess.answers.length < 500) {
         sess.answers.push({ q: m.q, choice: m.choice ?? null, correct: m.choice == null ? null : !!m.correct,
           text: clip(m.text), picked: clip(m.picked, 120), answer: clip(m.answer, 120), t: Date.now() });
-        persist();
+        const before = ELH.points(sid); persist();
+        const gain = ELH.points(sid) - before;
+        if (gain > 0) toast('+' + gain + ' 分 ⭐');
+        refresh();
       }
     });
 
@@ -87,20 +91,20 @@
       $('review').classList.toggle('btn-danger', st.review);
       $('review').classList.toggle('btn-outline-danger', !st.review);
       $('review').textContent = st.review ? '✓ 待複習中' : '待複習';
-      const n = st.completions.length;
-      $('done').textContent = n ? '✓ 再完成一次 (已' + n + '次)' : '✓ 完成';
-      $('undo').hidden = !n;
+      const hasQ = sess.totalQ > 0;               // 有題目的教材：自動統計，不需要按完成
+      const sum = ELH.summarize(sess);
+      $('prog').textContent = hasQ ? '已答 ' + sum.answered + '/' + sum.total : '';
+      $('done').hidden = hasQ;
+      const n = ELH.completedTimes(sid, id);
+      $('done').textContent = n ? '✓ 我學完了（已完成 ' + n + ' 次）' : '✓ 我學完了';
     };
     $('done').addEventListener('click', () => {
-      const p = ELH.complete(sid, id);
-      sess.completed = true; sess.completedAt = Date.now(); persist();
-      toast(p > 0 ? '太棒了！+' + p + ' 分 ⭐' : '已完成！（此教材不再加分）');
-      refresh();
-    });
-    $('undo').addEventListener('click', () => {
-      if (!confirm('取消最近一次完成，並扣回該次積分？')) return;
-      const p = ELH.undoComplete(sid, id);
-      toast(p > 0 ? '已取消，扣回 ' + p + ' 分' : '已取消');
+      ELH.complete(sid, id);
+      sess.completed = true; sess.completedAt = Date.now();
+      const before = ELH.points(sid); persist();
+      const gain = ELH.points(sid) - before;
+      const info = ELH.pointsInfo(sid).bySession[sess.id];
+      toast(gain > 0 ? '太棒了！+' + gain + ' 分 ⭐' : (info && info.note) || '已記錄');
       refresh();
     });
     $('review').addEventListener('click', () => { toast(ELH.toggleReview(sid, id) ? '已加入待複習' : '已移出待複習'); refresh(); });

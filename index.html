@@ -13,10 +13,10 @@
   <header class="elh-top">
     <h1>📚 E_learning Hub</h1>
     <span class="spacer"></span>
-    <div id="backup"></div>
   </header>
   <div id="app"><p class="elh-empty">載入中…</p></div>
 </div>
+<script src="assets/js/points.js"></script>
 <script src="assets/js/common.js"></script>
 <script src="assets/js/sync.js"></script>
 <script>
@@ -24,8 +24,6 @@
   const app = document.getElementById('app');
   try {
     const d = await ELH.loadAll();
-    document.getElementById('backup').innerHTML = ELH.backupTools();
-    ELH.bindBackup(() => location.reload());
     const render = () => {
       const students = d.students.map((s) => {
         const total = d.items.filter((i) => i.student === s.id).length;

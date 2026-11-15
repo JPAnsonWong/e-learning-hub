@@ -2,6 +2,7 @@
 const ELH = (() => {
   const KEY = 'elh.progress.v1';
   const NEW_DAYS = 7;
+  let pointsCfg = null, minutesById = new Map(), catalogIds = [], memo = {};
 
   // ---------- 資料載入 ----------
   async function loadAll() {
@@ -9,10 +10,14 @@ const ELH = (() => {
       if (!r.ok) throw new Error(`${u} (${r.status})`);
       return r.json();
     });
-    const [s, st, t, c] = await Promise.all([
+    const [s, st, t, c, pc] = await Promise.all([
       get('config/students.json'), get('config/stages.json'),
-      get('config/types.json'), get('catalog.json'),
+      get('config/types.json'), get('catalog.json'), get('config/points.json'),
     ]);
+    pointsCfg = pc;
+    minutesById = new Map(c.items.map((i) => [i.id, i.minutes]));
+    catalogIds = c.items.map((i) => ({ id: i.id, student: i.student }));
+    memo = {};
     const data = { students: s.students, stages: st.stages, types: t.types, tags: t.tags, items: c.items };
     data.stageIndex = new Map(data.stages.map((x, i) => [x.id, i]));
     return data;
@@ -27,6 +32,7 @@ const ELH = (() => {
     catch { return memory || {}; }
   }
   function write(db) {
+    memo = {};
     memory = db;
     try { localStorage.setItem(KEY, JSON.stringify(db)); } catch { /* 忽略 */ }
   }
@@ -42,23 +48,27 @@ const ELH = (() => {
     db[sid].items[id] = normItem(db[sid].items[id]);
     return db[sid].items[id];
   }
-  // 第 1 次 +2，第 2、3 次 +1，第 4 次起 0
-  const ptsFor = (n) => (n === 0 ? 2 : n <= 2 ? 1 : 0);
   const activeOf = (it) => it.completions.filter((c) => !c.undone).sort((a, b) => a.t - b.t);
   function itemState(sid, id) {
     const it = normItem(read()[sid]?.items?.[id]);
-    return { ...it, completions: activeOf(it) }; // completions 只含有效完成
+    return { ...it, completions: activeOf(it) }; // completions：有效的「我學完了」事件（只作狀態記錄，不直接給分）
   }
-  function points(sid) {
-    const items = read()[sid]?.items || {};
-    let total = 0;
-    for (const k in items) activeOf(normItem(items[k])).forEach((_, n) => { total += ptsFor(n); });
-    return total;
+  // 積分 = 舊積分（cutover 前的「點完成」記錄，已凍結）+ 新積分（由學習場次算出，見 assets/js/points.js）
+  function pointsInfo(sid) {
+    if (memo[sid]) return memo[sid];
+    if (!pointsCfg || typeof ELH_POINTS === 'undefined') return { legacy: 0, fresh: 0, total: 0, bySession: {}, validCount: {} };
+    const fresh = ELH_POINTS.compute(sessionsOf(sid), pointsCfg, (id) => minutesById.get(id));
+    const items = Object.values(read()[sid]?.items || {}).map(normItem);
+    const legacy = ELH_POINTS.legacyPoints(items, pointsCfg);
+    return (memo[sid] = { legacy, fresh: fresh.total, total: legacy + fresh.total, bySession: fresh.bySession, validCount: fresh.validCount });
   }
-  function doneCount(sid) {
-    const items = read()[sid]?.items || {};
-    return Object.values(items).filter((i) => activeOf(normItem(i)).length > 0).length;
+  const points = (sid) => pointsInfo(sid).total;
+  // 完成次數 = 舊的完成記錄（cutover 前）+ 有效場次數
+  function completedTimes(sid, id) {
+    if (!pointsCfg || typeof ELH_POINTS === 'undefined') return 0;
+    return ELH_POINTS.legacyDoneTimes(read()[sid]?.items?.[id], pointsCfg) + (pointsInfo(sid).validCount[id] || 0);
   }
+  function doneCount(sid) { return catalogIds.filter((c) => c.student === sid && completedTimes(sid, c.id) > 0).length; }
   function changed(sid, id) { try { hooks.onItemChange?.(sid, id); } catch { /* 忽略 */ } }
   function markStart(sid, id) {
     const db = read(); const it = slot(db, sid, id);
@@ -66,24 +76,12 @@ const ELH = (() => {
     it.started = it.started || now; it.last = now;
     write(db); changed(sid, id);
   }
-  function complete(sid, id) {
+  function complete(sid, id) { // 「我學完了」：只記錄一個完成事件；積分由場次決定
     const db = read(); const it = slot(db, sid, id);
-    const pts = ptsFor(activeOf(it).length);
     let t = Date.now(); while (it.completions.some((c) => c.t === t)) t++;
     it.completions.push({ t });
     it.last = Date.now();
     write(db); changed(sid, id);
-    return pts;
-  }
-  function undoComplete(sid, id) {
-    const db = read(); const it = slot(db, sid, id);
-    const act = activeOf(it);
-    if (!act.length) return 0;
-    const last = act[act.length - 1];
-    last.undone = true;
-    const target = it.completions.find((c) => c.t === last.t); target.undone = true;
-    write(db); changed(sid, id);
-    return ptsFor(act.length - 1);
   }
   function toggleReview(sid, id) {
     const db = read(); const it = slot(db, sid, id);
@@ -119,21 +117,19 @@ const ELH = (() => {
   const SKEY = 'elh.sessions.v1';
   function readSessions() { try { return JSON.parse(localStorage.getItem(SKEY) || '{}'); } catch { return {}; } }
   function writeSessions(o) {
-    const ids = Object.keys(o);
-    if (ids.length > 400) { // 只留最近 400 場
-      ids.sort((a, b) => (o[a].startedAt || 0) - (o[b].startedAt || 0));
-      for (const k of ids.slice(0, ids.length - 400)) delete o[k];
-    }
+    memo = {};
+    const ids = Object.keys(o).sort((a, b) => (o[b].startedAt || 0) - (o[a].startedAt || 0)); // 新到舊
+    for (const k of ids.slice(1500)) delete o[k]; // 最多留 1500 場
+    ids.slice(30, 1500).forEach((k) => { // 較舊的場次只留計分需要的欄位，節省空間
+      const x = o[k];
+      if (x && x.answers && !x._slim) {
+        x.answers = x.answers.map((a) => ({ q: a.q, choice: a.choice == null ? null : 1, correct: a.correct, t: a.t }));
+        x._slim = true;
+      }
+    });
     try { localStorage.setItem(SKEY, JSON.stringify(o)); } catch { /* 忽略 */ }
   }
-  function summarize(s) {
-    const last = new Map();
-    for (const a of s.answers || []) last.set(a.q, a);
-    const answered = [...last.values()].filter((a) => a.choice !== null && a.choice !== undefined).length;
-    const correct = [...last.values()].filter((a) => a.correct === true).length;
-    const total = Math.max(s.totalQ || 0, last.size);
-    return { total, answered, correct, wrong: answered - correct, unanswered: Math.max(0, total - answered) };
-  }
+  const summarize = (s) => ELH_POINTS.summarize(s);
   function saveSession(s) {
     const o = readSessions();
     o[s.id] = { ...o[s.id], ...s, ...summarize(s), updatedLocal: Date.now() };
@@ -152,14 +148,6 @@ const ELH = (() => {
   function sessionsOf(sid) {
     return Object.values(readSessions()).filter((s) => s.student === sid).sort((a, b) => b.startedAt - a.startedAt);
   }
-  function exportJson() { return JSON.stringify({ app: 'e-learning-hub', v: 2, data: read(), sessions: readSessions() }, null, 2); }
-  function importJson(text) {
-    const o = JSON.parse(text);
-    if (!o || o.app !== 'e-learning-hub' || typeof o.data !== 'object') throw new Error('不是有效的進度檔');
-    write(o.data);
-    if (o.sessions && typeof o.sessions === 'object') writeSessions(o.sessions);
-  }
-
   // ---------- 輔助 ----------
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const stageLabel = (d, id) => d.stages.find((s) => s.id === id)?.label || id;
@@ -173,7 +161,8 @@ const ELH = (() => {
   function badges(d, item) {
     const st = itemState(item.student, item.id);
     const out = [];
-    if (st.completions.length) out.push(['done', `已完成 ×${st.completions.length}`]);
+    const n = completedTimes(item.student, item.id);
+    if (n) out.push(['done', `已完成 ×${n}`]);
     if (st.review) out.push(['review', '待複習']);
     if (isNew(item)) out.push(['new', '新教材']);
     for (const t of item.tags || []) out.push(['key', d.tags.find((x) => x.id === t)?.label || t]);
@@ -213,36 +202,11 @@ const ELH = (() => {
     return `<section class="elh-section"><h2>${esc(title)}</h2>${html
       ? `<div class="elh-grid">${html}</div>` : `<p class="elh-empty">${esc(emptyText)}</p>`}</section>`;
   }
-  function backupTools() {
-    return `<div class="elh-backup">
-      <button class="btn btn-outline-secondary elh-btn" id="elh-export">匯出進度</button>
-      <button class="btn btn-outline-secondary elh-btn" id="elh-import">匯入進度</button>
-      <input type="file" id="elh-import-file" accept="application/json,.json" hidden>
-    </div>`;
-  }
-  function bindBackup(onDone) {
-    document.getElementById('elh-export')?.addEventListener('click', () => {
-      const blob = new Blob([exportJson()], { type: 'application/json' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `elearning-progress-${new Date().toISOString().slice(0, 10)}.json`;
-      a.click(); URL.revokeObjectURL(a.href);
-    });
-    const file = document.getElementById('elh-import-file');
-    document.getElementById('elh-import')?.addEventListener('click', () => file.click());
-    file?.addEventListener('change', async () => {
-      const f = file.files[0]; if (!f) return;
-      if (!confirm('匯入會取代這部裝置上現有的進度和積分，確定嗎？')) { file.value = ''; return; }
-      try { importJson(await f.text()); alert('匯入成功'); onDone?.(); }
-      catch (e) { alert('匯入失敗：' + e.message); }
-      file.value = '';
-    });
-  }
   function fail(el, e) {
     el.innerHTML = `<p class="elh-empty">載入失敗：${esc(e.message)}。請確認是透過網址（不是直接雙擊檔案）打開。</p>`;
   }
 
-  return { loadAll, hooks, itemState, getRaw, mergeItem, applyRemote, points, doneCount, markStart, complete, undoComplete, toggleReview, ptsFor,
-    saveSession, mergeSession, sessionsOf, summarize, exportJson, importJson,
-    esc, stageLabel, typeLabel, student, subject, badges, isNew, card, recent, reviewList, latest, section, backupTools, bindBackup, fail };
+  return { loadAll, hooks, itemState, getRaw, mergeItem, applyRemote, points, pointsInfo, completedTimes, doneCount, markStart, complete, toggleReview,
+    saveSession, mergeSession, sessionsOf, summarize,
+    esc, stageLabel, typeLabel, student, subject, badges, isNew, card, recent, reviewList, latest, section, fail };
 })();

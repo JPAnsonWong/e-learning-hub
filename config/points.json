@@ -1,0 +1,11 @@
+{
+  "_說明": "積分規則。cutover 之前的舊「點完成」記錄按舊規則凍結為「舊積分」；cutover 之後的積分全部由學習場次（作答與停留時間）算出。",
+  "cutover": "2026-11-15T12:45:00Z",
+  "legacyBonus": [2, 1, 1],
+  "question": { "firstCorrect": 1, "retryCorrect": 2 },
+  "validSession": { "answeredRatio": 0.8 },
+  "bonus": [2, 1, 1],
+  "dailyBonusPerMaterial": 1,
+  "static": { "minSecondsFloor": 60, "timeRatio": 0.5, "defaultMinutes": 10 },
+  "tzOffsetHours": 8
+}

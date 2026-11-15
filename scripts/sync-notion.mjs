@@ -51,17 +51,22 @@ meta.dbs ||= {};
 meta.pages ||= {};
 const hash = (o) => createHash('sha1').update(JSON.stringify(o)).digest('hex');
 
+// 舊資料庫補上新增的欄位（已存在的欄位不受影響）
+async function migrate(id, schema) {
+  const props = Object.fromEntries(Object.entries(schema.props).filter(([, v]) => !v.title));
+  await notion('PATCH', `/databases/${id}`, { properties: props });
+}
 async function ensureDb(key) {
   const schema = SCHEMAS[key];
   if (meta.dbs[key]) {
-    try { await notion('GET', `/databases/${meta.dbs[key]}`); return meta.dbs[key]; }
+    try { await notion('GET', `/databases/${meta.dbs[key]}`); await migrate(meta.dbs[key], schema); return meta.dbs[key]; }
     catch (e) { if (e.status !== 404 && e.status !== 400) throw e; }
   }
   let cursor;
   do { // 先看父頁面下有沒有同名資料庫
     const r = await notion('GET', `/blocks/${PARENT}/children?page_size=100${cursor ? `&start_cursor=${cursor}` : ''}`);
     const hit = r.results.find((b) => b.type === 'child_database' && b.child_database.title === schema.title);
-    if (hit) { meta.dbs[key] = hit.id; return hit.id; }
+    if (hit) { meta.dbs[key] = hit.id; await migrate(hit.id, schema); return hit.id; }
     cursor = r.has_more ? r.next_cursor : null;
   } while (cursor);
   const created = await notion('POST', '/databases', {
@@ -99,6 +104,7 @@ const model = buildModel({
   stages: readJson('config/stages.json').stages,
   types: readJson('config/types.json').types,
   catalog: readJson('catalog.json').items,
+  pointsCfg: readJson('config/points.json'),
   materials: (await db.collectionGroup('materials').get()).docs.map((d) => ({ sid: d.ref.parent.parent.id, mid: d.id, data: d.data() })),
   sessions: (await db.collection('sessions').get()).docs.map((d) => ({ id: d.id, ...d.data() })),
 });
