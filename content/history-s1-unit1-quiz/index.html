@@ -1,0 +1,85 @@
+<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>中一中國歷史｜導論至單元一｜測驗</title><style>*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:"PingFang TC","Microsoft JhengHei",sans-serif;background:#f4f1ea;color:#2b2622;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+.app{display:grid;grid-template-columns:58fr 42fr;gap:2.4vmin;height:100%;padding:2.4vmin}
+.col{background:#fff;border-radius:2vmin;padding:3vmin;overflow:auto;display:flex;flex-direction:column;gap:2vmin;box-shadow:0 .4vmin 1.6vmin rgba(0,0,0,.08)}
+.left{background:#fffaf0;border:.4vmin solid #c8a96a}
+.unit{font-size:clamp(14px,2.6vmin,40px);color:#8a5a14;font-weight:700}
+.prog{font-size:clamp(14px,2.6vmin,40px);color:#666;display:flex;gap:2vmin;align-items:center;flex-wrap:wrap}
+.bar{flex:1;min-width:20vmin;height:1.6vmin;background:#eadfc8;border-radius:1vmin;overflow:hidden}.bar i{display:block;height:100%;background:#c0392b}
+.q{font-size:clamp(20px,4.4vmin,72px);line-height:1.45;font-weight:700}
+.tip{font-size:clamp(14px,2.6vmin,40px);color:#555;line-height:1.5}
+.opts{display:flex;flex-direction:column;gap:1.8vmin}
+.btn,.opt{font:inherit;border:.4vmin solid #b9ab92;background:#fff;border-radius:1.6vmin;min-height:max(3rem,7vmin);padding:1.4vmin 2.4vmin;font-size:clamp(16px,3.4vmin,56px);text-align:left;cursor:pointer;color:#2b2622}
+.opt.sel{border-color:#2f6db5;background:#e6f0fb}
+.opt.ok{border-color:#1e8e3e;background:#e3f6e8}
+.opt.no{border-color:#c0392b;background:#fbe7e4}
+.opt:disabled{cursor:default}
+.row{display:flex;gap:2vmin;flex-wrap:wrap}
+.btn{text-align:center;font-weight:700;background:#8a5a14;color:#fff;border-color:#8a5a14;flex:1}
+.btn.alt{background:#fff;color:#8a5a14}
+.btn:disabled{opacity:.35}
+.fb{font-size:clamp(15px,3vmin,48px);line-height:1.5;padding:2vmin;border-radius:1.6vmin;display:none}
+.fb.show{display:block}.fb.good{background:#e3f6e8;border-left:1.2vmin solid #1e8e3e}.fb.bad{background:#fdf1dc;border-left:1.2vmin solid #e69b00}
+.chips{display:flex;flex-wrap:wrap;gap:1.4vmin}
+.chip{font:inherit;font-size:clamp(16px,3.4vmin,56px);min-height:max(3rem,7vmin);min-width:max(3rem,9vmin);padding:1vmin 2vmin;border-radius:1.4vmin;border:.4vmin solid #b9ab92;background:#fff;cursor:pointer}
+.chip.used{opacity:.25}.chip.sel{border-color:#2f6db5;background:#e6f0fb}.chip.ok{border-color:#1e8e3e;background:#e3f6e8}.chip.no{border-color:#c0392b;background:#fbe7e4}
+.slots{display:flex;flex-wrap:wrap;gap:1.2vmin}
+.slot{font-size:clamp(14px,3vmin,48px);min-width:max(2.6rem,8vmin);min-height:max(2.6rem,6.5vmin);border:.4vmin dashed #c8a96a;border-radius:1.2vmin;display:flex;align-items:center;justify-content:center;padding:.6vmin 1.2vmin;background:#fff}
+.slot.ok{border:.4vmin solid #1e8e3e;background:#e3f6e8}.slot.no{border:.4vmin solid #c0392b;background:#fbe7e4}
+.big{font-size:clamp(28px,9vmin,140px);font-weight:800;color:#8a5a14}
+@media (max-width:900px),(orientation:portrait){html,body{overflow:auto}.app{grid-template-columns:1fr;height:auto;min-height:100%}}
+.grid{display:grid;grid-template-columns:repeat(10,1fr);gap:1.2vmin}.grid .chip{min-width:0;padding:0;text-align:center}.chip.ans{background:#fdf1dc;border-color:#c8a96a}.chip.cur{outline:.5vmin solid #2f6db5}.timer{font-size:clamp(18px,4vmin,64px);font-weight:800;color:#c0392b}.bins{display:grid;grid-template-columns:1fr 1fr;gap:1.6vmin}.bin{font:inherit;border:.4vmin dashed #8a5a14;border-radius:1.6vmin;min-height:12vmin;padding:1.2vmin;background:#fffaf0;text-align:left;cursor:pointer;font-size:clamp(14px,2.8vmin,44px)}.bin b{display:block;margin-bottom:.8vmin}.bin .chip{font-size:clamp(13px,2.6vmin,40px);min-height:max(2.6rem,5.5vmin);margin:.4vmin}</style></head><body><div class="app"><section class="col left" id="L"></section><section class="col" id="R"></section></div><script>// ---- E_learning Hub 回報（只在被網站 iframe 載入時有效，單獨打開頁面時無任何作用）----
+function elhReport(m){
+  try{
+    if(location.search.indexOf("elhdebug")>=0)console.log("ELH",JSON.stringify(m));
+    if(window.parent!==window)window.parent.postMessage(Object.assign({elh:1},m),location.origin);
+  }catch(e){}
+}
+function elhText(h){return String(h==null?"":h).replace(/<[^>]*>/g,"").replace(/\s+/g," ").trim().slice(0,200);}
+
+var D={"items": [{"type": "mcq", "sec": "A", "q": "以下哪一項屬於「歷史」？", "options": ["電視劇《延禧攻略》", "香港特別行政區成立慶典（1997年）", "后羿射日", "2028年洛杉磯奧運"], "answer": 1}, {"type": "mcq", "sec": "A", "q": "學習中國歷史的三大要素是？", "options": ["時間、人物、經濟", "時間、人物、地點", "朝代、戰爭、文化", "人物、地點、文化"], "answer": 1}, {"type": "mcq", "sec": "A", "q": "朝代歌「三皇五帝夏商＿，春秋戰國亂悠悠」，空格應填？", "options": ["唐", "秦", "漢", "周"], "answer": 3}, {"type": "mcq", "sec": "A", "q": "孔丘，字＿＿。", "options": ["伯尼", "仲尼", "仲丘", "子丘"], "answer": 1}, {"type": "multi", "sec": "A", "q": "下列哪些「現今地名－古代地名」配對正確？（選出所有正確答案）", "options": ["西安－大都", "洛陽－成周", "南京－建康", "北京－順天"], "answer": [1, 2, 3]}, {"type": "mcq", "sec": "B", "q": "新石器時代的人在技術上懂得？", "options": ["居於洞穴，靠採集為生", "只會使用打製石器", "只會用火", "磨製石器，並製作陶器"], "answer": 3}, {"type": "mcq", "sec": "B", "q": "仰韶文化位於哪裡，又稱甚麼文化？", "options": ["黃河中游；彩陶文化", "長江下游；彩陶文化", "長江下游；水稻文化", "黃河中游；玉器文化"], "answer": 0}, {"type": "mcq", "sec": "B", "q": "良渚古城遺址和水利系統的發現，證實了？", "options": ["中華文明有五千多年歷史", "夏朝是第一個朝代", "仰韶人種植水稻", "黃帝被推舉為共主"], "answer": 0}, {"type": "mcq", "sec": "B", "q": "炎黃聯盟擊敗了東方的哪個部落？", "options": ["商族", "犬戎", "周族", "蚩尤部落"], "answer": 3}, {"type": "multi", "sec": "B", "q": "下列關於堯、舜、禹及夏朝的敘述，哪些正確？（選出所有正確答案）", "options": ["大禹以疏導方法治水成功", "堯把共主之位傳給賢能的舜", "禹的兒子啟繼位，禪讓變為世襲", "夏朝由商湯建立"], "answer": [0, 1, 2]}, {"type": "mcq", "sec": "C", "q": "西周封建制度下，諸侯要對天子盡哪些責任？", "options": ["兼愛、非攻", "自立為王、互相兼併", "推行縣制、編制戶籍", "服從天子、定期朝貢、出兵保衛王室"], "answer": 3}, {"type": "mcq", "sec": "C", "q": "西周為何滅亡？", "options": ["周幽王時犬戎攻破鎬京", "秦國統一六國", "商湯起兵攻打鎬京", "蚩尤部落入侵"], "answer": 0}, {"type": "mcq", "sec": "C", "q": "周平王東遷洛邑後，史稱？", "options": ["春秋霸政", "西周", "東周", "商朝"], "answer": 2}, {"type": "mcq", "sec": "D", "q": "春秋時期第一位霸主是？", "options": ["秦孝公", "周武王", "齊桓公", "周平王"], "answer": 2}, {"type": "mcq", "sec": "D", "q": "下列哪一國屬於戰國七雄？", "options": ["晉", "周", "秦", "夏"], "answer": 2}, {"type": "multi", "sec": "D", "q": "下列哪些是商鞅變法的措施？（選出所有正確答案）", "options": ["編制戶籍，施行連坐法", "恢復分封制，保留貴族世襲", "推行縣制，加強中央集權", "承認土地私有，可自由買賣"], "answer": [0, 2, 3]}, {"type": "mcq", "sec": "D", "q": "商鞅變法的結果是？", "options": ["秦國國勢強盛，奠定日後統一六國的基礎", "周室重新強大", "秦國被六國瓜分", "貴族世襲特權增加"], "answer": 0}, {"type": "mcq", "sec": "D", "q": "下列哪一項是百家爭鳴出現的背景？", "options": ["學術只限於宮廷", "周天子權力空前強大", "各國禁止私人講學", "列國爭相延攬人才，對思想言論態度寬容"], "answer": 3}, {"type": "mcq", "sec": "D", "q": "開創私學、令學術知識流入民間的是？", "options": ["孔子", "老子", "墨子", "韓非"], "answer": 0}, {"type": "sort", "sec": "D", "q": "把下列主張分入正確的學派", "bins": ["儒家", "墨家", "道家", "法家"], "cards": [{"text": "仁", "bin": 0}, {"text": "禮樂教化", "bin": 0}, {"text": "兼愛", "bin": 1}, {"text": "非攻", "bin": 1}, {"text": "順應自然", "bin": 2}, {"text": "無為而治", "bin": 2}, {"text": "以法治國", "bin": 3}, {"text": "善用法、術、勢", "bin": 3}]}]},IT=D.items,TOTAL=IT.length,LIMIT=15*60,left=LIMIT,cur=0,ans={},sub=false,tm=null,L=document.getElementById("L"),Rt=document.getElementById("R"),sortPick=null;
+var SEC={A:"中國歷史導論",B:"中華民族與早期國家的起源",C:"西周的封建",D:"春秋戰國時期的變局"};
+elhReport({type:"init",total:TOTAL});
+function esc(s){return String(s).replace(/[&<>]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;"}[c];});}
+function fmt(s){return Math.floor(s/60)+":"+("0"+s%60).slice(-2);}
+function intro(){L.innerHTML='<div class="unit">中一中國歷史｜導論至單元一｜測驗</div><div class="q">計時測驗</div><div class="tip">共 '+TOTAL+' 題，限時 15 分鐘。<br>大部分是單選題；「多選題」要選出所有正確答案，全對才得分；最後一題是分類題。<br>交卷後才顯示分數、每題對錯和正確答案。時間到會自動交卷。</div>';Rt.innerHTML='<div class="row"><button class="btn" onclick="start()">開始計時</button></div>';}
+function start(){tm=setInterval(function(){left--;var e=document.getElementById("tm");if(e)e.textContent=fmt(left);if(left<=0)submit();},1000);show(0);}
+function answered(i){var a=ans[i],t=IT[i];if(a===undefined)return false;if(t.type=="multi")return a.length>0;if(t.type=="sort")return Object.keys(a).length>0;return true;}
+function isOk(i){var a=ans[i],t=IT[i];if(!answered(i))return false;if(t.type=="mcq")return a==t.answer;if(t.type=="multi")return a.slice().sort().join()==t.answer.join();return t.cards.every(function(c,k){return a[k]===c.bin;});}
+function head(){var done=0;for(var i=0;i<TOTAL;i++)if(answered(i))done++;var t=IT[cur];
+ return '<div class="unit">'+t.sec+'　'+SEC[t.sec]+'</div><div class="prog">第 '+(cur+1)+' / '+TOTAL+' 題'+(sub?'':'<span class="timer" id="tm">'+fmt(left)+'</span>')+'<span class="bar"><i style="width:'+(done/TOTAL*100)+'%"></i></span></div>';}
+function navs(){return '<div class="row"><button class="btn alt" onclick="show(cur-1)"'+(cur==0?' disabled':'')+'>上一題</button><button class="btn alt" onclick="show(cur+1)"'+(cur==TOTAL-1?' disabled':'')+'>下一題</button>'+(sub?'<button class="btn" onclick="result()">成績</button>':'<button class="btn" onclick="confirmSub()">交卷</button>')+'</div><div class="grid">'+IT.map(function(x,i){var c=sub?(isOk(i)?" ok":" no"):(answered(i)?" ans":"");return '<button class="chip'+c+(i==cur?' cur':'')+'" onclick="show('+i+')">'+(i+1)+'</button>';}).join("")+'</div>';}
+function show(i){if(i<0||i>=TOTAL)return;cur=i;var t=IT[i];
+ var typ=t.type=="multi"?"（多選題，全對才得分）":t.type=="sort"?"（分類題：先點卡，再點學派；點箱內的卡可放回）":"（單選題）";
+ var fb="";
+ if(sub){var ok=isOk(i);fb='<div class="fb show '+(ok?'good':'bad')+'">'+(ok?'✔ 答對':(answered(i)?'✘ 答錯':'未作答'))+'。正確答案：'+esc(rightText(t))+'</div>';}
+ L.innerHTML=head()+'<div class="q">'+esc(t.q)+'</div><div class="tip">'+typ+'</div>'+fb;
+ if(t.type=="sort"){drawSort();return;}
+ var a=ans[i];
+ Rt.innerHTML='<div class="opts">'+t.options.map(function(o,j){var c="";var picked=t.type=="multi"?(a||[]).indexOf(j)>=0:a===j;
+   if(sub){var right=t.type=="multi"?t.answer.indexOf(j)>=0:t.answer==j;if(right)c=" ok";else if(picked)c=" no";if(picked)c+=" sel";}else if(picked)c=" sel";
+   return '<button class="opt'+c+'" data-j="'+j+'"'+(sub?' disabled':'')+'>'+(t.type=="multi"?(picked?"☑ ":"☐ "):"")+"ABCDE"[j]+'. '+esc(o)+'</button>';}).join("")+'</div>'+navs();
+ if(!sub)Rt.querySelectorAll(".opt").forEach(function(b){b.onclick=function(){var j=+b.dataset.j;if(t.type=="multi"){var s=(ans[i]||[]).slice(),k=s.indexOf(j);if(k>=0)s.splice(k,1);else s.push(j);ans[i]=s;}else ans[i]=j;show(i);};});}
+function drawSort(){var t=IT[cur],a=ans[cur]||{};
+ var pool=t.cards.map(function(c,k){return k;}).filter(function(k){return a[k]===undefined;});
+ Rt.innerHTML='<div class="chips">'+pool.map(function(k){return '<button class="chip'+(sortPick===k?' sel':'')+'" data-k="'+k+'"'+(sub?' disabled':'')+'>'+esc(t.cards[k].text)+'</button>';}).join("")+(pool.length?'':'<span class="tip">卡片已全部放好</span>')+'</div><div class="bins">'+t.bins.map(function(b,bi){
+   return '<div class="bin" data-b="'+bi+'"><b>'+esc(b)+'</b>'+t.cards.map(function(c,k){if(a[k]!==bi)return "";var cl=sub?(c.bin==bi?" ok":" no"):"";return '<button class="chip'+cl+'" data-in="'+k+'"'+(sub?' disabled':'')+'>'+esc(c.text)+'</button>';}).join("")+'</div>';}).join("")+'</div>'+navs();
+ if(sub)return;
+ Rt.querySelectorAll(".chips .chip").forEach(function(c){c.onclick=function(){var k=+c.dataset.k;sortPick=sortPick===k?null:k;drawSort();};});
+ Rt.querySelectorAll(".bin").forEach(function(b){b.onclick=function(e){if(e.target.dataset.in!==undefined){var s=Object.assign({},ans[cur]||{});delete s[+e.target.dataset.in];ans[cur]=s;sortPick=null;drawSort();return;}if(sortPick===null)return;var s=Object.assign({},ans[cur]||{});s[sortPick]=+b.dataset.b;ans[cur]=s;sortPick=null;drawSort();};});}
+function rightText(t){if(t.type=="mcq")return "ABCD"[t.answer]+". "+t.options[t.answer];if(t.type=="multi")return t.answer.map(function(j){return "ABCDE"[j]+". "+t.options[j];}).join("；");return t.bins.map(function(b,bi){return b+"："+t.cards.filter(function(c){return c.bin==bi;}).map(function(c){return c.text;}).join("、");}).join("；");}
+function pickedText(i){var t=IT[i],a=ans[i];if(!answered(i))return null;if(t.type=="mcq")return t.options[a];if(t.type=="multi")return a.slice().sort().map(function(j){return t.options[j];}).join(" / ");return t.cards.map(function(c,k){return c.text+"→"+(a[k]===undefined?"未放":t.bins[a[k]]);}).join(" / ");}
+function choiceVal(i){var t=IT[i],a=ans[i];if(!answered(i))return null;if(t.type=="mcq")return a;if(t.type=="multi")return a.slice().sort().join("|");return t.cards.map(function(c,k){return a[k]===undefined?"-":a[k];}).join("|");}
+function confirmSub(){var n=0;for(var i=0;i<TOTAL;i++)if(!answered(i))n++;
+ L.innerHTML='<div class="unit">交卷確認</div><div class="q">確定交卷？</div><div class="tip">'+(n?'還有 '+n+' 題未作答。':'全部已作答。')+'交卷後不能再改。</div>';
+ Rt.innerHTML='<div class="row"><button class="btn alt" onclick="show(cur)">返回作答</button><button class="btn" onclick="submit()">確定交卷</button></div>';}
+function submit(){if(sub)return;sub=true;clearInterval(tm);
+ for(var i=0;i<TOTAL;i++){var t=IT[i];elhReport({type:"answer",q:"Q"+(i+1),choice:choiceVal(i),correct:isOk(i),text:elhText(t.q),picked:pickedText(i),answer:elhText(rightText(t))});}
+ result();}
+function result(){var n=0;for(var i=0;i<TOTAL;i++)if(isOk(i))n++;var used=LIMIT-Math.max(left,0);
+ var by={};IT.forEach(function(t,i){by[t.sec]=by[t.sec]||[0,0];by[t.sec][1]++;if(isOk(i))by[t.sec][0]++;});
+ L.innerHTML='<div class="unit">成績</div><div class="big">'+n+' / '+TOTAL+'</div><div class="tip">用時 '+fmt(used)+'</div><div class="tip">'+Object.keys(by).map(function(k){return k+" "+SEC[k]+"："+by[k][0]+" / "+by[k][1];}).join("<br>")+'</div>';
+ Rt.innerHTML='<div class="tip">點題號查看每題對錯和正確答案（綠＝對，紅＝錯或未答）。</div><div class="grid">'+IT.map(function(x,i){return '<button class="chip '+(isOk(i)?'ok':'no')+'" onclick="show('+i+')">'+(i+1)+'</button>';}).join("")+'</div><div class="row"><button class="btn" onclick="show(0)">逐題查看</button><button class="btn alt" onclick="location.reload()">重新測驗</button></div>';}
+intro();
+</script></body></html>
