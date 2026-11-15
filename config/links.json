@@ -1,0 +1,8 @@
+{
+  "_說明": "右上角「連結」選單。每一項需要 name（顯示名稱）和 url（必須以 https:// 或 http:// 開頭）。新增時複製一整行 { ... }，行與行之間用逗號隔開，最後一項後面不要加逗號。順序即顯示順序。",
+  "links": [
+    { "name": "拔河遊戲", "url": "https://timhing.github.io/SnakeGame/tug-of-war/" },
+    { "name": "貪食蛇遊戲", "url": "https://timhing.github.io/SnakeGame/" },
+    { "name": "Vocabulary Practice", "url": "https://timhing.github.io/Vocabulary/" }
+  ]
+}

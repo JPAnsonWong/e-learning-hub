@@ -60,6 +60,8 @@
         <div id="list"></div>
       </section>`;
 
+    ELH.mountLinks();
+
     const matches = (i) => {
       const st = ELH.itemState(sid, i.id);
       if (f.subject && i.subject !== f.subject) return false;

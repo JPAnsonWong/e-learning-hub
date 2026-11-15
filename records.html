@@ -96,6 +96,7 @@
         </section>`;
     }
     render();
+    ELH.mountLinks();
     ELH_SYNC.init().then((on) => on && ELH_SYNC.pull(sid)).then((got) => got && render());
     window.addEventListener('pageshow', render);
   } catch (e) { ELH.fail(app, e); }

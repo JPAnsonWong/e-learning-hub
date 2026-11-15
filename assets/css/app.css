@@ -102,3 +102,12 @@ body.elh-viewer .elh-sync { display: none; }
 .elh-badge-resume { background: #dff0ff; color: #0a5aa8; }
 .elh-login-box .row-btns { display: flex; gap: .8rem; flex-wrap: wrap; }
 .elh-login-box .row-btns .btn { flex: 1 1 10rem; min-height: max(3rem, 7vmin); font-size: 1.2rem; }
+
+/* 右上角連結選單 */
+.elh-links { position: relative; margin-left: auto; }
+.elh-links-menu { position: absolute; right: 0; top: calc(100% + .4rem); z-index: 50; min-width: 14rem; background: var(--card);
+  border: 1px solid var(--line); border-radius: 1rem; box-shadow: 0 .6rem 1.6rem rgba(29,39,51,.18); padding: .4rem; }
+.elh-links-menu[hidden] { display: none; }
+.elh-links-menu a { display: flex; align-items: center; min-height: max(3rem, 6vmin); padding: .4rem 1rem; border-radius: .7rem;
+  font-size: 1.15rem; font-weight: 700; white-space: nowrap; }
+.elh-links-menu a:active { background: #efe7d8; }
