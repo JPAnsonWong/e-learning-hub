@@ -1,0 +1,10 @@
+{
+  "enabled": true,
+  "familyEmail": "family@elh.app",
+  "firebase": {
+    "apiKey": "AIzaSyAkdEOc94fsxNJpQ6M7FahYO1Wl37UWGJQ",
+    "authDomain": "ansonfirebase.firebaseapp.com",
+    "projectId": "ansonfirebase",
+    "appId": "1:703895189751:web:75b4d710f9e49b17fa7bf2"
+  }
+}

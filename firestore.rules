@@ -1,0 +1,18 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 只有家庭共用帳號可以讀寫；其餘全部拒絕（Admin SDK 不受規則限制，供 Notion 同步使用）
+    function isFamily() {
+      return request.auth != null && request.auth.token.email == 'family@elh.app';
+    }
+    match /students/{sid}/materials/{mid} {
+      allow read, write: if isFamily();
+    }
+    match /sessions/{sessionId} {
+      allow read, write: if isFamily();
+    }
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
