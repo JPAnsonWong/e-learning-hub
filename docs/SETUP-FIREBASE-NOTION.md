@@ -39,7 +39,7 @@ gh secret set FIREBASE_SERVICE_ACCOUNT --repo JPAnsonWong/e-learning-hub < 下�
 1. 把 A8 的四個值填進 `config/firebase.json`，並把 `"enabled"` 改成 `true`，提交並合併。
 2. 打開網站，輸入家庭密碼；右下角出現「☁ 已連線」即成功。
 3. 玩幾題後到 GitHub → Actions → **Sync to Notion** → **Run workflow**，檢查 Notion 頁面下是否出現四個資料庫：
-   學生概況、教材進度、作答記錄、錯題跟進。之後每天香港時間 06:00 和 18:00 自動同步。
+   學生概況、教材進度、作答記錄、錯題跟進。之後每天香港時間 11:00（中午）和 23:00（晚上）自動同步，實際執行時間 GitHub 可能延遲數分鐘到半小時。
 
 ## 注意
 
