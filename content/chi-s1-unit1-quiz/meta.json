@@ -1,0 +1,15 @@
+{
+  "id": "chi-s1-unit1-quiz",
+  "student": "son",
+  "subject": "chinese",
+  "stage": "s1-1a-term1",
+  "type": "quiz",
+  "title": "中文中一｜單元一 細說今昔事｜測驗卷",
+  "unit": "單元一 細說今昔事：記敘的要素和方法",
+  "tags": [],
+  "difficulty": 2,
+  "minutes": 30,
+  "version": 1,
+  "date": "2026-11-15",
+  "description": "單元一測驗卷，共 30 題：單選 12 題、多選 8 題、分類 5 題、圈選改錯 5 題。計時 30 分鐘，交卷後出分。"
+}

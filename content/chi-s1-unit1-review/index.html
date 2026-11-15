@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>中一中文 單元一 細說今昔事：記敘的要素和方法｜知識溫習</title>
+<style>
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;overflow:hidden}
+body{font-family:"PingFang TC","Microsoft JhengHei",sans-serif;background:#eef2f7;color:#1f2937;-webkit-text-size-adjust:100%}
+button{font-family:inherit;touch-action:manipulation;cursor:pointer;border:none;background:none;color:inherit}
+#app{height:100%;display:flex;flex-direction:row;gap:1.6vmin;padding:1.6vmin}
+.colL{flex:0 0 58%;max-width:58%;background:#fff;border-radius:1.6vmin;box-shadow:0 .4vmin 1.6vmin rgba(15,23,42,.10);padding:2.2vmin 2.6vmin;overflow:auto;display:flex;flex-direction:column;gap:1.4vmin}
+.colR{flex:1 1 42%;min-width:0;display:flex;flex-direction:column;gap:1.6vmin;overflow:auto}
+.unit{font-size:clamp(.9rem,2.2vmin,2rem);color:#475569;font-weight:700;letter-spacing:.05em}
+.unit b{color:#1d4ed8}
+.tabs{display:flex;flex-wrap:wrap;gap:1.2vmin}
+.tabs button{min-height:max(3rem,7vmin);padding:1vmin 2.2vmin;font-size:clamp(1rem,3vmin,3.6rem);border-radius:1.2vmin;background:#e2e8f0;color:#334155;font-weight:700;border:.3vmin solid transparent}
+.tabs button.on{background:#1d4ed8;color:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:1vmin}
+.chips button{min-height:max(3rem,7vmin);padding:.8vmin 1.8vmin;font-size:clamp(.95rem,2.6vmin,3.2rem);border-radius:3vmin;background:#f1f5f9;color:#475569;border:.25vmin solid #cbd5e1}
+.chips button.on{background:#0f766e;color:#fff;border-color:#0f766e}
+.chips button.done::after{content:" ✓";color:#16a34a;font-weight:900}
+.chips button.done.on::after{color:#bbf7d0}
+.sh{font-size:clamp(1.5rem,4.2vmin,5.2rem);font-weight:800;color:#0f172a;margin:.4vmin 0 0}
+.steps{display:flex;flex-direction:column;gap:1.4vmin;margin-top:.6vmin}
+.step{font-size:clamp(1.1rem,3.2vmin,4rem);line-height:1.6;background:#f8fafc;border-left:.8vmin solid #2563eb;border-radius:1vmin;padding:1.4vmin 1.8vmin}
+.step b{color:#1e40af}
+.pg{display:inline-block;font-size:.62em;background:#e2e8f0;color:#475569;border-radius:.8vmin;padding:.1em .55em;margin:0 .15em;font-weight:700;vertical-align:middle}
+.panel{background:#fff;border-radius:1.6vmin;box-shadow:0 .4vmin 1.6vmin rgba(15,23,42,.10);padding:2vmin;display:flex;flex-direction:column;gap:1.6vmin}
+.ctrls{display:flex;flex-wrap:wrap;gap:1.2vmin}
+.ctrls button{flex:1 1 auto;min-height:max(3rem,7vmin);padding:1vmin 1.6vmin;font-size:clamp(1rem,3vmin,3.6rem);font-weight:800;border-radius:1.2vmin;background:#1d4ed8;color:#fff}
+.ctrls button.sec{background:#0f766e}
+.ctrls button.ghost{background:#e2e8f0;color:#334155}
+.ctrls button:disabled{background:#cbd5e1;color:#64748b;cursor:default}
+.prog{font-size:clamp(1rem,2.8vmin,3.4rem);font-weight:800;color:#334155}
+.think{background:#fffbeb;border:.3vmin solid #f59e0b;border-radius:1.6vmin;padding:2vmin;display:flex;flex-direction:column;gap:1.4vmin}
+.think h3{margin:0;font-size:clamp(1.4rem,3.8vmin,4.6rem);color:#92400e}
+.think .q{font-size:clamp(1.2rem,3.6vmin,4.4rem);line-height:1.5;font-weight:700;color:#1f2937}
+.opt{display:block;width:100%;min-height:max(3rem,7vmin);padding:1.2vmin 1.6vmin;font-size:clamp(1.05rem,3.2vmin,4rem);line-height:1.45;text-align:left;background:#fff;border:.35vmin solid #94a3b8;border-radius:1.2vmin;color:#1f2937;font-weight:700}
+.opt .k{display:inline-block;min-width:2.4em;font-weight:900;color:#1d4ed8}
+.opt.ok{background:#dcfce7;border-color:#16a34a;color:#14532d}
+.opt.no{background:#fee2e2;border-color:#dc2626;color:#7f1d1d}
+.opt.correct{background:#dcfce7;border-color:#16a34a;color:#14532d;box-shadow:0 0 0 .5vmin #86efac}
+.look{min-height:max(3rem,7vmin);padding:1vmin 2vmin;font-size:clamp(1rem,2.8vmin,3.4rem);font-weight:800;border-radius:1.2vmin;background:#fef3c7;color:#92400e;border:.3vmin solid #f59e0b;align-self:flex-start}
+.fb{font-size:clamp(1.1rem,3.2vmin,4rem);line-height:1.55;font-weight:800;padding:1.2vmin 1.6vmin;border-radius:1.2vmin}
+.fb.good{background:#dcfce7;color:#14532d}
+.fb.bad{background:#fee2e2;color:#991b1b}
+.fb.deep{background:#ecfdf5;color:#065f46;font-weight:600}
+.fb.ans{background:#e0f2fe;color:#075985;font-weight:600}
+.pageref{font-size:clamp(1rem,2.8vmin,3.4rem);color:#64748b;font-weight:700}
+.lock{font-size:clamp(1.05rem,3vmin,3.8rem);color:#92400e;background:#fef3c7;border-radius:1.2vmin;padding:1.4vmin 1.6vmin;font-weight:700;line-height:1.5}
+.donebar{font-size:clamp(1rem,2.8vmin,3.4rem);color:#166534;font-weight:800;background:#dcfce7;border-radius:1.2vmin;padding:1vmin 1.6vmin}
+@media (max-width:900px),(orientation:portrait){
+ html,body{overflow:auto}
+ #app{flex-direction:column;height:auto;min-height:100%}
+ .colL,.colR{flex:1 1 auto;max-width:100%;width:100%;overflow:visible}
+}
+.donebar:empty{display:none}
+.tb{border-collapse:collapse;width:100%;font-size:.9em}.tb td{border:.2vmin solid #cbd5e1;padding:.6vmin 1vmin;vertical-align:top}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="colL">
+    <div class="unit" id="unitTitle"></div>
+    <div class="tabs" id="tabs"></div>
+    <div class="chips" id="chips"></div>
+    <h2 class="sh" id="secH"></h2>
+    <div class="steps" id="steps"></div>
+  </div>
+  <div class="colR">
+    <div class="panel">
+      <div class="ctrls">
+        <button id="bNext">下一步</button>
+        <button id="bAll">全部展開</button>
+        <button id="bPrevSec" class="sec">上一節</button>
+        <button id="bNextSec" class="sec">下一節</button>
+      </div>
+      <div class="prog" id="prog"></div>
+      <div class="donebar" id="doneBar"></div>
+    </div>
+    <div id="think"></div>
+  </div>
+</div>
+<script>
+// ---- E_learning Hub 回報（只在被網站 iframe 載入時有效，單獨打開頁面時無任何作用）----
+function elhReport(m){
+  try{
+    if(location.search.indexOf("elhdebug")>=0)console.log("ELH",JSON.stringify(m));
+    if(window.parent!==window)window.parent.postMessage(Object.assign({elh:1},m),location.origin);
+  }catch(e){}
+}
+function elhText(h){return String(h==null?"":h).replace(/<[^>]*>/g,"").replace(/\s+/g," ").trim().slice(0,200);}
+
+const REV = {"title": "中一中文 單元一「細說今昔事」", "tabs": [{"label": "①講讀《楊修之死》", "sections": [{"h": "作者出處", "steps": ["作者：羅貫中——課本「文言知識庫」引例句時標示出處為「羅貫中《楊修之死》」<span class=pg>p1.25<\/span>。", "本篇的作者剪影／首頁<span class=pg>p1.4–1.5<\/span>掃描缺頁，作者生平及選文出處未能核對，見 notes.md。", "單元引言：《楊修之死》記述聰慧過人的楊修遭曹操下令斬殺的前因後果<span class=pg>p1.1<\/span>。", "課後「文學點滴」介紹四大古典小說名著：《三國演義》原名《三國志通俗演義》，是中國第一本長篇歷史章回小說，敘述漢末羣雄爭逐和魏、蜀、吳三國鼎立，曹操、劉備等形象鮮明<span class=pg>p1.12<\/span>。"], "check": null}, {"h": "文體", "steps": ["課本以本篇作為「認識中國古典小說名著」的學習材料（單元學習重點，p1.3），並在篇後「文學點滴」介紹章回小說：四大名著都屬於章回小說，起源於宋代講故事藝人的稿本<span class=pg>p1.11<\/span>。", "本篇明確的文體標示在缺頁 p1.4–1.5，未能核對（見 notes.md）。"], "check": null}, {"h": "內容大意與段落結構", "steps": ["本文記述聰慧過人的楊修遭曹操下令斬殺的前因後果<span class=pg>p1.1<\/span>", "楊修之死近因＝雞肋事件（第1–3段）：楊修從夜間口號猜中曹操退兵的心意，叫軍士收拾行裝（段2，p1.7）；曹操以惑亂軍心的罪名斬殺楊修<span class=pg>p1.13、p1.46<\/span>", "遠因包括闊門事件（第4段）、一合酥事件（第5段）、夢中殺人事件（第6段）、吳質事件（第7段）、鄴城門事件（第8段）、答教事件（第9段）<span class=pg>p1.13<\/span>", "曹操對楊修的厭惡程度逐漸加深<span class=pg>p1.46<\/span>"], "check": null}, {"h": "記敘六要素", "steps": ["記敘要素：時間、地點、人物和事件（原因、經過和結果）<span class=pg>p1.3<\/span>", "雞肋事件（第1–3段）的記敘要素表，課本已給「時間＝曹操屯兵的一夜」，其餘為練習<span class=pg>p1.14<\/span>。", "原文可見：曹操屯兵日久，欲進兵被馬超拒守，欲收兵又恐被蜀兵恥笑（段1，p1.7）；楊修見傳「雞肋」二字，便教隨行軍士收拾行裝（段2，p1.7）；曹操大怒，「汝怎敢造言亂我軍心！」喝刀斧手推出斬之（段3，p1.8）。"], "check": null}, {"h": "記敘次序", "steps": ["倒敘法：以事情的結局或某個重要的情節開展文章，然後順序記述事情的始末，以吸引讀者追看<span class=pg>p1.45<\/span>；課本比較表列明《楊修之死》＝倒敘法<span class=pg>p1.16、p1.46<\/span>。", "結果：曹操以惑亂軍心罪名斬殺楊修；原因：楊修為人恃才放曠數犯曹操之忌；經過：闊門、一合酥、夢中殺人、吳質、鄴門、答教<span class=pg>p1.46<\/span>"], "check": {"id": "c1", "q": "《楊修之死》第1–3段先寫曹操斬殺楊修，第4段才用「原來楊修為人……」回述以前的事。這種先寫結局、再交代始末的寫法叫甚麼？", "options": ["順敘法", "倒敘法", "只寫結果，不寫原因"], "answer": 1, "hint": "回看左邊：課本 p1.45 說哪一種方法「以事情的結局或某個重要的情節開展文章」？", "deepen": "再想深一層：課本說這種寫法的作用是「吸引讀者追看」（p1.45）。你讀到楊修被斬，會不會想知道曹操為何要殺他？", "page": "p1.45、p1.46"}}, {"h": "中心句／主旨", "steps": ["課本練習要求「摘錄能概括全文要旨的中心句」<span class=pg>p1.14，無印刷答案<\/span>。p1.46 倒敘圖把「楊修為人恃才放曠，數犯曹操之忌」列為事件原因，原句見第4段：「原來楊修為人，恃才放曠，數犯曹操之忌。」<span class=pg>p1.8<\/span>", "曹操對楊修的厭惡程度逐漸加深<span class=pg>p1.46<\/span>；第9段：「此時已有殺修之心，今乃借惑亂軍心之罪殺之。」<span class=pg>p1.10<\/span>", "課本「歸納主旨」為填充練習：本文通過記述楊修＿＿，最終被曹操以＿＿的罪名斬首的事，刻畫楊修的＿＿和曹操的＿＿，並說明＿＿的害處<span class=pg>p1.13，無印刷答案<\/span>。"], "check": null}, {"h": "人物性格與描寫手法", "steps": ["楊修：恃才放曠（「恃着自己有才華而行為放恣」，p1.26 語譯；p1.8 原文）；聰慧過人<span class=pg>p1.1<\/span>。他一再猜中曹操心意：「活」字＝嫌園門闊（段4）、「一合酥」＝一人一口酥（段5），並當眾說破「丞相非在夢中，君乃在夢中耳」（段6）<span class=pg>p1.8–1.9<\/span>。", "曹操：表面稱美、心裏忌恨——「操雖稱美，心甚忌之」「操雖喜而笑，心惡之」<span class=pg>p1.8<\/span>；假裝夢中殺人，「佯驚問」<span class=pg>p1.9<\/span>。", "曹操的反應層層加深：忌之→惡之→愈惡之→愈惡之→亦不喜植→大怒、有殺修之心（段4–9，p1.8–1.10）。", "作者記述楊修招致殺身之禍的幾件事時，加插了不少對話，既能表現人物的內心情感，亦可塑造人物的性格特點<span class=pg>p1.17<\/span>"], "check": {"id": "c2", "q": "楊修猜中門上「活」字是嫌園門闊，曹操心裏怎樣？", "options": ["真心欣賞，從此重用楊修", "表面稱美，心裏忌恨", "毫不在意"], "answer": 1, "hint": "回看第4段原文：「操雖稱美，心＿＿＿＿。」", "deepen": "對了，原文是「操雖稱美，心甚忌之」（p1.8）。接着一合酥事件，曹操「雖喜而笑，心惡之」——厭惡程度是不是逐漸加深（p1.46）？", "page": "p1.8、p1.46"}}, {"h": "重點字詞", "steps": ["操：曹操(155-220)，字孟德，小名阿瞞。東漢末年任丞相，曾挾天子以令諸侯，後封魏王。其子曹丕稱帝，建立魏國後，追尊曹操為魏武帝。<span class=pg>p1.7<\/span>", "屯兵：駐兵。<span class=pg>p1.7<\/span>", "馬超：字孟起，劉備部下勇將。<span class=pg>p1.7<\/span>", "蜀兵：劉備的軍隊。東漢末年，羣雄並起，劉備在四川建立蜀漢。<span class=pg>p1.7<\/span>", "庖官：掌管膳食的官員。<span class=pg>p1.7<\/span>", "雞肋：雞胸壁兩側長條形的骨。<span class=pg>p1.7<\/span>", "夏侯惇：複姓夏侯，字元讓，曹操部下大將。<span class=pg>p1.7<\/span>", "夜間口號：夜間在軍營之中守衞或巡邏時，用來分辨敵我的暗號。<span class=pg>p1.7<\/span>", "行軍主簿：軍中掌管文書的官員。<span class=pg>p1.7<\/span>", "教：使、令、讓。<span class=pg>p1.7<\/span>", "不日：未來幾天之內。<span class=pg>p1.7<\/span>", "班師：師，軍隊。調回出征的軍隊。<span class=pg>p1.7<\/span>", "肺腑：一般指人的內臟。這裏運用了比喻，指內心的想法。<span class=pg>p1.7<\/span>", "遶寨私行：遶，同「繞」。環繞營寨，暗中巡視。<span class=pg>p1.9<\/span>", "首級：被斬下的人頭。戰國時，秦商鞅變法，規定兵將斬下敵人一個人頭，便賜爵一級，所以稱所斬的人頭為首級。<span class=pg>p1.9<\/span>", "號令：軍隊中用言語或軍號等傳達命令。這裏指示眾的意思。<span class=pg>p1.9<\/span>", "轅門：轅，和車軸相連，伸向前面的兩條駕車用的長木。古代帝王巡狩田獵，在住宿的地方把車子圍在四周作為屏障，在出口翻起兩車的轅作門，所以稱為轅門。後指軍營營門。<span class=pg>p1.9<\/span>", "放曠：放恣，不守法度。【kuàng 粵音礦】<span class=pg>p1.9<\/span>", "數：屢次。【shuò 粵音朔】<span class=pg>p1.9<\/span>", "嘗：曾經。<span class=pg>p1.9<\/span>", "不置褒貶：褒，讚美。貶，給予不好的評價。不說好，也不說壞。<span class=pg>p1.9<\/span>", "停當：完畢，妥當。<span class=pg>p1.9<\/span>", "塞北：中國古代稱長城以北的地區為塞北。<span class=pg>p1.9<\/span>", "訖：完畢。<span class=pg>p1.9<\/span>", "半晌：半天，好久。<span class=pg>p1.9<\/span>", "佯：假裝。<span class=pg>p1.9<\/span>", "曹植：曹植(192-232)，字子建，曹操第四子。擅長詩賦，詞彩富麗，是當時的大文學家，著作有《曹子建集》。<span class=pg>p1.10<\/span>", "世子：諸侯王的繼承人。<span class=pg>p1.10<\/span>", "曹丕(187-226)，字子桓，曹操第二子。愛好文學，有文章和詩賦等傳世。曹操死後，他篡漢自立，是為魏文帝。<span class=pg>p1.10<\/span>", "朝歌長吳質：朝歌，今河南淇縣。長，官名，相當於「令」。吳質，字季重，才識通博，是曹丕的親信。<span class=pg>p1.10<\/span>", "大簏：大竹筐。【lù 粵音碌】<span class=pg>p1.10<\/span>", "逕：直接。<span class=pg>p1.10<\/span>", "伺察：暗中守候，觀察。【sì 粵音自】<span class=pg>p1.10<\/span>", "譖：說壞話誣陷別人。【zèn 粵音浸】<span class=pg>p1.10<\/span>", "鄴：今河北臨漳，當時曹操的封地。【yè 粵音業】<span class=pg>p1.10<\/span>", "阻當：同「阻擋」。<span class=pg>p1.10<\/span>", "竟：這裏解作「逕」，直接。<span class=pg>p1.10<\/span>", "然：表示同意、贊同。這裏作動詞用。<span class=pg>p1.10<\/span>", "叱：大聲責罵。【chì 粵音斥】<span class=pg>p1.10<\/span>", "答教：一種預先擬定問題，作好答案，以便應對的文件。<span class=pg>p1.10<\/span>", "但：只要。<span class=pg>p1.10<\/span>", "匹夫：原意是平常人，後又指無常識、無智謀的人，有輕蔑之意。<span class=pg>p1.10<\/span>", "安：怎麼、哪裏，表示反問。<span class=pg>p1.10<\/span>"], "check": null}, {"h": "文言字詞", "steps": ["「之」的用法<span class=pg>p1.25<\/span>", "　• 作結構助詞用，可譯為「的」。例：操第三子曹植，愛修之才，常邀修談論。<span class=pg>p1.25<\/span>", "　• 作代詞用，可代人、物或處所，可譯為「他」「她」「牠」「它」「這」「那」等。例：張助遠出來還，見之驚云：「此有何神？乃我所種耳。」因就斫之。<span class=pg>p1.25<\/span>", "　• 課本例句：操躍起拔劍斬之<span class=pg>p1.25<\/span>", "　• 課本例句：此時已有殺修之心，今乃借惑亂軍心之罪殺之<span class=pg>p1.25<\/span>", "　• 課本例句：先知大王欲歸之意……操喚楊修問之，修以雞肋之意對……喝刀斧手推出斬之<span class=pg>p1.25<\/span>", "單音節詞<span class=pg>p1.26<\/span>", "　• 例1 見李核，欲持去。（看見李子的核，想拿着帶走。）<span class=pg>p1.26<\/span>", "　• 例2 操嘗造花園一所，造成，操往觀之。（曹操曾經建造了一所花園，造成之後，曹操前往觀看它。）<span class=pg>p1.26<\/span>", "　• 例 原來楊修為人，恃才放曠，數犯曹操之忌。（原來楊修為人，恃着自己有才華而行為放恣，屢次觸犯曹操的忌諱。）<span class=pg>p1.26<\/span>"], "check": null}, {"h": "課本閱讀指引／思考題", "steps": ["導致楊修被殺的七件事：A 吳質事件、B 答教、C 一合酥、D 雞肋（夜間口號）、E 鄴郡城門、F 闊門（花園門）、G 夢中殺人——試按課文記述先後排序。<span class=pg>p1.6<\/span>", "預習：楊修有甚麼優點和缺點？試用四字詞形容楊修的性格。<span class=pg>p1.6<\/span>", "第1至3段記敘了雞肋事件，填寫記敘要素表（時間＝曹操屯兵的一夜，課本已給；地點、人物、起因、經過、結果待填）。<span class=pg>p1.14<\/span>", "(1)作者運用了哪一種記敘方法寫楊修被殺及前因後果 (2)好處。<span class=pg>p1.14<\/span>", "摘錄能概括全文要旨的中心句並說明原因。<span class=pg>p1.14<\/span>", "(1)直接和間接導致楊修被殺的事分別有哪些<span class=pg>p1.14<\/span>", "(2)間接導致楊修被殺各事件中曹操對楊修的厭惡程度：由□□漸趨□□（兩個字）<span class=pg>p1.15<\/span>", "(3)作者這樣鋪排事件對表達主題有甚麼作用。<span class=pg>p1.15<\/span>", "作者形容楊修「恃才放曠」(1)辨楊修行為的目的或影響：表現自己/協助曹植/影響軍事決策 ×7事件（①雞肋②闊門③一合酥④夢中殺人⑤吳質⑥鄴門⑦答教）(2)為甚麼曹操到了雞肋事件時才殺楊修 作答提示：先比較「雞肋事件」與其他事件的性質和嚴重程度，再找出曹操殺楊修的理由。(3)綜合全文曹操性格特點。<span class=pg>p1.15<\/span>", "(1)七個字熟語形容楊修遭遇 (2)是否咎由自取 (3)教訓<span class=pg>p1.15<\/span>", "絕妙好辭（故事出自《世說新語‧捷悟》）：(1)與課文哪兩件事在選材上相似 (2)比較表：記敘方法 絕妙好辭＝①(blank) 楊修之死＝倒敘法（課本給）<span class=pg>p1.16<\/span>", "詞語運用 造句：猶豫不決 收拾行裝 恃才放曠。<span class=pg>p1.17<\/span>", "技巧運用：分析對話：(1)「盒上明書『一人一口酥』，豈敢違丞相之命乎？」(2)「丞相非在夢中，君乃在夢中耳。」(3)「匹夫安敢欺我耶！」<span class=pg>p1.17<\/span>", "以讀帶寫：試為第7段曹丕和吳質加插對話<span class=pg>p1.17<\/span>"], "check": null}]}, {"label": "②講讀《桑中生李》", "sections": [{"h": "作者出處", "steps": ["作者干寶，字令升，東晉新蔡（今河南）人，著名文學家和史學家，勤學博覽；元帝時領修國史，著《晉紀》二十卷，時稱良史；又編神怪靈異故事為《搜神記》。<span class=pg>p1.20<\/span>", "本文選自干寶《搜神記》，文題為後人所擬。<span class=pg>p1.18<\/span>"], "check": null}, {"h": "文體", "steps": ["志怪小說：指帶有神怪色彩，主要記載怪誕不經的事的小說。<span class=pg>p1.18<\/span>", "「志怪」一詞出自《莊子‧逍遙遊》中「《齊諧》者，志怪者也」，即記載怪異故事的意思。<span class=pg>p1.18<\/span>", "干寶的《搜神記》是志怪小說的代表作，還有陶潛的《搜神後記》、王嘉的《拾遺記》和吳均的《續齊諧記》等。<span class=pg>p1.18<\/span>"], "check": null}, {"h": "內容大意與段落結構", "steps": ["課文大意：南頓人張助在田中種禾時拾得李核，種於空桑之中，以餘漿灌溉；後人見桑中生李，輾轉相告；有人患目痛，借陰休息，自言李君令其目愈，並以豚謝之；目痛實自行而愈，眾人卻以為李樹有神，遠近翕赫，車騎常數千百，酒肉滂沱；過了一年多，張助遠出歸來，見之大驚，曰「此有何神？乃我所種耳」，於是就斫之。<span class=pg>歸納自 p1.20<\/span>", "課文概覽把全文分為三部分：種樹（概覽第1項）／祭樹（第2–5項）／砍樹（第6項）<span class=pg>p1.22，概覽為填充練習，無印刷答案<\/span>。"], "check": null}, {"h": "記敘六要素", "steps": ["本課學習重點為「認識記敘的方法（一）：順敘法」及「運用閱讀策略：尋找文章的中心句」；課本未就本課列出記敘六要素表<span class=pg>p1.18<\/span>。", "原文可見：人物張助，地點南頓、田中<span class=pg>p1.20<\/span>；「間一歲餘」張助遠出來還<span class=pg>p1.20<\/span>。", "課本所載記敘要素為：時間、地點、人物和事件（原因、經過和結果）。<span class=pg>p1.3<\/span>"], "check": null}, {"h": "記敘次序", "steps": ["本課運用順敘法。<span class=pg>p1.18<\/span>", "順敘法：按事件發生的先後次序記述，即原因→經過→結果，能清楚交代來龍去脈。<span class=pg>p1.45<\/span>"], "check": null}, {"h": "中心句／主旨", "steps": ["課本預習問「李樹是不是神靈？」並要求摘錄句子：張助說「此有何神？乃我所種耳。」<span class=pg>p1.19、p1.20<\/span>", "課本「歸納主旨」為填充練習：本文通過記述＿＿的故事，諷刺＿＿的愚昧行為，並說明人們遇事應＿＿的道理<span class=pg>p1.22，無印刷答案<\/span>。", "註5「眾犬吠聲：一隻狗吠，其他的狗也跟着吠起來；形容眾人盲目附和」<span class=pg>p1.20<\/span>，可幫助理解眾人為何爭相拜祭。"], "check": {"id": "c3", "q": "《桑中生李》裏，張助哪一句話說明李樹其實不是神靈？", "options": ["李君令我目愈，謝以一豚。", "此有何神？乃我所種耳。", "間一歲餘，張助遠出來還。"], "answer": 1, "hint": "李樹是誰種的？誰最清楚真相？找那個人說的話。", "deepen": "想多一步：課本註5說「眾犬吠聲」是形容眾人盲目附和（p1.20）。這和大家爭相拜祭李樹有甚麼關係？", "page": "p1.19、p1.20"}}, {"h": "人物與寫法", "steps": ["人物：張助（種李者）；有病目痛者（息陰下、許願謝豚）；眾人（轉相告語、車騎祭拜）。<span class=pg>歸納自 p1.20<\/span>", "寫法：作者以順敘法記述事件，由張助種李寫起，到眾人拜祭，再到張助歸來砍樹，依事情發生先後記述<span class=pg>歸納自 p1.20；學習重點「順敘法」見 p1.18<\/span>。"], "check": null}, {"h": "重點字詞", "steps": ["「干寶（？-336），字令升。東晉新蔡（今河南）人，著名文學家和史學家，勤學博覽。元帝時領修國史，著《晉紀》二十卷，時稱良史；又編神怪靈異故事為《搜神記》。」<span class=pg>p1.20<\/span>", "「南頓：古代地名，今河南項城。」<span class=pg>p1.20<\/span>", "「李君：人們對從桑樹中長出來的李樹的尊稱。」<span class=pg>p1.20<\/span>", "「愈：通『癒』，病癒、痊癒的意思。」<span class=pg>p1.20<\/span>", "「眾犬吠聲：一隻狗吠，其他的狗也跟着吠起來；形容眾人盲目附和。」<span class=pg>p1.20<\/span>", "「翕赫：翕，聚集。赫，盛貌。這裏指轟動、驚動。」<span class=pg>p1.20<\/span>", "「滂沱：本來形容雨勢盛大的樣子。這裏指酒肉多而不斷。」<span class=pg>p1.20<\/span>", "「斫：用刀斧砍削。」<span class=pg>p1.20<\/span>"], "check": null}, {"h": "文言字詞", "steps": ["<b>「之」的用法<\/b>", "「之」字可作結構助詞、代詞用。<span class=pg>p1.25<\/span>", "作結構助詞用，可譯為「的」。例：操第三子曹植，愛修之才，常邀修談論。<span class=pg>p1.25<\/span>", "作代詞用，可代人、物或處所，可譯為「他」「她」「牠」「它」「這」「那」等。例：張助遠出來還，見之驚云：「此有何神？乃我所種耳。」因就斫之。<span class=pg>p1.25<\/span>", "<b>單音節詞<\/b>", "與白話文比較，文言文中有較多單音節詞；有些單音節詞，只要為它配上一個字，就能譯成白話文。<span class=pg>p1.26<\/span>", "例1：見李核，欲持去。（看見李子的核，想拿着帶走。）<span class=pg>p1.26<\/span>", "例2：操嘗造花園一所，造成，操往觀之。（曹操曾經建造了一所花園，造成之後，曹操前往觀看它。）<span class=pg>p1.26<\/span>", "不能用以上方法轉譯的單音節詞，就得根據上下文理用其他雙音節詞翻譯。例：原來楊修為人，恃才放曠，數犯曹操之忌。<span class=pg>p1.26<\/span>", "分辨單音節詞，可以避免錯解文意，例如把兩個連在一起的文言單音節詞，誤解為白話文中常用的雙音節詞。例：先世避秦時亂，率妻子邑人來此絕境。（「妻子」不是白話文裏「妻子」的意思，而是分別指「妻子」和「子女」。）<span class=pg>p1.26<\/span>", "或是把兩個連用的近義單音節詞，誤解為白話文中常用的雙音節詞。例：妻止之曰：「特與嬰兒戲耳。」（「嬰」和「兒」近義，這裏不是白話文裏「嬰兒」的意思，而是指「小孩子」。）<span class=pg>p1.26<\/span>", "<b>擴展語譯法<\/b>", "擴展是把單音節詞擴寫成現在常用的雙音節詞。<span class=pg>p1.23<\/span>", "例：於田中種禾。種：種植。禾：禾苗。<span class=pg>p1.23<\/span>", "可應用於「後」「人」「見」「桑」「生」「李」「轉」「相」「告」「病」「痛」「息」。<span class=pg>p1.23<\/span>"], "check": {"id": "c4", "q": "「因就斫之」的「之」，指的是甚麼？", "options": ["張助", "李樹", "患眼疾的人"], "answer": 1, "hint": "「斫」是用刀斧砍削（註8）。張助回來後砍了甚麼？", "deepen": "對！課本 p1.25 語譯：「於是他就把李樹砍了。」這個「之」作代詞用。再想：「愛修之才」的「之」又是哪種用法？（課本說可譯為「的」）", "page": "p1.25"}}, {"h": "民間信仰", "steps": ["人們以為從桑樹中長出的李樹有神奇的力量，紛紛前往拜祭，這是中國民間信仰的常見現象。<span class=pg>p1.21<\/span>", "民間信仰沒有嚴謹的教義和組織，人們認為萬物皆有靈性，希望通過崇拜各種事物，趨吉避凶。<span class=pg>p1.21<\/span>", "三類崇拜對象——俗神、靈物和符號。<span class=pg>p1.21<\/span>", "俗神信仰：俗神即世俗神，反映人們在世俗生活中的追求，例如求財富有財神，求姻緣有月老；各行各業亦有不同的神祇，如茶聖陸羽、海上守護神媽祖等；道教的太上老君、佛教的觀音菩薩、如來佛；春節時在門戶貼上「福」字，源於福神信仰；道教三官大帝，天官職掌賜福；古代的門神用作鎮邪，是俗神信仰的一種。<span class=pg>p1.21<\/span>", "靈物信仰：人們相信自然界的每種事物都有靈性，能變妖成精，更能施福降禍，因此祭祀它們以求避禍得福；自然物如日月星宿、山川河海，動植物如飛禽走獸、樹木花草，還有人造物和幻想物；喜鵲出現代表有喜事來臨；把村邊、宅邊大樹視為保護神。<span class=pg>p1.21<\/span>", "符號信仰：人們認為符號有吉凶預兆、驅邪避惡的作用；起源於古代的圖騰崇拜；如意紋、辟邪的八卦圖等；古代鋪首獸面紋樣寓意辟邪鎮宅，雲紋石雕寓意吉祥、幸福。<span class=pg>p1.21<\/span>"], "check": null}, {"h": "課本閱讀提示／思考題", "steps": ["本文是一個有趣的民間故事，記述因張助在桑樹中種李而引發一件轟動遠近的事。閱讀時留意：1為甚麼桑樹中會生出李子？2人們怎樣看待李樹？為甚麼？3張助怎樣平息事件？<span class=pg>p1.18<\/span>", "預習：兩件「神奇」的事情；李樹是不是神靈？試摘錄句子說明。<span class=pg>p1.19<\/span>", "文言助讀：推測詞義 1「顧見空桑中有土」的「顧」是甚麼意思？單音節詞 2用雙音節詞解釋：（1）李君令我目愈，謝以一豚。（2）張助遠出來還，見之驚云。<span class=pg>p1.20<\/span>", "背誦建議：「有病目痛者」至「酒肉滂沱」這幾句說明人們競相祭李樹的原因，富有啟發性。<span class=pg>p1.20<\/span>", "討論與練習 詞解語譯 1 解釋：見李核，欲持去（持）；因植種，以餘漿溉灌（因）；間一歲餘，張助遠出來還（間）。<span class=pg>p1.23<\/span>", "2 譯白話：後人見桑中反復生李，轉相告語／有病目痛者，息陰下。<span class=pg>p1.23<\/span>", "能力訓練 3 張助種李一事（1）作者運用哪種記敘方法（2）好處。<span class=pg>p1.23<\/span>", "4 目痛者病癒後，大家沸沸揚揚（1）摘錄句子（2）四字成語概括原因。<span class=pg>p1.23<\/span>", "理解分析 5 判斷正確／錯誤／無從判斷：（1）作者認為患眼疾的人即使不拜李樹，眼疾也會痊癒。（2）張助砍掉李樹，是為了制止謠言傳播。<span class=pg>p1.24<\/span>", "進階思考 6（1）為甚麼會有那麼多人拜祭李樹（2）為甚麼人們會把患眼疾者得以痊癒歸功於李樹。作答提示：想想人們對桑樹生出李子的看法，連繫患眼疾者求樹後痊癒的事。<span class=pg>p1.24<\/span>", "7 現實生活類似例子。<span class=pg>p1.24<\/span>", "比較閱讀 8 戴侯祠 干寶：豫章有戴氏女，久病不差，見一小石形像偶人，女謂曰：「爾有人形，豈神？能差我宿疾者，吾將重汝。」其夜，夢有人告之：「吾將祐汝。」自後疾漸差。遂為立祠山下。戴氏為巫，故名戴侯祠。註①不差：沒有痊癒 ②形像偶人：形，形狀。偶人，用土木造的人像 ③差我宿疾：醫好我積久的病患 ④重：重視、尊重。這裏指作為神明奉祀 ⑤巫：代人向鬼神求賜福、解決問題的人。（1）中患眼疾的人和戴氏女行為共通之處（2）反映古人甚麼思想。<span class=pg>p1.24<\/span>"], "check": null}]}, {"label": "③導讀《歪兒》", "sections": [{"h": "作者出處", "steps": ["本文選自馮驥才散文集《靈魂的巢》。<span class=pg>p1.27<\/span>", "馮驥才，生於1942年，當代作家、畫家。原籍浙江，生於天津，早年從事繪畫工作，後專職文學創作和文化研究。<span class=pg>p1.27<\/span>", "作品集近百種，《啊！》《雕花煙斗》《珍珠鳥》《俗世奇人》等均獲全國文學獎。<span class=pg>p1.27<\/span>", "作品被譯成英、法、德、意、日、俄等文字。<span class=pg>p1.27<\/span>"], "check": null}, {"h": "文體", "steps": ["課本註明「本文選自馮驥才散文集《靈魂的巢》」<span class=pg>p1.27<\/span>。"], "check": null}, {"h": "內容大意與段落結構", "steps": ["歪兒是作者兒時的玩伴，他們一起玩「踢罐電報」遊戲；本文記敘他們玩遊戲時的一場風波，並將玩伴們從欺負歪兒到愛護歪兒的轉變娓娓道來。<span class=pg>p1.27<\/span>", "段1：那個暑假，天剛擦黑，晚飯吃了一半，「我」的心就飛出去，因為又聽到歪兒尖細的召喚聲：「來玩踢罐電報呀——」。<span class=pg>p1.28<\/span>", "段2：介紹「踢罐電報」的玩法；坐莊要拾回罐兒並捉住躲藏的孩子，是苦差事，然而最苦的還要算是歪兒。<span class=pg>p1.28<\/span>", "段3：描寫歪兒的樣貌、身世，以及他因身子歪而玩遊戲吃虧，卻仍熱愛遊戲、寧願坐莊。<span class=pg>p1.28<\/span>", "段4：只有歪兒家才有裝蘆筍的長長鐵罐；若沒有這寶貝罐兒，大家或會嫌他累贅、不帶他玩。<span class=pg>p1.29<\/span>", "段5：「我」剛搬到這條街便加入遊戲並很快成了佼佼者；「我」踢罐兒遠、追人迅猛，大家最興奮的是瞅着歪兒追罐兒的可笑樣子；「我」成了當然的英雄，歪兒則一臉懊喪、疲於奔命。終於有一天，歪兒一屁股坐在白粉圈裏，怏怏無奈地痛哭不止，他媽媽扯他回家，「我們都感覺自己做了甚麼不好的事」。<span class=pg>p1.29、p1.30<\/span>", "段6：歪兒不來玩了，大家改用「我」家裝草莓醬的小鐵罐，遊戲的快樂減色許多；歪兒從二樓窗子把長長的罐兒扔下來，「我的心頭一次感到被一種內疚深深地刺痛了」，「我」迫不及待地招手叫他來玩。<span class=pg>p1.30<\/span>", "段7：「歪兒回到了我們中間。」<span class=pg>p1.31<\/span>", "段8：一切都奇妙又美好地發生了變化——大家不約而同、齊心合力地等待歪兒，盡力不叫他坐莊，做假成真；「我」踢開罐兒解救歪兒，和他躲在破桌案下，發現他的眼睛「目光興奮、親熱、滿足，並像晨星一樣光亮」。課本朗讀建議指出：第8段為全文的高潮，點出題旨。<span class=pg>p1.31<\/span>", "課文概覽把全文分為：背景（第1–4段）、遊戲（第5–8段）、總結<span class=pg>p1.32<\/span>。", "課本「歸納主旨」為填充練習：本文通過記述作者兒時＿＿時發生的一場風波，交代大家從＿＿，到後來＿＿的過程，反映友情的＿＿，以及人與人之間＿＿的美好<span class=pg>p1.32，無印刷答案<\/span>；閱讀提示已說明本文寫「玩伴們從欺負歪兒到愛護歪兒的轉變」<span class=pg>p1.27<\/span>。"], "check": null}, {"h": "記敘六要素", "steps": ["學習重點：掌握記敘的要素——時間、地點、人物和事件（原因、經過和結果）。<span class=pg>p1.27<\/span>", "時間：某個暑假（課本練習表已給；原文「那個暑假」）。<span class=pg>p1.28、p1.33<\/span>", "地點：那條小街（街中央畫白粉圈玩遊戲；「我家剛搬到這條街上來」）。<span class=pg>p1.28、p1.29、p1.30<\/span>", "人物：歪兒、作者（「我」）及其他玩伴（男孩子們）。<span class=pg>p1.28、p1.29<\/span>", "事件（第5–8段的風波，課本練習1，無印刷答案）可從原文找到：大家以瞅着歪兒追罐兒的可笑樣子為樂<span class=pg>p1.30<\/span>；歪兒終於坐在白粉圈裏痛哭，被媽媽扯回家；之後他不來玩，遊戲失去樂趣；他把長長的罐兒扔下來，作者感到內疚並招手叫他來玩<span class=pg>p1.30<\/span>；歪兒回到同伴中間，大家不約而同、齊心合力等待他，盡力不叫他坐莊，互相配合解救他。<span class=pg>p1.31<\/span>"], "check": {"id": "c6", "q": "課本練習表格已替第5–8段那場風波填好了哪一項要素的內容「某個暑假」？", "options": ["時間", "地點", "人物"], "answer": 0, "hint": "「暑假」回答的是「甚麼時候」還是「在哪裏」？", "deepen": "對。你再試試從原文找出地點：大家在哪裏畫白粉圈玩「踢罐電報」？（p1.28）", "page": "p1.33"}}, {"h": "記敘次序", "steps": ["學習重點：掌握記敘的方法（一）：順敘法。<span class=pg>p1.27<\/span>", "課文按時間先後敘述：先寫暑假黃昏聽到歪兒召喚，再寫遊戲玩法與歪兒坐莊，然後寫「我」加入後欺負歪兒、歪兒痛哭離開，最後寫歪兒回歸、大家改變態度。<span class=pg>歸納自 p1.28、p1.29、p1.30、p1.31<\/span>"], "check": null}, {"h": "中心句／主旨", "steps": ["閱讀策略：運用閱讀策略——尋找文章的中心句。<span class=pg>p1.27<\/span>", "課本思考題：「你能找出本文的中心句嗎？試為它加上底線，並說說你選擇這一句的原因。」<span class=pg>p1.31<\/span>", "文中點題句：「是不是每個人都有這樣一雙眼睛，就看我們能不能把它點亮。」<span class=pg>p1.31<\/span>", "朗讀建議：第8段為全文的高潮，點出題旨<span class=pg>p1.31<\/span>。", "品德情意：友愛同儕。<span class=pg>p1.27<\/span>"], "check": {"id": "c5", "q": "課本朗讀建議說，《歪兒》哪一段是全文的高潮，點出題旨？", "options": ["第3段", "第6段", "第8段"], "answer": 2, "hint": "找寫歪兒眼睛「像晨星一樣光亮」的那一段。", "deepen": "第8段最後一句：「是不是每個人都有這樣一雙眼睛，就看我們能不能把它點亮。」課本請你想想本文的中心句是哪一句，並說出原因（p1.31）。", "page": "p1.31"}}, {"h": "人物性格與描寫手法", "steps": ["歪兒樣貌：細小、軟綿綿、歪歪扭扭；眼睛總像睜不開；薄薄的嘴脣有點斜；耳朵明顯一大一小。<span class=pg>p1.28<\/span>", "歪兒性格／處境：熱愛遊戲，寧願坐莊、徒自奔跑、累得跌跌撞撞；因身子歪而十分吃虧。<span class=pg>p1.28<\/span>", "歪兒被欺負時：見到「我」總是一臉懊喪；終於怏怏無奈地痛哭不止。<span class=pg>p1.30<\/span>", "歪兒的轉變：回來後目光「興奮、親熱、滿足」，「並像晨星一樣光亮」；原文稱「原來他有這樣一雙又美又動人的眼睛」。<span class=pg>p1.31<\/span>", "作者（「我」）前期：個子高、腿長，跑起來「真像騎摩托送電報的郵差那樣風馳電掣」；踢罐兒一腳很遠；以瞅歪兒追罐兒的可笑樣子為最興奮，自覺是「當然的英雄，得意非凡」。<span class=pg>p1.29、p1.30<\/span>", "作者轉變：見歪兒痛哭、被其母責罵後，「我們都感覺自己做了甚麼不好的事」；歪兒扔下罐兒後，「我的心頭一次感到被一種內疚深深地刺痛了」，並「迫不及待地朝他招手，叫他來玩兒」。<span class=pg>p1.30<\/span>", "同伴轉變：大家並沒有商定甚麼，卻不約而同、齊心合力等待歪兒；盡力不叫他坐莊，有人情願被他捉住以頂替他；相互配合、心領神會、做假成真。<span class=pg>p1.31<\/span>", "明喻例句一：「歪兒站在街中央，尋着空鐵罐左盼右盼，活像一個蒸熟了的小紅薯。」<span class=pg>p1.28<\/span>", "明喻例句二：「我的個子比同齡的孩子高一頭，腿也幾乎長一截，跑起來真像騎摩托送電報的郵差那樣風馳電掣，誰也甭想逃脫我的追逐。」<span class=pg>p1.29<\/span>", "明喻例句三：「他一忽兒斜向左，一忽兒斜向右，像個脫了軌而瞎撞的破車，逗得大家捂着肚子笑。」<span class=pg>p1.30<\/span>", "明喻例句四：「我忽然見他那雙眯縫的小眼睛竟然睜得很大，目光興奮、親熱、滿足，並像晨星一樣光亮！」<span class=pg>p1.31<\/span>", "修辭運用提示：作者運用了明喻來突顯人物形象。<span class=pg>p1.36<\/span>"], "check": null}, {"h": "重點字詞", "steps": ["註1 聚攏：聚集在一起。【lǒng 粵音壟】<span class=pg>p1.29<\/span>", "註2 躥出：向上或向前跳。【cuān 粵音川】<span class=pg>p1.29<\/span>", "註3 累贅：多餘、拖累、麻煩。【zhuì 粵音序】<span class=pg>p1.29<\/span>", "註4 佼佼者：表現出眾的人。【jiǎo 粵音搞】<span class=pg>p1.29<\/span>", "註5 摩托：摩托車的簡稱，香港稱電單車。<span class=pg>p1.29<\/span>", "註6 甭想：甭，北方方言，不用的意思。【béng 粵音不】<span class=pg>p1.29<\/span>", "註7 瞅：看。【chǒu 粵音醜】<span class=pg>p1.29<\/span>", "[8] 捂着：遮蓋、遮掩。【捂 wǔ，粵音污 wu¹】<span class=pg>p1.31<\/span>", "[9] 怏怏：不快樂、不滿意的樣子。【怏 yàng，粵音央 joeng²】<span class=pg>p1.31<\/span>", "[10] 蜷縮：彎曲收縮。【蜷 quán，粵音拳 kyn⁴】<span class=pg>p1.31<\/span>"], "check": null}, {"h": "課本閱讀指引／思考題", "steps": ["閱讀提示：1「踢罐電報」是甚麼遊戲？作者為甚麼借它來寫歪兒？2歪兒的樣貌和性格有甚麼特點？3作者的感情經歷了哪些變化？<span class=pg>p1.27<\/span>", "閱讀指引：1「踢罐電報」遊戲是怎麼玩的？2「這真是個苦差事，然而最苦的還要算是歪兒！」這句話在文章結構上有甚麼作用？<span class=pg>p1.28<\/span>", "閱讀指引3「如果要沒有這寶貝罐兒，說不定大家嫌他累贅，不帶他玩了呢！」隱含甚麼意思？<span class=pg>p1.29<\/span>", "4 歪兒不來跟同伴玩「踢罐電報」，原因是甚麼？<span class=pg>p1.30<\/span>", "5 甚麼事情改變了作者對歪兒的態度？<span class=pg>p1.31<\/span>", "6 你能找出本文的中心句嗎？試為它加上底線，並說說你選擇這一句的原因。<span class=pg>p1.31<\/span>", "能力訓練1 本文第5至8段記述了一場由「踢罐電報」遊戲引起的風波，試寫出這件事的記敘要素。（表格：時間「某個暑假」；地點(1)；人物(2)；事件原因(3)、經過(4)、結果(5)）。<span class=pg>p1.33<\/span>", "能力訓練2 承上題，作者運用了哪一種記敘方法來記述這一場風波？試加以說明。<span class=pg>p1.33<\/span>", "理解分析3 作者和歪兒玩「踢罐電報」的表現有甚麼不同？試在以下的空格內填上合適的詞語。（部分詞語可從課文摘錄）<span class=pg>p1.33<\/span>", "4 根據課文內容，作者對歪兒的情感發生了甚麼變化？試綜合全文，完成下表。<span class=pg>p1.34<\/span>", "5 本文刻畫了作者和歪兒兩個男孩子，二人的個性是怎樣的？試選出正確答案。（可選擇多於一項）（選項：A 大方　B 善良　C 愛玩　D 愛哭　E 霸道　F 自信）<span class=pg>p1.34<\/span>", "6 試閱讀以下對歪兒的眼睛的描述，然後回答問題。1) 在作者看來，為甚麼歪兒的眼睛有那麼大的轉變？2) 承上題，作者的看法轉變，對你跟朋友相處有甚麼啟發？<span class=pg>p1.34<\/span>", "進階思考7 試閱讀以下三個段落，然後回答問題。(1) 在以上三個處境中，你認為歪兒的心情會怎樣？試以三人為一組，先加以討論，然後回答問題。(2) 承上題，假如你是文章中的「我」，跟歪兒經歷了以上的事情之後，你有甚麼對歪兒說？<span class=pg>p1.35<\/span>", "詞語運用1 試運用以下詞語各造一個句子。(1) 怏怏 (2) 眼巴巴 (3) 歪歪扭扭 (4) 跌跌撞撞。<span class=pg>p1.36<\/span>", "詞語運用2 試從以下動詞中選出三個，記述一件事。（聚攏、躥出、蜷縮、搭着、瞅着）。<span class=pg>p1.36<\/span>", "修辭運用：作者運用了明喻來突顯人物形象。試運用括號內的詞語，按照例句仿造句子。1 歪兒站在街中央，尋着空鐵罐左盼右盼，活像一個蒸熟了的小紅薯。（動也不動【OCR 原作「動也動」，待核】、雕像）2 這遊戲簡直就是為我發明的——我的個子比同齡的孩子高一頭，腿也幾乎長一截，跑起來真像騎摩托送電報的郵差那樣風馳電掣，誰也甭想逃脫我的追逐。（眼淚、珍珠）。<span class=pg>p1.36<\/span>", "朗讀建議：第8段為全文的高潮，點出題旨；朗讀時注意表達作者的感情；容易錯讀的字：槐、蜷、屏、脯、眯；易發懶音的字：生、等、我、過、內、能、那、眼、睜、得、光。<span class=pg>p1.31<\/span>"], "check": null}]}, {"label": "④閱讀理解《兩角錢》", "sections": [{"h": "作者出處", "steps": ["篇名《兩角錢》，作者肖復興<span class=pg>p1.37<\/span>。", "本課收於中一上《語文》單元一「細說今昔事」，屬「記敘的要素和方法」閱讀理解部分<span class=pg>p1.37<\/span>。", "單元引言：《兩角錢》記述一個小孩子為大人解窘的故事<span class=pg>p1.1<\/span>。"], "check": null}, {"h": "文體", "steps": ["課本以「記敘的要素和方法」為本課訓練重點，並以「順敘法」分析本文，故本文為記敘文<span class=pg>歸納自 p1.37、p1.46<\/span>。"], "check": null}, {"h": "內容大意與段落結構", "steps": ["全文可分為四個部分：第一部分（第1段）、第二部分（第2–6段）、第三部分（第7–9段）、第四部分（第10段）<span class=pg>p1.40<\/span>。", "事件原因：作者在郵局寄信欠兩角錢，服務員堅持要他找兩角零錢<span class=pg>p1.46<\/span>。", "事件經過：一個男孩子給作者兩角錢為他解窘<span class=pg>p1.46<\/span>。", "事件結果：作者重回郵局時沒有把錢歸還給男孩子，改而再次鄭重地向他道謝<span class=pg>p1.46<\/span>。", "事件體會：面對一些舉手之勞的事情，能夠伸出手來去幫助他人，一定要伸出手來<span class=pg>p1.46<\/span>。"], "check": null}, {"h": "記敘六要素", "steps": ["課本所指記敘要素：時間、地點、人物和事件（原因、經過和結果）<span class=pg>p1.37<\/span>。", "時間：那天下午<span class=pg>p1.37<\/span>；後文為「落日的黃昏」<span class=pg>p1.39<\/span>。", "地點：郵局<span class=pg>p1.37<\/span>。", "人物：「我」、櫃台裏的女服務員、一個男孩子；周圍還有很多在附近工地幹活的民工<span class=pg>p1.37<\/span>。", "事件原因：「我」寄信算郵費，掏光衣袋裏所有零錢，還差兩角錢<span class=pg>p1.37<\/span>。", "事件經過：男孩子把手心裏攥着的兩角錢交給「我」<span class=pg>p1.38<\/span>。", "事件結果：「我」寄完信到超市破開一百元票子，回郵局想還錢，最終打消還那兩角錢的念頭，再次鄭重道謝<span class=pg>p1.39<\/span>。"], "check": {"id": "c7", "q": "《兩角錢》第2段「那天下午，我去郵局寄信」——「那天下午」和「郵局」分別是哪兩項要素？", "options": ["時間和地點", "人物和事件", "原因和結果"], "answer": 0, "hint": "一個回答「甚麼時候」，一個回答「在哪裏」。", "deepen": "再想：事件的原因是甚麼？課本 p1.46 寫：作者在郵局寄信欠兩角錢，服務員堅持要他找兩角零錢。", "page": "p1.37、p1.46"}}, {"h": "記敘次序", "steps": ["本文採用順敘法；作用：清楚交代事情的來龍去脈<span class=pg>p1.46<\/span>。"], "check": {"id": "c8", "q": "《兩角錢》由寄信差錢，寫到男孩子借錢，再寫作者回郵局道謝。這是按甚麼次序記述？", "options": ["按照事情發生的經過順序", "先寫結局，再回述原因", "只寫最重要的情節"], "answer": 0, "hint": "想想：故事是不是由開頭一步一步寫到結尾？", "deepen": "對，這是順敘法，作用是「清楚交代事情的來龍去脈」（p1.45、p1.46）。和《楊修之死》的倒敘法比較，有甚麼不同？", "page": "p1.45、p1.46"}}, {"h": "中心句／主旨", "steps": ["課本練習要求「摘錄文章的中心句」<span class=pg>p1.40，無印刷答案<\/span>。p1.46 把第10段這句列為「事件體會」：「他讓我時時提醒自己，面對一些舉手之勞的事情，能夠伸出手來去幫助他人，一定要伸出手來。」<span class=pg>p1.39、p1.46<\/span>", "練習1指出第四部分（第10段）「呼應文首」<span class=pg>p1.40<\/span>；文首第1段：「有時只是舉手之勞，就能幫助別人，但我們對好多舉手之勞的事情卻總是熟視無睹，而不願意伸出手來。」<span class=pg>p1.37<\/span>", "本課品德情意：關懷互助<span class=pg>p1.37<\/span>。"], "check": null}, {"h": "人物性格與描寫手法", "steps": ["男孩子外貌：「穿着一身塵土僕僕的工裝」「個頭才到我的肩膀，瘦小得像個豆芽菜」<span class=pg>p1.37<\/span>——可見其瘦小<span class=pg>歸納自 p1.37<\/span>。", "男孩子神態：「眼光裏流露着猶豫的眼神，抿着嘴，衝我似笑非笑的樣子」<span class=pg>p1.37<\/span>；「羞澀地臉紅了」<span class=pg>p1.38<\/span>——可見其猶豫、羞澀<span class=pg>歸納自 p1.37、p1.38<\/span>。", "男孩子動作：「一隻手揣在褲袋裏，活塞一樣來回動了幾下，似掏未掏的樣子」<span class=pg>p1.38<\/span>；「他的手從褲袋裏掏了出來，手心裏攥着兩角錢」<span class=pg>p1.38<\/span>。", "男孩子語言：「我這裏有兩角錢。」，說的是「外鄉口音很重的話」<span class=pg>p1.38<\/span>。", "男孩子性格：樂於助人、天真可愛——「真是一個可愛的孩子」<span class=pg>p1.38<\/span>；「他的笑容讓我感到一種天真的親切，很乾淨透明的那種感覺」<span class=pg>p1.39<\/span>。", "作者的感受：能夠幫助人，而且是舉手之勞的事情，尤其是幫助了一個看起來比自己大許多的大人，心裏總會產生一種美好的感覺<span class=pg>p1.39<\/span>。", "綜上，本文運用外貌、神態、動作、語言等描寫手法刻畫男孩子形象<span class=pg>歸納自 p1.37、p1.38、p1.39<\/span>。"], "check": null}, {"h": "重點字詞", "steps": ["註① 摞：量詞，用於重疊放置的東西。【摞 luò，粵音羅⁶】<span class=pg>p1.37<\/span>", "註② 褲兜：褲子上的口袋。<span class=pg>p1.37<\/span>", "註③ 抿：合上雙脣。【抿 mǐn，粵音吻 men⁵】<span class=pg>p1.37<\/span>", "註④ 揣：手或物品藏在所穿衣服的口袋、衣襟等地方。【揣 chuāi，粵音猜 tsai¹】<span class=pg>p1.39<\/span>", "註⑤ 活塞：裝在機器內，可將蒸氣或燃料爆發的壓力轉換成機械能的機件；這裏作者形容男孩子的動作如活塞般上下擺動。<span class=pg>p1.39<\/span>", "註⑥ 扎手：刺手。<span class=pg>p1.39<\/span>", "註⑦ 攥：握住。【攥 zuàn，粵音賺 dzan⁶】<span class=pg>p1.39<\/span>", "註⑧ 幹嘛：口語，幹甚麼的意思。<span class=pg>p1.39<\/span>"], "check": null}, {"h": "課本閱讀理解練習題", "steps": ["1 本文可以分為四個部分，試把內容大意填在表格內。<span class=pg>p1.40<\/span>", "<table class=tb><tr><td>部分<\/td><td>內容大意<\/td><\/tr><tr><td>第一部分 (第1段)<\/td><td>(1) 指出__________，引出事件。<\/td><\/tr><tr><td>第二部分 (第2-6段)<\/td><td>(2) 記述作者__________。__________。<\/td><\/tr><tr><td>第三部分 (第7-9段)<\/td><td>(3) 記述作者__________。__________。<\/td><\/tr><tr><td>第四部分 (第10段)<\/td><td>(4) 呼應文首，指出__________。__________。<\/td><\/tr><\/table>", "2 試摘錄文章的中心句，並說明你選擇這一句的原因。<span class=pg>p1.40<\/span><br>3 試用不多於60字寫出「兩角錢事件」的原因、經過和結果。<span class=pg>p1.40<\/span><br>4 男孩子幫助作者的僅僅是兩角錢，為甚麼作者「怎麼也忘不了他」？試選出正確答案。（可選擇多於一項）<span class=pg>p1.41<\/span><br>A 他在作者最需要幫助的時候替作者解窘。<br>B 他借給作者的錢太少，令作者印象深刻。<br>C 他鼓起了很大的勇氣才提出借錢給作者。<br>D 他讓作者有所感悟，提醒自己要幫助別人。<br>E 作者未能再次看到他，所以念念不忘。<br>5 本文三次寫到那男孩子的「笑」，試根據上下文有關內容，完成下表。<span class=pg>p1.41<\/span>", "<table class=tb><tr><td>次數<\/td><td>內容<\/td><td>男孩子的「笑」的含意<\/td><\/tr><tr><td>第一次<\/td><td>他微微地一笑，只是臉更有些發紅了，真是一個可愛的孩子。（第6段）<\/td><td>(1) 回應作者的______，以及以笑掩飾自己的______。<\/td><\/tr><tr><td>第二次<\/td><td>我向他走了過去，他看見了我，衝我笑了笑。（第8段）<\/td><td>(2) 用笑容______。<\/td><\/tr><tr><td>第三次<\/td><td>我再次鄭重地向他說了聲：「謝謝你啊！」他的臉上再次綻放出笑容。（第9段）<\/td><td>(3) 為作者的再次感謝而感到______。<\/td><\/tr><\/table>", "6 在文中，作者只對男孩子說感謝而不遞錢。試回答以下問題。<span class=pg>p1.41<\/span><br>(1) 作者為甚麼不遞兩角錢給那男孩子？<br>(2) 你認為作者這樣做對嗎？試談談你的看法。<br>7 作者在文中多次提到「舉手之勞」，試舉出一個生活中的例子，說明「有時只是舉手之勞，就能幫助別人」。<span class=pg>p1.41<\/span>"], "check": null}]}, {"label": "⑤單元共通知識", "sections": [{"h": "單元學習重點", "steps": ["閱讀：認識記敘要素（時間、地點、人物和事件，事件包括原因、經過和結果）；認識記敘的方法（一）：順敘法和倒敘法；運用閱讀策略：尋找文章的中心句。<span class=pg>p1.3<\/span>", "基礎知識：標點符號——認識頓號、逗號、句號；語法——認識名詞、動詞。<span class=pg>p1.3<\/span>", "文言知識：文言詞匯——認識虛詞（之）；認識單音節詞。<span class=pg>p1.3<\/span>", "文學：認識中國古典小說名著；認識志怪小說。<span class=pg>p1.3<\/span>", "文化：認識中國民間信仰。<span class=pg>p1.3<\/span>", "品德情意：友愛同儕；關懷互助。<span class=pg>p1.3<\/span>", "寫作：運用記敘六要素構思和組織文章內容；運用順敘法和倒敘法；寫作策略：審題的技巧。<span class=pg>p1.3<\/span>", "聆聽：聽出話語中的記敘要素；判斷話語的意思。<span class=pg>p1.3<\/span>", "說話：學習清楚交代事情；掌握個人短講的技巧。<span class=pg>p1.3<\/span>", "視聽：結合影像和話音掌握信息。<span class=pg>p1.3<\/span>", "自學：認識偏旁和部首。<span class=pg>p1.3<\/span>"], "check": null}, {"h": "記敘六要素", "steps": ["時間：交代事情發生的時間，如年份、季節、日期等。<span class=pg>p1.45<\/span>", "地點：交代事件發生的地點，包括對故事內容有影響的環境。<span class=pg>p1.45<\/span>", "人物：交代事件中的人物，以及他們的背景資料，如身份、職業、年齡、性格等。<span class=pg>p1.45<\/span>", "事情的原因、經過和結果：這是記敘文的主要內容，因此要寫得具體，以突出中心思想。<span class=pg>p1.45<\/span>", "運用記敘六要素寫作時，需根據情況靈活交代各項內容，以免流於公式化。<span class=pg>p1.45<\/span>", "取捨材料：與事情發展關係密切的材料必須清楚交代，補充的材料可以略寫，不影響讀者理解情節的材料可以略去。<span class=pg>p1.45<\/span>"], "check": null}, {"h": "順敘／倒敘", "steps": ["<b>順敘<\/b>", "定義：按照事情發生的經過順序記述。<span class=pg>p1.45<\/span>", "作用：能清楚交代事情的來龍去脈。<span class=pg>p1.45<\/span>", "圖式：原因 → 經過 → 結果<span class=pg>p1.45<\/span>", "課本例子：《兩角錢》——事件原因：作者在郵局寄信欠兩角錢，服務員堅持要他找兩角零錢；事件經過：一個男孩子給作者兩角錢為他解窘；事件結果：作者重回郵局時沒有把錢歸還給男孩子，改而再次鄭重地向他道謝；事件體會：面對一些舉手之勞的事情，能夠伸出手來去幫助他人，一定要伸出手來。<span class=pg>p1.46<\/span>", "<b>倒敘<\/b>", "定義：以事情的結局或某個重要的情節開展文章，然後順序記述事情的始末。<span class=pg>p1.45<\/span>", "作用：以吸引讀者追看。<span class=pg>p1.45<\/span>", "圖式：結果 → 原因 → 經過；重要情節 → 原因 → 經過 …… → 結果<span class=pg>p1.45<\/span>", "課本例子：《楊修之死》——事件結果：曹操以惑亂軍心的罪名斬殺楊修；事件原因：楊修為人恃才放曠，數犯曹操之忌；事件經過：闊門事件、一合酥事件、夢中殺人事件、吳質事件、鄴門事件、答教事件；曹操對楊修的厭惡程度逐漸加深。<span class=pg>p1.46<\/span>", "比較閱讀表格亦指出《楊修之死》用了倒敘法。<span class=pg>p1.16<\/span>"], "check": null}, {"h": "中心句", "steps": ["單元學習重點要求運用閱讀策略：尋找文章的中心句。<span class=pg>p1.3<\/span>", "《歪兒》的朗讀建議指出：第8段為全文的高潮，點出題旨<span class=pg>p1.31<\/span>；課本思考題要求找出本文的中心句<span class=pg>p1.31<\/span>。", "《兩角錢》的訓練重點包括「運用閱讀策略：尋找文章的中心句」<span class=pg>p1.37<\/span>。", "《楊修之死》《兩角錢》練習都要求摘錄中心句並說明原因<span class=pg>p1.14、p1.40<\/span>，課本沒有印刷答案。"], "check": null}, {"h": "頓號、逗號、句號", "steps": ["<b>頓號<\/b>", "定義：頓號（、）表示句中並列的詞語或短語之間的停頓。<span class=pg>p1.42<\/span>", "例句：我忽然見他那雙眯縫的小眼睛竟然睜得很大，目光興奮、親熱、滿足，並像晨星一樣光亮！（馮驥才《歪兒》）<span class=pg>p1.42<\/span>", "例句：這東西掉在地上的聲音那麼熟悉、那麼悅耳、那麼刺激，原來正是歪兒那長長的罐兒。（馮驥才《歪兒》）<span class=pg>p1.42<\/span>", "<b>逗號<\/b>", "定義：逗號（，）表示句子內部一般的停頓。<span class=pg>p1.42<\/span>", "例句：他母親是蘇州人，四十歲才生下這個有點畸形的兒子，取名叫「彎兒」。（馮驥才《歪兒》）<span class=pg>p1.42<\/span>", "例句：我寄了一摞子信件，最後算郵費，掏光了衣袋裏所有的零錢，還差兩角錢。（肖復興《兩角錢》）<span class=pg>p1.42<\/span>", "<b>句號<\/b>", "定義：句號（。）表示陳述句完結的停頓。<span class=pg>p1.42<\/span>", "例句：天天黃昏，這條小街上充滿着我的迅猛威風和歪兒的疲於奔命。（馮驥才《歪兒》）<span class=pg>p1.42<\/span>", "例句：走到他的身邊，我打消了還那兩角錢的念頭。（肖復興《兩角錢》）<span class=pg>p1.42<\/span>"], "check": {"id": "c9", "q": "「目光興奮、親熱、滿足」裏，「興奮」「親熱」「滿足」之間用的是甚麼標點？", "options": ["頓號", "逗號", "句號"], "answer": 0, "hint": "這三個詞是並列的詞語。課本說哪一種標點表示並列詞語之間的停頓？", "deepen": "對。那麼逗號呢？課本說逗號表示「句子內部一般的停頓」，句號表示「陳述句完結的停頓」（p1.42）。", "page": "p1.42"}}, {"h": "名詞四類、動詞七類", "steps": ["<b>名詞<\/b>", "定義：名詞是表示人或事物名稱的詞語。<span class=pg>p1.43<\/span>", "表示人或具體事物：如同學、鉛筆、山川、動物等。<span class=pg>p1.43<\/span>", "表示抽象事物：如年齡、宇宙、原因、狀況等。<span class=pg>p1.43<\/span>", "表示時間：如明天、晚上、冬季、去年等。<span class=pg>p1.43<\/span>", "表示方位：如上、下、左、右、東、西、外面、旁邊等。<span class=pg>p1.43<\/span>", "課本例句：歪兒站在街中央，尋着空鐵罐左盼右盼，活像一個蒸熟了的小紅薯。（馮驥才《歪兒》）<span class=pg>p1.43<\/span>", "課本例句：他穿着一身塵土僕僕的工裝，就站在我旁邊的櫃台的角上，個頭才到我的肩膀，瘦小得像個豆芽菜。（肖復興《兩角錢》）<span class=pg>p1.43<\/span>", "<b>動詞<\/b>", "定義：動詞是常用的詞類，大致可分為以下幾種。<span class=pg>p1.44<\/span>", "表示動作、行為：如走、讀、寫、看、保護、贊成等。<span class=pg>p1.44<\/span>", "表示存在、變化：如有、出現、發生、滅亡、增加等。<span class=pg>p1.44<\/span>", "表示心理活動：如愛、想、忘記、感到、希望等。<span class=pg>p1.44<\/span>", "表示使令：如使、請、讓、要求、禁止等。<span class=pg>p1.44<\/span>", "表示可能、意願：如應該、可以、會等。<span class=pg>p1.44<\/span>", "表示趨向：如來、去、回等。<span class=pg>p1.44<\/span>", "表示判斷：如是、等於等。<span class=pg>p1.44<\/span>"], "check": null}, {"h": "偏旁和部首", "steps": ["漢字可以分成獨體和合體兩類，合體字由不同部分組成，這些不同的部分稱為偏旁。<span class=pg>p1.59<\/span>", "漢字中，意義相關的字常有相同的偏旁，例如「河」、「海」等，它們都有「水（氵）」旁；讀音相近的字有時也有相同的偏旁，如「扛」、「江」、「缸」等，它們都有「工」旁。<span class=pg>p1.59<\/span>", "部首是字典、詞典中按漢字的偏旁所分的門類。<span class=pg>p1.59<\/span>", "編寫的人根據字的偏旁分類，把同類的字放在同一部首內，如「艹」部的字多與草本植物有關；「木」部的字多與樹木有關；「魚」部的字多與魚類有關。<span class=pg>p1.59<\/span>", "傳統的字典分214個部首。有些部首是純粹表示筆畫的，如「亅」、「丶」等，有些則是一個有意義的字，如「目」、「田」等。<span class=pg>p1.59<\/span>", "前人或為了方便書寫，或為了美化字形，改變了某些偏旁的寫法，於是同一個偏旁便可能有兩種或以上寫法。<span class=pg>p1.59<\/span>", "例子：「刀」有「刀、刂」兩種寫法，如「切、判」；「水」有「氵、水、氺」等寫法，如「湘、漿、泰」。<span class=pg>p1.59<\/span>"], "check": {"id": "c10", "q": "「河」「海」都有「氵」旁，這說明了偏旁的甚麼特點？", "options": ["意義相關的字常有相同的偏旁", "筆畫相同的字一定同音", "每個字都只有一個偏旁"], "answer": 0, "hint": "「河」「海」都和甚麼有關？課本說它們都有「水（氵）」旁。", "deepen": "對。課本又說讀音相近的字有時也有相同的偏旁，例如「扛」「江」「缸」都有「工」旁（p1.59）。", "page": "p1.59"}}, {"h": "審題技巧", "steps": ["審題的作用是理解題意，掌握寫作要求；寫作前，必須先弄清楚題目的要求。<span class=pg>p1.47<\/span>", "口訣：抓住中心，認清範圍，確定體裁，區別人稱。<span class=pg>p1.47<\/span>", "中心：題目中標示寫作對象的中心詞，寫作前須先找出來，以確定文章的主要內容。<span class=pg>p1.47<\/span>", "範圍：一般包括數量、時間、地點、性質等，認清寫作的範圍，可避免離題。例如「一條別具特色的昔日香港街道」規定了中心「街道」，範圍為數量「一條」、時間「昔日」、地點「香港」、性質「別具特色的」。<span class=pg>p1.47<\/span>", "體裁：一般可分為記敘、描寫、說明、抒情和議論，有些題目包含標示文章體裁的詞語；文章的體裁不一定是單一的，有時我們可以通過記敘來抒情，或借助講述事情來說明道理等。<span class=pg>p1.47<\/span>", "人稱：主要有第一人稱和第三人稱，前者以作者「我」的角度出發寫作，後者以旁觀者的角度出發寫作。<span class=pg>p1.47<\/span>"], "check": null}, {"h": "文言虛詞「之」", "steps": ["「之」字可作結構助詞、代詞用：作結構助詞可譯為「的」，如「愛修之才」；作代詞可代人、物或處所，如「見之驚云」「因就斫之」<span class=pg>p1.25<\/span>。"], "check": null}]}]};
+(function(){
+var D=(REV&&REV.tabs&&REV.tabs.length)?REV:{title:"中一中文 知識溫習",tabs:[{label:"①講讀",sections:[{h:"待載入",steps:["請稍候，教材資料載入中…"],check:null}]}]};
+var flat=[],ti=0,si=0,reported={};
+D.tabs.forEach(function(t){t.sections.forEach(function(s){flat.push({t:t,s:s});});});
+var total=flat.filter(function(f){return f.s.check;}).length;
+elhReport({type:"init",total:total});
+function $(id){return document.getElementById(id);}
+function cur(){return flat[ti*0+ flatIdx()];}
+function flatIdx(){var k=0;for(var i=0;i<D.tabs.length;i++){if(i===ti)return k+si;k+=D.tabs[i].sections.length;}return 0;}
+function render(){
+ var f=flat[flatIdx()],sec=f.s,tab=D.tabs[ti];
+ $("unitTitle").innerHTML="單元：<b>"+D.title+"</b>｜"+tab.label;
+ var th="";D.tabs.forEach(function(t,i){th+='<button data-i="'+i+'" class="'+(i===ti?"on":"")+'">'+t.label+"</button>";});
+ $("tabs").innerHTML=th;
+ var ch="";tab.sections.forEach(function(s,j){
+   var done=s.check?(reported[s.check.id]?"✓":""):"";
+   ch+='<button data-j="'+j+'" class="'+(j===si?"on":"")+(s.check&&reported[s.check.id]?" done":"")+'">'+s.h+"</button>";
+ });
+ $("chips").innerHTML=ch;
+ $("secH").textContent=sec.h;
+ var st="";sec.steps.forEach(function(x,i){st+='<div class="step" data-i="'+i+'" style="'+(i<shown?"":"display:none")+'">'+x+"</div>";});
+ $("steps").innerHTML=st;
+ $("prog").textContent="第 "+Math.min(shown,sec.steps.length)+" / "+sec.steps.length+" 步";
+ $("bNext").disabled=shown>=sec.steps.length;
+ $("bAll").disabled=shown>=sec.steps.length;
+ renderThink();
+ var lastSt=$("steps").querySelector('.step[data-i="'+(Math.min(shown,sec.steps.length)-1)+'"]');
+ if(lastSt&&shown>1)lastSt.scrollIntoView({block:"nearest"}); else $("steps").parentNode.scrollTop=0;
+}
+var shown=1;
+function renderThink(){
+ var sec=flat[flatIdx()].s,box=$("think");
+ if(!sec.check){box.innerHTML="";return;}
+ var c=sec.check,html='<div class="think"><h3>想一想</h3><div class="q">'+c.q+"</div>";
+ if(shown<sec.steps.length){
+   html+='<div class="lock">🔒 先看完左邊的講解，再回答</div>';
+ }else{
+   c.options.forEach(function(o,i){html+='<button class="opt" data-i="'+i+'"><span class="k">'+String.fromCharCode(65+i)+". </span>"+o+"</button>";});
+   html+='<button class="look" id="bLook">看答案</button>';
+ }
+ html+='<div id="fb"></div><div class="pageref" id="pgref"></div></div>';
+ box.innerHTML=html;
+ if(shown>=sec.steps.length){
+   Array.prototype.forEach.call(box.querySelectorAll(".opt"),function(b){b.addEventListener("click",function(){pick(+b.getAttribute("data-i"));});});
+   $("bLook").addEventListener("click",function(){showAnswer(false);});
+ }
+ if(reported[c.id]){
+   var st=state[c.id]||{};
+   if(st.picked!=null){var ob=box.querySelector('.opt[data-i="'+st.picked+'"]');if(ob)ob.classList.add(st.ok?"ok":"no");}
+   var cb=box.querySelector('.opt[data-i="'+c.answer+'"]');if(cb)cb.classList.add("correct");
+   showFb(c,st.ok,st.deep,st.ans);
+ }
+}
+function showFb(c,ok,deep,ans){
+ var fb=$("fb"),pr=$("pgref");if(!fb)return;
+ var h="";
+ if(ok){h+='<div class="fb good">答對了！</div>';}
+ else if(ans){h+='<div class="fb ans">答案是：'+String.fromCharCode(65+c.answer)+"．"+c.options[c.answer]+"</div>";}
+ else{h+='<div class="fb bad">再想想：'+c.hint+"</div>";}
+ if(deep)h+='<div class="fb deep">'+c.deepen+"</div>";
+ fb.innerHTML=h;
+ if(pr)pr.textContent="課本頁碼："+(c.page||"");
+}
+function pick(i){
+ var f=flat[flatIdx()],c=f.s.check;if(!c)return;
+ var st=state[c.id]||(state[c.id]={});
+ if(st.locked)return;
+ if(i===c.answer){
+   st.picked=i;st.ok=true;st.locked=true;st.deep=true;
+   report(c,i,true);
+   renderThink();
+ }else{
+   st.picked=i;st.ok=false;st.wrong=true;
+   if(!reported[c.id])report(c,i,false);
+   renderThink();
+ }
+}
+function showAnswer(fromBtn){
+ var f=flat[flatIdx()],c=f.s.check;if(!c)return;
+ var st=state[c.id]||(state[c.id]={});
+ if(st.locked)return;
+ st.picked=null;st.ok=false;st.locked=true;st.ans=true;
+ report(c,null,false);
+ renderThink();
+}
+function report(c,idx,ok){
+ if(reported[c.id])return;reported[c.id]=1;
+ elhReport({type:"answer",q:c.id,choice:idx,correct:ok,text:elhText(c.q),picked:idx==null?null:elhText(c.options[idx]),answer:elhText(c.options[c.answer])});
+}
+var state={};
+$("bNext").addEventListener("click",function(){var s=flat[flatIdx()].s;if(shown<s.steps.length){shown++;render();}});
+$("bAll").addEventListener("click",function(){shown=flat[flatIdx()].s.steps.length;render();});
+$("bPrevSec").addEventListener("click",function(){
+ if(si>0){si--;}else if(ti>0){ti--;si=D.tabs[ti].sections.length-1;}else{return;}
+ shown=1;render();
+});
+$("bNextSec").addEventListener("click",function(){
+ if(si<D.tabs[ti].sections.length-1){si++;}
+ else if(ti<D.tabs.length-1){ti++;si=0;}
+ else{return;}
+ shown=1;render();
+});
+$("tabs").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;ti=+b.getAttribute("data-i");si=0;shown=1;render();});
+$("chips").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;si=+b.getAttribute("data-j");shown=1;render();});
+render();
+})();
+</script>
+</body>
+</html>
