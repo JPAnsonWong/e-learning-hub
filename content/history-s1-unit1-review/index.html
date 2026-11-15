@@ -1,0 +1,89 @@
+<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>中一中國歷史｜導論至單元一｜知識溫習</title><style>*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:"PingFang TC","Microsoft JhengHei",sans-serif;background:#f4f1ea;color:#2b2622;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+.app{display:grid;grid-template-columns:58fr 42fr;gap:2.4vmin;height:100%;padding:2.4vmin}
+.col{background:#fff;border-radius:2vmin;padding:3vmin;overflow:auto;display:flex;flex-direction:column;gap:2vmin;box-shadow:0 .4vmin 1.6vmin rgba(0,0,0,.08)}
+.left{background:#fffaf0;border:.4vmin solid #c8a96a}
+.unit{font-size:clamp(14px,2.6vmin,40px);color:#8a5a14;font-weight:700}
+.prog{font-size:clamp(14px,2.6vmin,40px);color:#666;display:flex;gap:2vmin;align-items:center;flex-wrap:wrap}
+.bar{flex:1;min-width:20vmin;height:1.6vmin;background:#eadfc8;border-radius:1vmin;overflow:hidden}.bar i{display:block;height:100%;background:#c0392b}
+.q{font-size:clamp(20px,4.4vmin,72px);line-height:1.45;font-weight:700}
+.tip{font-size:clamp(14px,2.6vmin,40px);color:#555;line-height:1.5}
+.opts{display:flex;flex-direction:column;gap:1.8vmin}
+.btn,.opt{font:inherit;border:.4vmin solid #b9ab92;background:#fff;border-radius:1.6vmin;min-height:max(3rem,7vmin);padding:1.4vmin 2.4vmin;font-size:clamp(16px,3.4vmin,56px);text-align:left;cursor:pointer;color:#2b2622}
+.opt.sel{border-color:#2f6db5;background:#e6f0fb}
+.opt.ok{border-color:#1e8e3e;background:#e3f6e8}
+.opt.no{border-color:#c0392b;background:#fbe7e4}
+.opt:disabled{cursor:default}
+.row{display:flex;gap:2vmin;flex-wrap:wrap}
+.btn{text-align:center;font-weight:700;background:#8a5a14;color:#fff;border-color:#8a5a14;flex:1}
+.btn.alt{background:#fff;color:#8a5a14}
+.btn:disabled{opacity:.35}
+.fb{font-size:clamp(15px,3vmin,48px);line-height:1.5;padding:2vmin;border-radius:1.6vmin;display:none}
+.fb.show{display:block}.fb.good{background:#e3f6e8;border-left:1.2vmin solid #1e8e3e}.fb.bad{background:#fdf1dc;border-left:1.2vmin solid #e69b00}
+.chips{display:flex;flex-wrap:wrap;gap:1.4vmin}
+.chip{font:inherit;font-size:clamp(16px,3.4vmin,56px);min-height:max(3rem,7vmin);min-width:max(3rem,9vmin);padding:1vmin 2vmin;border-radius:1.4vmin;border:.4vmin solid #b9ab92;background:#fff;cursor:pointer}
+.chip.used{opacity:.25}.chip.sel{border-color:#2f6db5;background:#e6f0fb}.chip.ok{border-color:#1e8e3e;background:#e3f6e8}.chip.no{border-color:#c0392b;background:#fbe7e4}
+.slots{display:flex;flex-wrap:wrap;gap:1.2vmin}
+.slot{font-size:clamp(14px,3vmin,48px);min-width:max(2.6rem,8vmin);min-height:max(2.6rem,6.5vmin);border:.4vmin dashed #c8a96a;border-radius:1.2vmin;display:flex;align-items:center;justify-content:center;padding:.6vmin 1.2vmin;background:#fff}
+.slot.ok{border:.4vmin solid #1e8e3e;background:#e3f6e8}.slot.no{border:.4vmin solid #c0392b;background:#fbe7e4}
+.big{font-size:clamp(28px,9vmin,140px);font-weight:800;color:#8a5a14}
+@media (max-width:900px),(orientation:portrait){html,body{overflow:auto}.app{grid-template-columns:1fr;height:auto;min-height:100%}}
+</style></head><body><div class="app"><section class="col left" id="L"></section><section class="col" id="R"></section></div><script>// ---- E_learning Hub 回報（只在被網站 iframe 載入時有效，單獨打開頁面時無任何作用）----
+function elhReport(m){
+  try{
+    if(location.search.indexOf("elhdebug")>=0)console.log("ELH",JSON.stringify(m));
+    if(window.parent!==window)window.parent.postMessage(Object.assign({elh:1},m),location.origin);
+  }catch(e){}
+}
+function elhText(h){return String(h==null?"":h).replace(/<[^>]*>/g,"").replace(/\s+/g," ").trim().slice(0,200);}
+
+var D={"sections": [{"id": "A", "title": "中國歷史導論", "steps": [{"q": "你昨天做過的事，算不算「過去發生的事」？那麼「歷史」最貼切的意思是甚麼？", "options": ["電視劇裡的古代情節", "任何好看的古代故事", "人類過去真實發生過、並有記載或證據可考的事情", "將來會發生的大事"], "answer": 2, "hint": "關鍵詞是「真實發生過」和「有證據」。", "explain": "歷史是人類過去真實發生過、並有記載或證據可考的事情。"}, {"q": "用這個定義判斷：下列哪一項屬於歷史？", "options": ["后羿射日", "香港特別行政區成立慶典（1997年）", "2028年洛杉磯奧運", "電視劇《延禧攻略》"], "answer": 1, "hint": "逐項問：是真實的嗎？已經發生了嗎？", "explain": "1997年的成立慶典已真實發生。電視劇屬虛構改編，后羿射日是神話傳說，2028年奧運尚未發生。"}, {"q": "介紹一件事時，我們常說「何時、何人、何地」。學習中國歷史的三大要素是？", "options": ["時間、人物、經濟", "時間、人物、地點", "時間、地點、事件", "人物、地點、文化"], "answer": 1, "hint": "就是「何時、何人、何地」。", "explain": "學習中國歷史三大要素：時間、人物、地點。"}, {"q": "周代開始，人有「名」也有「字」。男子二十歲成年後另取「字」，供誰稱呼？", "options": ["只在書本上使用", "只供皇帝稱呼", "平輩或晚輩，以示尊重", "只供父母稱呼"], "answer": 2, "hint": "直呼別人的名不夠尊重，所以要另取一個稱呼。", "explain": "「字」供平輩或晚輩稱呼，以示尊重。例：孔丘，字仲尼。"}, {"q": "那麼孔丘的「字」是甚麼？", "options": ["子丘", "仲尼", "孔子", "伯尼"], "answer": 1, "hint": "課本的例子：孔丘，字＿＿。", "explain": "孔丘，字仲尼。"}]}, {"id": "B", "title": "單元一 課題一 中華民族與早期國家的起源", "steps": [{"q": "想像沒有農田、沒有超市，最早期的人怎樣取得食物？舊石器時代的人主要靠甚麼？", "options": ["飼養大量牲畜", "向別的部落購買", "採集和漁獵，依賴大自然", "種植水稻"], "answer": 2, "hint": "那時還未懂得自行生產糧食。", "explain": "舊石器時代靠採集和漁獵；新石器時代發展農耕、畜牧，能自行生產糧食。"}, {"q": "新石器時代在技術上有甚麼進步？", "options": ["懂得使用打製石器", "只會居於洞穴", "第一次懂得用火", "懂得磨製石器，並製作陶器"], "answer": 3, "hint": "「新」石器的石器做得更精細，還多了一種用泥燒成的器物。", "explain": "舊石器懂得用火、使用打製石器；新石器懂得磨製石器，並製作陶器，又建房屋村落、逐步定居。"}, {"q": "仰韶文化位於黃河中游，擅製精美彩陶，所以又稱為？", "options": ["青銅文化", "彩陶文化", "水稻文化", "玉器文化"], "answer": 1, "hint": "名稱直接來自它最擅長製作的器物。", "explain": "仰韶文化又稱「彩陶文化」，以農耕為主，聚居成村落。"}, {"q": "良渚文化位於長江下游。考古發現良渚古城遺址和多條大壩組成的水利系統，證實了甚麼？", "options": ["中國第一個朝代是夏朝", "黃帝發明舟車", "中華文明有五千多年歷史", "商鞅變法成功"], "answer": 2, "hint": "這是關於中華文明有多悠久。", "explain": "良渚種植水稻，有陶器、玉器作坊；古城和水利系統證實中華文明有五千多年歷史。"}, {"q": "黃帝打敗炎帝部落後結成炎黃聯盟，再擊敗東方哪個部落？", "options": ["商族", "夏族", "犬戎", "蚩尤部落"], "answer": 3, "hint": "是東方一個部落首領的名字。", "explain": "炎黃聯盟擊敗蚩尤，黃帝被推舉為共主；後人自稱「炎黃子孫」，尊黃帝為「人文初祖」。"}, {"q": "堯把共主之位傳給賢能的舜，舜再傳給禹。這種「傳賢不傳子」的方式叫甚麼？之後禹的兒子啟繼位，又變成了甚麼？", "options": ["先是選舉，後變禪讓", "先是禪讓，後變世襲", "先是世襲，後變禪讓", "先是分封，後變郡縣"], "answer": 1, "hint": "傳給賢人叫「禪」甚麼；傳給兒子叫「世」甚麼。", "explain": "堯舜禹是禪讓；啟繼位後變為世襲（家天下），建立夏朝——中國第一個朝代。"}, {"q": "夏、商、周怎樣更替？", "options": ["商紂滅夏建商；周平王滅商建周", "周武王滅夏建周；商湯滅周建商", "夏桀滅商建夏；周武王滅夏建周", "商湯滅夏桀建商；周武王滅商紂建周"], "answer": 3, "hint": "兩個暴君：夏桀、商紂。", "explain": "夏桀暴虐，商湯滅夏建商；商紂暴虐，周武王（牧野之戰）滅商建周，定都鎬京。"}]}, {"id": "C", "title": "單元一 課題二 西周的封建", "steps": [{"q": "國家太大，天子一個人管不來，可以怎樣辦？周天子把土地和人民分封給宗室、功臣，他們稱為？", "options": ["縣官", "平民", "諸侯", "霸主"], "answer": 2, "hint": "受封的人管理一片封地。", "explain": "這就是封建：周天子把土地和人民分封給宗室、功臣等為諸侯。"}, {"q": "諸侯得到封地後，要對天子盡甚麼責任？", "options": ["可以不理天子，自立為王", "只需交還人民", "服從天子、定期朝貢、出兵保衛王室", "把土地自由買賣"], "answer": 2, "hint": "有三項：聽命、進貢、保護。", "explain": "諸侯要服從天子、定期朝貢、出兵保衛王室。"}, {"q": "周幽王時犬戎攻破鎬京，西周滅亡。其後周平王東遷到哪裡，史稱東周？", "options": ["鎬京", "大都", "建康", "洛邑"], "answer": 3, "hint": "東遷後的都城，就是今日洛陽一帶。", "explain": "周平王東遷洛邑，史稱東周；此後周室衰落、諸侯崛起，進入春秋戰國。"}]}, {"id": "D", "title": "單元一 課題三 春秋戰國時期的變局", "steps": [{"q": "周室衰落後，強大的諸侯用甚麼號召成為霸主？", "options": ["尊王攘夷", "兼愛非攻", "無為而治", "以法治國"], "answer": 0, "hint": "表面上仍尊重周王，同時抵禦外族。", "explain": "春秋霸政以「尊王攘夷」為號召；齊桓公任用管仲，成為第一位霸主。"}, {"q": "戰國七雄是哪七國？", "options": ["齊、楚、燕、韓、趙、魏、秦", "齊、楚、燕、韓、趙、魏、夏", "齊、楚、燕、韓、趙、魏、晉", "齊、楚、燕、韓、趙、魏、周"], "answer": 0, "hint": "最後統一六國的那一國也在其中。", "explain": "戰國七雄：齊、楚、燕、韓、趙、魏、秦。"}, {"q": "秦孝公任用商鞅變法。在經濟上，商鞅怎樣鼓勵人民耕作？", "options": ["恢復分封制", "承認土地私有，可自由買賣", "把土地全部收歸貴族", "禁止人民耕作"], "answer": 1, "hint": "土地屬於自己，耕作就更起勁。", "explain": "經濟：承認土地私有、可自由買賣、鼓勵耕作；政治：推行縣制、編制戶籍、施行連坐法；軍事：軍功爵制。"}, {"q": "推行軍功爵制後，貴族和平民的地位有甚麼變化？", "options": ["貴族和平民都失去土地", "貴族失去世襲特權，平民可憑軍功提升地位", "平民不可以參軍", "貴族特權更大"], "answer": 1, "hint": "論功不論出身。", "explain": "貴族失去世襲特權，平民可憑軍功提升地位；秦國變得強盛，奠定統一六國的基礎。"}, {"q": "封建解體後，貴族淪為平民並私人講學，學術知識流入民間。誰開創了私學？", "options": ["管仲", "韓非", "商鞅", "孔子"], "answer": 3, "hint": "他是儒家的代表人物。", "explain": "孔子開創私學；列國爭相延攬人才、對思想言論寬容（如齊國設稷下學宮），形成百家爭鳴。"}]}], "order": {"q": "朝代歌排序：按朝代歌的次序點選", "items": ["夏", "商", "周", "春秋戰國", "秦", "漢", "三國", "晉", "南北朝", "隋", "唐", "五代十國", "宋", "元", "明", "清"], "explain": "三皇五帝夏商周，春秋戰國亂悠悠，秦漢三國晉統一，南朝北朝是對頭，隋唐五代又十國，宋元明清帝王休。"}, "match": {"q": "四大古都：配對現今地名與古代地名", "pairs": [["洛陽", "成周"], ["北京", "大都／燕山／順天"], ["南京", "建康"], ["西安", "鎬京／長安"]]}};
+var S=[];D.sections.forEach(function(s){s.steps.forEach(function(t,i){S.push({k:"mcq",sec:s,t:t,n:i+1,len:s.steps.length});});});
+S.push({k:"order",t:D.order});S.push({k:"match",t:D.match});
+var TOTAL=S.length,cur=-1,score={},L=document.getElementById("L"),Rt=document.getElementById("R");
+elhReport({type:"init",total:TOTAL});
+function esc(s){return String(s).replace(/[&<>]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;"}[c];});}
+function prog(){var done=Object.keys(score).length;return '<div class="prog">第 '+(cur+1)+' / '+TOTAL+' 題<span class="bar"><i style="width:'+(done/TOTAL*100)+'%"></i></span>已答 '+done+'</div>';}
+function nav(ready){return '<div class="row"><button class="btn alt" onclick="go(cur-1)"'+(cur<=0?' disabled':'')+'>上一題</button><button class="btn" id="nx" onclick="go(cur+1)"'+(ready?'':' disabled')+'>'+(cur==TOTAL-1?'完成':'下一題')+'</button></div>';}
+function intro(){cur=-1;L.innerHTML='<div class="unit">中一中國歷史｜導論至單元一｜知識溫習</div><div class="q">一次一問，邊答邊溫習</div><div class="tip">共 '+TOTAL+' 題，約 15–20 分鐘。<br>A 中國歷史導論　B 中華民族與早期國家的起源<br>C 西周的封建　D 春秋戰國時期的變局<br>最後有「朝代歌排序」和「四大古都配對」。<br>答錯會先給提示，可以再試一次。</div>';Rt.innerHTML='<div class="row"><button class="btn" onclick="go(0)">開始</button></div>';}
+function go(i){if(i<0)return;if(i>=TOTAL){summary();return;}cur=i;var s=S[i];if(s.k=="mcq")mcq(s);else if(s.k=="order")order(s);else match(s);}
+function mcq(s){var t=s.t,tries=0,done=score[cur]!==undefined;
+ L.innerHTML='<div class="unit">'+s.sec.id+'　'+esc(s.sec.title)+'（'+s.n+'/'+s.len+'）</div>'+prog()+'<div class="q">'+esc(t.q)+'</div><div class="fb" id="fb"></div>';
+ Rt.innerHTML='<div class="tip">點選答案</div><div class="opts">'+t.options.map(function(o,j){return '<button class="opt" data-j="'+j+'">'+"ABCD"[j]+'. '+esc(o)+'</button>';}).join("")+'</div>'+nav(done);
+ var fb=document.getElementById("fb"),bs=Rt.querySelectorAll(".opt");
+ if(done){bs[t.answer].classList.add("ok");bs.forEach(function(b){b.disabled=true;});fb.className="fb show good";fb.innerHTML="✔ "+esc(t.explain);return;}
+ bs.forEach(function(b){b.onclick=function(){var j=+b.dataset.j,ok=j==t.answer;tries++;
+  elhReport({type:"answer",q:"R"+(cur+1),choice:j,correct:ok,text:elhText(t.q),picked:t.options[j],answer:elhText(t.options[t.answer])});
+  if(ok||tries>=2){if(score[cur]===undefined)score[cur]=ok&&tries==1;bs.forEach(function(x){x.disabled=true;});bs[t.answer].classList.add("ok");if(!ok)b.classList.add("no");
+   fb.className="fb show "+(ok?"good":"bad");fb.innerHTML=(ok?"✔ 答對了！":"正確答案是 "+"ABCD"[t.answer]+"。")+"<br>"+esc(t.explain);document.getElementById("nx").disabled=false;}
+  else{b.classList.add("no");b.disabled=true;fb.className="fb show bad";fb.innerHTML="提示："+esc(t.hint)+"<br>再試一次。";}
+ };});}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var x=a[i];a[i]=a[j];a[j]=x;}return a;}
+function order(s){var t=s.t,pool=shuffle(t.items),seq=[];
+ function draw(checked){L.innerHTML='<div class="unit">朝代歌排序</div>'+prog()+'<div class="q">'+esc(t.q)+'</div><div class="tip">由最早到最晚，依次點右邊的朝代；點錯可按「退一格」。</div><div class="slots">'+t.items.map(function(x,i){var v=seq[i];var c=checked&&v!==undefined?(v==t.items[i]?" ok":" no"):"";return '<div class="slot'+c+'">'+(v===undefined?(i+1):esc(v))+'</div>';}).join("")+'</div><div class="fb" id="fb"></div>';
+  Rt.innerHTML='<div class="chips">'+pool.map(function(x){return '<button class="chip'+(seq.indexOf(x)>=0?' used':'')+'" data-x="'+esc(x)+'"'+(seq.indexOf(x)>=0||checked?' disabled':'')+'>'+esc(x)+'</button>';}).join("")+'</div><div class="row"><button class="btn alt" id="bk">退一格</button><button class="btn alt" id="rs">重來</button><button class="btn" id="ck"'+(seq.length==t.items.length&&!checked?'':' disabled')+'>檢查</button></div>'+nav(score[cur]!==undefined);
+  Rt.querySelectorAll(".chip").forEach(function(c){c.onclick=function(){seq.push(c.dataset.x);draw(false);};});
+  document.getElementById("bk").onclick=function(){seq.pop();draw(false);};
+  document.getElementById("rs").onclick=function(){seq=[];draw(false);};
+  document.getElementById("ck").onclick=function(){var ok=seq.join()==t.items.join();
+   elhReport({type:"answer",q:"R"+(cur+1),choice:seq.join("|"),correct:ok,text:elhText(t.q),picked:seq.join(" → "),answer:t.items.join(" → ")});
+   if(score[cur]===undefined)score[cur]=ok;draw(true);var fb=document.getElementById("fb");fb.className="fb show "+(ok?"good":"bad");fb.innerHTML=(ok?"✔ 全對！":"紅色格子次序不對，可按「重來」再試。")+"<br>"+esc(t.explain);
+   document.getElementById("rs").onclick=function(){seq=[];draw(false);};document.getElementById("bk").disabled=true;};
+ }draw(false);}
+function match(s){var t=s.t,L1=shuffle(t.pairs.map(function(p){return p[0];})),R1=shuffle(t.pairs.map(function(p){return p[1];})),pick=null,made={};
+ function draw(checked){L.innerHTML='<div class="unit">四大古都配對</div>'+prog()+'<div class="q">'+esc(t.q)+'</div><div class="tip">先點一個現今地名，再點右邊對應的古代地名。點已配好的地名可取消。</div><div class="chips">'+L1.map(function(x){var c=made[x]?(checked?(made[x]==ans(x)?" ok":" no"):" used"):(pick==x?" sel":"");return '<button class="chip'+c+'" data-l="'+esc(x)+'"'+(checked?' disabled':'')+'>'+esc(x)+(made[x]?' ↔ '+esc(made[x]):'')+'</button>';}).join("")+'</div><div class="fb" id="fb"></div>';
+  var usedR=Object.keys(made).map(function(k){return made[k];});
+  Rt.innerHTML='<div class="tip">古代地名</div><div class="opts">'+R1.map(function(x){return '<button class="opt'+(usedR.indexOf(x)>=0?' sel':'')+'" data-r="'+esc(x)+'"'+(checked||usedR.indexOf(x)>=0?' disabled':'')+'>'+esc(x)+'</button>';}).join("")+'</div><div class="row"><button class="btn alt" id="rs">重來</button><button class="btn" id="ck"'+(Object.keys(made).length==4&&!checked?'':' disabled')+'>檢查</button></div>'+nav(score[cur]!==undefined);
+  L.querySelectorAll(".chip").forEach(function(c){c.onclick=function(){var x=c.dataset.l;if(made[x]){delete made[x];pick=null;}else pick=x;draw(false);};});
+  Rt.querySelectorAll(".opt").forEach(function(c){c.onclick=function(){if(!pick)return;made[pick]=c.dataset.r;pick=null;draw(false);};});
+  document.getElementById("rs").onclick=function(){made={};pick=null;draw(false);};
+  document.getElementById("ck").onclick=function(){var ok=L1.every(function(x){return made[x]==ans(x);});var str=L1.map(function(x){return x+"-"+made[x];}).join("|");
+   elhReport({type:"answer",q:"R"+(cur+1),choice:str,correct:ok,text:elhText(t.q),picked:str,answer:t.pairs.map(function(p){return p[0]+"-"+p[1];}).join("|")});
+   if(score[cur]===undefined)score[cur]=ok;draw(true);var fb=document.getElementById("fb");fb.className="fb show "+(ok?"good":"bad");fb.innerHTML=(ok?"✔ 全部配對正確！":"有配對不對，可按「重來」再試。")+"<br>"+t.pairs.map(function(p){return p[0]+" ↔ "+p[1];}).join("；");};
+ }function ans(x){for(var i=0;i<t.pairs.length;i++)if(t.pairs[i][0]==x)return t.pairs[i][1];}draw(false);}
+function summary(){var n=0,wrong=[];for(var i=0;i<TOTAL;i++){if(score[i])n++;else wrong.push(i);}
+ L.innerHTML='<div class="unit">本次簡要</div><div class="big">'+n+' / '+TOTAL+'</div><div class="tip">第一次就答對的題數。</div>'+(wrong.length?'<div class="tip">可再溫習：</div><div class="chips">'+wrong.map(function(i){return '<button class="chip" onclick="go('+i+')">第 '+(i+1)+' 題</button>';}).join("")+'</div>':'<div class="tip">全部第一次就答對，做得好！</div>');
+ Rt.innerHTML='<div class="tip">重點回顧：歷史三大要素（時間、人物、地點）；新石器時代磨製石器、製陶、農耕定居；禪讓→世襲；夏→商→周；封建與周室東遷；尊王攘夷、戰國七雄、商鞅變法、百家爭鳴。</div><div class="row"><button class="btn alt" onclick="go(TOTAL-1)">返回</button><button class="btn" onclick="location.reload()">重新開始</button></div>';}
+intro();
+</script></body></html>
