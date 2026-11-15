@@ -12,16 +12,17 @@
 <div class="elh-bar" id="bar">
   <a class="btn btn-outline-secondary" id="back" href="index.html">← 返回</a>
   <div class="title" id="title">載入中…</div>
+  <span class="pts hide-sm" id="prog"></span>
   <span class="pts hide-sm" id="pts"></span>
   <button class="btn btn-outline-danger" id="review">待複習</button>
-  <button class="btn btn-success" id="done">✓ 完成</button>
-  <button class="btn btn-outline-secondary hide-sm" id="undo" hidden>取消完成</button>
+  <button class="btn btn-success" id="done">✓ 我學完了</button>
   <a class="btn btn-outline-secondary hide-sm" id="newtab" target="_blank" rel="noopener">新分頁</a>
   <button class="btn btn-outline-secondary" id="collapse" title="收起工具列">▲</button>
 </div>
 <button class="elh-reopen" id="reopen" title="顯示工具列">▼</button>
 <iframe class="elh-frame" id="frame" title="教材內容" allow="fullscreen" allowfullscreen></iframe>
 <div class="elh-toast" id="toast"></div>
+<script src="assets/js/points.js"></script>
 <script src="assets/js/common.js"></script>
 <script src="assets/js/sync.js"></script>
 <script>
@@ -42,17 +43,41 @@
 
     await ELH_SYNC.init();          // 需要時先登入
     await ELH_SYNC.pull(sid);       // 先取雲端最新進度（離線時略過）
+
+    // ----- 斷點續做：有上次的進度快照時，先問繼續或重新開始 -----
+    const agoText = (t) => { const m = Math.max(1, Math.round((Date.now() - t) / 60000)); return m < 60 ? m + ' 分鐘前' : m < 1440 ? Math.round(m / 60) + ' 小時前' : Math.round(m / 1440) + ' 天前'; };
+    const askResume = (data, at) => new Promise((resolve) => {
+      const ov = document.createElement('div'); ov.className = 'elh-login';
+      const where = typeof data.i === 'number' ? '第 ' + (data.i + 1) + ' 題' : '上次的位置';
+      ov.innerHTML = '<div class="elh-login-box"><h2>⏯ 繼續上次的進度？</h2><p>上次做到 ' + where + '（' + agoText(at) + '）。</p>' +
+        '<div class="row-btns"><button class="btn btn-primary" id="rs-go">繼續</button><button class="btn btn-outline-secondary" id="rs-new">重新開始</button></div></div>';
+      document.body.appendChild(ov);
+      ov.querySelector('#rs-go').onclick = () => { ov.remove(); resolve(true); };
+      ov.querySelector('#rs-new').onclick = () => { ov.remove(); resolve(false); };
+    });
+    let resumeData = null, sess = null;
+    const rs = ELH.getResume(sid, id);
+    if (rs && rs.ver === item.version) {
+      let parsed = null; try { parsed = JSON.parse(rs.dataJson); } catch { /* 快照損壞就當沒有 */ }
+      if (parsed && await askResume(parsed, rs.at)) {
+        resumeData = parsed;
+        const prev = ELH.sessionById(rs.sessionId);
+        if (prev && prev.student === sid && prev.material === id) sess = { ...prev }; // 接續同一個場次：已答題目和累計用時都保留
+      } else ELH.setResume(sid, id, null);
+    } else if (rs) ELH.setResume(sid, id, null); // 教材已改版，舊快照作廢
     $('frame').src = item.path;
     ELH.markStart(sid, id);
 
     // ----- 作答場次：用時與每題對錯 -----
-    const startedAt = Date.now();
-    const sess = {
-      id: [sid, id, startedAt.toString(36), Math.random().toString(36).slice(2, 6)].join('-'),
-      student: sid, material: id, title: item.title, startedAt, endedAt: startedAt, activeSeconds: 0,
-      totalQ: 0, answers: [], completed: false,
-      device: (navigator.userAgentData?.platform || navigator.platform || '?') + ' ' + screen.width + 'x' + screen.height,
-    };
+    if (!sess) {
+      const startedAt = Date.now();
+      sess = {
+        id: [sid, id, startedAt.toString(36), Math.random().toString(36).slice(2, 6)].join('-'),
+        student: sid, material: id, title: item.title, startedAt, endedAt: startedAt, activeSeconds: 0,
+        totalQ: 0, answers: [], completed: false,
+        device: (navigator.userAgentData?.platform || navigator.platform || '?') + ' ' + screen.width + 'x' + screen.height,
+      };
+    }
     let dirty = false, lastAct = Date.now();
     const IDLE_MS = 60000; // 超過 60 秒沒有操作就不計時
     const persist = () => {
@@ -68,16 +93,44 @@
     addEventListener('pagehide', persist);
     document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') persist(); });
 
+    // 進度快照：頁面每次換題或作答後回報 {elh:1, type:'state', data}，防抖後存起來
+    let latestState = null, resumeTimer = null, resumeCleared = false;
+    const saveResume = () => {
+      clearTimeout(resumeTimer); resumeTimer = null;
+      if (!latestState) return;
+      const sum = ELH.summarize(sess);
+      if (sess.totalQ > 0 && sum.answered >= sess.totalQ) { // 已全部作答：不需要續做
+        if (!resumeCleared) { resumeCleared = true; if (ELH.getResume(sid, id)) ELH.setResume(sid, id, null); }
+        return;
+      }
+      resumeCleared = false;
+      const json = JSON.stringify(latestState);
+      if (json.length > 8000) return;
+      persist();
+      ELH.setResume(sid, id, { sessionId: sess.id, dataJson: json, ver: item.version });
+    };
+    const scheduleResume = () => { clearTimeout(resumeTimer); resumeTimer = setTimeout(saveResume, 3000); };
+    addEventListener('pagehide', saveResume);
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') saveResume(); });
+
     // 教材頁回報：{elh:1, type:'init', total} / {elh:1, type:'answer', q, choice, correct, text, picked, answer}
     addEventListener('message', (e) => {
       const m = e.data;
       if (e.source !== $('frame').contentWindow || !m || m.elh !== 1) return;
       lastAct = Date.now();
-      if (m.type === 'init') { sess.totalQ = Math.max(0, Math.min(1000, Number(m.total) || 0)); persist(); }
+      if (m.type === 'init') {
+        sess.totalQ = Math.max(0, Math.min(1000, Number(m.total) || 0)); persist(); refresh();
+        if (resumeData) { e.source.postMessage({ elh: 1, type: 'restore', data: resumeData }, location.origin); resumeData = null; }
+      } else if (m.type === 'state') {
+        latestState = m.data; scheduleResume();
+      }
       else if (m.type === 'answer' && sess.answers.length < 500) {
         sess.answers.push({ q: m.q, choice: m.choice ?? null, correct: m.choice == null ? null : !!m.correct,
           text: clip(m.text), picked: clip(m.picked, 120), answer: clip(m.answer, 120), t: Date.now() });
-        persist();
+        const before = ELH.points(sid); persist();
+        const gain = ELH.points(sid) - before;
+        if (gain > 0) toast('+' + gain + ' 分 ⭐');
+        refresh();
       }
     });
 
@@ -87,20 +140,20 @@
       $('review').classList.toggle('btn-danger', st.review);
       $('review').classList.toggle('btn-outline-danger', !st.review);
       $('review').textContent = st.review ? '✓ 待複習中' : '待複習';
-      const n = st.completions.length;
-      $('done').textContent = n ? '✓ 再完成一次 (已' + n + '次)' : '✓ 完成';
-      $('undo').hidden = !n;
+      const hasQ = sess.totalQ > 0;               // 有題目的教材：自動統計，不需要按完成
+      const sum = ELH.summarize(sess);
+      $('prog').textContent = hasQ ? '已答 ' + sum.answered + '/' + sum.total : '';
+      $('done').hidden = hasQ;
+      const n = ELH.completedTimes(sid, id);
+      $('done').textContent = n ? '✓ 我學完了（已完成 ' + n + ' 次）' : '✓ 我學完了';
     };
     $('done').addEventListener('click', () => {
-      const p = ELH.complete(sid, id);
-      sess.completed = true; sess.completedAt = Date.now(); persist();
-      toast(p > 0 ? '太棒了！+' + p + ' 分 ⭐' : '已完成！（此教材不再加分）');
-      refresh();
-    });
-    $('undo').addEventListener('click', () => {
-      if (!confirm('取消最近一次完成，並扣回該次積分？')) return;
-      const p = ELH.undoComplete(sid, id);
-      toast(p > 0 ? '已取消，扣回 ' + p + ' 分' : '已取消');
+      ELH.complete(sid, id);
+      sess.completed = true; sess.completedAt = Date.now();
+      const before = ELH.points(sid); persist();
+      const gain = ELH.points(sid) - before;
+      const info = ELH.pointsInfo(sid).bySession[sess.id];
+      toast(gain > 0 ? '太棒了！+' + gain + ' 分 ⭐' : (info && info.note) || '已記錄');
       refresh();
     });
     $('review').addEventListener('click', () => { toast(ELH.toggleReview(sid, id) ? '已加入待複習' : '已移出待複習'); refresh(); });

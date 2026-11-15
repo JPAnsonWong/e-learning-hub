@@ -1,8 +1,13 @@
 name: Sync to Notion
 on:
   schedule:
-    - cron: '0 3,15 * * *'    # UTC 03:00 與 15:00，相當於香港時間每天 11:00（中午）和 23:00（晚上）
+    - cron: '*/30 * * * *'    # 每 30 分鐘檢查一次；沒有新的學習活動時幾秒內結束，不碰 Notion
   workflow_dispatch:
+    inputs:
+      force:
+        description: '忽略「沒有新活動」的判斷，強制完整同步'
+        type: boolean
+        default: false
 permissions:
   contents: read
 concurrency:
@@ -15,6 +20,7 @@ jobs:
       NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
       NOTION_PARENT_PAGE_ID: ${{ secrets.NOTION_PARENT_PAGE_ID }}
       FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      FORCE: ${{ inputs.force }}
     steps:
       - name: 檢查是否已設定 Secrets
         id: gate

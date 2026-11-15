@@ -668,6 +668,19 @@ function applyHash() {
 }
 window.addEventListener("hashchange", applyHash);
 applyHash();
+// ---- E_learning Hub 斷點續做：回報進度快照，並在網站要求時還原 ----
+function elhState(){
+  try{ if(i>=0) elhReport({type:"state", data:{i:i, p:picked, r:revealed, seen:(typeof seen!=="undefined"?Array.from(seen):[])}}); }catch(e){}
+}
+(function(){ var _r=render; render=function(){ _r.apply(this,arguments); elhState(); }; })();
+window.addEventListener("message", function(e){
+  var m=e.data; if(!m||m.elh!==1||m.type!=="restore"||e.source!==window.parent)return;
+  var d=m.data||{}; var n=(typeof QUESTIONS!=="undefined"?QUESTIONS.length:slides.length);
+  if(typeof d.i!=="number"||d.i<0||d.i>=n)return;
+  i=d.i; picked=(typeof d.p==="number"?d.p:null); revealed=!!d.r;
+  if(typeof seen!=="undefined"&&d.seen)d.seen.forEach(function(k){seen.add(k);});
+  render();
+});
 </script>
 </body>
 </html>

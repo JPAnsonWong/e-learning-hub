@@ -98,3 +98,7 @@ body.elh-viewer .elh-sync { display: none; }
 .elh-login-box p { margin: 0; color: var(--muted); }
 .elh-login-box .form-control { min-height: 3.2rem; font-size: 1.2rem; }
 .elh-login-err { color: #b42318; min-height: 1.4rem; font-weight: 700; }
+
+.elh-badge-resume { background: #dff0ff; color: #0a5aa8; }
+.elh-login-box .row-btns { display: flex; gap: .8rem; flex-wrap: wrap; }
+.elh-login-box .row-btns .btn { flex: 1 1 10rem; min-height: max(3rem, 7vmin); font-size: 1.2rem; }

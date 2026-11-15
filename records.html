@@ -17,6 +17,8 @@
   .rec-scroll { overflow-x: auto; }
   .rec-sess { background: var(--card); border: 1px solid var(--line); border-radius: 1rem; padding: .8rem 1.1rem; margin-bottom: .8rem; }
   .rec-sess summary { cursor: pointer; font-weight: 700; min-height: 2.6rem; display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; }
+  .rec-pts { color: #b26a00; font-weight: 800; }
+  .rec-stat small { color: var(--muted); display: block; }
   .rec-ok { color: #157a3a; font-weight: 800; } .rec-bad { color: #b42318; font-weight: 800; } .rec-skip { color: #8a5a12; font-weight: 800; }
   .rec-q { padding: .5rem 0; border-top: 1px dashed var(--line); }
   .rec-q small { color: var(--muted); display: block; }
@@ -24,6 +26,7 @@
 </head>
 <body>
 <div class="elh-wrap" id="wrap"><div id="app"><p class="elh-empty">載入中…</p></div></div>
+<script src="assets/js/points.js"></script>
 <script src="assets/js/common.js"></script>
 <script src="assets/js/sync.js"></script>
 <script>
@@ -40,8 +43,11 @@
     document.title = `${stu.name}的學習記錄 · E_learning Hub`;
     document.getElementById('wrap').style.setProperty('--accent', stu.color);
 
+    const ptSummary = (p) => (p ? `<span class="rec-pts">+${p.pts} 分</span>` : '<span class="rec-skip">舊規則時期，不計新分</span>');
+    const ptDetail = (p) => (!p ? '' : `<div class="rec-q"><b>積分明細：</b>${p.parts.map((x) => esc(x.label) + ' +' + x.pts).join('；') || '本場次沒有得分'}${p.note ? '<small>' + esc(p.note) + '</small>' : ''}</div>`);
     function render() {
       const sessions = ELH.sessionsOf(sid);
+      const pinfo = ELH.pointsInfo(sid);
       const mine = d.items.filter((i) => i.student === sid);
       const totalSec = sessions.reduce((a, s) => a + (s.activeSeconds || 0), 0);
       const sum = sessions.reduce((a, s) => ({ c: a.c + (s.correct || 0), t: a.t + (s.total || 0) }), { c: 0, t: 0 });
@@ -59,7 +65,7 @@
           <h1 style="color:var(--accent)">${esc(stu.icon)} ${esc(stu.name)}的學習記錄</h1>
         </header>
         <div class="rec-stats">
-          <div class="rec-stat">積分<b>⭐ ${ELH.points(sid)}</b></div>
+          <div class="rec-stat">積分<b>⭐ ${ELH.points(sid)}</b><small>舊積分 ${pinfo.legacy}（已凍結）＋ 新積分 ${pinfo.fresh}</small></div>
           <div class="rec-stat">已完成教材<b>${ELH.doneCount(sid)} / ${mine.length}</b></div>
           <div class="rec-stat">累計學習時間<b>${esc(mins(totalSec))}</b></div>
           <div class="rec-stat">作答正確率<b>${sum.t ? Math.round((sum.c / sum.t) * 100) + '%' : '—'}</b></div>
@@ -68,7 +74,7 @@
           <div class="rec-scroll"><table class="rec-table"><thead><tr>
             <th>教材</th><th>完成次數</th><th>學習場次</th><th>累計時間</th><th>最近正確率</th><th>最近學習</th></tr></thead><tbody>
             ${rows.map((r) => `<tr><td><a href="viewer.html?id=${encodeURIComponent(r.i.id)}"><b>${esc(r.i.title)}</b></a><br><small>${esc(ELH.stageLabel(d, r.i.stage))}</small></td>
-              <td>${r.st.completions.length}</td><td>${r.n}</td><td>${esc(mins(r.sec))}</td>
+              <td>${ELH.completedTimes(sid, r.i.id)}</td><td>${r.n}</td><td>${esc(mins(r.sec))}</td>
               <td>${r.acc === null ? '—' : r.acc + '%'}</td><td>${r.last ? esc(when(r.last)) : '—'}</td></tr>`).join('') || '<tr><td colspan="6">暫無教材</td></tr>'}
           </tbody></table></div>
         </section>
@@ -81,7 +87,7 @@
               <span>${esc(when(s.startedAt))}</span><span>${esc(s.title || s.material)}</span>
               <span>用時 ${esc(mins(s.activeSeconds || 0))}</span>
               ${t ? `<span class="rec-ok">對 ${s.correct}</span><span class="rec-bad">錯 ${s.wrong}</span><span class="rec-skip">未做 ${s.unanswered}</span>` : '<span>（此教材沒有作答記錄）'+'</span>'}
-              ${s.completed ? '<span class="rec-ok">✓ 已完成</span>' : ''}</summary>
+              ${s.completed ? '<span class="rec-ok">✓ 已按完成</span>' : ''}${ptSummary(pinfo.bySession[s.id])}</summary>${ptDetail(pinfo.bySession[s.id])}
               ${[...bad.map((a) => ['rec-bad', '答錯', a]), ...skip.map((a) => ['rec-skip', '跳過', a])].map(([c, l, a]) => `<div class="rec-q">
                 <span class="${c}">${l}</span> 第 ${esc(a.q)} 題：${esc(a.text)}
                 <small>${a.picked ? '所選：' + esc(a.picked) + '　' : ''}正確答案：${esc(a.answer)}</small></div>`).join('') || '<div class="rec-q">沒有錯題。</div>'}

@@ -1,19 +1,8 @@
 // Firestore 資料 → Notion 資料列（純函式，不做任何網絡操作，方便測試）
-export const ptsFor = (n) => (n === 0 ? 2 : n <= 2 ? 1 : 0);
-export const activeCompletions = (it) => (it?.completions || []).filter((c) => !c.undone).sort((a, b) => a.t - b.t);
-export function pointsOf(items) {
-  let t = 0;
-  for (const it of items) activeCompletions(it).forEach((_, n) => { t += ptsFor(n); });
-  return t;
-}
-export function summarize(s) {
-  const last = new Map();
-  for (const a of s.answers || []) last.set(a.q, a);
-  const answered = [...last.values()].filter((a) => a.choice !== null && a.choice !== undefined).length;
-  const correct = [...last.values()].filter((a) => a.correct === true).length;
-  const total = Math.max(s.totalQ || 0, last.size);
-  return { total, answered, correct, wrong: answered - correct, unanswered: Math.max(0, total - answered) };
-}
+// 積分規則與網站共用同一份：assets/js/points.js + config/points.json
+import { createRequire } from 'node:module';
+const PTS = createRequire(import.meta.url)('../../assets/js/points.js');
+export const summarize = PTS.summarize;
 
 // ---- Notion 屬性值建構 ----
 const clip = (x, n = 1900) => String(x ?? '').slice(0, n);
@@ -41,13 +30,14 @@ export const SCHEMAS = {
   sessions: { title: '作答記錄', props: {
     場次: { title: {} }, 學生: { select: {} }, 教材: { rich_text: {} }, 科目: { select: {} }, 階段: { select: {} },
     開始時間: { date: {} }, 用時分鐘: { number: {} }, 總題數: { number: {} }, 答對: { number: {} }, 答錯: { number: {} },
-    未做: { number: {} }, 正確率: { number: { format: 'percent' } }, 完成: { checkbox: {} }, 裝置: { rich_text: {} }, Key: { rich_text: {} } } },
+    未做: { number: {} }, 正確率: { number: { format: 'percent' } }, 完成: { checkbox: {} }, 得分: { number: {} }, 積分明細: { rich_text: {} },
+    裝置: { rich_text: {} }, Key: { rich_text: {} } } },
   wrong: { title: '錯題跟進', props: {
     題目: { title: {} }, 學生: { select: {} }, 教材: { rich_text: {} }, 題號: { number: {} }, 情況: { select: {} },
     所選答案: { rich_text: {} }, 正確答案: { rich_text: {} }, 日期: { date: {} }, 已跟進: { checkbox: {} }, Key: { rich_text: {} } } },
 };
 
-export function buildModel({ students, stages, types, catalog, materials, sessions, now = Date.now() }) {
+export function buildModel({ students, stages, types, catalog, materials, sessions, pointsCfg, now = Date.now() }) {
   const stuName = (id) => students.find((s) => s.id === id)?.name || id;
   const subjName = (sid, id) => students.find((s) => s.id === sid)?.subjects.find((x) => x.id === id)?.name || id;
   const stageName = (id) => stages.find((s) => s.id === id)?.label || id;
@@ -61,6 +51,10 @@ export function buildModel({ students, stages, types, catalog, materials, sessio
   };
 
   const sess = sessions.map((s) => ({ ...s, ...summarize(s) }));
+  const minutesOf = (id) => cat.get(id)?.minutes;
+  const pc = {};
+  for (const stu of students) pc[stu.id] = PTS.compute(sess.filter((s) => s.student === stu.id), pointsCfg, minutesOf);
+  const explain = (p) => (!p ? '舊規則時期，不計新分' : [...p.parts.map((x) => `${x.label} +${x.pts}`), p.note].filter(Boolean).join('；') || '本場次沒有得分');
   const out = { students: [], materials: [], sessions: [] };
 
   // 學生概況
@@ -71,8 +65,8 @@ export function buildModel({ students, stages, types, catalog, materials, sessio
     const c = ss.reduce((a, s) => a + s.correct, 0);
     const t = ss.reduce((a, s) => a + s.total, 0);
     out.students.push({ key: stu.id, props: {
-      學生: P.title(stu.name), 積分: P.num(pointsOf(mats)),
-      已完成教材: P.num(mats.filter((m) => activeCompletions(m).length > 0).length),
+      學生: P.title(stu.name), 積分: P.num(PTS.legacyPoints(mats, pointsCfg) + pc[stu.id].total),
+      已完成教材: P.num(catalog.filter((c) => c.student === stu.id && (PTS.legacyDoneTimes(materials.find((x) => x.sid === stu.id && x.mid === c.id)?.data, pointsCfg) + (pc[stu.id].validCount[c.id] || 0)) > 0).length),
       累計用時分鐘: P.num(mins(ss.reduce((a, s) => a + (s.activeSeconds || 0), 0))), 學習場次: P.num(ss.length),
       整體正確率: P.num(pct(c, t)), 最近學習: P.date(lastMs || null), 更新時間: P.date(now), Key: P.text(stu.id) } });
   }
@@ -89,7 +83,7 @@ export function buildModel({ students, stages, types, catalog, materials, sessio
       教材: P.title(item?.title || ss[0]?.title || mid), 學生: P.sel(stuName(sid)),
       科目: P.sel(item ? subjName(sid, item.subject) : ''), 階段: P.sel(item ? stageName(item.stage) : ''),
       類型: P.sel(item ? typeName(item.type) : ''),
-      完成次數: P.num(activeCompletions(md).length), 累計用時分鐘: P.num(mins(ss.reduce((a, s) => a + (s.activeSeconds || 0), 0))),
+      完成次數: P.num(PTS.legacyDoneTimes(md, pointsCfg) + (pc[sid]?.validCount[mid] || 0)), 累計用時分鐘: P.num(mins(ss.reduce((a, s) => a + (s.activeSeconds || 0), 0))),
       學習場次: P.num(ss.length), 最近正確率: P.num(lastQ ? pct(lastQ.correct, lastQ.total) : null),
       最近學習: P.date(Math.max(md.last || 0, ss[0]?.endedAt || 0) || null), 待複習: P.chk(md.review), Key: P.text(key) } });
   }
@@ -112,7 +106,8 @@ export function buildModel({ students, stages, types, catalog, materials, sessio
       教材: P.text(item?.title || s.title || s.material), 科目: P.sel(item ? subjName(s.student, item.subject) : ''),
       階段: P.sel(item ? stageName(item.stage) : ''), 開始時間: P.date(s.startedAt), 用時分鐘: P.num(mins(s.activeSeconds)),
       總題數: P.num(s.total), 答對: P.num(s.correct), 答錯: P.num(s.wrong), 未做: P.num(s.unanswered),
-      正確率: P.num(pct(s.correct, s.total)), 完成: P.chk(s.completed), 裝置: P.text(s.device), Key: P.text(s.id) } });
+      正確率: P.num(pct(s.correct, s.total)), 完成: P.chk(s.completed), 得分: P.num(pc[s.student]?.bySession[s.id]?.pts ?? null),
+      積分明細: P.text(explain(pc[s.student]?.bySession[s.id])), 裝置: P.text(s.device), Key: P.text(s.id) } });
   }
   return out;
 }

@@ -12,6 +12,7 @@
 <div class="elh-wrap" id="wrap">
   <div id="app"><p class="elh-empty">載入中…</p></div>
 </div>
+<script src="assets/js/points.js"></script>
 <script src="assets/js/common.js"></script>
 <script src="assets/js/sync.js"></script>
 <script>
@@ -64,8 +65,9 @@
       if (f.subject && i.subject !== f.subject) return false;
       if (f.stage && i.stage !== f.stage) return false;
       if (f.type && i.type !== f.type) return false;
-      if (f.status === 'todo' && st.completions.length) return false;
-      if (f.status === 'done' && !st.completions.length) return false;
+      const doneN = ELH.completedTimes(sid, i.id);
+      if (f.status === 'todo' && doneN) return false;
+      if (f.status === 'done' && !doneN) return false;
       if (f.status === 'review' && !st.review) return false;
       if (f.status === 'key' && !(i.tags || []).includes('key')) return false;
       if (f.status === 'new' && !ELH.badges(d, i).some(([k]) => k === 'new')) return false;

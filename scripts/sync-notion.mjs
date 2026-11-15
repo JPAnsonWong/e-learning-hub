@@ -6,7 +6,7 @@ import { createHash } from 'node:crypto';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { initializeApp, cert } from 'firebase-admin/app';
-import { getFirestore, FieldValue } from 'firebase-admin/firestore';
+import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { buildModel, SCHEMAS } from './lib/model.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -51,17 +51,40 @@ meta.dbs ||= {};
 meta.pages ||= {};
 const hash = (o) => createHash('sha1').update(JSON.stringify(o)).digest('hex');
 
+// ---- 沒有新活動就直接略過（每 30 分鐘執行一次，絕大多數時候只花 3 次 Firestore 讀取）----
+const runStart = Timestamp.now();           // 用開始時間當作「上次同步」，同步期間新增的資料下一輪會再處理
+const cfgStudents = readJson('config/students.json').students;
+const force = process.env.FORCE === 'true';
+async function plan() {
+  const last = meta.lastSync, lastFull = meta.lastFull;
+  if (force) return { go: true, full: true, why: '手動要求完整同步' };
+  if (!last || !lastFull) return { go: true, full: true, why: '第一次同步' };
+  if (Date.now() - lastFull.toMillis() > 12 * 3600e3) return { go: true, full: true, why: '距離上次完整同步超過 12 小時' };
+  const qs = [db.collection('sessions').where('updatedAt', '>', last).limit(1)];
+  for (const s of cfgStudents) qs.push(db.collection(`students/${s.id}/materials`).where('updatedAt', '>', last).limit(1));
+  const rs = await Promise.all(qs.map((q) => q.get()));
+  return rs.some((r) => !r.empty) ? { go: true, full: false, why: '有新的學習活動' } : { go: false };
+}
+const decision = await plan();
+if (!decision.go) { console.log('沒有新活動，略過同步。'); process.exit(0); }
+console.log('開始同步：' + decision.why);
+
+// 舊資料庫補上新增的欄位（已存在的欄位不受影響）
+async function migrate(id, schema) {
+  const props = Object.fromEntries(Object.entries(schema.props).filter(([, v]) => !v.title));
+  await notion('PATCH', `/databases/${id}`, { properties: props });
+}
 async function ensureDb(key) {
   const schema = SCHEMAS[key];
   if (meta.dbs[key]) {
-    try { await notion('GET', `/databases/${meta.dbs[key]}`); return meta.dbs[key]; }
+    try { await notion('GET', `/databases/${meta.dbs[key]}`); await migrate(meta.dbs[key], schema); return meta.dbs[key]; }
     catch (e) { if (e.status !== 404 && e.status !== 400) throw e; }
   }
   let cursor;
   do { // 先看父頁面下有沒有同名資料庫
     const r = await notion('GET', `/blocks/${PARENT}/children?page_size=100${cursor ? `&start_cursor=${cursor}` : ''}`);
     const hit = r.results.find((b) => b.type === 'child_database' && b.child_database.title === schema.title);
-    if (hit) { meta.dbs[key] = hit.id; return hit.id; }
+    if (hit) { meta.dbs[key] = hit.id; await migrate(hit.id, schema); return hit.id; }
     cursor = r.has_more ? r.next_cursor : null;
   } while (cursor);
   const created = await notion('POST', '/databases', {
@@ -95,10 +118,11 @@ async function upsert(dbId, prev, key, props, createOnly = {}) {
 
 // ---- 讀資料並同步 ----
 const model = buildModel({
-  students: readJson('config/students.json').students,
+  students: cfgStudents,
   stages: readJson('config/stages.json').stages,
   types: readJson('config/types.json').types,
   catalog: readJson('catalog.json').items,
+  pointsCfg: readJson('config/points.json'),
   materials: (await db.collectionGroup('materials').get()).docs.map((d) => ({ sid: d.ref.parent.parent.id, mid: d.id, data: d.data() })),
   sessions: (await db.collection('sessions').get()).docs.map((d) => ({ id: d.id, ...d.data() })),
 });
@@ -131,5 +155,5 @@ for (const s of model.sessions) {
   await ref.update({ notion: { page: row.page, hash: row.hash, wrongPages } }); // 只寫 notion 欄位，不動 updatedAt
 }
 
-await metaRef.set({ dbs: meta.dbs, pages: meta.pages, lastSync: FieldValue.serverTimestamp() }, { merge: true });
+await metaRef.set({ dbs: meta.dbs, pages: meta.pages, lastSync: runStart, lastFull: decision.full ? runStart : meta.lastFull }, { merge: true });
 console.log(`完成：新增 ${stats.created}、更新 ${stats.updated}、略過（無變化）${stats.skipped}、移除 ${stats.archived}`);
