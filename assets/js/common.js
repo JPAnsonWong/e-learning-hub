@@ -19,6 +19,8 @@ const ELH = (() => {
   }
 
   // ---------- 進度存取 ----------
+  // 完成記錄是事件清單 [{t, undone?}]，積分由規則推算，方便多裝置合併。
+  const hooks = { onItemChange: null, onSessionChange: null };
   let memory = null; // localStorage 不可用時的後備
   function read() {
     try { const raw = localStorage.getItem(KEY); return raw ? JSON.parse(raw) : {}; }
@@ -28,62 +30,134 @@ const ELH = (() => {
     memory = db;
     try { localStorage.setItem(KEY, JSON.stringify(db)); } catch { /* 忽略 */ }
   }
+  const emptyItem = () => ({ started: null, last: null, completions: [], review: false, reviewAt: 0 });
+  function normItem(it) {
+    const o = Object.assign(emptyItem(), it || {});
+    o.completions = (o.completions || []).map((c) => (c.undone ? { t: c.t, undone: true } : { t: c.t }));
+    return o;
+  }
   function slot(db, sid, id) {
     db[sid] = db[sid] || { items: {} };
     db[sid].items = db[sid].items || {};
-    if (id === undefined) return db[sid];
-    db[sid].items[id] = db[sid].items[id] || { started: null, last: null, completions: [], review: false };
+    db[sid].items[id] = normItem(db[sid].items[id]);
     return db[sid].items[id];
   }
+  // 第 1 次 +2，第 2、3 次 +1，第 4 次起 0
+  const ptsFor = (n) => (n === 0 ? 2 : n <= 2 ? 1 : 0);
+  const activeOf = (it) => it.completions.filter((c) => !c.undone).sort((a, b) => a.t - b.t);
   function itemState(sid, id) {
-    const db = read();
-    const it = db[sid]?.items?.[id];
-    return it || { started: null, last: null, completions: [], review: false };
+    const it = normItem(read()[sid]?.items?.[id]);
+    return { ...it, completions: activeOf(it) }; // completions 只含有效完成
   }
   function points(sid) {
     const items = read()[sid]?.items || {};
     let total = 0;
-    for (const k in items) for (const c of items[k].completions || []) total += c.pts;
+    for (const k in items) activeOf(normItem(items[k])).forEach((_, n) => { total += ptsFor(n); });
     return total;
   }
   function doneCount(sid) {
     const items = read()[sid]?.items || {};
-    return Object.values(items).filter((i) => (i.completions || []).length > 0).length;
+    return Object.values(items).filter((i) => activeOf(normItem(i)).length > 0).length;
   }
-  // 第 1 次 +2，第 2、3 次 +1，第 4 次起 0
-  const ptsFor = (n) => (n === 0 ? 2 : n <= 2 ? 1 : 0);
-
+  function changed(sid, id) { try { hooks.onItemChange?.(sid, id); } catch { /* 忽略 */ } }
   function markStart(sid, id) {
     const db = read(); const it = slot(db, sid, id);
     const now = Date.now();
     it.started = it.started || now; it.last = now;
-    write(db);
+    write(db); changed(sid, id);
   }
   function complete(sid, id) {
     const db = read(); const it = slot(db, sid, id);
-    const pts = ptsFor(it.completions.length);
-    it.completions.push({ t: Date.now(), pts });
+    const pts = ptsFor(activeOf(it).length);
+    let t = Date.now(); while (it.completions.some((c) => c.t === t)) t++;
+    it.completions.push({ t });
     it.last = Date.now();
-    write(db);
+    write(db); changed(sid, id);
     return pts;
   }
   function undoComplete(sid, id) {
     const db = read(); const it = slot(db, sid, id);
-    const c = it.completions.pop();
-    write(db);
-    return c ? c.pts : 0;
+    const act = activeOf(it);
+    if (!act.length) return 0;
+    const last = act[act.length - 1];
+    last.undone = true;
+    const target = it.completions.find((c) => c.t === last.t); target.undone = true;
+    write(db); changed(sid, id);
+    return ptsFor(act.length - 1);
   }
   function toggleReview(sid, id) {
     const db = read(); const it = slot(db, sid, id);
-    it.review = !it.review;
-    write(db);
+    it.review = !it.review; it.reviewAt = Date.now();
+    write(db); changed(sid, id);
     return it.review;
   }
-  function exportJson() { return JSON.stringify({ app: 'e-learning-hub', v: 1, data: read() }, null, 2); }
+  // 合併遠端與本機（可交換、可重複套用）
+  function mergeItem(a, b) {
+    a = normItem(a); b = normItem(b);
+    const byT = new Map();
+    for (const c of [...a.completions, ...b.completions]) {
+      const p = byT.get(c.t);
+      byT.set(c.t, { t: c.t, ...(p?.undone || c.undone ? { undone: true } : {}) });
+    }
+    const newer = (b.reviewAt || 0) > (a.reviewAt || 0) ? b : a;
+    return {
+      started: [a.started, b.started].filter(Boolean).sort((x, y) => x - y)[0] || null,
+      last: Math.max(a.last || 0, b.last || 0) || null,
+      completions: [...byT.values()].sort((x, y) => x.t - y.t),
+      review: newer.review, reviewAt: newer.reviewAt || 0,
+    };
+  }
+  function getRaw(sid, id) { return normItem(read()[sid]?.items?.[id]); }
+  function applyRemote(sid, id, remote) {
+    const db = read(); const it = slot(db, sid, id);
+    db[sid].items[id] = mergeItem(it, remote);
+    write(db);
+    return db[sid].items[id];
+  }
+
+  // ---------- 作答場次（session）本機快取 ----------
+  const SKEY = 'elh.sessions.v1';
+  function readSessions() { try { return JSON.parse(localStorage.getItem(SKEY) || '{}'); } catch { return {}; } }
+  function writeSessions(o) {
+    const ids = Object.keys(o);
+    if (ids.length > 400) { // 只留最近 400 場
+      ids.sort((a, b) => (o[a].startedAt || 0) - (o[b].startedAt || 0));
+      for (const k of ids.slice(0, ids.length - 400)) delete o[k];
+    }
+    try { localStorage.setItem(SKEY, JSON.stringify(o)); } catch { /* 忽略 */ }
+  }
+  function summarize(s) {
+    const last = new Map();
+    for (const a of s.answers || []) last.set(a.q, a);
+    const answered = [...last.values()].filter((a) => a.choice !== null && a.choice !== undefined).length;
+    const correct = [...last.values()].filter((a) => a.correct === true).length;
+    const total = Math.max(s.totalQ || 0, last.size);
+    return { total, answered, correct, wrong: answered - correct, unanswered: Math.max(0, total - answered) };
+  }
+  function saveSession(s) {
+    const o = readSessions();
+    o[s.id] = { ...o[s.id], ...s, ...summarize(s), updatedLocal: Date.now() };
+    writeSessions(o);
+    try { hooks.onSessionChange?.(o[s.id]); } catch { /* 忽略 */ }
+  }
+  function mergeSession(remote) {
+    const o = readSessions();
+    const l = o[remote.id];
+    // 場次只會在單一裝置上增長，取活動秒數較大者
+    if (!l || (remote.activeSeconds || 0) > (l.activeSeconds || 0) || (remote.answers || []).length > (l.answers || []).length) {
+      o[remote.id] = { ...remote, ...summarize(remote) };
+      writeSessions(o);
+    }
+  }
+  function sessionsOf(sid) {
+    return Object.values(readSessions()).filter((s) => s.student === sid).sort((a, b) => b.startedAt - a.startedAt);
+  }
+  function exportJson() { return JSON.stringify({ app: 'e-learning-hub', v: 2, data: read(), sessions: readSessions() }, null, 2); }
   function importJson(text) {
     const o = JSON.parse(text);
     if (!o || o.app !== 'e-learning-hub' || typeof o.data !== 'object') throw new Error('不是有效的進度檔');
     write(o.data);
+    if (o.sessions && typeof o.sessions === 'object') writeSessions(o.sessions);
   }
 
   // ---------- 輔助 ----------
@@ -168,6 +242,7 @@ const ELH = (() => {
     el.innerHTML = `<p class="elh-empty">載入失敗：${esc(e.message)}。請確認是透過網址（不是直接雙擊檔案）打開。</p>`;
   }
 
-  return { loadAll, itemState, points, doneCount, markStart, complete, undoComplete, toggleReview, ptsFor, exportJson, importJson,
+  return { loadAll, hooks, itemState, getRaw, mergeItem, applyRemote, points, doneCount, markStart, complete, undoComplete, toggleReview, ptsFor,
+    saveSession, mergeSession, sessionsOf, summarize, exportJson, importJson,
     esc, stageLabel, typeLabel, student, subject, badges, isNew, card, recent, reviewList, latest, section, backupTools, bindBackup, fail };
 })();

@@ -18,6 +18,7 @@
   <div id="app"><p class="elh-empty">載入中…</p></div>
 </div>
 <script src="assets/js/common.js"></script>
+<script src="assets/js/sync.js"></script>
 <script>
 (async () => {
   const app = document.getElementById('app');
@@ -43,6 +44,7 @@
         ELH.section('最新教材', cards(ELH.latest(d, null, 6)), '暫無教材。');
     };
     render();
+    ELH_SYNC.init().then((on) => on && ELH_SYNC.pullAll(d.students)).then((got) => got && render());
   } catch (e) { ELH.fail(app, e); }
 })();
 </script>

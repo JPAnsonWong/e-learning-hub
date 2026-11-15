@@ -13,6 +13,7 @@
   <div id="app"><p class="elh-empty">載入中…</p></div>
 </div>
 <script src="assets/js/common.js"></script>
+<script src="assets/js/sync.js"></script>
 <script>
 (async () => {
   const app = document.getElementById('app');
@@ -36,6 +37,7 @@
         <a class="btn btn-outline-secondary elh-btn" href="index.html">← 首頁</a>
         <h1 style="color:var(--accent)">${ELH.esc(stu.icon)} ${ELH.esc(stu.name)}的學習空間</h1>
         <span class="spacer"></span>
+        <a class="btn btn-outline-secondary elh-btn" href="records.html?s=${encodeURIComponent(sid)}">📊 學習記錄</a>
         <span class="pts" id="pts" style="font-size:1.5rem;font-weight:800;color:#b26a00"></span>
       </header>
       <div id="extras"></div>
@@ -114,6 +116,7 @@
     document.getElementById('q').addEventListener('input', (e) => { f.q = e.target.value.trim(); render(); });
     window.addEventListener('pageshow', render); // 從教材返回時更新狀態
     render();
+    ELH_SYNC.init().then((on) => on && ELH_SYNC.pull(sid)).then((got) => got && render());
   } catch (e) { ELH.fail(app, e); }
 })();
 </script>

@@ -23,42 +23,84 @@
 <iframe class="elh-frame" id="frame" title="教材內容" allow="fullscreen" allowfullscreen></iframe>
 <div class="elh-toast" id="toast"></div>
 <script src="assets/js/common.js"></script>
+<script src="assets/js/sync.js"></script>
 <script>
 (async () => {
   const $ = (id) => document.getElementById(id);
   const toast = (t) => { const el = $('toast'); el.textContent = t; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 1800); };
+  const clip = (x, n = 300) => (x == null ? null : String(x).slice(0, n));
   try {
     const d = await ELH.loadAll();
     const id = new URLSearchParams(location.search).get('id');
     const item = d.items.find((i) => i.id === id);
     if (!item) { $('title').textContent = '找不到這份教材'; return; }
     const sid = item.student;
-    document.title = `${item.title} · E_learning Hub`;
+    document.title = item.title + ' · E_learning Hub';
     $('title').textContent = item.title;
-    $('back').href = `student.html?s=${encodeURIComponent(sid)}`;
+    $('back').href = 'student.html?s=' + encodeURIComponent(sid);
     $('newtab').href = item.path;
+
+    await ELH_SYNC.init();          // 需要時先登入
+    await ELH_SYNC.pull(sid);       // 先取雲端最新進度（離線時略過）
     $('frame').src = item.path;
     ELH.markStart(sid, id);
 
+    // ----- 作答場次：用時與每題對錯 -----
+    const startedAt = Date.now();
+    const sess = {
+      id: [sid, id, startedAt.toString(36), Math.random().toString(36).slice(2, 6)].join('-'),
+      student: sid, material: id, title: item.title, startedAt, endedAt: startedAt, activeSeconds: 0,
+      totalQ: 0, answers: [], completed: false,
+      device: (navigator.userAgentData?.platform || navigator.platform || '?') + ' ' + screen.width + 'x' + screen.height,
+    };
+    let dirty = false, lastAct = Date.now();
+    const IDLE_MS = 60000; // 超過 60 秒沒有操作就不計時
+    const persist = () => {
+      if (!sess.answers.length && !sess.completed && sess.activeSeconds < 5) return;
+      sess.endedAt = Date.now(); dirty = false; ELH.saveSession(sess);
+    };
+    const act = () => { lastAct = Date.now(); };
+    const bindAct = (w) => { for (const ev of ['pointerdown', 'keydown', 'touchstart', 'wheel', 'scroll', 'mousemove']) w.addEventListener(ev, act, { passive: true, capture: true }); };
+    bindAct(window);
+    $('frame').addEventListener('load', () => { try { bindAct($('frame').contentWindow); } catch { /* 跨來源就略過 */ } });
+    setInterval(() => { if (document.visibilityState === 'visible' && Date.now() - lastAct < IDLE_MS) { sess.activeSeconds++; dirty = true; } }, 1000);
+    setInterval(() => { if (dirty) persist(); }, 30000);
+    addEventListener('pagehide', persist);
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') persist(); });
+
+    // 教材頁回報：{elh:1, type:'init', total} / {elh:1, type:'answer', q, choice, correct, text, picked, answer}
+    addEventListener('message', (e) => {
+      const m = e.data;
+      if (e.source !== $('frame').contentWindow || !m || m.elh !== 1) return;
+      lastAct = Date.now();
+      if (m.type === 'init') { sess.totalQ = Math.max(0, Math.min(1000, Number(m.total) || 0)); persist(); }
+      else if (m.type === 'answer' && sess.answers.length < 500) {
+        sess.answers.push({ q: m.q, choice: m.choice ?? null, correct: m.choice == null ? null : !!m.correct,
+          text: clip(m.text), picked: clip(m.picked, 120), answer: clip(m.answer, 120), t: Date.now() });
+        persist();
+      }
+    });
+
     const refresh = () => {
       const st = ELH.itemState(sid, id);
-      $('pts').textContent = `⭐ ${ELH.points(sid)} 分`;
+      $('pts').textContent = '⭐ ' + ELH.points(sid) + ' 分';
       $('review').classList.toggle('btn-danger', st.review);
       $('review').classList.toggle('btn-outline-danger', !st.review);
       $('review').textContent = st.review ? '✓ 待複習中' : '待複習';
       const n = st.completions.length;
-      $('done').textContent = n ? `✓ 再完成一次 (已${n}次)` : '✓ 完成';
+      $('done').textContent = n ? '✓ 再完成一次 (已' + n + '次)' : '✓ 完成';
       $('undo').hidden = !n;
     };
     $('done').addEventListener('click', () => {
       const p = ELH.complete(sid, id);
-      toast(p > 0 ? `太棒了！+${p} 分 ⭐` : '已完成！（此教材不再加分）');
+      sess.completed = true; sess.completedAt = Date.now(); persist();
+      toast(p > 0 ? '太棒了！+' + p + ' 分 ⭐' : '已完成！（此教材不再加分）');
       refresh();
     });
     $('undo').addEventListener('click', () => {
       if (!confirm('取消最近一次完成，並扣回該次積分？')) return;
       const p = ELH.undoComplete(sid, id);
-      toast(p > 0 ? `已取消，扣回 ${p} 分` : '已取消');
+      toast(p > 0 ? '已取消，扣回 ' + p + ' 分' : '已取消');
       refresh();
     });
     $('review').addEventListener('click', () => { toast(ELH.toggleReview(sid, id) ? '已加入待複習' : '已移出待複習'); refresh(); });

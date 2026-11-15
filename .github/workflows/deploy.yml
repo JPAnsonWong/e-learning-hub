@@ -26,7 +26,7 @@ jobs:
       - name: 組裝網站
         run: |
           mkdir _site
-          cp -r index.html student.html viewer.html assets config content catalog.json _site/
+          cp -r index.html student.html viewer.html records.html assets config content catalog.json _site/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

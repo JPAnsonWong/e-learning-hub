@@ -43,6 +43,31 @@ content/<id>/meta.json
 - 字體用系統字體（`"PingFang TC","Microsoft JhengHei",sans-serif`）。
 - 內容用繁體中文，除非是語言科目需要其他語言。
 - 設定 `<title>`，不含任何個人資料。
+- **作答回報（教材有選擇題、問答或測驗時一定要加）**：網站會記錄每份教材的學習時間，以及每題的對錯和未做。教材只要在**顯示答案那一刻**，用 `postMessage` 通知外層網站，不必自己存任何資料：
+
+```js
+// 放在教材 <script> 開頭。單獨打開頁面時不會有任何作用。
+function elhReport(m){try{if(window.parent!==window)window.parent.postMessage(Object.assign({elh:1},m),location.origin);}catch(e){}}
+function elhText(h){return String(h==null?"":h).replace(/<[^>]*>/g,"").replace(/\s+/g," ").trim().slice(0,200);}
+
+// 1) 頁面載入時回報總題數（只算需要作答的題目）
+elhReport({type:"init", total: QUESTIONS.length});
+
+// 2) 每題「顯示答案」那一刻回報一次
+elhReport({
+  type: "answer",
+  q: q.id,                      // 題號（數字或字串，同一份教材內唯一）
+  choice: picked,               // 孩子選的選項序號；沒選就直接看答案時傳 null
+  correct: picked === q.answer, // 是否答對
+  text: elhText(q.prompt),      // 題目文字（純文字，不含 HTML）
+  picked: picked == null ? null : elhText(q.options[picked]),
+  answer: elhText(q.options[q.answer])
+});
+```
+  - 沒有作答互動的靜態頁（只讀、只看）不需要回報，網站仍會記錄開始、停留時間和完成。
+  - 回報內容不得包含孩子姓名或其他個人資料。
+  - 孩子沒按到的題目，網站會用「總題數 − 已答題數」自動算成「未做」，所以 `init` 的 `total` 要準確。
+  - 家長可在網站「📊 學習記錄」頁查看；資料也會每半天同步到 Notion 的「作答記錄」和「錯題跟進」。
 
 ### 5. 撰寫 meta.json
 ```json

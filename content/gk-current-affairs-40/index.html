@@ -365,6 +365,10 @@ const QUESTIONS = [{"id":1,"priority":"建議","prompt":"2026 年第四屆青年
 const letters = ["A","B","C","D"];
 const priClass = { "必溫":"must", "建議":"suggest", "補充":"extra", "稍易":"easy" };
 
+// ---- E_learning Hub 回報（只在被網站 iframe 載入時有效，單獨打開時無任何作用）----
+function elhReport(m){try{if(window.parent!==window)window.parent.postMessage(Object.assign({elh:1},m),location.origin);}catch(e){}}
+function elhText(h){return String(h==null?"":h).replace(/<[^>]*>/g,"").replace(/\s+/g," ").trim().slice(0,200);}
+elhReport({type:"init", total: QUESTIONS.length});
 let i = -1;
 let picked = null;
 let revealed = false;
@@ -488,7 +492,12 @@ function choose(idx){
 }
 function toggleReveal(){
   revealed = !revealed;
-  if (revealed) seen.add(i);
+  if (revealed) {
+    seen.add(i);
+    const q = QUESTIONS[i];
+    elhReport({type:"answer", q:q.id, choice:picked, correct:picked===q.answer, text:elhText(q.prompt),
+      picked:picked==null?null:elhText(q.options[picked]), answer:elhText(q.options[q.answer])});
+  }
   render();
 }
 function toggleDark(){

@@ -1,0 +1,42 @@
+name: Sync to Notion
+on:
+  schedule:
+    - cron: '0 22,10 * * *'   # UTC 22:00 與 10:00，相當於香港時間每天 06:00 和 18:00
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: notion-sync
+  cancel-in-progress: false
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+      NOTION_PARENT_PAGE_ID: ${{ secrets.NOTION_PARENT_PAGE_ID }}
+      FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+    steps:
+      - name: 檢查是否已設定 Secrets
+        id: gate
+        run: |
+          if [ -z "$NOTION_TOKEN" ] || [ -z "$NOTION_PARENT_PAGE_ID" ] || [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "尚未設定 NOTION_TOKEN / NOTION_PARENT_PAGE_ID / FIREBASE_SERVICE_ACCOUNT，略過同步。"
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.run == 'true'
+      - uses: actions/setup-node@v4
+        if: steps.gate.outputs.run == 'true'
+        with:
+          node-version: 22
+      - name: 安裝 firebase-admin（不寫入倉庫）
+        if: steps.gate.outputs.run == 'true'
+        run: npm install --no-save --no-package-lock firebase-admin@12.7.0
+      - name: 生成 catalog.json
+        if: steps.gate.outputs.run == 'true'
+        run: node scripts/build-catalog.mjs
+      - name: 同步 Firestore → Notion
+        if: steps.gate.outputs.run == 'true'
+        run: node scripts/sync-notion.mjs
