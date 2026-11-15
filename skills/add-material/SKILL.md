@@ -5,6 +5,8 @@ description: 為 E_learning Hub（公開 GitHub 倉庫 JPAnsonWong/e-learning-hu
 
 # 新增教材到 E_learning Hub
 
+**規則版本：v4**（歷次更新見同資料夾的 `Version_Change.md`；已讀過舊版本的 AI 只需讀尚未讀過的版本）
+
 這份說明不依賴任何特定 AI 工具，只需要 `git`、`gh`（GitHub CLI）和 Node.js 18+。
 
 ## 硬規則（先讀）
@@ -89,7 +91,9 @@ elhReport({
 ```
 - 必填：`id` `student` `subject` `stage` `type` `title` `date`（YYYY-MM-DD）`version`（正整數）。
 - 選填：`unit`、`tags`（只能是 `config/types.json` 裡 `tags` 的 id）、`difficulty`（1、2、3）、`minutes`（正數）、`description`。
-- 修改已發布的教材時，把 `version` 加 1。
+- 修改已發布的教材時，把 `version` 加 1。**改了題目、題數或題目順序時一定要加 1**：孩子「做到一半」的續做快照會依 `version` 作廢，不加的話舊快照會把孩子帶到錯誤的位置。
+- `minutes` 要填得合理：沒有題目的教材（閱讀、卡片），孩子要停留達到 `minutes` 的一半（至少 60 秒）按「我學完了」才算完成並得分。
+- 有題目的教材，`q`（題號）必須穩定：同一道題改版後不要換題號，否則會被當成新題重新計分。
 - 要把教材搬到另一個階段，只改 `stage`。
 
 ### 6. 本機驗證
@@ -112,4 +116,6 @@ PR 的 GitHub Actions 會自動重跑驗證。然後**停下來**，告訴爸爸
 - [ ] id 唯一，且資料夾名 = id
 - [ ] student / subject / stage / type 都取自 `config/` 現有的值
 - [ ] `node scripts/build-catalog.mjs --check` 輸出 OK
+- [ ] 收到的 HTML 已對照 `ai-html-rules.md` 最後的「交付前自我檢查」；有題目的頁面確認有作答回報（`elhReport` 的 `init` 和 `answer`），10 題以上的確認有斷點續做（`elhState` 和 `restore` 監聽）
+- [ ] `minutes` 合理；修改既有教材時 `version` 已加 1、題號 `q` 沒有重編
 - [ ] 只開了 PR，沒有合併、沒有推送到 main
