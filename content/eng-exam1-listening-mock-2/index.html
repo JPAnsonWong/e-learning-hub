@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>第一次評估 英文聆聽模擬題第三、四篇</title>
+<style>
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;overflow:hidden}
+body{
+  font-family:"PingFang TC","Microsoft JhengHei",sans-serif;
+  background:#eef3f6;color:#1c2430;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+}
+.app{display:grid;grid-template-columns:58fr 42fr;gap:2vmin;height:100%;padding:2vmin}
+.col{background:#fff;border-radius:1.6vmin;padding:2.4vmin;overflow:auto;display:flex;flex-direction:column;gap:1.6vmin;box-shadow:0 .4vmin 1.4vmin rgba(28,36,48,.08);min-height:0}
+.left{background:#f7fbfc;border:.35vmin solid #c5dbe3}
+.kicker{font-size:clamp(14px,2.6vmin,36px);color:#1f6f8b;font-weight:700}
+.title{font-size:clamp(20px,3.8vmin,56px);font-weight:800;line-height:1.3;margin:0}
+.stem{font-size:clamp(18px,3.8vmin,58px);font-weight:700;line-height:1.45;margin:0}
+.note,.status,.hint{font-size:clamp(14px,2.6vmin,36px);color:#5a6573;line-height:1.5}
+.status{background:#e6f4f8;color:#173f50;border-radius:1vmin;padding:1.2vmin 1.6vmin;font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:1vmin}
+.chip{
+  font:inherit;font-size:clamp(14px,2.8vmin,36px);font-weight:800;
+  min-height:max(3rem,7vmin);min-width:max(3rem,7vmin);
+  border:.35vmin solid #c5d0da;border-radius:1.2vmin;background:#fff;cursor:pointer;color:#1c2430
+}
+.chip.on{border-color:#1f6f8b;background:#1f6f8b;color:#fff}
+.chip.ok{border-color:#157a3a;background:#dff6e8;color:#157a3a}
+.chip.no{border-color:#b42318;background:#fde8e6;color:#b42318}
+.chip.part{outline:.3vmin dashed #f0b429}
+.opts{display:flex;flex-direction:column;gap:1.2vmin}
+.opt,.btn,.key,.mbtn,.act{
+  font:inherit;cursor:pointer;border:.35vmin solid #c5d0da;background:#fff;color:#1c2430;
+  border-radius:1.4vmin;min-height:max(3rem,7vmin);padding:1.2vmin 1.8vmin;
+  font-size:clamp(16px,3.2vmin,48px);text-align:left
+}
+.opt{display:flex;align-items:center;gap:1.6vmin}
+.opt.on{border-color:#1f6f8b;background:#e6f4f8}
+.opt.ok{border-color:#157a3a;background:#dff6e8}
+.opt.no{border-color:#b42318;background:#fde8e6}
+.circle{width:3.8vmin;height:3.8vmin;min-width:1.4rem;min-height:1.4rem;border:.4vmin solid #1c2430;border-radius:50%;flex:0 0 auto;background:#fff}
+.opt.on .circle,.opt.ok .circle,.opt.no .circle{background:#1c2430}
+.opt.ok .circle{background:#157a3a;border-color:#157a3a}
+.opt.no .circle{background:#b42318;border-color:#b42318}
+.lab{font-weight:800;flex:0 0 auto}
+.pics{display:grid;grid-template-columns:1fr 1fr;gap:.8vmin}
+.pic-opt{display:flex;flex-direction:column;align-items:center;text-align:center;padding:1vmin}
+.pic-opt svg{width:100%;height:auto;aspect-ratio:16/10;max-height:16vmin;display:block}
+.pic-opt .cap{font-size:clamp(14px,2.6vmin,36px);font-weight:700;margin-top:.4vmin}
+.blanks{display:flex;flex-direction:column;gap:1.2vmin}
+.blank-row{display:flex;flex-wrap:wrap;align-items:center;gap:1vmin}
+.blank-lab{font-size:clamp(14px,2.6vmin,36px);color:#5a6573;font-weight:700}
+.blank{
+  min-height:max(3rem,8vmin);min-width:18vmin;flex:1;
+  font-size:clamp(18px,4vmin,52px);font-weight:700;text-align:center;
+  border:.4vmin solid #c5d0da;border-radius:1.2vmin;background:#fff;color:#1c2430;padding:0 1.4vmin
+}
+.blank.on{border-color:#1f6f8b;background:#e6f4f8}
+.blank.ok{border-color:#157a3a;background:#dff6e8}
+.blank.no{border-color:#b42318;background:#fde8e6}
+.keys{display:grid;grid-template-columns:repeat(3,1fr);gap:1vmin}
+.key{text-align:center;font-weight:800;min-height:max(3rem,8vmin);min-width:8vmin;padding:0}
+.key.wide{grid-column:span 1}
+.months,.acts{display:grid;grid-template-columns:1fr 1fr;gap:1vmin}
+.mbtn,.act{text-align:center;font-weight:700}
+.mbtn.on,.act.on{border-color:#1f6f8b;background:#e6f4f8}
+.row{display:flex;flex-wrap:wrap;gap:1vmin}
+.btn{text-align:center;font-weight:800;background:#1f6f8b;color:#fff;border-color:#1f6f8b;flex:1}
+.btn.alt{background:#fff;color:#1f6f8b}
+.btn.danger{background:#8f1d18;border-color:#8f1d18;color:#fff}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-size:clamp(15px,3vmin,42px);line-height:1.5;padding:1.4vmin 1.6vmin;border-radius:1.2vmin;display:none}
+.fb.show{display:block}
+.fb.good{background:#dff6e8}
+.fb.bad{background:#fde8e6}
+.score{font-size:clamp(28px,8vmin,110px);font-weight:800;color:#1f6f8b;line-height:1.1}
+.script{font-family:Georgia,"Times New Roman",serif;font-size:clamp(15px,2.8vmin,40px);line-height:1.7}
+.script p{margin:0 0 .6em}
+.hk{padding:.05em .25em;border-radius:.3em;font-weight:700}
+.parent{background:#111827;color:#f8fafc;border-radius:1.2vmin;padding:1.6vmin;font-family:Georgia,"Times New Roman",serif;font-size:clamp(14px,2.6vmin,36px);line-height:1.7}
+.confirm{background:#fff8e8;border:.35vmin solid #f0b429;border-radius:1.2vmin;padding:1.6vmin;display:flex;flex-direction:column;gap:1.2vmin}
+.bigpick{display:flex;flex-direction:column;gap:1.6vmin}
+.pick{font-size:clamp(18px,3.4vmin,48px);min-height:max(3.6rem,10vmin)}
+@media (max-width:900px),(orientation:portrait){
+  html,body{overflow:auto}
+  .app{grid-template-columns:1fr;height:auto;min-height:100%}
+}
+
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+function elhReport(m){
+  try{
+    if(location.search.indexOf("elhdebug")>=0)console.log("ELH",JSON.stringify(m));
+    if(window.parent!==window)window.parent.postMessage(Object.assign({elh:1},m),location.origin);
+  }catch(e){}
+}
+function elhText(h){return String(h==null?"":h).replace(/<[^>]*>/g,"").replace(/\s+/g," ").trim().slice(0,200);}
+
+// SVG 生成函式，回傳內嵌 SVG 字串
+function svgPic(kind) {
+  switch (kind) {
+    case "drum":
+      return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M6 4h4l2-3h6l2 3h4v8H6V4ZM6 10h4l2-3h6l2 3h4v8H6v-4ZM6 16h4l2-3h6l2 3h4v8H6v-4Z"/></svg>';
+    case "ballet":
+      return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3L2 12h3v9H12V12H5v-2h7v2H12v-3ZM12 6l-2 3h2V12h2v-6h-2V9h2v3h-2Z"/></svg>';
+    case "violin":
+      return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M19 13v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h2v4h6v4h2V9a2 2 0 0 1 2-2h4v7ZM5 9h2v4H5V9Zm0 4h2v4H5v-4Z"/></svg>';
+    case "games":
+      return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3L2 9h4v12H2V9h4l8-6h-4V3ZM9 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM15 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/></svg>';
+    case "crafts":
+      return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M19 14c0-1-1-2-2-2H7c-1 0-2 1-2 2v3h2v-3H5v3c0 1 1 2 2 2h4c1 0 2-1 2-2v-3h2v3c0 1-1 2-2 2h2c1 0 2-1 2-2v-3h2v3ZM7 18h2v2H7v-2ZM15 18h2v2h-2v-2Z"/></svg>';
+    case "music":
+      return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2L2 7l10 5 10-5-10-5ZM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>';
+    case "sport":
+      return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3L2 9h4v12H2V9h4l8-6h-4V3ZM9 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM15 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/></svg>';
+    case "cards":
+      return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" fill="currentColor" rx="2"/><path fill="currentColor" d="M7 11l5 5 5-5M7 13l5-5 5-5"/></svg>';
+    case "picnic":
+      return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3L2 9h4v12H2V9h4l8-6h-4V3ZM9 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM15 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path fill="currentColor" d="M12 9v2M5.5 14h13M5.5 18h13M1.5 12l18 6v-6l-18-6ZM12 3v3M19 12l-5 5-5-5Z"/></svg>';
+    case "sportsDay":
+      return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3L2 9h4v12H2V9h4l8-6h-4V3ZM9 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM15 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path fill="currentColor" d="M12 15v3M9 12h6M15 12h-6"/></svg>';
+    case "christmas":
+      return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2L2 7l10 5 10-5-10-5ZM2 12a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-4v-2ZM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>';
+    case "openDay":
+      return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3L2 9h4v12H2V9h4l8-6h-4V3ZM9 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM15 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path fill="currentColor" d="M12 9v2M5.5 14h13M5.5 18h13M1.5 12l18 6v-6l-18-6ZM12 3v3M19 12l-5 5-5-5Z"/></svg>';
+    default:
+      return '';
+  }
+}
+
+// PAPERS 物件：模擬題三與模擬題四
+var PAPERS = {
+  "3": {
+    id: "3",
+    title: "模擬題三",
+    qPrefix: "3",
+    activities: ["the school picnic", "English Week", "the talent show", "Exam Week", "Sports Day", "Open Day"],
+    parts: [
+      {
+        id: "A",
+        label: "Part A",
+        marks: 24,
+        intro: "Part A. Listen and blacken the correct circles. You will hear the recording twice. Now look at the questions.",
+        look: 10000,
+        lines: [
+          { role: "n", text: "Number 1 to Number 6. Anna's mum is talking to Miss Ng on Parents' Day." },
+          { role: "t", text: "Good afternoon, Mrs Chan. Welcome to Parents' Day." },
+          { role: "w", text: "Good afternoon, Miss Ng. How is Anna at school?" },
+          { role: "t", text: "Anna is good at Music. She likes playing the violin. She is not good at Maths or Chinese." },
+          { role: "w", text: "Does she like English?" },
+          { role: "t", text: "Yes. She likes English because it is fun. She does not like Computer Studies." },
+          { role: "w", text: "What does she like doing in the Visual Arts lesson?" },
+          { role: "t", text: "She likes making crafts, but she does not like making models." },
+          { role: "w", text: "What about PE?" },
+          { role: "t", text: "She likes PE. She likes playing sport." },
+          { role: "w", text: "Tomorrow is Open Day. When does Anna need to arrive at school?" },
+          { role: "t", text: "Open Day starts at nine o'clock in the morning. She needs to arrive at school by eight forty-five a.m." },
+          { role: "w", text: "Thank you, Miss Ng." }
+        ],
+        scriptHtml: '<p>Q1: good at Music</p><p>Q2: playing the violin</p><p>Q3: does not like Computer Studies</p><p>Q4: making crafts, but she does not like making models</p><p>Q5: playing sport</p><p>Q6: by eight forty-five a.m.</p>',
+        questions: [
+          { n: 1, part: "A", type: "mcq", marks: 4, stem: "What subject is Anna good at?", options: ["Maths", "English", "Music", "Chinese"], answer: 2 },
+          { n: 2, part: "A", type: "mcq-pic", marks: 4, stem: "What does Anna like doing?", options: ["playing the drum", "doing ballet", "playing the violin", "playing online games"], pics: ["drum", "ballet", "violin", "games"], answer: 2 },
+          { n: 3, part: "A", type: "mcq", marks: 4, stem: "Which of the following is NOT true?", options: ["Anna likes English because it is fun.", "Anna likes Computer Studies.", "Anna is good at Music.", "Anna likes playing the violin."], answer: 1 },
+          { n: 4, part: "A", type: "mcq", marks: 4, stem: "What does Anna like doing in the Visual Arts lesson?", options: ["making models", "making crafts", "collecting stickers", "collecting cards"], answer: 1 },
+          { n: 5, part: "A", type: "mcq-pic", marks: 4, stem: "What does Anna like doing in PE?", options: ["making crafts", "playing the violin", "listening to music", "playing sport"], pics: ["crafts", "violin", "music", "sport"], answer: 3 },
+          { n: 6, part: "A", type: "mcq", marks: 4, stem: "When does Anna need to arrive at school on Open Day?", options: ["by 8:15 a.m.", "by 8:30 a.m.", "by 8:45 a.m.", "by 9:00 a.m."], answer: 2 }
+        ]
+      },
+      {
+        id: "B",
+        label: "Part B",
+        marks: 16,
+        intro: "Part B. Listen and write the answers. You will hear the recording twice. Now look at the questions.",
+        look: 8000,
+        lines: [
+          { role: "n", text: "Good morning, boys and girls. Here is the news about our school events." },
+          { role: "n", text: "The school picnic is on the second of December." },
+          { role: "n", text: "English Week is from the fifth of December to the ninth of December." },
+          { role: "n", text: "The talent show is on the tenth of December. It starts at two o'clock in the afternoon." },
+          { role: "n", text: "Exam Week is on the twelfth of December." },
+          { role: "n", text: "Sports Day is in January." }
+        ],
+        scriptHtml: '<p>Q7: the second of December</p><p>Q8: from the fifth of December to the ninth of December</p><p>Q9+11: the tenth of December ... two o\'clock in the afternoon</p><p>Q10: Sports Day is in January</p>',
+        questions: [
+          { n: 7, part: "B", type: "fill", marks: 3, stem: "The school picnic is on ________.", blanks: [{ id: "date1", accept: "date", expect: { d: 2, m: 12 }, label: "date" }] },
+          { n: 8, part: "B", type: "fill", marks: 3, stem: "English Week is from ________ to ________.", blanks: [{ id: "range1", accept: "daterange", expect: [{ d: 5, m: 12 }, { d: 9, m: 12 }], label: "daterange" }] },
+          { n: 9, part: "B", type: "fill", marks: 3, stem: "The talent show is on ________. It starts at ________.", blanks: [{ id: "date2", accept: "date", expect: { d: 10, m: 12 }, label: "date" }, { id: "time2", accept: "time", expect: "2:00pm", label: "time" }] },
+          { n: 10, part: "B", type: "fill", marks: 3, stem: "Sports Day is in ________.", blanks: [{ id: "month1", accept: "month", expect: 1, label: "month" }] },
+          { n: 11, part: "B", type: "activity", marks: 4, stem: "Peter can only come to school on the tenth of December in the afternoon. What can he join?\nHe can join ________.", answer: "the talent show" }
+        ]
+      }
+    ]
+  },
+  "4": {
+    id: "4",
+    title: "模擬題四",
+    qPrefix: "4",
+    activities: ["Open Day", "Exam Week", "the talent show", "Parents' Day", "the Christmas party", "English Week", "Sports Day", "the school picnic"],
+    parts: [
+      {
+        id: "A",
+        label: "Part A",
+        marks: 24,
+        intro: "Part A. Listen and blacken the correct circles. You will hear the recording twice. Now look at the questions.",
+        look: 10000,
+        lines: [
+          { role: "n", text: "Number 1 to Number 6. David and Lucy are talking at school." },
+          { role: "s", text: "Hi, Lucy. What do you like doing after school?" },
+          { role: "l", text: "I like doing ballet and collecting cards, but I do not like collecting stickers." },
+          { role: "s", text: "I like playing the drum and listening to music. I do not like playing the violin." },
+          { role: "l", text: "What subject are you good at?" },
+          { role: "s", text: "I like PE because I am good at playing sport. I do not like General Studies or Putonghua." },
+          { role: "l", text: "I like Maths and Computer Studies. I do not like Visual Arts." },
+          { role: "s", text: "Sports Day is on the third of November. It starts at eight thirty a.m. We need to arrive at school by eight fifteen a.m." },
+          { role: "l", text: "I thought it started at eight forty-five." },
+          { role: "s", text: "No. It starts at eight thirty. The school picnic is on the fourth of November, not on the third." }
+        ],
+        scriptHtml: '<p>Q1: doing ballet and collecting cards, but I do not like collecting stickers</p><p>Q2: playing the drum and listening to music</p><p>Q3: I do not like Visual Arts</p><p>Q4: General Studies or Putonghua</p><p>Q5: Sports Day is on the third of November</p><p>Q6: arrive ... by eight fifteen a.m.</p>',
+        questions: [
+          { n: 1, part: "A", type: "mcq", marks: 4, stem: "What does Lucy like doing after school?", options: ["collecting stickers", "doing ballet and collecting cards", "playing the drum and listening to music", "doing ballet and collecting stickers"], answer: 1 },
+          { n: 2, part: "A", type: "mcq-pic", marks: 4, stem: "What does David like doing?", options: ["playing the violin", "doing ballet", "playing the drum", "collecting cards"], pics: ["violin", "ballet", "drum", "cards"], answer: 2 },
+          { n: 3, part: "A", type: "mcq", marks: 4, stem: "Which of the following is NOT true?", options: ["David likes PE because he is good at playing sport.", "Lucy likes Maths and Computer Studies.", "Lucy likes Visual Arts.", "David likes playing the drum."], answer: 2 },
+          { n: 4, part: "A", type: "mcq", marks: 4, stem: "What subjects does David not like?", options: ["PE or Maths", "General Studies or Putonghua", "Maths and Computer Studies", "Visual Arts and Music"], answer: 1 },
+          { n: 5, part: "A", type: "mcq-pic", marks: 4, stem: "Which event is on the third of November?", options: ["the school picnic", "Sports Day", "the Christmas party", "Open Day"], pics: ["picnic", "sportsDay", "christmas", "openDay"], answer: 1 },
+          { n: 6, part: "A", type: "mcq", marks: 4, stem: "When do they need to arrive at school on Sports Day?", options: ["by 8:15 a.m.", "by 8:30 a.m.", "by 8:45 a.m.", "by 9:00 a.m."], answer: 0 }
+        ]
+      },
+      {
+        id: "B",
+        label: "Part B",
+        marks: 16,
+        intro: "Part B. Listen and write the answers. You will hear the recording twice. Now look at the questions.",
+        look: 8000,
+        lines: [
+          { role: "n", text: "Good morning, boys and girls. Please listen carefully to the dates of our school events." },
+          { role: "n", text: "Open Day is on the first of December. It is from nine o'clock in the morning to twelve o'clock noon." },
+          { role: "n", text: "Exam Week is from the sixth of December to the eighth of December." },
+          { role: "n", text: "The talent show is on the ninth of December. It starts at one thirty p.m., not at two thirty p.m." },
+          { role: "n", text: "Parents' Day is on the eleventh of December. It starts at nine fifteen a.m." },
+          { role: "n", text: "The Christmas party is on the twelfth of December. It starts at two o'clock in the afternoon." },
+          { role: "n", text: "English Week is in January." }
+        ],
+        scriptHtml: '<p>Q7: the first of December；nine o\'clock；twelve o\'clock noon</p><p>Q8: one thirty p.m., not at two thirty p.m. 以及 the ninth of December</p><p>Q9: eleventh of December；nine fifteen a.m.</p><p>Q10+11: twelfth of December；two o\'clock in the afternoon</p>',
+        questions: [
+          { n: 7, part: "B", type: "fill", marks: 3, stem: "Open Day is on ________. It is from ________ to ________.", blanks: [{ id: "date3", accept: "date", expect: { d: 1, m: 12 }, label: "date" }, { id: "time3_1", accept: "time", expect: "9:00am", label: "time" }, { id: "time3_2", accept: "time", expect: "12:00noon", label: "time" }] },
+          { n: 8, part: "B", type: "fill", marks: 3, stem: "The talent show is on ________. It starts at ________.", blanks: [{ id: "date4", accept: "date", expect: { d: 9, m: 12 }, label: "date" }, { id: "time4", accept: "time", expect: "1:30pm", label: "time" }] },
+          { n: 9, part: "B", type: "fill", marks: 3, stem: "Parents' Day is on ________. It starts at ________.", blanks: [{ id: "date5", accept: "date", expect: { d: 11, m: 12 }, label: "date" }, { id: "time5", accept: "time", expect: "9:15am", label: "time" }] },
+          { n: 10, part: "B", type: "fill", marks: 3, stem: "The Christmas party is on ________. It starts at ________.", blanks: [{ id: "date6", accept: "date", expect: { d: 12, m: 12 }, label: "date" }, { id: "time6", accept: "time", expect: "2:00pm", label: "time" }] },
+          { n: 11, part: "B", type: "activity", marks: 4, stem: "May can only come on the twelfth of December in the afternoon. What can she join?\nShe can join ________.", answer: "the Christmas party" }
+        ]
+      }
+    ]
+  }
+};
+
+function svgPic(kind){
+  const bg = {
+    drum:"#fff4e5", ballet:"#fde8f0", violin:"#f4efe6", games:"#e8f1ff",
+    crafts:"#fff6d8", music:"#eef7ff", sport:"#e5f6d8", cards:"#f3e9ff",
+    picnic:"#e9f6e3", sportsDay:"#e5f6d8", christmas:"#e9f7ee", openDay:"#eef6fb"
+  }[kind] || "#eef3f6";
+  const body = {
+    drum:'<ellipse cx="80" cy="52" rx="36" ry="14" fill="#c27a3a" stroke="#5a3a22" stroke-width="3"/><path d="M44 52 v28 c0 10 16 18 36 18 s36-8 36-18 V52" fill="#d8924a" stroke="#5a3a22" stroke-width="3"/><ellipse cx="80" cy="80" rx="36" ry="14" fill="#e8b072" stroke="#5a3a22" stroke-width="3"/><path d="M28 28 l36 28" stroke="#5a3a22" stroke-width="4" stroke-linecap="round"/><path d="M132 24 l-28 32" stroke="#5a3a22" stroke-width="4" stroke-linecap="round"/><circle cx="26" cy="26" r="4" fill="#5a3a22"/><circle cx="134" cy="22" r="4" fill="#5a3a22"/>',
+    ballet:'<circle cx="86" cy="28" r="10" fill="#f0c8a0"/><path d="M86 38 L86 62" stroke="#c58b62" stroke-width="5" stroke-linecap="round"/><path d="M86 48 L58 40" stroke="#c58b62" stroke-width="4" stroke-linecap="round"/><path d="M86 50 L118 36" stroke="#c58b62" stroke-width="4" stroke-linecap="round"/><path d="M70 62 Q86 78 102 62 Q86 70 70 62" fill="#e94e8c"/><path d="M80 68 L62 108" stroke="#c58b62" stroke-width="4" stroke-linecap="round"/><path d="M92 68 L122 96" stroke="#c58b62" stroke-width="4" stroke-linecap="round"/><path d="M50 108 h20" stroke="#c58b62" stroke-width="4" stroke-linecap="round"/><path d="M118 96 l16 8" stroke="#c58b62" stroke-width="4" stroke-linecap="round"/>',
+    violin:'<ellipse cx="78" cy="78" rx="22" ry="30" fill="#b45309" stroke="#5a3a22" stroke-width="3"/><ellipse cx="78" cy="52" rx="16" ry="20" fill="#d97706" stroke="#5a3a22" stroke-width="3"/><path d="M78 32 L96 10" stroke="#5a3a22" stroke-width="4" stroke-linecap="round"/><circle cx="100" cy="8" r="5" fill="#c9a227"/><path d="M68 58 q10 8 20 0" fill="none" stroke="#fde68a" stroke-width="2"/><path d="M68 82 q10 8 20 0" fill="none" stroke="#fde68a" stroke-width="2"/><path d="M46 34 l70 70" stroke="#5a3a22" stroke-width="3" stroke-linecap="round"/><path d="M112 100 h16" stroke="#5a3a22" stroke-width="4"/>',
+    games:'<rect x="30" y="28" width="100" height="64" rx="6" fill="#334155" stroke="#1e293b" stroke-width="3"/><rect x="38" y="36" width="84" height="40" fill="#7dd3fc"/><rect x="58" y="84" width="16" height="10" fill="#1e293b"/><rect x="86" y="84" width="16" height="10" fill="#1e293b"/><circle cx="70" cy="54" r="6" fill="#f97316"/><rect x="96" y="48" width="14" height="10" rx="2" fill="#22c55e"/>',
+    crafts:'<rect x="36" y="40" width="70" height="52" fill="#fde68a" stroke="#b45309" stroke-width="3"/><path d="M36 52 h70" stroke="#b45309" stroke-width="2"/><circle cx="118" cy="40" r="14" fill="none" stroke="#64748b" stroke-width="4"/><circle cx="138" cy="40" r="14" fill="none" stroke="#64748b" stroke-width="4"/><path d="M126 50 L86 96" stroke="#64748b" stroke-width="4" stroke-linecap="round"/><path d="M28 86 l24-18 10 8 -24 22 z" fill="#fb7185" stroke="#9f1239" stroke-width="2"/>',
+    music:'<circle cx="52" cy="70" r="18" fill="none" stroke="#1f6f8b" stroke-width="5"/><circle cx="108" cy="70" r="18" fill="none" stroke="#1f6f8b" stroke-width="5"/><path d="M70 70 V42 h20 V70" fill="none" stroke="#1f6f8b" stroke-width="5"/><path d="M78 30 q20 -16 40 0" fill="none" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/><circle cx="86" cy="92" r="6" fill="#f59e0b"/><circle cx="108" cy="86" r="5" fill="#f59e0b"/>',
+    sport:'<rect y="88" width="160" height="24" fill="#7cbc4a"/><circle cx="58" cy="36" r="10" fill="#e8b88a"/><path d="M58 46 L58 70 L42 100 M58 70 L78 100 M58 54 L86 48" stroke="#1d4ed8" stroke-width="5" stroke-linecap="round" fill="none"/><circle cx="118" cy="82" r="12" fill="#f97316" stroke="#7c2d12" stroke-width="2"/>',
+    cards:'<rect x="40" y="28" width="48" height="64" rx="4" fill="#fff" stroke="#1f6f8b" stroke-width="3" transform="rotate(-12 64 60)"/><rect x="70" y="32" width="48" height="64" rx="4" fill="#fff" stroke="#be185d" stroke-width="3" transform="rotate(10 94 64)"/><circle cx="86" cy="60" r="6" fill="#be185d"/><rect x="52" y="48" width="16" height="10" fill="#1f6f8b"/>',
+    picnic:'<rect y="86" width="160" height="26" fill="#86c26b"/><ellipse cx="80" cy="96" rx="54" ry="12" fill="#f9a8d4"/><path d="M58 86 L70 50 h20 l12 36" fill="#c4a574" stroke="#5a3a22" stroke-width="2"/><rect x="66" y="58" width="28" height="16" fill="#b45309"/><circle cx="28" cy="30" r="14" fill="#ffd166"/><path d="M120 86 L120 46" stroke="#5a3a22" stroke-width="4"/><ellipse cx="120" cy="38" rx="16" ry="14" fill="#2f9e44"/>',
+    sportsDay:'<rect y="88" width="160" height="24" fill="#7cbc4a"/><path d="M0 88 H160" stroke="#fff" stroke-width="3"/><circle cx="50" cy="40" r="9" fill="#e8b88a"/><path d="M50 49 L50 72 L36 100 M50 72 L66 100 M50 58 L72 52" stroke="#1d4ed8" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="108" cy="36" r="9" fill="#c58b62"/><path d="M108 45 L108 70 L94 100 M108 70 L124 100" stroke="#b91c1c" stroke-width="4" fill="none" stroke-linecap="round"/><polygon points="20,30 28,48 8,48" fill="#facc15"/>',
+    christmas:'<rect y="96" width="160" height="16" fill="#86c26b"/><polygon points="80,10 112,46 48,46" fill="#15803d"/><polygon points="80,28 124,72 36,72" fill="#16a34a"/><polygon points="80,50 132,100 28,100" fill="#22c55e"/><rect x="72" y="100" width="16" height="12" fill="#7c4a1e"/><polygon points="80,6 84,16 76,16" fill="#facc15"/><circle cx="68" cy="70" r="4" fill="#ef4444"/><circle cx="96" cy="80" r="4" fill="#fde047"/><circle cx="80" cy="88" r="4" fill="#ef4444"/>',
+    openDay:'<rect x="28" y="36" width="80" height="60" fill="#f8fafc" stroke="#5a6573" stroke-width="3"/><rect x="36" y="46" width="18" height="14" fill="#9ad0f5"/><rect x="62" y="46" width="18" height="14" fill="#a8e6cf"/><rect x="86" y="58" width="16" height="38" fill="#1f6f8b"/><polygon points="28,36 68,12 108,36" fill="#fca5a5" stroke="#5a6573" stroke-width="3"/><circle cx="50" cy="104" r="8" fill="#e8b88a"/><circle cx="78" cy="104" r="8" fill="#c58b62"/><circle cx="130" cy="104" r="8" fill="#f0c8a0"/>'
+  }[kind] || "";
+  return `<svg viewBox="0 0 160 120" aria-hidden="true"><rect width="160" height="120" fill="${bg}"/>${body}</svg>`;
+}
+
+
+let cancelled = false, speaking = false, voiceReady = false;
+
+const MONTHS = {
+  january:1, jan:1, february:2, feb:2, march:3, mar:3, april:4, apr:4,
+  may:5, june:6, jun:6, july:7, jul:7, august:8, aug:8,
+  september:9, sept:9, sep:9, october:10, oct:10, november:11, nov:11,
+  december:12, dec:12
+};
+const ORDINALS = {
+  first:1, second:2, third:3, fourth:4, fifth:5, sixth:6, seventh:7,
+  eighth:8, ninth:9, tenth:10, eleventh:11, twelfth:12, thirteenth:13,
+  fourteenth:14, fifteenth:15, sixteenth:16, seventeenth:17, eighteenth:18,
+  nineteenth:19, twentieth:20, "twenty-first":21, twentyfirst:21,
+  "twenty-second":22, twentysecond:22, "twenty-third":23, twentythird:23,
+  "twenty-fourth":24, twentyfourth:24, "twenty-fifth":25, twentyfifth:25,
+  "twenty-sixth":26, twentysixth:26, "twenty-seventh":27, twentyseventh:27,
+  "twenty-eighth":28, twentyeighth:28, "twenty-ninth":29, twentyninth:29,
+  thirtieth:30, "thirty-first":31, thirtyfirst:31
+};
+const QCOLOR = {
+  1:"#ffe08a", 2:"#a8e6cf", 3:"#9ad0f5", 4:"#f5b7c8",
+  5:"#ffd4a3", 6:"#c5b4f0", 7:"#b5e48c", 8:"#f4a5ae",
+  9:"#ffe08a", 10:"#a8e6cf", 11:"#9ad0f5", 12:"#f5b7c8",
+  13:"#ffd4a3", 14:"#c5b4f0",
+  15:"#ffe08a", 16:"#a8e6cf", 17:"#9ad0f5", 18:"#f5b7c8",
+  19:"#ffd4a3", 20:"#c5b4f0", 21:"#b5e48c", 22:"#f4a5ae"
+};
+
+
+function getVoice() {
+  const voices = window.speechSynthesis ? speechSynthesis.getVoices() : [];
+  const gb = voices.find(v => /en-GB/i.test(v.lang) && /female|woman|Kate|Serena|Google UK English Female/i.test(v.name))
+    || voices.find(v => /en-GB/i.test(v.lang))
+    || voices.find(v => /^en/i.test(v.lang) && /female|woman|Samantha|Karen/i.test(v.name))
+    || voices.find(v => /^en/i.test(v.lang));
+  return gb || null;
+}
+function unlockSpeech() {
+  if (!window.speechSynthesis) return;
+  try {
+    const u = new SpeechSynthesisUtterance(" ");
+    u.lang = "en-GB";
+    u.volume = 0;
+    speechSynthesis.speak(u);
+    speechSynthesis.cancel();
+  } catch (e) {}
+  speechSynthesis.getVoices();
+  if (speechSynthesis.onvoiceschanged !== undefined) {
+    speechSynthesis.onvoiceschanged = () => { voiceReady = true; };
+  }
+  voiceReady = true;
+}
+function speak(text, pitch) {
+  return new Promise((resolve) => {
+    if (cancelled) return resolve(false);
+    if (!window.speechSynthesis) return resolve(false);
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "en-GB";
+    u.rate = 0.9;
+    u.pitch = pitch || 1;
+    u.volume = 1;
+    const v = getVoice();
+    if (v) u.voice = v;
+    u.onend = () => resolve(true);
+    u.onerror = () => resolve(false);
+    speechSynthesis.speak(u);
+  });
+}
+function silence(ms) {
+  return new Promise((resolve) => {
+    const t = setTimeout(() => resolve(), ms);
+    const iv = setInterval(() => {
+      if (cancelled) { clearTimeout(t); clearInterval(iv); resolve(); }
+    }, 120);
+    setTimeout(() => clearInterval(iv), ms + 50);
+  });
+}
+function stopSpeech() {
+  cancelled = true;
+  speaking = false;
+  if (window.speechSynthesis) speechSynthesis.cancel();
+}
+
+function compact(s) {
+  return String(s || "")
+    .toLowerCase()
+    .replace(/[’']/g, "")
+    .replace(/a\.?\s*m\.?/g, "am")
+    .replace(/p\.?\s*m\.?/g, "pm")
+    .replace(/o'?clock/g, "")
+    .replace(/in the morning/g, "am")
+    .replace(/in the afternoon/g, "pm")
+    .replace(/midday|noon/g, "noon")
+    .replace(/to|–|—|~/g, "-")
+    .replace(/(\d)\.(\d)/g, "$1:$2")
+    .replace(/[,.]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+function parseDate(str) {
+  const raw = compact(str).replace(/(\d)(st|nd|rd|th)/g, "$1");
+  let m = raw.match(/^(\d{1,2})\s*[\/\-]\s*(\d{1,2})$/);
+  if (m) return { d:+m[1], m:+m[2] };
+  m = raw.match(/^the\s+([a-z\-]+)\s+of\s+([a-z]+)$/);
+  if (m && ORDINALS[m[1]] && MONTHS[m[2]]) return { d:ORDINALS[m[1]], m:MONTHS[m[2]] };
+  m = raw.match(/^(\d{1,2})\s+([a-z]+)$/);
+  if (m && MONTHS[m[2]]) return { d:+m[1], m:MONTHS[m[2]] };
+  m = raw.match(/^([a-z]+)\s+(\d{1,2})$/);
+  if (m && MONTHS[m[1]]) return { d:+m[2], m:MONTHS[m[1]] };
+  const ord = raw.match(/^the\s+([a-z\-]+)\s+of\s+([a-z]+)/);
+  if (ord && ORDINALS[ord[1]] && MONTHS[ord[2]]) return { d:ORDINALS[ord[1]], m:MONTHS[ord[2]] };
+  return null;
+}
+function parseMonth(str) {
+  const raw = compact(str).replace(/^in\s+/, "");
+  return MONTHS[raw] || null;
+}
+function parseTime(str) {
+  let raw = compact(str);
+  raw = raw.replace(/half past two/g, "2:30pm").replace(/half past one/g, "1:30pm")
+    .replace(/two thirty/g, "2:30").replace(/one thirty/g, "1:30")
+    .replace(/eight thirty/g, "8:30").replace(/nine\s*(am)?$/g, "9:00am")
+    .replace(/twelve\s*(noon)?/g, "12:00noon");
+  let m = raw.match(/(\d{1,2})\s*[:.]\s*(\d{2})\s*(am|pm|noon)?/);
+  if (m) {
+    const h = +m[1], min = m[2], ap = m[3] || "";
+    return `${h}:${min}${ap}`;
+  }
+  m = raw.match(/(\d{1,2})\s+(\d{2})\s*(am|pm|noon)?/);
+  if (m) {
+    const h = +m[1], min = m[2], ap = m[3] || "";
+    return `${h}:${min}${ap}`;
+  }
+  m = raw.match(/\b(\d{1,2})\s*(am|pm)\b/);
+  if (m) return `${m[1]}:00${m[2]}`;
+  if (/12:00noon|12noon|noon/.test(raw)) return "12:00noon";
+  return raw.replace(/\s+/g, "");
+}
+function timeEq(a, b) {
+  const na = parseTime(a), nb = parseTime(b);
+  const norm = (t) => {
+    const m = String(t).match(/(\d{1,2}):(\d{2})(am|pm|noon)?/);
+    if (!m) return t;
+    return `${+m[1]}:${m[2]}${m[3]||""}`;
+  };
+  return norm(na) === norm(nb);
+}
+function dateEq(val, expect) {
+  const got = parseDate(val);
+  return got && got.d === expect.d && got.m === expect.m;
+}
+function checkText(q, val) {
+  const s = compact(val);
+  if (!s) return false;
+  if (q.accept === "date") return dateEq(s, q.expect);
+  if (q.accept === "month") return parseMonth(s) === q.expect;
+  if (q.accept === "time") return timeEq(s, q.expect);
+  if (q.accept === "daterange") {
+    const parts = s.split("-").map(x => x.trim()).filter(Boolean);
+    if (parts.length < 2) {
+      const all = s.match(/(\d{1,2}\s*[\/\-]\s*\d{1,2}|the\s+[a-z\-]+\s+of\s+[a-z]+|\d{1,2}\s+[a-z]+)/g) || [];
+      if (all.length >= 2) return dateEq(all[0], q.expect[0]) && dateEq(all[1], q.expect[1]);
+      return false;
+    }
+    return dateEq(parts[0], q.expect[0]) && dateEq(parts[1], q.expect[1]);
+  }
+  if (q.accept === "timerange") {
+    const parts = s.split("-").map(x => x.trim()).filter(Boolean);
+    if (parts.length < 2) return false;
+    const end = /noon/.test(parts[1]) ? "12:00noon" : parts[1];
+    return timeEq(parts[0], q.expect.t1) && (timeEq(end, q.expect.t2) || (q.expect.t2 === "12:00noon" && /noon|12:00/.test(parts[1])));
+  }
+  if (q.accept === "datetime") {
+    let got = parseDate(s);
+    if (!got) {
+      const m = s.match(/(\d{1,2}\s*[\/\-]\s*\d{1,2}|the\s+[a-z\-]+\s+of\s+[a-z]+|\d{1,2}\s+[a-z]+|[a-z]+\s+\d{1,2})/);
+      if (m) got = parseDate(m[0]);
+    }
+    const okDate = got && got.d === q.expect.d && got.m === q.expect.m;
+    const okTime = timeEq(s, q.expect.t);
+    return !!(okDate && okTime);
+  }
+  return false;
+}
+
+const PITCH = { n:1, t:1.15, w:0.95, s:0.88, l:1.18 };
+const ROLE = { n:"Narrator", t:"Miss Ng", w:"Mrs Chan", s:"David", l:"Lucy" };
+const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const HIGHLIGHTS = {
+  "3": [
+    [1,"good at Music"],[2,"playing the violin"],[3,"does not like Computer Studies"],
+    [4,"making crafts, but she does not like making models"],[5,"playing sport"],
+    [6,"by eight forty-five a.m."],[7,"the second of December"],
+    [8,"from the fifth of December to the ninth of December"],
+    [9,"the tenth of December"],[9,"two o'clock in the afternoon"],
+    [11,"the tenth of December"],[10,"Sports Day is in January"]
+  ],
+  "4": [
+    [1,"doing ballet and collecting cards, but I do not like collecting stickers"],
+    [2,"playing the drum and listening to music"],[3,"I do not like Visual Arts"],
+    [4,"General Studies or Putonghua"],[5,"Sports Day is on the third of November"],
+    [6,"by eight fifteen a.m."],[7,"the first of December"],
+    [7,"nine o'clock in the morning"],[7,"twelve o'clock noon"],
+    [8,"the ninth of December"],[8,"one thirty p.m., not at two thirty p.m."],
+    [9,"eleventh of December"],[9,"nine fifteen a.m."],
+    [10,"twelfth of December"],[10,"two o'clock in the afternoon"],
+    [11,"twelfth of December"]
+  ]
+};
+
+let phase = "home";
+let paperId = null;
+let i = -1;
+let ans = [];
+let submitted = false;
+let showParent = false;
+let activeBlank = 0;
+let confirmOpen = false;
+let reviewTab = "q";
+let allAns = { "3": null, "4": null };
+let allSubmitted = { "3": false, "4": false };
+
+function getPaper(id){
+  const src = PAPERS[id];
+  return {
+    id: src.id,
+    title: src.title,
+    qPrefix: src.qPrefix,
+    activities: src.activities.slice(),
+    parts: src.parts,
+    questions: src.parts.reduce(function(a,p){ return a.concat(p.questions); }, [])
+  };
+}
+function curPaper(){ return paperId ? getPaper(paperId) : null; }
+function curQ(){ const p = curPaper(); return p ? p.questions[i] : null; }
+
+function escapeHtml(s){
+  return String(s==null?"":s).replace(/[&<>"']/g, function(c){
+    return ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c];
+  });
+}
+function prettyTime(t){
+  const s = String(t||"");
+  if (/noon/i.test(s)) {
+    const m = s.match(/(\d{1,2}):(\d{2})/);
+    return (m ? (+m[1]+":"+m[2]) : "12:00") + " noon";
+  }
+  const m = s.match(/(\d{1,2}):(\d{2})\s*(am|pm)/i);
+  if (m) return +m[1]+":"+m[2]+" "+m[3].toLowerCase().split("").join(".")+".";
+  return s;
+}
+function formatBlank(b){
+  if (b.accept==="date") return b.expect.d+"/"+b.expect.m;
+  if (b.accept==="time") return prettyTime(b.expect);
+  if (b.accept==="month") return MONTH_NAMES[(b.expect||1)-1];
+  if (b.accept==="daterange") return b.expect[0].d+"/"+b.expect[0].m+" to "+b.expect[1].d+"/"+b.expect[1].m;
+  return String(b.expect||"");
+}
+function correctText(q){
+  if (q.type==="mcq"||q.type==="mcq-pic") return q.options[q.answer];
+  if (q.type==="activity") return q.answer;
+  return (q.blanks||[]).map(formatBlank).join(" / ");
+}
+function activityEq(val, expect){
+  const n = function(s){ return compact(String(s||"")).replace(/^the\s+/,"").trim(); };
+  return !!val && n(val)===n(expect);
+}
+function gradeBlank(blank, userStr){
+  if (!String(userStr||"").trim()) return false;
+  return checkText({accept:blank.accept, expect:blank.expect}, userStr);
+}
+function isUnanswered(q, a){
+  if (!a) return true;
+  if (q.type==="mcq"||q.type==="mcq-pic") return a.choice==null;
+  if (q.type==="activity") return !String(a.value||"").trim();
+  if (q.type==="fill") return !a.blanks || a.blanks.every(function(s){ return !String(s||"").trim(); });
+  return true;
+}
+function isCorrect(q, a){
+  if (isUnanswered(q,a)) return false;
+  if (q.type==="mcq"||q.type==="mcq-pic") return a.choice===q.answer;
+  if (q.type==="activity") return activityEq(a.value, q.answer);
+  return q.blanks.every(function(b,j){ return gradeBlank(b, a.blanks[j]||""); });
+}
+function marksOf(q, a){ return isCorrect(q,a) ? (q.marks||0) : 0; }
+function pickedText(q, a){
+  if (!a || isUnanswered(q,a)) return null;
+  if (q.type==="mcq"||q.type==="mcq-pic") return q.options[a.choice];
+  if (q.type==="activity") return a.value;
+  return a.blanks.join(" / ");
+}
+function choiceVal(q, a){
+  if (!a || isUnanswered(q,a)) return null;
+  if (q.type==="mcq"||q.type==="mcq-pic") return a.choice;
+  if (q.type==="activity") return a.value;
+  return a.blanks.join("|");
+}
+
+function globalIndex(){
+  if (!paperId || i < 0) return -1;
+  return (paperId === "4" ? 11 : 0) + i;
+}
+function syncPaper(){
+  if (!paperId) return;
+  allAns[paperId] = ans;
+  allSubmitted[paperId] = submitted;
+}
+function elhState(){
+  if (phase==="home" || phase==="intro") return;
+  const gi = globalIndex();
+  if (gi < 0) return;
+  syncPaper();
+  elhReport({type:"state", data:{
+    i: gi,
+    paper: paperId,
+    ans3: allAns["3"],
+    ans4: allAns["4"],
+    submitted3: allSubmitted["3"],
+    submitted4: allSubmitted["4"],
+    phase: phase,
+    tab: reviewTab,
+    parent: showParent,
+    blank: activeBlank
+  }});
+}
+function reportPaperAnswers(pid){
+  const p = getPaper(pid);
+  const answers = allSubmitted[pid] ? allAns[pid] : null;
+  p.questions.forEach(function(q, idx){
+    const a = answers ? answers[idx] : null;
+    const unanswered = isUnanswered(q, a);
+    elhReport({
+      type:"answer",
+      q: p.qPrefix + "-" + q.n,
+      choice: unanswered ? null : choiceVal(q, a),
+      correct: isCorrect(q, a),
+      text: elhText(q.stem),
+      picked: unanswered ? null : pickedText(q, a),
+      answer: elhText(correctText(q))
+    });
+  });
+}
+function reportAllAnswers(){
+  syncPaper();
+  reportPaperAnswers("3");
+  reportPaperAnswers("4");
+}
+
+function setAnsMcq(choice){
+  if (submitted) return;
+  ans[i] = {choice:choice};
+  render();
+}
+function setAct(val){
+  if (submitted) return;
+  ans[i] = {value:val};
+  render();
+}
+function ensureFill(){
+  const q = curQ();
+  if (!ans[i] || !ans[i].blanks) ans[i] = {blanks: q.blanks.map(function(){ return ""; })};
+  if (activeBlank < 0 || activeBlank >= q.blanks.length) activeBlank = 0;
+}
+function appendKey(s, k){
+  if (k==="⌫") return String(s||"").slice(0,-1);
+  if (k==="清除") return "";
+  if (/^(a\.m\.|p\.m\.|noon|to)$/.test(k)) {
+    if (s && !/\s$/.test(s)) s += " ";
+    return s + k;
+  }
+  return String(s||"") + k;
+}
+function pressKey(k){
+  if (submitted) return;
+  ensureFill();
+  ans[i].blanks[activeBlank] = appendKey(ans[i].blanks[activeBlank], k);
+  render();
+}
+function setMonth(name){
+  if (submitted) return;
+  ensureFill();
+  ans[i].blanks[activeBlank] = name;
+  render();
+}
+
+function decorateScript(paper){
+  const pairs = (HIGHLIGHTS[paper.id]||[]).slice().sort(function(a,b){ return b[1].length-a[1].length; });
+  return paper.parts.map(function(part){
+    const body = part.lines.map(function(line){
+      let t = escapeHtml(line.text);
+      pairs.forEach(function(pair){
+        const qn = pair[0], phrase = escapeHtml(pair[1]);
+        if (!phrase) return;
+        const span = '<span class="hk" data-q="'+qn+'" style="background:'+(QCOLOR[qn]||"#ffe08a")+'">'+phrase+'</span>';
+        t = t.split(phrase).join(span);
+      });
+      return "<p><b>"+escapeHtml(ROLE[line.role]||"Narrator")+":</b> "+t+"</p>";
+    }).join("");
+    return "<h3 style='font-size:clamp(16px,3vmin,40px);color:#1f6f8b'>"+escapeHtml(part.label)+"</h3>"+body;
+  }).join("");
+}
+function plainScript(paper){
+  return paper.parts.map(function(part){
+    const body = part.lines.map(function(line){
+      return (ROLE[line.role]||"Narrator")+": "+line.text;
+    }).join("\n");
+    return part.label+"\n"+part.intro+"\n"+body;
+  }).join("\n\n");
+}
+
+function setStatus(text, partId){
+  const el = document.getElementById("listenStatus");
+  if (el) el.textContent = text;
+  document.querySelectorAll(".chip").forEach(function(n){ n.classList.remove("part"); });
+  if (!partId) return;
+  const p = curPaper();
+  p.questions.forEach(function(q, idx){
+    if (q.part===partId) {
+      const c = document.getElementById("chip-"+idx);
+      if (c) c.classList.add("part");
+    }
+  });
+}
+
+async function playPart(part, round){
+  if (round==="first") {
+    setStatus("Now look at the questions. ("+part.label+")", part.id);
+    await speak(part.intro, 1);
+    if (cancelled) return;
+    await silence(part.look || 8000);
+    if (cancelled) return;
+  }
+  setStatus(part.label+"  ·  "+(round==="first"?"first time":"second time"), part.id);
+  for (let k=0;k<(part.lines||[]).length;k++){
+    if (cancelled) return;
+    const line = part.lines[k];
+    await speak(line.text, PITCH[line.role]||1);
+    await silence(350);
+  }
+}
+async function runExamAudio(){
+  speaking = true;
+  cancelled = false;
+  const p = curPaper();
+  for (let n=0;n<p.parts.length;n++){
+    if (cancelled) break;
+    await playPart(p.parts[n], "first");
+    if (cancelled) break;
+    await silence(1200);
+    await playPart(p.parts[n], "second");
+    if (cancelled) break;
+    await silence(1000);
+  }
+  if (!cancelled) {
+    await speak("This is the end of the listening test. Please check your answers and submit.", 1);
+    setStatus("This is the end of the listening test. Please check your answers and submit.");
+  }
+  speaking = false;
+}
+function continueAudio(){
+  if (speaking) return;
+  unlockSpeech();
+  cancelled = false;
+  runExamAudio();
+}
+function togglePause(){
+  if (!window.speechSynthesis) return;
+  if (speechSynthesis.paused) speechSynthesis.resume();
+  else speechSynthesis.pause();
+  render();
+}
+function goHome(){
+  stopSpeech();
+  cancelled = true;
+  if (phase==="exam" || phase==="result") syncPaper();
+  phase = "home";
+  paperId = null;
+  i = -1;
+  ans = [];
+  submitted = false;
+  showParent = false;
+  confirmOpen = false;
+  reviewTab = "q";
+  render();
+}
+function choosePaper(id){
+  paperId = id;
+  phase = "intro";
+  i = -1;
+  submitted = false;
+  showParent = false;
+  render();
+}
+function startExam(){
+  unlockSpeech();
+  const p = curPaper();
+  const pid = paperId;
+  if (!allAns[pid] || allSubmitted[pid]) {
+    allAns[pid] = p.questions.map(function(){ return null; });
+    allSubmitted[pid] = false;
+    i = 0;
+  } else {
+    i = 0;
+  }
+  ans = allAns[pid];
+  submitted = false;
+  confirmOpen = false;
+  showParent = false;
+  reviewTab = "q";
+  activeBlank = 0;
+  phase = "exam";
+  syncPaper();
+  render();
+  runExamAudio();
+}
+function goQ(n){
+  if (n<0 || n>10) return;
+  i = n;
+  activeBlank = 0;
+  confirmOpen = false;
+  render();
+}
+function trySubmit(){
+  if (submitted) return;
+  const p = curPaper();
+  const left = p.questions.filter(function(q,idx){ return isUnanswered(q, ans[idx]); }).length;
+  if (left>0 && !confirmOpen) { confirmOpen = true; render(); return; }
+  confirmOpen = false;
+  stopSpeech();
+  submitted = true;
+  phase = "result";
+  syncPaper();
+  reportAllAnswers();
+  render();
+}
+
+function render(){
+  const app = document.getElementById("app");
+  if (phase==="home") { app.innerHTML = viewHome(); bindHome(); elhState(); return; }
+  if (phase==="intro") { app.innerHTML = viewIntro(); bindIntro(); elhState(); return; }
+  if (phase==="result") { app.innerHTML = viewResult(); bindResult(); elhState(); return; }
+  app.innerHTML = viewExam();
+  bindExam();
+  elhState();
+}
+
+function viewHome(){
+  return `<div class="col left">
+    <div class="kicker">女兒　小三／3D　英文</div>
+    <h1 class="title">第一次評估 英文聆聽模擬題第三、四篇</h1>
+    <p class="note">兩篇都是 40 分、各 11 題。開考後以英文朗讀，每段錄音讀兩次。作答時不會顯示對錯，按「交卷」後才出分，並可查看錄音稿與答案。</p>
+    <p class="note">請先選一篇。內容為 Unit 1–3 活動、科目、學校活動、日期與時間。</p>
+  </div>
+  <div class="col">
+    <div class="kicker">請選擇</div>
+    <div class="bigpick">
+      <button class="btn pick" id="btn3" type="button">模擬題三</button>
+      <button class="btn pick alt" id="btn4" type="button">模擬題四</button>
+    </div>
+  </div>`;
+}
+function bindHome(){
+  document.getElementById("btn3").onclick = function(){ choosePaper("3"); };
+  document.getElementById("btn4").onclick = function(){ choosePaper("4"); };
+}
+function viewIntro(){
+  const p = curPaper();
+  return `<div class="col left">
+    <div class="kicker">女兒　小三／3D</div>
+    <h1 class="title">${escapeHtml(p.title)}</h1>
+    <p class="note">請允許網頁朗讀。開始後會先給你一點時間看題，再用英文讀出錄音，每段讀兩次。作答時不會顯示對錯。</p>
+    <p class="note">如果沒有聲音，作答頁可以改由家長朗讀。</p>
+  </div>
+  <div class="col">
+    <div class="row">
+      <button class="btn" id="startBtn" type="button">開始作答並播放錄音</button>
+    </div>
+    <div class="row">
+      <button class="btn alt" id="backBtn" type="button">返回封面</button>
+    </div>
+  </div>`;
+}
+function bindIntro(){
+  document.getElementById("startBtn").onclick = startExam;
+  document.getElementById("backBtn").onclick = goHome;
+}
+
+function chipClass(idx){
+  let c = "chip"+(idx===i?" on":"");
+  if (submitted) {
+    const p = curPaper();
+    c += isCorrect(p.questions[idx], ans[idx]) ? " ok" : " no";
+  }
+  return c;
+}
+function viewChips(){
+  const p = curPaper();
+  return `<div class="chips">${p.questions.map(function(q,idx){
+    return `<button type="button" class="${chipClass(idx)}" id="chip-${idx}">${q.n}</button>`;
+  }).join("")}</div>`;
+}
+
+function viewMcq(q, reviewed){
+  const a = ans[i]||{};
+  const items = q.options.map(function(opt, idx){
+    let cls = "opt";
+    if (q.type==="mcq-pic") cls += " pic-opt";
+    if (a.choice===idx) cls += " on";
+    if (reviewed) {
+      if (idx===q.answer) cls += " ok";
+      else if (a.choice===idx) cls += " no";
+    }
+    const pic = (q.type==="mcq-pic" && q.pics && q.pics[idx]) ? svgPic(q.pics[idx]) : "";
+    const cap = q.type==="mcq-pic" ? `<div class="cap">${escapeHtml(opt)}</div>` : `<span>${escapeHtml(opt)}</span>`;
+    return `<button type="button" class="${cls}" data-i="${idx}">
+      <span class="circle" aria-hidden="true"></span>
+      <span class="lab">${String.fromCharCode(65+idx)}.</span>
+      ${pic}${cap}
+    </button>`;
+  }).join("");
+  const wrap = q.type==="mcq-pic" ? "pics" : "opts";
+  return `<div class="${wrap}">${items}</div>`;
+}
+
+function viewFill(q, reviewed){
+  const a = ans[i] || {blanks: q.blanks.map(function(){ return ""; })};
+  const rows = q.blanks.map(function(b, j){
+    let cls = "blank";
+    if (!reviewed && activeBlank===j) cls += " on";
+    if (reviewed) cls += gradeBlank(b, a.blanks[j]||"") ? " ok" : " no";
+    return `<div class="blank-row">
+      <div class="blank-lab">${escapeHtml(b.label||("空格 "+(j+1)))}</div>
+      <button type="button" class="${cls}" data-b="${j}">${escapeHtml(a.blanks[j]||"")||"　"}</button>
+    </div>`;
+  }).join("");
+  let pad = "";
+  if (!reviewed) {
+    const kinds = q.blanks.map(function(b){ return b.accept; });
+    if (kinds.length===1 && kinds[0]==="month") {
+      pad = `<div class="months">${MONTH_NAMES.map(function(m){
+        const on = (a.blanks[activeBlank]||"")===m ? " on":"";
+        return `<button type="button" class="mbtn${on}" data-m="${escapeHtml(m)}">${m}</button>`;
+      }).join("")}</div>`;
+    } else {
+      const keys = ["1","2","3","4","5","6","7","8","9","0","/",":","a.m.","p.m.","noon","to","⌫","清除"];
+      pad = `<div class="keys">${keys.map(function(k){
+        return `<button type="button" class="key" data-k="${escapeHtml(k)}">${k}</button>`;
+      }).join("")}</div>`;
+    }
+  }
+  return `<div class="blanks">${rows}</div>${pad}`;
+}
+
+function viewActivity(q, reviewed){
+  const p = curPaper();
+  const a = ans[i]||{};
+  return `<div class="acts">${p.activities.map(function(name){
+    let cls = "act";
+    if (a.value===name) cls += " on";
+    if (reviewed) {
+      if (activityEq(name, q.answer)) cls += " ok";
+      else if (a.value===name) cls += " no";
+    }
+    return `<button type="button" class="${cls}" data-a="${escapeHtml(name)}">${escapeHtml(name)}</button>`;
+  }).join("")}</div>`;
+}
+
+function viewFeedback(q){
+  if (!submitted) return "";
+  const a = ans[i];
+  const ok = isCorrect(q, a);
+  const you = isUnanswered(q,a) ? "未作答" : pickedText(q,a);
+  return `<div class="fb show ${ok?"good":"bad"}">${ok?"正確。":"還未全對。"} 你的答案：${escapeHtml(you)}<br>正確答案：${escapeHtml(correctText(q))}（${q.marks} 分）</div>`;
+}
+
+function viewExam(){
+  const p = curPaper();
+  const q = curQ();
+  const paused = window.speechSynthesis && speechSynthesis.paused;
+  let rightBody = "";
+  if (q.type==="mcq"||q.type==="mcq-pic") rightBody = viewMcq(q, false);
+  else if (q.type==="fill") rightBody = viewFill(q, false);
+  else rightBody = viewActivity(q, false);
+  const confirm = confirmOpen ? `<div class="confirm" id="confirmBox">
+    <div>還有未作答的題目。確定要交卷嗎？</div>
+    <div class="row">
+      <button type="button" class="btn alt" id="cancelSub">繼續作答</button>
+      <button type="button" class="btn danger" id="okSub">確定交卷</button>
+    </div>
+  </div>` : "";
+  const parent = showParent ? `<div class="parent" id="parentBox">For the parent: please read this aloud in English. The student should look at the questions, not this script.<pre style="white-space:pre-wrap;font:inherit">${escapeHtml(plainScript(p))}</pre></div>` : "";
+  return `<div class="col left">
+    <div class="kicker">${escapeHtml(p.title)}　Part ${escapeHtml(q.part)}　第 ${q.n} 題／11</div>
+    <div class="status" id="listenStatus">Listen and answer. You will hear each part twice.</div>
+    ${viewChips()}
+    <p class="stem">${escapeHtml(q.stem).replace(/\n/g,"<br>")}</p>
+  </div>
+  <div class="col">
+    <div class="row">
+      <button type="button" class="btn alt" id="prevBtn" ${i===0?"disabled":""}>上一題</button>
+      <button type="button" class="btn alt" id="nextBtn" ${i===10?"disabled":""}>下一題</button>
+      <button type="button" class="btn danger" id="submitBtn">交卷</button>
+    </div>
+    ${rightBody}
+    <div class="row">
+      <button type="button" class="btn alt" id="pauseBtn">${paused?"Resume":"Pause"}</button>
+      <button type="button" class="btn alt" id="replayBtn">繼續播放錄音</button>
+      <button type="button" class="btn alt" id="parentBtn">${showParent?"收起家長稿":"沒有聲音？改由家長朗讀"}</button>
+    </div>
+    ${confirm}${parent}
+  </div>`;
+}
+function bindExam(){
+  document.querySelectorAll(".chip").forEach(function(el){
+    el.onclick = function(){ goQ(+el.id.replace("chip-","")); };
+  });
+  document.querySelectorAll(".opt").forEach(function(el){
+    el.onclick = function(){ setAnsMcq(+el.getAttribute("data-i")); };
+  });
+  document.querySelectorAll(".blank").forEach(function(el){
+    el.onclick = function(){ activeBlank = +el.getAttribute("data-b"); render(); };
+  });
+  document.querySelectorAll(".key").forEach(function(el){
+    el.onclick = function(){ pressKey(el.getAttribute("data-k")); };
+  });
+  document.querySelectorAll(".mbtn").forEach(function(el){
+    el.onclick = function(){ setMonth(el.getAttribute("data-m")); };
+  });
+  document.querySelectorAll(".act").forEach(function(el){
+    el.onclick = function(){ setAct(el.getAttribute("data-a")); };
+  });
+  document.getElementById("prevBtn").onclick = function(){ goQ(i-1); };
+  document.getElementById("nextBtn").onclick = function(){ goQ(i+1); };
+  document.getElementById("pauseBtn").onclick = togglePause;
+  document.getElementById("replayBtn").onclick = continueAudio;
+  document.getElementById("parentBtn").onclick = function(){ showParent = !showParent; render(); };
+  document.getElementById("submitBtn").onclick = trySubmit;
+  const c = document.getElementById("cancelSub");
+  const o = document.getElementById("okSub");
+  if (c) c.onclick = function(){ confirmOpen=false; render(); };
+  if (o) o.onclick = function(){ confirmOpen=true; trySubmit(); };
+}
+
+function totalScore(){
+  const p = curPaper();
+  return p.questions.reduce(function(s,q,idx){ return s+marksOf(q, ans[idx]); }, 0);
+}
+function viewResult(){
+  const p = curPaper();
+  const q = curQ();
+  const score = totalScore();
+  let right = "";
+  if (reviewTab==="script") {
+    right = `<div class="script">${decorateScript(p)}</div>`;
+  } else {
+    let body = "";
+    if (q.type==="mcq"||q.type==="mcq-pic") body = viewMcq(q, true);
+    else if (q.type==="fill") body = viewFill(q, true);
+    else body = viewActivity(q, true);
+    right = body + viewFeedback(q);
+  }
+  return `<div class="col left">
+    <div class="kicker">${escapeHtml(p.title)}　交卷結果</div>
+    <div class="score">${score} / 40</div>
+    <p class="note">第 1–6 題每題 4 分，第 7–10 題每題 3 分（全對才得分），第 11 題 4 分。</p>
+    ${viewChips()}
+    <p class="stem">${escapeHtml(q.stem).replace(/\n/g,"<br>")}</p>
+  </div>
+  <div class="col">
+    ${right}
+    <div class="row">
+      <button type="button" class="btn alt" id="tabQ">逐題查看</button>
+      <button type="button" class="btn alt" id="tabS">看錄音稿</button>
+    </div>
+    <div class="row">
+      <button type="button" class="btn alt" id="prevBtn" ${i===0?"disabled":""}>上一題</button>
+      <button type="button" class="btn alt" id="nextBtn" ${i===10?"disabled":""}>下一題</button>
+    </div>
+    <div class="row">
+      <button type="button" class="btn" id="homeBtn">返回封面</button>
+    </div>
+  </div>`;
+}
+function bindResult(){
+  document.querySelectorAll(".chip").forEach(function(el){
+    el.onclick = function(){ reviewTab="q"; goQ(+el.id.replace("chip-","")); };
+  });
+  document.getElementById("tabQ").onclick = function(){ reviewTab="q"; render(); };
+  document.getElementById("tabS").onclick = function(){ reviewTab="script"; render(); };
+  document.getElementById("prevBtn").onclick = function(){ reviewTab="q"; goQ(i-1); };
+  document.getElementById("nextBtn").onclick = function(){ reviewTab="q"; goQ(i+1); };
+  document.getElementById("homeBtn").onclick = goHome;
+}
+
+window.addEventListener("message", function(e){
+  var m = e.data;
+  if (!m || m.elh !== 1 || m.type !== "restore" || e.source !== window.parent) return;
+  var d = m.data || {};
+  if (typeof d.i !== "number" || d.i < 0 || d.i >= 22) return;
+  allAns["3"] = Array.isArray(d.ans3) ? d.ans3 : null;
+  allAns["4"] = Array.isArray(d.ans4) ? d.ans4 : null;
+  allSubmitted["3"] = !!d.submitted3;
+  allSubmitted["4"] = !!d.submitted4;
+  if (d.paper==="3" || d.paper==="4") paperId = d.paper;
+  else paperId = d.i >= 11 ? "4" : "3";
+  i = (typeof d.i === "number") ? (d.i >= 11 ? d.i - 11 : d.i) : 0;
+  if (i < 0 || i > 10) i = 0;
+  if (!allAns[paperId]) allAns[paperId] = getPaper(paperId).questions.map(function(){ return null; });
+  ans = allAns[paperId];
+  submitted = allSubmitted[paperId] || d.phase==="result";
+  phase = (d.phase==="result" || submitted) ? "result" : "exam";
+  // 還原時不重報 init，也不重報答案
+  reviewTab = d.tab==="script" ? "script" : "q";
+  showParent = !!d.parent;
+  activeBlank = typeof d.blank==="number" ? d.blank : 0;
+  confirmOpen = false;
+  render();
+});
+
+elhReport({type:"init", total:22});
+render();
+
+</script>
+</body>
+</html>
