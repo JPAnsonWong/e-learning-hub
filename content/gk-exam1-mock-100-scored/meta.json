@@ -1,0 +1,15 @@
+{
+  "id": "gk-exam1-mock-100-scored",
+  "student": "daughter",
+  "subject": "general",
+  "stage": "g3-3d-exam1",
+  "type": "quiz",
+  "title": "3D 常識第一次考試｜模擬題 100（投屏練習・計分）",
+  "unit": "第一次評估",
+  "tags": [],
+  "difficulty": 2,
+  "minutes": 70,
+  "version": 1,
+  "date": "2026-11-16",
+  "description": "與已上線的模擬題 100 投屏練習分開，互不取代。題目與第 2 版相同，共 100 題，含練習／模擬測驗模式、錯題重做和課題篩選；已按新規則補上斷點續做，網站可記錄進度與計分。約 60 至 80 分鐘。"
+}
