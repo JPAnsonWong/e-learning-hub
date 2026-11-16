@@ -1,0 +1,15 @@
+{
+  "id": "gk-exam1-mock-paper",
+  "student": "daughter",
+  "subject": "general",
+  "stage": "g3-3d-exam1",
+  "type": "quiz",
+  "title": "3D 常識第一次考試｜考前模擬卷",
+  "unit": "第一次評估",
+  "tags": [],
+  "difficulty": 2,
+  "minutes": 60,
+  "version": 1,
+  "date": "2026-11-16",
+  "description": "考前模擬卷，十部分共 67 格計分、滿分 100，計時 60 分鐘，交卷後才出分。範圍為第1冊1–4課、第2冊1–2課及現況時事，不含植物萬花筒。與已上線的模擬題 100 分開，互不取代。"
+}
