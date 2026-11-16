@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3D 常識第一次考試｜考前模擬卷</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;font-family:"PingFang TC","Microsoft JhengHei",sans-serif;background:#eef3f8;color:#1d2b3a;touch-action:manipulation}
+button,input,textarea{font-family:inherit;touch-action:manipulation}
+button{cursor:pointer}
+html{scroll-padding-top:12vh}
+input,textarea{scroll-margin-top:12vh}
+#app{display:flex;height:100%;gap:1.4vmin;padding:1.4vmin}
+.col{background:#fff;border-radius:2vmin;box-shadow:0 .4vmin 1.2vmin rgba(0,0,0,.08);padding:2vmin 2.4vmin;overflow:auto;display:flex;flex-direction:column;min-width:0}
+#left{flex:56}#right{flex:44}
+.meta{display:flex;justify-content:space-between;align-items:center;font-size:clamp(14px,2.5vmin,38px);color:#557;gap:1vmin;flex-wrap:wrap}
+.tag{background:#dbeafe;color:#1e40af;border-radius:1vmin;padding:.25vmin 1.1vmin;font-weight:bold}
+.tag.warn{background:#fee2e2;color:#b91c1c}
+.tag.ok{background:#dcfce7;color:#166534}
+.part{font-size:clamp(16px,3.2vmin,48px);font-weight:bold;margin:.4vmin 0;color:#0f3d7a}
+.qno{font-size:clamp(18px,3.6vmin,54px);font-weight:bold;margin:.4vmin 0}
+.qtext{font-size:clamp(17px,3.6vmin,54px);line-height:1.45}
+.hint{font-size:clamp(13px,2.4vmin,36px);color:#667;margin:.6vmin 0}
+.fig{margin:.8vmin 0;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:1vmin}
+.fig svg{max-width:100%;height:auto;display:block}
+.fig.small svg,.gitem svg{max-height:22vmin}
+.cloze-line{font-size:clamp(17px,3.6vmin,54px);line-height:1.7;margin:.8vmin 0}
+.blank{min-width:16vmin;min-height:max(3rem,7.5vmin);border:.4vmin solid #94a3b8;border-radius:1.2vmin;display:inline-flex;align-items:center;justify-content:center;padding:0 1.4vmin;background:#f8fafc;font-size:clamp(16px,3.6vmin,54px);font-weight:bold;color:#0f3d7a;vertical-align:middle;margin:0 .3vmin}
+.blank.active{border-color:#2563eb;background:#dbeafe;box-shadow:0 0 0 .45vmin #93c5fd}
+.blank.filled{background:#eff6ff;border-color:#2563eb}
+.blank.ok{border-color:#16a34a;background:#dcfce7}
+.blank.bad{border-color:#dc2626;background:#fee2e2}
+.bank,.opts,.btns{display:flex;flex-wrap:wrap;gap:1.2vmin;margin-top:1vmin}
+.bank button,.opt,.chip,.boxbtn,.judgebtn,.choicebtn{
+  min-height:max(3rem,7vmin);min-width:12vmin;font-size:clamp(15px,3.2vmin,48px);
+  border:.35vmin solid #94a3b8;border-radius:1.2vmin;background:#fff;padding:.4vmin 1.6vmin;font-weight:bold
+}
+.bank button.used,.opt.used{opacity:.4;background:#f1f5f9}
+.bank button.sel,.opt.sel,.chip.sel,.boxbtn.sel,.choicebtn.sel{background:#2563eb;color:#fff;border-color:#2563eb}
+.bank button.picked{background:#dbeafe;border-color:#2563eb}
+.mc{display:flex;flex-direction:column;gap:1.2vmin}
+.mc .opt,.choicebtn{text-align:left;width:100%}
+.opt.right,.choicebtn.right,.judgebtn.right,.chip.right,.blank.right{background:#16a34a;color:#fff;border-color:#16a34a}
+.opt.wrong,.choicebtn.wrong,.judgebtn.wrong,.chip.wrong{background:#dc2626;color:#fff;border-color:#dc2626}
+.ggrid{display:grid;grid-template-columns:1fr 1fr;gap:1.2vmin}
+.gitem{border:.3vmin solid #e2e8f0;border-radius:1.4vmin;padding:1vmin;display:flex;flex-direction:column;gap:.6vmin;background:#f8fafc}
+.gitem .gt{font-size:clamp(14px,2.8vmin,42px);line-height:1.35;font-weight:bold}
+.jrow{display:flex;gap:1vmin}
+.judgebtn{flex:1}
+.match{display:flex;flex-direction:column;gap:1vmin}
+.mrow{display:flex;align-items:center;gap:1vmin;font-size:clamp(15px,3vmin,46px)}
+.slots{display:flex;align-items:center;gap:1vmin;flex-wrap:wrap;font-size:clamp(18px,3.6vmin,54px);font-weight:bold}
+.arrow{color:#c2410c}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:1.2vmin;margin-top:1vmin}
+.box{border:.4vmin dashed #94a3b8;border-radius:1.4vmin;min-height:20vmin;padding:1vmin;background:#f8fafc}
+.box.active{border-color:#2563eb;background:#dbeafe;border-style:solid}
+.box h3{margin:0 0 .6vmin;font-size:clamp(15px,3vmin,44px);text-align:center}
+.box .inbox{display:flex;flex-wrap:wrap;gap:.6vmin;justify-content:center}
+.chips{display:flex;flex-wrap:wrap;gap:1vmin;margin:.8vmin 0}
+.nav{display:flex;gap:1.1vmin;margin-top:1.4vmin;flex-wrap:wrap}
+.nav button{flex:1;min-height:max(3rem,7vmin);font-size:clamp(15px,3.1vmin,46px);border:none;border-radius:1.2vmin;background:#cbd5e1;font-weight:bold;min-width:14vmin}
+.nav .go{background:#2563eb;color:#fff}
+.nav .sub{background:#ea580c;color:#fff}
+.nav .again{background:#0f766e;color:#fff}
+.res{font-size:clamp(14px,2.7vmin,40px);margin-top:1.2vmin;padding:1.1vmin 1.4vmin;border-radius:1.2vmin;line-height:1.5}
+.res.ok{background:#dcfce7}
+.res.bad{background:#fee2e2}
+textarea,input[type=text]{width:100%;min-height:max(3rem,8vmin);font-size:clamp(16px,3.6vmin,52px);padding:1vmin 1.2vmin;border:.35vmin solid #94a3b8;border-radius:1.2vmin;resize:vertical}
+.short-wrap{display:flex;flex-direction:column;gap:1vmin}
+.need-space::after{content:"";display:block;height:50vh}
+#ov{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;padding:2vh 2vmin;z-index:9}
+#ovb{background:#fff;border-radius:2vmin;padding:2vmin 2.4vmin;width:min(94vw,150vmin);max-height:94%;overflow:auto}
+.grid{display:grid;grid-template-columns:repeat(10,1fr);gap:.5vmin;margin:.6vmin 0}
+.grid button{min-height:max(2rem,4.6vmin);font-size:clamp(10px,1.7vmin,26px);border:.3vmin solid #94a3b8;border-radius:.8vmin;background:#fff;font-weight:bold;padding:0 .15vmin}
+.grid .done{background:#bfdbfe}
+.grid .g{background:#16a34a;color:#fff;border-color:#16a34a}
+.grid .r{background:#dc2626;color:#fff;border-color:#dc2626}
+.big{font-size:clamp(22px,5vmin,80px);font-weight:bold;color:#1d4ed8;text-align:center;margin:.2vmin 0}
+.ovt{font-size:clamp(18px,4vmin,60px);font-weight:bold}
+.ovp{font-size:clamp(14px,2.9vmin,44px);line-height:1.5}
+.parts{display:grid;grid-template-columns:1fr 1fr;gap:.6vmin 1.6vmin;font-size:clamp(14px,2.8vmin,42px);margin:1vmin 0}
+.start-title{font-size:clamp(22px,4.6vmin,70px);font-weight:bold;color:#0f3d7a;line-height:1.3;margin:0 0 1vmin}
+.start-lead{font-size:clamp(16px,3.2vmin,48px);line-height:1.5}
+.hero{min-height:max(4rem,12vmin);font-size:clamp(20px,4.2vmin,64px);background:#2563eb;color:#fff;border:none;border-radius:1.6vmin;font-weight:bold;width:100%;margin-top:2vmin}
+.score-parts{display:grid;grid-template-columns:1fr 1fr;gap:0 .8vmin;margin:.6vmin 0 1vmin}
+.score-row{display:flex;justify-content:space-between;font-size:clamp(13px,2.4vmin,36px);padding:.25vmin .4vmin;border-bottom:.15vmin solid #e2e8f0}
+.grid{margin:.8vmin 0 0}
+@media (max-width:900px),(orientation:portrait){
+  #app{flex-direction:column;height:auto;min-height:100%}
+  #left,#right{flex:none}
+  .ggrid,.boxes{grid-template-columns:1fr}
+  .grid{grid-template-columns:repeat(5,1fr)}
+}
+
+.diag-row{display:flex;gap:.6vmin;flex-wrap:wrap;margin:0 0 .8vmin}
+.diag-row .choicebtn{flex:1;min-width:9vmin;width:auto;text-align:center;font-size:clamp(14px,2.7vmin,40px);padding:.2vmin .6vmin}
+.nav button:disabled{opacity:.45;cursor:default}
+.ggrid{align-content:start}
+
+</style>
+</head>
+<body>
+<div id="app"><div class="col" id="left"></div><div class="col" id="right"></div></div>
+<div id="ov"><div id="ovb"></div></div>
+<script>
+// ---- E_learning Hub 回報（只在被網站 iframe 載入時有效，單獨打開頁面時無任何作用）----
+function elhReport(m){
+  try{
+    if(location.search.indexOf("elhdebug")>=0)console.log("ELH",JSON.stringify(m));
+    if(window.parent!==window)window.parent.postMessage(Object.assign({elh:1},m),location.origin);
+  }catch(e){}
+}
+function elhText(h){return String(h==null?"":h).replace(/<[^>]*>/g,"").replace(/\s+/g," ").trim().slice(0,200);}
+
+var QUESTIONS = /*__QUESTIONS__*/{"title": "3D 常識第一次考試｜考前模擬卷", "timeLimitSec": 3600, "totalScore": 100, "totalItems": 67, "parts": [{"id": 1, "name": "（一）供詞填充題", "max": 16}, {"id": 2, "name": "（二）填圖題", "max": 8}, {"id": 3, "name": "（三）看圖辨別題", "max": 12}, {"id": 4, "name": "（四）選擇題", "max": 12}, {"id": 5, "name": "（五）配對題", "max": 10}, {"id": 6, "name": "（六）時事常識題", "max": 10}, {"id": 7, "name": "（七）排序題", "max": 2}, {"id": 8, "name": "（八）看圖分類題", "max": 12}, {"id": 9, "name": "（九）生活情境題", "max": 8}, {"id": 10, "name": "（十）簡答題", "max": 10}], "screens": [{"id": "s-1-1", "part": 1, "type": "cloze_bank", "instruction": "選出適當的字詞填在橫線上。點選字庫按鈕填空，可改填。有兩個詞不用。", "bank": ["醫生", "開水", "陰涼", "堅決拒絕", "冷靜", "關心", "母乳", "保護色", "果汁", "發脾氣"], "bankShared": "part1", "items": [{"qid": "1-1", "before": "身體不適時，應該及早請", "after": "診治，不可自行胡亂服藥。", "answer": "醫生", "score": 2, "review": "須與字庫用詞完全相同。"}]}, {"id": "s-1-2", "part": 1, "type": "cloze_bank", "instruction": "選出適當的字詞填在橫線上。點選字庫按鈕填空，可改填。有兩個詞不用。", "bank": ["醫生", "開水", "陰涼", "堅決拒絕", "冷靜", "關心", "母乳", "保護色", "果汁", "發脾氣"], "bankShared": "part1", "items": [{"qid": "1-2", "before": "生病時要多休息，多喝", "after": "，並吃有營養和容易消化的食物。", "answer": "開水", "score": 2, "review": "須與字庫用詞完全相同。"}]}, {"id": "s-1-3", "part": 1, "type": "cloze_bank", "instruction": "選出適當的字詞填在橫線上。點選字庫按鈕填空，可改填。有兩個詞不用。", "bank": ["醫生", "開水", "陰涼", "堅決拒絕", "冷靜", "關心", "母乳", "保護色", "果汁", "發脾氣"], "bankShared": "part1", "items": [{"qid": "1-3", "before": "儲存藥物的地方要", "after": "，並且小孩觸碰不到。", "answer": "陰涼", "score": 2, "review": "須與字庫用詞完全相同。"}]}, {"id": "s-1-4", "part": 1, "type": "cloze_bank", "instruction": "選出適當的字詞填在橫線上。點選字庫按鈕填空，可改填。有兩個詞不用。", "bank": ["醫生", "開水", "陰涼", "堅決拒絕", "冷靜", "關心", "母乳", "保護色", "果汁", "發脾氣"], "bankShared": "part1", "items": [{"qid": "1-4", "before": "有人請你試吸一口煙，你應該", "after": "。", "answer": "堅決拒絕", "score": 2, "review": "須與字庫用詞完全相同。"}]}, {"id": "s-1-5", "part": 1, "type": "cloze_bank", "instruction": "選出適當的字詞填在橫線上。點選字庫按鈕填空，可改填。有兩個詞不用。", "bank": ["醫生", "開水", "陰涼", "堅決拒絕", "冷靜", "關心", "母乳", "保護色", "果汁", "發脾氣"], "bankShared": "part1", "items": [{"qid": "1-5", "before": "生氣時，要先", "after": "下來，然後才表達自己的感受。", "answer": "冷靜", "score": 2, "review": "須與字庫用詞完全相同。"}]}, {"id": "s-1-6", "part": 1, "type": "cloze_bank", "instruction": "選出適當的字詞填在橫線上。點選字庫按鈕填空，可改填。有兩個詞不用。", "bank": ["醫生", "開水", "陰涼", "堅決拒絕", "冷靜", "關心", "母乳", "保護色", "果汁", "發脾氣"], "bankShared": "part1", "items": [{"qid": "1-6", "before": "看見朋友悶悶不樂，我們要互相", "after": "。", "answer": "關心", "score": 2, "review": "須與字庫用詞完全相同。"}]}, {"id": "s-1-7", "part": 1, "type": "cloze_bank", "instruction": "選出適當的字詞填在橫線上。點選字庫按鈕填空，可改填。有兩個詞不用。", "bank": ["醫生", "開水", "陰涼", "堅決拒絕", "冷靜", "關心", "母乳", "保護色", "果汁", "發脾氣"], "bankShared": "part1", "items": [{"qid": "1-7", "before": "哺乳類動物用", "after": "餵養幼兒。", "answer": "母乳", "score": 2, "review": "須與字庫用詞完全相同。"}]}, {"id": "s-1-8", "part": 1, "type": "cloze_bank", "instruction": "選出適當的字詞填在橫線上。點選字庫按鈕填空，可改填。有兩個詞不用。", "bank": ["醫生", "開水", "陰涼", "堅決拒絕", "冷靜", "關心", "母乳", "保護色", "果汁", "發脾氣"], "bankShared": "part1", "items": [{"qid": "1-8", "before": "迷彩服的設計參考了動物的", "after": "。", "answer": "保護色", "score": 2, "review": "須與字庫用詞完全相同。"}]}, {"id": "s-2", "part": 2, "type": "diagram_choice", "instruction": "以下的動物屬於哪種類別？為 A、B、C、D 各選一個類別。", "stem": "請看圖中的四種動物，在橫線上填寫適當的類別。", "fig": "fig2_scene", "choices": ["昆蟲類", "鳥類", "哺乳類", "魚類"], "items": [{"qid": "2-A", "label": "A", "hint": "停在花上的動物", "answer": "昆蟲類", "score": 2, "review": "蝴蝶屬於昆蟲類。"}, {"qid": "2-B", "label": "B", "hint": "站在淺水／濕地的動物", "answer": "鳥類", "score": 2, "review": "白鷺屬於鳥類。"}, {"qid": "2-C", "label": "C", "hint": "草地上的動物", "answer": "哺乳類", "score": 2, "review": "水牛屬於哺乳類。"}, {"qid": "2-D", "label": "D", "hint": "水中有鱗片和鰭的動物", "answer": "魚類", "score": 2, "review": "海魚屬於魚類。"}]}, {"id": "s-3-1", "part": 3, "type": "judge_group", "instruction": "正確的在（ ）內加「✓」，不正確的在（ ）內加「✗」。", "stem": "以下哪些是生病時照顧自己的正確做法？", "items": [{"qid": "3-1A", "text": "按醫生指示服藥", "answer": "✓", "fig": "fig3_1A", "score": 1, "review": "按指示服藥是正確做法。"}, {"qid": "3-1B", "text": "多喝開水、多休息", "answer": "✓", "fig": "fig3_1B", "score": 1, "review": "生病時要多喝開水、多休息。"}, {"qid": "3-1C", "text": "病情改善了，便自行停止服藥", "answer": "✗", "fig": "fig3_1C", "score": 1, "review": "即使病情改善，也不可自行停止服藥。"}, {"qid": "3-1D", "text": "用牛奶送服藥丸", "answer": "✗", "fig": "fig3_1D", "score": 1, "review": "不應用牛奶送服藥丸。"}]}, {"id": "s-3-2", "part": 3, "type": "judge_group", "instruction": "正確的在（ ）內加「✓」，不正確的在（ ）內加「✗」。", "stem": "以下哪些是吸食毒品可能造成的禍害？", "items": [{"qid": "3-2A", "text": "影響儀容", "answer": "✓", "fig": "fig3_2A", "score": 1, "review": "吸毒可能影響儀容。"}, {"qid": "3-2B", "text": "令人增強記憶力和抵抗力", "answer": "✗", "fig": "fig3_2B", "score": 1, "review": "吸毒不會增強記憶力和抵抗力。"}, {"qid": "3-2C", "text": "影響學習和工作", "answer": "✓", "fig": "fig3_2C", "score": 1, "review": "吸毒可能影響學習和工作。"}, {"qid": "3-2D", "text": "嚴重損害健康，甚至失去生命", "answer": "✓", "fig": "fig3_2D", "score": 1, "review": "吸毒會嚴重損害健康，甚至失去生命。"}]}, {"id": "s-3-3", "part": 3, "type": "judge_group", "instruction": "正確的在（ ）內加「✓」，不正確的在（ ）內加「✗」。", "stem": "以下哪些是魚類的特徵？", "items": [{"qid": "3-3A", "text": "通常長有鱗片，用以保護身體", "answer": "✓", "fig": "fig3_3A", "score": 1, "review": "魚類通常長有鱗片，用以保護身體。"}, {"qid": "3-3B", "text": "用鰓呼吸", "answer": "✓", "fig": "fig3_3B", "score": 1, "review": "魚類用鰓呼吸。"}, {"qid": "3-3C", "text": "長有四肢", "answer": "✗", "fig": "fig3_3C", "score": 1, "review": "魚類沒有四肢。"}, {"qid": "3-3D", "text": "用鰭游動和保持平衡", "answer": "✓", "fig": "fig3_3D", "score": 1, "review": "魚類用鰭游動和保持平衡。"}]}, {"id": "s-4-1", "part": 4, "type": "mc", "instruction": "把適當的英文字母填在（ ）內。", "qid": "4-1", "stem": "以下哪一項不是藥物標籤上的資料？", "options": ["每天服藥的次數", "藥物價格", "每次服用的分量", "服藥注意事項（例如飯後）"], "answer": "B", "score": 2, "review": "藥物價格不是藥物標籤上的資料。"}, {"id": "s-4-2", "part": 4, "type": "mc", "instruction": "把適當的英文字母填在（ ）內。", "qid": "4-2", "stem": "以下哪個地方最適合儲存藥物？", "options": ["靠近窗戶、有陽光照射的窗台", "小朋友拿得到的茶几上", "陰涼、乾爽、小孩觸碰不到的高櫃內", "潮濕的魚缸旁邊"], "answer": "C", "score": 2, "review": "藥物應存放在陰涼、乾爽、小孩觸碰不到的高櫃內。"}, {"id": "s-4-3", "part": 4, "type": "mc", "instruction": "把適當的英文字母填在（ ）內。", "qid": "4-3", "stem": "以下哪一種服藥做法是正確的？", "options": ["生病時自行服用成藥。", "按照醫生的指示，定時定量服藥。", "病情改善了，便自行停止服藥。", "想快點痊癒，便多服一點藥物。"], "answer": "B", "score": 2, "review": "必須按照醫生的指示，定時定量服藥。"}, {"id": "s-4-4", "part": 4, "type": "mc", "instruction": "把適當的英文字母填在（ ）內。", "qid": "4-4", "stem": "以下哪一項是哺乳類動物的特徵？", "options": ["用鰓呼吸。", "用肺呼吸，並用母乳餵養幼兒。", "有三對腳。", "全身長有羽毛。"], "answer": "B", "score": 2, "review": "哺乳類用肺呼吸，並用母乳餵養幼兒。"}, {"id": "s-4-5", "part": 4, "type": "mc", "instruction": "把適當的英文字母填在（ ）內。", "qid": "4-5", "stem": "子彈火車的外形，主要是參考了哪一種動物的哪一部分？", "options": ["松鼠的爪", "八爪魚的吸盤", "普通翠鳥的喙", "海龜的殼"], "answer": "C", "score": 2, "review": "子彈火車的外形主要參考普通翠鳥的喙。吸盤是另一項發明的靈感，但不是子彈火車外形的來源。"}, {"id": "s-4-6", "part": 4, "type": "mc", "instruction": "把適當的英文字母填在（ ）內。", "qid": "4-6", "stem": "朋友請你抄寫她的功課，你應該怎樣做？", "options": ["照她的意思抄寫，免得她不高興。", "完全不理會她。", "告訴她自己不會抄她的功課，並提醒她這樣做不對。", "先抄一部分，剩下的自己做。"], "answer": "C", "score": 2, "review": "應該拒絕抄功課，並提醒對方這樣做不對。"}, {"id": "s-5-jia", "part": 5, "type": "match", "instruction": "把適當的代表字母填在橫線上。先點選項，再點橫線（或先點橫線再點選項）。有多餘選項不使用。", "title": "甲. 分辨以下動物的主要特徵。", "lefts": [{"qid": "5-甲1", "text": "哺乳類", "answer": "A", "score": 1}, {"qid": "5-甲2", "text": "昆蟲類", "answer": "B", "score": 1}, {"qid": "5-甲3", "text": "鳥類", "answer": "C", "score": 1}], "rights": [{"key": "A", "text": "用母乳餵養幼兒，身體表面長有毛髮。"}, {"key": "B", "text": "身體分為頭、胸和腹，有三對腳。"}, {"key": "C", "text": "全身長有羽毛，用喙取食。"}, {"key": "D", "text": "用鰓呼吸，用鰭游動。"}], "review": "1 配 A，2 配 B，3 配 C。D（魚類特徵）不使用。"}, {"id": "s-5-yi", "part": 5, "type": "match", "instruction": "把適當的代表字母填在橫線上。先點選項，再點橫線（或先點橫線再點選項）。有多餘選項不使用。", "title": "乙. 以下動物怎樣幫助人類？", "lefts": [{"qid": "5-乙1", "text": "導盲犬", "answer": "A", "score": 1}, {"qid": "5-乙2", "text": "警犬", "answer": "B", "score": 1}, {"qid": "5-乙3", "text": "動物醫生（陪伴病人的動物）", "answer": "C", "score": 1}], "rights": [{"key": "A", "text": "幫助失明人士照顧自己的起居生活。"}, {"key": "B", "text": "協助警察執行搜尋任務。"}, {"key": "C", "text": "陪伴長期住在醫院、感到沉悶的病人。"}, {"key": "D", "text": "為我們提供奶和毛。"}], "review": "1 配 A，2 配 B，3 配 C。D 不使用。"}, {"id": "s-5-bing", "part": 5, "type": "match", "instruction": "把適當的代表字母填在橫線上。先點選項，再點橫線（或先點橫線再點選項）。有多餘選項不使用。", "title": "丙. 在以下情況，我們應該怎樣做？", "lefts": [{"qid": "5-丙1", "text": "弟弟患了感冒。", "answer": "A", "score": 1}, {"qid": "5-丙2", "text": "哥哥建議把剩下的藥物給妹妹吃。", "answer": "B", "score": 1}, {"qid": "5-丙3", "text": "同學請你嘗一口啤酒。", "answer": "C", "score": 1}, {"qid": "5-丙4", "text": "生氣時很想踢壞玩具。", "answer": "D", "score": 1}], "rights": [{"key": "A", "text": "告訴家人，讓他們帶他看醫生，並向他表達關懷和慰問。"}, {"key": "B", "text": "告訴他不可以服用別人的藥物。"}, {"key": "C", "text": "堅決拒絕，並提醒他做得不對的地方。"}, {"key": "D", "text": "先冷靜下來，然後才表達自己的感受。"}, {"key": "E", "text": "為了繼續一起玩，就按他的意思做。"}], "review": "1 配 A，2 配 B，3 配 C，4 配 D。E 不使用。"}, {"id": "s-6-1", "part": 6, "type": "mc", "instruction": "把適當的英文字母填在（ ）內。", "qid": "6-1", "stem": "黎家盈主持「天宮課堂」時提及，太空站環繞地球一周需要多少時間？", "options": ["45 分鐘", "60 分鐘", "90 分鐘", "120 分鐘"], "answer": "C", "score": 2, "review": "太空站環繞地球一周需要 90 分鐘。"}, {"id": "s-6-2", "part": 6, "type": "mc", "instruction": "把適當的英文字母填在（ ）內。", "qid": "6-2", "stem": "根據報道，以下哪一位網球運動員為港隊奪得歷來首面亞運網球男單金牌？", "options": ["黃澤林", "張瑋桓", "鄧銘漮", "何詩蓓"], "answer": "A", "score": 2, "review": "黃澤林為港隊奪得歷來首面亞運網球男單金牌。何詩蓓是游泳運動員。"}, {"id": "s-6-3", "part": 6, "type": "mc", "instruction": "把適當的英文字母填在（ ）內。", "qid": "6-3", "stem": "2026 年第四屆青年奧林匹克運動會在哪裏舉行？", "options": ["日本名古屋", "塞內加爾達卡", "意大利米蘭", "中國北京"], "answer": "B", "score": 2, "review": "2026 年第四屆青年奧林匹克運動會在塞內加爾達卡舉行。"}, {"id": "s-6-4", "part": 6, "type": "mc", "instruction": "把適當的英文字母填在（ ）內。", "qid": "6-4", "stem": "中國香港隊在 2026 年青年奧林匹克運動會的首面金牌，是由哪一位運動員奪得的？", "options": ["何承謙（劍擊）", "黃澤林（網球）", "潘浩然（武術：男子太極拳太極扇全能）", "何詩蓓（游泳）"], "answer": "C", "score": 2, "review": "潘浩然奪得中國香港隊於今屆青奧的首面金牌。何承謙其後亦奪得花劍金牌，但不是首面。"}, {"id": "s-6-5", "part": 6, "type": "mc", "instruction": "把適當的英文字母填在（ ）內。", "qid": "6-5", "stem": "2026 年 11 月 12 日，是孫中山先生誕辰多少周年紀念日？", "options": ["100 周年", "120 周年", "150 周年", "160 周年"], "answer": "D", "score": 2, "review": "2026 年 11 月 12 日是孫中山先生誕辰 160 周年紀念日。"}, {"id": "s-7", "part": 7, "type": "order", "instruction": "把答案的代表字母填在（ ）內。已給出第一步。點選剩餘空位填入字母，可更改。全對才得分。", "qid": "7-1", "stem": "生病時，從求醫到服藥的過程是怎樣的？請順序排列。已給出第一步。", "fig": "fig7_comic", "steps": [{"key": "A", "text": "仔細閱讀藥物標籤，按照醫生指示服藥"}, {"key": "B", "text": "身體不適，及早求醫"}, {"key": "C", "text": "定時定量服藥，並多休息、多喝開水"}, {"key": "D", "text": "清楚說出病情，並小心聆聽醫生的指示"}], "slots": 4, "locked": [0], "preset": ["B", null, null, null], "answer": ["B", "D", "A", "C"], "score": 2, "review": "正確順序是 B → D → A → C。"}, {"id": "s-8-jia", "part": 8, "type": "classify", "instruction": "把適當的英文字母填入所屬類別。先點選字母，再點所屬分類箱。同一類可放多個字母；可更改。", "title": "甲. 哪些是脊椎動物？哪些是無脊椎動物？", "boxes": [{"id": "vert", "label": "脊椎動物"}, {"id": "invert", "label": "無脊椎動物"}], "items": [{"qid": "8-甲A", "key": "A", "text": "蝴蝶", "fig": "fig8_jiaA", "answer": "invert", "score": 1}, {"qid": "8-甲B", "key": "B", "text": "白鷺", "fig": "fig8_jiaB", "answer": "vert", "score": 1}, {"qid": "8-甲C", "key": "C", "text": "水牛", "fig": "fig8_jiaC", "answer": "vert", "score": 1}, {"qid": "8-甲D", "key": "D", "text": "蝗蟲", "fig": "fig8_jiaD", "answer": "invert", "score": 1}], "review": "脊椎動物：B 白鷺、C 水牛。無脊椎動物：A 蝴蝶、D 蝗蟲。"}, {"id": "s-8-yi", "part": 8, "type": "classify", "instruction": "把適當的英文字母填入所屬類別。先點選字母，再點所屬分類箱。同一類可放多個字母；可更改。", "title": "乙. 以下哪些是吸毒可能導致的後果？哪些不是？", "boxes": [{"id": "yes", "label": "吸毒可能導致的後果"}, {"id": "no", "label": "不是吸毒可能導致的後果"}], "items": [{"qid": "8-乙A", "key": "A", "text": "影響儀容", "fig": "fig8_yiA", "answer": "yes", "score": 1}, {"qid": "8-乙B", "key": "B", "text": "令身體更強壯", "fig": "fig8_yiB", "answer": "no", "score": 1}, {"qid": "8-乙C", "key": "C", "text": "情緒和行為失控", "fig": "fig8_yiC", "answer": "yes", "score": 1}, {"qid": "8-乙D", "key": "D", "text": "失去生命", "fig": "fig8_yiD", "answer": "yes", "score": 1}], "review": "可能導致：A、C、D。不是：B。"}, {"id": "s-8-bing", "part": 8, "type": "classify", "instruction": "把適當的英文字母填入所屬類別。先點選字母，再點所屬分類箱。同一類可放多個字母；可更改。", "title": "丙. 以下哪些是正面情緒？哪些是負面情緒？", "boxes": [{"id": "pos", "label": "正面情緒"}, {"id": "neg", "label": "負面情緒"}], "items": [{"qid": "8-丙A", "key": "A", "text": "開心", "fig": "fig8_bingA", "answer": "pos", "score": 1}, {"qid": "8-丙B", "key": "B", "text": "傷心", "fig": "fig8_bingB", "answer": "neg", "score": 1}, {"qid": "8-丙C", "key": "C", "text": "興奮", "fig": "fig8_bingC", "answer": "pos", "score": 1}, {"qid": "8-丙D", "key": "D", "text": "生氣", "fig": "fig8_bingD", "answer": "neg", "score": 1}], "review": "正面情緒：A 開心、C 興奮。負面情緒：B 傷心、D 生氣。"}, {"id": "s-9-1", "part": 9, "type": "mc_buttons", "instruction": "根據以下情境，回答問題。", "qid": "9-1", "fig": "fig9_scene", "stem": "子文若在上午十時服藥，下一次再服應該是甚麼時間？", "options": ["下午一時", "下午二時", "下午四時"], "answer": "下午二時", "score": 2, "review": "標籤寫明每隔 4 小時服 1 次，上午十時再隔四小時是下午二時。"}, {"id": "s-9-2", "part": 9, "type": "mc_buttons", "instruction": "根據以下情境，回答問題。", "qid": "9-2", "fig": "fig9_scene", "stem": "以下哪個地方最適合儲存子文的藥物？", "options": ["窗邊", "茶几", "高櫃"], "answer": "高櫃", "score": 2, "review": "藥物應存放在陰涼、小孩觸碰不到的高櫃。"}, {"id": "s-9-3", "part": 9, "type": "cloze_bank", "instruction": "選出適當的字詞填在橫線上。點選字庫按鈕填空，可改填。有兩個詞不用。", "fig": "fig9_scene", "bank": ["定時定量", "誤服", "隨便", "增加"], "bankShared": "part9", "items": [{"qid": "9-3a", "before": "看病後要按照醫生的指示，", "after": "服藥。", "answer": "定時定量", "score": 2, "review": "要按照醫生的指示，定時定量服藥。"}, {"qid": "9-3b", "before": "正確儲存藥物，可以避免藥物變質或", "after": "藥物。", "answer": "誤服", "score": 2, "review": "正確儲存藥物，可以避免藥物變質或誤服藥物。"}]}, {"id": "s-10-1", "part": 10, "type": "short", "qid": "10-1", "stem": "舉出一項鳥類的特徵。", "sample": "鳥類全身長有羽毛。", "acceptGroups": [{"id": "feathers", "keys": ["羽毛"]}, {"id": "beak", "keys": ["喙", "用嘴取食", "用咀取食"]}, {"id": "wings", "keys": ["翅膀", "一對腳"]}, {"id": "lungs", "keys": ["用肺呼吸", "肺呼吸"]}], "rejectKeys": ["鰓", "母乳", "三對腳", "三對足", "鱗片"], "score": 2, "review": "可接受：全身長有羽毛；用喙取食；有一對翅膀和一對腳；用肺呼吸。不接受張冠李戴的特徵。"}, {"id": "s-10-2", "part": 10, "type": "short", "qid": "10-2", "stem": "舉出一種當我們不快樂時，可以用來放鬆心情的方法。", "sample": "不快樂時，可以向別人傾訴。", "acceptGroups": [{"id": "talk", "keys": ["傾訴", "傾偈", "告訴別人", "向人講", "向別人說", "向朋友說", "向家人說", "告訴朋友", "告訴家人", "告訴老師", "訴說"]}, {"id": "sport", "keys": ["運動", "游泳", "跑步", "打球", "做體操", "散步", "慢跑"]}, {"id": "cry", "keys": ["大哭", "哭一場", "哭出來", "哭一哭"]}, {"id": "music", "keys": ["聽音樂", "聽歌", "音樂"]}], "rejectKeys": ["暴飲暴食", "破壞", "踢壞", "發脾氣", "吸毒", "食煙", "飲酒"], "score": 2, "review": "可接受：向別人傾訴、做運動、大哭一場、聽音樂。不接受暴飲暴食、破壞物件、胡亂發脾氣或吸毒。"}, {"id": "s-10-3", "part": 10, "type": "short_pair", "instruction": "舉出兩種朋友之間要互相做到的事情。（兩項須不相同）", "stem": "舉出兩種朋友之間要互相做到的事情。", "items": [{"qid": "10-3a", "label": "第一項", "score": 2}, {"qid": "10-3b", "label": "第二項", "score": 2}], "sample": "朋友之間要互相分享和關心。", "acceptGroups": [{"id": "share", "keys": ["分享", "共享"]}, {"id": "care", "keys": ["關心", "關懷", "關愛", "關切"]}, {"id": "support", "keys": ["支持", "打氣", "加油"]}, {"id": "help", "keys": ["幫助", "幫忙", "互助", "協助"]}], "rejectKeys": ["抄功課", "偷看日記", "作弄", "依從不當", "抄襲"], "distinct": true, "review": "可接受兩項不同的：分享、關心、支持、幫助（意思相同即可，例如「互相幫忙」＝幫助，「為對方打氣」＝支持）。不接受抄功課、偷看日記、一同作弄別人或依從不當要求。"}, {"id": "s-10-4", "part": 10, "type": "short", "qid": "10-4", "stem": "農場裏的動物可以為我們提供甚麼？請舉出一項。", "sample": "農場裏的動物可以為我們提供食物。", "acceptGroups": [{"id": "food", "keys": ["食物", "食糧", "食品"]}, {"id": "goods", "keys": ["生活用品", "用品"]}, {"id": "meat", "keys": ["肉"]}, {"id": "egg", "keys": ["蛋", "雞蛋"]}, {"id": "milk", "keys": ["奶", "牛奶", "乳"]}, {"id": "wool", "keys": ["毛", "羊毛"]}, {"id": "hide", "keys": ["皮", "皮革"]}], "rejectKeys": ["野生", "隨便食用野生"], "score": 2, "review": "可接受：食物、生活用品、肉、蛋、奶、毛、皮（也可寫由哪種動物提供，例如「牛提供奶」）。不接受只寫野生動物製品，或說可以隨便食用野生動物。"}], "qids": ["1-1", "1-2", "1-3", "1-4", "1-5", "1-6", "1-7", "1-8", "2-A", "2-B", "2-C", "2-D", "3-1A", "3-1B", "3-1C", "3-1D", "3-2A", "3-2B", "3-2C", "3-2D", "3-3A", "3-3B", "3-3C", "3-3D", "4-1", "4-2", "4-3", "4-4", "4-5", "4-6", "5-甲1", "5-甲2", "5-甲3", "5-乙1", "5-乙2", "5-乙3", "5-丙1", "5-丙2", "5-丙3", "5-丙4", "6-1", "6-2", "6-3", "6-4", "6-5", "7-1", "8-甲A", "8-甲B", "8-甲C", "8-甲D", "8-乙A", "8-乙B", "8-乙C", "8-乙D", "8-丙A", "8-丙B", "8-丙C", "8-丙D", "9-1", "9-2", "9-3a", "9-3b", "10-1", "10-2", "10-3a", "10-3b", "10-4"]};
+var FIGURES = /*__FIGURES__*/{"fig2_scene": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 900 480\" aria-hidden=\"true\" >\n<rect width=\"900\" height=\"480\" fill=\"#c8e6c9\"/>\n<rect x=\"0\" y=\"0\" width=\"900\" height=\"200\" fill=\"#b3e5fc\"/>\n<ellipse cx=\"140\" cy=\"70\" rx=\"40\" ry=\"28\" fill=\"#fff9c4\" opacity=\".9\"/>\n<!-- trees left -->\n<rect x=\"70\" y=\"160\" width=\"18\" height=\"80\" fill=\"#6d4c41\"/>\n<circle cx=\"79\" cy=\"150\" r=\"48\" fill=\"#2e7d32\"/>\n<rect x=\"200\" y=\"170\" width=\"16\" height=\"70\" fill=\"#6d4c41\"/>\n<circle cx=\"208\" cy=\"160\" r=\"40\" fill=\"#388e3c\"/>\n<!-- grass -->\n<rect x=\"0\" y=\"300\" width=\"520\" height=\"180\" fill=\"#81c784\"/>\n<!-- wetland / pond -->\n<ellipse cx=\"640\" cy=\"340\" rx=\"240\" ry=\"110\" fill=\"#4fc3f7\"/>\n<ellipse cx=\"640\" cy=\"340\" rx=\"210\" ry=\"90\" fill=\"#29b6f6\"/>\n<!-- flower + butterfly A -->\n<rect x=\"120\" y=\"300\" width=\"6\" height=\"36\" fill=\"#2e7d32\"/>\n<circle cx=\"123\" cy=\"292\" r=\"14\" fill=\"#ec407a\"/>\n<circle cx=\"123\" cy=\"292\" r=\"6\" fill=\"#ffd54f\"/>\n<g transform=\"translate(150,250)\">\n  <ellipse cx=\"-12\" cy=\"-8\" rx=\"16\" ry=\"10\" fill=\"#7e57c2\" stroke=\"#4527a0\" stroke-width=\"1\"/>\n  <ellipse cx=\"12\" cy=\"-8\" rx=\"16\" ry=\"10\" fill=\"#7e57c2\" stroke=\"#4527a0\" stroke-width=\"1\"/>\n  <ellipse cx=\"-10\" cy=\"8\" rx=\"12\" ry=\"8\" fill=\"#b39ddb\"/>\n  <ellipse cx=\"10\" cy=\"8\" rx=\"12\" ry=\"8\" fill=\"#b39ddb\"/>\n  <rect x=\"-2\" y=\"-10\" width=\"4\" height=\"22\" rx=\"2\" fill=\"#37474f\"/>\n  <line x1=\"-2\" y1=\"-10\" x2=\"-8\" y2=\"-20\" stroke=\"#37474f\" stroke-width=\"1.5\"/>\n  <line x1=\"2\" y1=\"-10\" x2=\"8\" y2=\"-20\" stroke=\"#37474f\" stroke-width=\"1.5\"/>\n<\/g>\n<!-- buffalo C on grass -->\n<g transform=\"translate(300,300)\">\n  <ellipse cx=\"70\" cy=\"50\" rx=\"70\" ry=\"32\" fill=\"#6d4c41\"/>\n  <rect x=\"20\" y=\"40\" width=\"90\" height=\"28\" rx=\"10\" fill=\"#5d4037\"/>\n  <circle cx=\"20\" cy=\"40\" r=\"22\" fill=\"#4e342e\"/>\n  <circle cx=\"12\" cy=\"34\" r=\"3\" fill=\"#fff\"/>\n  <path d=\"M8 22 Q0 10 18 18\" fill=\"none\" stroke=\"#3e2723\" stroke-width=\"4\"/>\n  <path d=\"M28 22 Q36 8 22 18\" fill=\"none\" stroke=\"#3e2723\" stroke-width=\"4\"/>\n  <rect x=\"30\" y=\"70\" width=\"10\" height=\"28\" fill=\"#4e342e\"/>\n  <rect x=\"55\" y=\"70\" width=\"10\" height=\"28\" fill=\"#4e342e\"/>\n  <rect x=\"80\" y=\"70\" width=\"10\" height=\"28\" fill=\"#4e342e\"/>\n  <rect x=\"100\" y=\"70\" width=\"10\" height=\"28\" fill=\"#4e342e\"/>\n  <path d=\"M135 50 Q155 40 145 60\" fill=\"#4e342e\"/>\n<\/g>\n<!-- egret B in shallow water -->\n<g transform=\"translate(560,230)\">\n  <path d=\"M40 20 C20 40 50 70 40 110\" fill=\"#fafafa\" stroke=\"#90a4ae\" stroke-width=\"1\"/>\n  <circle cx=\"44\" cy=\"16\" r=\"10\" fill=\"#fff\" stroke=\"#90a4ae\"/>\n  <circle cx=\"47\" cy=\"14\" r=\"2\" fill=\"#333\"/>\n  <path d=\"M52 16 L78 20 L52 22 Z\" fill=\"#ffb300\"/>\n  <path d=\"M40 110 L36 150\" stroke=\"#ffb300\" stroke-width=\"4\"/>\n  <path d=\"M36 150 L28 160 M36 150 L44 158\" stroke=\"#ffb300\" stroke-width=\"3\"/>\n  <path d=\"M38 50 Q70 40 50 70\" fill=\"#eceff1\"/>\n<\/g>\n<!-- fish D in water with scales and fins -->\n<g transform=\"translate(700,310)\">\n  <ellipse cx=\"50\" cy=\"30\" rx=\"48\" ry=\"22\" fill=\"#0288d1\"/>\n  <path d=\"M98 30 L128 12 L120 30 L128 48 Z\" fill=\"#01579b\"/>\n  <path d=\"M50 8 L62 0 L58 12 Z\" fill=\"#01579b\"/>\n  <path d=\"M40 48 L28 62 L50 50 Z\" fill=\"#01579b\"/>\n  <path d=\"M70 48 L80 62 L60 50 Z\" fill=\"#01579b\"/>\n  <circle cx=\"24\" cy=\"26\" r=\"4\" fill=\"#fff\"/><circle cx=\"23\" cy=\"26\" r=\"2\" fill=\"#111\"/>\n  <path d=\"M18 32 Q28 38 38 32\" fill=\"none\" stroke=\"#01579b\" stroke-width=\"1.5\"/>\n  <!-- scales -->\n  <path d=\"M40 20 q8 6 0 12 M52 18 q8 8 0 16 M64 20 q8 6 0 12 M46 28 q8 6 0 12 M58 28 q8 6 0 12\" fill=\"none\" stroke=\"#4fc3f7\" stroke-width=\"1.4\"/>\n<\/g>\n<!-- labels -->\n<g font-family=\"PingFang TC,Microsoft JhengHei,sans-serif\" font-size=\"28\" font-weight=\"bold\" text-anchor=\"middle\">\n  <circle cx=\"200\" cy=\"230\" r=\"22\" fill=\"#1565c0\"/><text x=\"200\" y=\"240\" fill=\"#fff\">A<\/text>\n  <circle cx=\"530\" cy=\"220\" r=\"22\" fill=\"#1565c0\"/><text x=\"530\" y=\"230\" fill=\"#fff\">B<\/text>\n  <circle cx=\"280\" cy=\"290\" r=\"22\" fill=\"#1565c0\"/><text x=\"280\" y=\"300\" fill=\"#fff\">C<\/text>\n  <circle cx=\"680\" cy=\"300\" r=\"22\" fill=\"#1565c0\"/><text x=\"680\" y=\"310\" fill=\"#fff\">D<\/text>\n<\/g>\n<\/svg>", "fig3_1A": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 160\" aria-hidden=\"true\" ><rect width=\"100%\" height=\"100%\" rx=\"16\" fill=\"#e8f5e9\" stroke=\"#cfd8dc\" stroke-width=\"3\"/>\n<rect x=\"30\" y=\"90\" width=\"120\" height=\"50\" rx=\"6\" fill=\"#a1887f\"/>\n<circle cx=\"80\" cy=\"70\" r=\"22\" fill=\"#ffe0b2\"/>\n<ellipse cx=\"80\" cy=\"110\" rx=\"28\" ry=\"22\" fill=\"#42a5f5\"/>\n<rect x=\"150\" y=\"40\" width=\"70\" height=\"50\" rx=\"6\" fill=\"#fff8e1\" stroke=\"#f9a825\" stroke-width=\"2\"/>\n<text x=\"185\" y=\"62\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"bold\" fill=\"#f57f17\">藥<\/text>\n<text x=\"185\" y=\"80\" text-anchor=\"middle\" font-size=\"11\" fill=\"#6d4c41\">按指示<\/text>\n<circle cx=\"70\" cy=\"100\" r=\"6\" fill=\"#ef5350\"/>\n<\/svg>", "fig3_1B": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 160\" aria-hidden=\"true\" ><rect width=\"100%\" height=\"100%\" rx=\"16\" fill=\"#e3f2fd\" stroke=\"#cfd8dc\" stroke-width=\"3\"/>\n<!-- drink + rest -->\n<rect x=\"20\" y=\"70\" width=\"90\" height=\"55\" rx=\"8\" fill=\"#bbdefb\"/>\n<circle cx=\"55\" cy=\"60\" r=\"18\" fill=\"#ffe0b2\"/>\n<rect x=\"40\" y=\"80\" width=\"10\" height=\"28\" fill=\"#29b6f6\"/>\n<rect x=\"130\" y=\"80\" width=\"90\" height=\"18\" rx=\"4\" fill=\"#8d6e63\"/>\n<ellipse cx=\"175\" cy=\"70\" rx=\"36\" ry=\"16\" fill=\"#ffe0b2\"/>\n<rect x=\"150\" y=\"78\" width=\"50\" height=\"22\" rx=\"6\" fill=\"#66bb6a\"/>\n<text x=\"120\" y=\"40\" text-anchor=\"middle\" font-size=\"14\" fill=\"#1565c0\">多喝開水、多休息<\/text>\n<\/svg>", "fig3_1C": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 160\" aria-hidden=\"true\" ><rect width=\"100%\" height=\"100%\" rx=\"16\" fill=\"#ffebee\" stroke=\"#cfd8dc\" stroke-width=\"3\"/>\n<circle cx=\"70\" cy=\"70\" r=\"22\" fill=\"#ffe0b2\"/>\n<ellipse cx=\"70\" cy=\"115\" rx=\"30\" ry=\"22\" fill=\"#ef9a9a\"/>\n<rect x=\"120\" y=\"90\" width=\"40\" height=\"18\" rx=\"4\" fill=\"#ffcc80\" transform=\"rotate(-20 140 99)\"/>\n<path d=\"M140 70 l30 -20\" stroke=\"#e53935\" stroke-width=\"4\"/>\n<text x=\"120\" y=\"36\" font-size=\"13\" fill=\"#c62828\">「我好多了，<\/text>\n<text x=\"120\" y=\"54\" font-size=\"13\" fill=\"#c62828\">不用再吃」<\/text>\n<\/svg>", "fig3_1D": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 160\" aria-hidden=\"true\" ><rect width=\"100%\" height=\"100%\" rx=\"16\" fill=\"#f3e5f5\" stroke=\"#cfd8dc\" stroke-width=\"3\"/>\n<circle cx=\"80\" cy=\"70\" r=\"20\" fill=\"#ffe0b2\"/>\n<ellipse cx=\"80\" cy=\"115\" rx=\"28\" ry=\"22\" fill=\"#ce93d8\"/>\n<rect x=\"140\" y=\"70\" width=\"22\" height=\"50\" rx=\"4\" fill=\"#fff\" stroke=\"#90a4ae\" stroke-width=\"2\"/>\n<rect x=\"142\" y=\"88\" width=\"18\" height=\"30\" fill=\"#fafafa\"/>\n<ellipse cx=\"151\" cy=\"88\" rx=\"9\" ry=\"6\" fill=\"#fff8e1\"/>\n<circle cx=\"130\" cy=\"80\" r=\"7\" fill=\"#ef5350\"/>\n<text x=\"120\" y=\"40\" font-size=\"14\" fill=\"#6a1b9a\">用牛奶送藥丸<\/text>\n<\/svg>", "fig3_2A": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 160\" aria-hidden=\"true\" ><rect width=\"100%\" height=\"100%\" rx=\"16\" fill=\"#eceff1\" stroke=\"#cfd8dc\" stroke-width=\"3\"/>\n<circle cx=\"120\" cy=\"80\" r=\"36\" fill=\"#ffe0b2\"/>\n<path d=\"M90 60 Q120 30 150 60\" fill=\"#8d6e63\"/>\n<path d=\"M95 70 Q100 50 80 55 M150 70 Q160 48 175 58\" stroke=\"#5d4037\" stroke-width=\"3\" fill=\"none\"/>\n<circle cx=\"108\" cy=\"82\" r=\"4\" fill=\"#333\"/>\n<circle cx=\"132\" cy=\"82\" r=\"4\" fill=\"#333\"/>\n<path d=\"M108 104 Q120 98 132 104\" fill=\"none\" stroke=\"#333\" stroke-width=\"2\"/>\n<text x=\"120\" y=\"145\" text-anchor=\"middle\" font-size=\"14\" fill=\"#546e7a\">儀容變差<\/text>\n<\/svg>", "fig3_2B": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 160\" aria-hidden=\"true\" ><rect width=\"100%\" height=\"100%\" rx=\"16\" fill=\"#fff8e1\" stroke=\"#cfd8dc\" stroke-width=\"3\"/>\n<circle cx=\"80\" cy=\"80\" r=\"28\" fill=\"#ffe0b2\"/>\n<ellipse cx=\"80\" cy=\"125\" rx=\"32\" ry=\"16\" fill=\"#64b5f6\"/>\n<path d=\"M70 55 L80 35 L90 55\" fill=\"#ffd54f\"/>\n<text x=\"125\" y=\"50\" font-size=\"12\" fill=\"#c62828\">「吸毒令我<\/text>\n<text x=\"125\" y=\"68\" font-size=\"12\" fill=\"#c62828\">更聰明！」<\/text>\n<text x=\"120\" y=\"150\" text-anchor=\"middle\" font-size=\"12\" fill=\"#546e7a\">這是錯誤想法<\/text>\n<\/svg>", "fig3_2C": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 160\" aria-hidden=\"true\" ><rect width=\"100%\" height=\"100%\" rx=\"16\" fill=\"#e3f2fd\" stroke=\"#cfd8dc\" stroke-width=\"3\"/>\n<rect x=\"30\" y=\"50\" width=\"100\" height=\"70\" rx=\"4\" fill=\"#fff\" stroke=\"#90a4ae\"/>\n<line x1=\"40\" y1=\"65\" x2=\"120\" y2=\"65\" stroke=\"#b0bec5\"/>\n<line x1=\"40\" y1=\"80\" x2=\"110\" y2=\"80\" stroke=\"#b0bec5\"/>\n<line x1=\"40\" y1=\"95\" x2=\"115\" y2=\"95\" stroke=\"#b0bec5\"/>\n<circle cx=\"170\" cy=\"70\" r=\"22\" fill=\"#ffe0b2\"/>\n<ellipse cx=\"170\" cy=\"115\" rx=\"26\" ry=\"18\" fill=\"#42a5f5\"/>\n<path d=\"M158 70 Q170 80 182 70\" fill=\"none\" stroke=\"#333\" stroke-width=\"2\"/>\n<text x=\"120\" y=\"30\" text-anchor=\"middle\" font-size=\"14\" fill=\"#1565c0\">無法專心上課<\/text>\n<\/svg>", "fig3_2D": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 160\" aria-hidden=\"true\" ><rect width=\"100%\" height=\"100%\" rx=\"16\" fill=\"#ffebee\" stroke=\"#cfd8dc\" stroke-width=\"3\"/>\n<g transform=\"translate(120,80)\">\n  <path d=\"M0 16 C0 0 -28 -8 -28 10 C-28 28 0 44 0 52 C0 44 28 28 28 10 C28 -8 0 0 0 16Z\" fill=\"#ef9a9a\" stroke=\"#c62828\" stroke-width=\"2\"/>\n  <path d=\"M0 8 L0 36\" stroke=\"#b71c1c\" stroke-width=\"5\" stroke-linecap=\"round\"/>\n  <path d=\"M-10 30 L0 40 L10 24\" fill=\"none\" stroke=\"#b71c1c\" stroke-width=\"4\"/>\n<\/g>\n<text x=\"120\" y=\"145\" text-anchor=\"middle\" font-size=\"13\" fill=\"#b71c1c\">損害健康<\/text>\n<\/svg>", "fig3_3A": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 160\" aria-hidden=\"true\" ><rect width=\"100%\" height=\"100%\" rx=\"16\" fill=\"#e1f5fe\" stroke=\"#cfd8dc\" stroke-width=\"3\"/>\n<ellipse cx=\"120\" cy=\"80\" rx=\"80\" ry=\"44\" fill=\"#0288d1\"/>\n<path d=\"M60 70 q16 10 0 20 M80 58 q18 16 0 32 M100 54 q18 20 0 40 M120 52 q18 22 0 44 M140 54 q18 20 0 40 M160 58 q18 16 0 32 M180 70 q16 10 0 20\" fill=\"none\" stroke=\"#b3e5fc\" stroke-width=\"3\"/>\n<text x=\"120\" y=\"145\" text-anchor=\"middle\" font-size=\"16\" fill=\"#01579b\">魚鱗特寫<\/text>\n<\/svg>", "fig3_3B": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 160\" aria-hidden=\"true\" ><rect width=\"100%\" height=\"100%\" rx=\"16\" fill=\"#e1f5fe\" stroke=\"#cfd8dc\" stroke-width=\"3\"/>\n<ellipse cx=\"130\" cy=\"80\" rx=\"70\" ry=\"32\" fill=\"#039be5\"/>\n<path d=\"M200 80 L230 60 L220 80 L230 100 Z\" fill=\"#01579b\"/>\n<circle cx=\"85\" cy=\"74\" r=\"5\" fill=\"#fff\"/><circle cx=\"84\" cy=\"74\" r=\"2.5\" fill=\"#111\"/>\n<!-- gill -->\n<path d=\"M100 58 Q88 80 100 102\" fill=\"none\" stroke=\"#01579b\" stroke-width=\"4\"/>\n<path d=\"M108 60 Q96 80 108 100\" fill=\"none\" stroke=\"#0277bd\" stroke-width=\"3\"/>\n<text x=\"120\" y=\"140\" text-anchor=\"middle\" font-size=\"16\" fill=\"#01579b\">魚鰓<\/text>\n<\/svg>", "fig3_3C": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 160\" aria-hidden=\"true\" ><rect width=\"100%\" height=\"100%\" rx=\"16\" fill=\"#f3e5f5\" stroke=\"#cfd8dc\" stroke-width=\"3\"/>\n<!-- mammal legs -->\n<rect x=\"80\" y=\"30\" width=\"80\" height=\"40\" rx=\"16\" fill=\"#8d6e63\"/>\n<rect x=\"88\" y=\"66\" width=\"18\" height=\"55\" rx=\"6\" fill=\"#6d4c41\"/>\n<rect x=\"134\" y=\"66\" width=\"18\" height=\"55\" rx=\"6\" fill=\"#6d4c41\"/>\n<ellipse cx=\"97\" cy=\"126\" rx=\"16\" ry=\"8\" fill=\"#5d4037\"/>\n<ellipse cx=\"143\" cy=\"126\" rx=\"16\" ry=\"8\" fill=\"#5d4037\"/>\n<text x=\"120\" y=\"150\" text-anchor=\"middle\" font-size=\"15\" fill=\"#4e342e\">動物的腿（四肢）<\/text>\n<\/svg>", "fig3_3D": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 160\" aria-hidden=\"true\" ><rect width=\"100%\" height=\"100%\" rx=\"16\" fill=\"#e1f5fe\" stroke=\"#cfd8dc\" stroke-width=\"3\"/>\n<ellipse cx=\"120\" cy=\"80\" rx=\"60\" ry=\"26\" fill=\"#0288d1\"/>\n<path d=\"M180 80 L220 55 L205 80 L220 105 Z\" fill=\"#01579b\"/>\n<path d=\"M120 54 L140 28 L128 58 Z\" fill=\"#01579b\"/>\n<path d=\"M100 102 L80 130 L112 104 Z\" fill=\"#01579b\"/>\n<path d=\"M140 100 L155 128 L128 102 Z\" fill=\"#01579b\"/>\n<circle cx=\"80\" cy=\"76\" r=\"4\" fill=\"#fff\"/>\n<text x=\"120\" y=\"150\" text-anchor=\"middle\" font-size=\"16\" fill=\"#01579b\">魚鰭<\/text>\n<\/svg>", "fig7_comic": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 880 220\" aria-hidden=\"true\" >\n<defs>\n  <style>@import; .lb{font:bold 22px \"PingFang TC\",\"Microsoft JhengHei\",sans-serif}<\/style>\n<\/defs>\n<!-- B -->\n<g>\n  <rect x=\"8\" y=\"8\" width=\"200\" height=\"204\" rx=\"12\" fill=\"#fff3e0\" stroke=\"#fb8c00\" stroke-width=\"3\"/>\n  <circle cx=\"70\" cy=\"80\" r=\"24\" fill=\"#ffe0b2\"/>\n  <ellipse cx=\"70\" cy=\"130\" rx=\"28\" ry=\"22\" fill=\"#42a5f5\"/>\n  <path d=\"M62 76 Q70 84 78 76\" fill=\"none\" stroke=\"#333\" stroke-width=\"2\"/>\n  <text x=\"150\" y=\"70\" font-size=\"18\" fill=\"#e65100\">不適<\/text>\n  <path d=\"M70 160 L140 180\" stroke=\"#6d4c41\" stroke-width=\"4\"/>\n  <rect x=\"140\" y=\"150\" width=\"50\" height=\"40\" fill=\"#90caf9\"/>\n  <text x=\"108\" y=\"36\" text-anchor=\"middle\" class=\"lb\" fill=\"#e65100\" font-size=\"22\" font-weight=\"bold\">B<\/text>\n<\/g>\n<!-- D -->\n<g>\n  <rect x=\"228\" y=\"8\" width=\"200\" height=\"204\" rx=\"12\" fill=\"#e3f2fd\" stroke=\"#1e88e5\" stroke-width=\"3\"/>\n  <circle cx=\"280\" cy=\"90\" r=\"22\" fill=\"#ffe0b2\"/>\n  <rect x=\"255\" y=\"112\" width=\"50\" height=\"50\" fill=\"#eceff1\"/>\n  <circle cx=\"370\" cy=\"90\" r=\"22\" fill=\"#ffe0b2\"/>\n  <rect x=\"348\" y=\"112\" width=\"50\" height=\"40\" fill=\"#81d4fa\"/>\n  <text x=\"328\" y=\"36\" text-anchor=\"middle\" font-size=\"22\" font-weight=\"bold\" fill=\"#1565c0\">D<\/text>\n  <text x=\"328\" y=\"190\" text-anchor=\"middle\" font-size=\"14\" fill=\"#1565c0\">說出病情、聆聽指示<\/text>\n<\/g>\n<!-- A -->\n<g>\n  <rect x=\"448\" y=\"8\" width=\"200\" height=\"204\" rx=\"12\" fill=\"#e8f5e9\" stroke=\"#43a047\" stroke-width=\"3\"/>\n  <rect x=\"470\" y=\"60\" width=\"90\" height=\"70\" rx=\"6\" fill=\"#fff8e1\" stroke=\"#f9a825\" stroke-width=\"2\"/>\n  <text x=\"515\" y=\"90\" text-anchor=\"middle\" font-size=\"16\" fill=\"#f57f17\">標籤<\/text>\n  <text x=\"515\" y=\"112\" text-anchor=\"middle\" font-size=\"12\" fill=\"#6d4c41\">按指示<\/text>\n  <circle cx=\"600\" cy=\"100\" r=\"20\" fill=\"#ffe0b2\"/>\n  <text x=\"548\" y=\"36\" text-anchor=\"middle\" font-size=\"22\" font-weight=\"bold\" fill=\"#2e7d32\">A<\/text>\n  <text x=\"548\" y=\"190\" text-anchor=\"middle\" font-size=\"14\" fill=\"#2e7d32\">閱讀標籤後服藥<\/text>\n<\/g>\n<!-- C -->\n<g>\n  <rect x=\"668\" y=\"8\" width=\"200\" height=\"204\" rx=\"12\" fill=\"#f3e5f5\" stroke=\"#8e24aa\" stroke-width=\"3\"/>\n  <rect x=\"700\" y=\"70\" width=\"16\" height=\"40\" fill=\"#29b6f6\"/>\n  <rect x=\"740\" y=\"90\" width=\"70\" height=\"16\" rx=\"4\" fill=\"#8d6e63\"/>\n  <ellipse cx=\"775\" cy=\"80\" rx=\"30\" ry=\"14\" fill=\"#ffe0b2\"/>\n  <circle cx=\"720\" cy=\"70\" r=\"8\" fill=\"#ef5350\"/>\n  <text x=\"768\" y=\"36\" text-anchor=\"middle\" font-size=\"22\" font-weight=\"bold\" fill=\"#6a1b9a\">C<\/text>\n  <text x=\"768\" y=\"175\" text-anchor=\"middle\" font-size=\"13\" fill=\"#6a1b9a\">定時定量、休息<\/text>\n  <text x=\"768\" y=\"195\" text-anchor=\"middle\" font-size=\"13\" fill=\"#6a1b9a\">多喝開水<\/text>\n<\/g>\n<\/svg>", "fig8_jiaA": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 160\" aria-hidden=\"true\" ><rect width=\"100%\" height=\"100%\" rx=\"16\" fill=\"#f3e5f5\" stroke=\"#cfd8dc\" stroke-width=\"3\"/>\n<g transform=\"translate(120,80)\">\n  <ellipse cx=\"-16\" cy=\"-10\" rx=\"22\" ry=\"14\" fill=\"#7e57c2\"/>\n  <ellipse cx=\"16\" cy=\"-10\" rx=\"22\" ry=\"14\" fill=\"#7e57c2\"/>\n  <ellipse cx=\"-14\" cy=\"12\" rx=\"16\" ry=\"10\" fill=\"#b39ddb\"/>\n  <ellipse cx=\"14\" cy=\"12\" rx=\"16\" ry=\"10\" fill=\"#b39ddb\"/>\n  <rect x=\"-3\" y=\"-16\" width=\"6\" height=\"30\" rx=\"3\" fill=\"#37474f\"/>\n<\/g>\n<text x=\"120\" y=\"145\" text-anchor=\"middle\" font-size=\"18\" font-weight=\"bold\">A 蝴蝶<\/text>\n<\/svg>", "fig8_jiaB": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 160\" aria-hidden=\"true\" ><rect width=\"100%\" height=\"100%\" rx=\"16\" fill=\"#e3f2fd\" stroke=\"#cfd8dc\" stroke-width=\"3\"/>\n<g transform=\"translate(90,30)\">\n  <path d=\"M40 20 C22 40 50 70 40 110\" fill=\"#fafafa\" stroke=\"#90a4ae\"/>\n  <circle cx=\"44\" cy=\"16\" r=\"10\" fill=\"#fff\" stroke=\"#90a4ae\"/>\n  <circle cx=\"47\" cy=\"14\" r=\"2\" fill=\"#333\"/>\n  <path d=\"M52 16 L78 20 L52 22 Z\" fill=\"#ffb300\"/>\n  <path d=\"M40 110 L36 140\" stroke=\"#ffb300\" stroke-width=\"4\"/>\n<\/g>\n<text x=\"120\" y=\"150\" text-anchor=\"middle\" font-size=\"18\" font-weight=\"bold\">B 白鷺<\/text>\n<\/svg>", "fig8_jiaC": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 160\" aria-hidden=\"true\" ><rect width=\"100%\" height=\"100%\" rx=\"16\" fill=\"#efebe9\" stroke=\"#cfd8dc\" stroke-width=\"3\"/>\n<g transform=\"translate(50,50)\">\n  <ellipse cx=\"70\" cy=\"40\" rx=\"60\" ry=\"26\" fill=\"#6d4c41\"/>\n  <circle cx=\"24\" cy=\"34\" r=\"18\" fill=\"#4e342e\"/>\n  <rect x=\"40\" y=\"58\" width=\"10\" height=\"24\" fill=\"#4e342e\"/>\n  <rect x=\"70\" y=\"58\" width=\"10\" height=\"24\" fill=\"#4e342e\"/>\n  <rect x=\"95\" y=\"58\" width=\"10\" height=\"24\" fill=\"#4e342e\"/>\n<\/g>\n<text x=\"120\" y=\"148\" text-anchor=\"middle\" font-size=\"18\" font-weight=\"bold\">C 水牛<\/text>\n<\/svg>", "fig8_jiaD": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 160\" aria-hidden=\"true\" ><rect width=\"100%\" height=\"100%\" rx=\"16\" fill=\"#f1f8e9\" stroke=\"#cfd8dc\" stroke-width=\"3\"/>\n<g transform=\"translate(120,80)\">\n  <ellipse cx=\"0\" cy=\"0\" rx=\"36\" ry=\"16\" fill=\"#7cb342\"/>\n  <ellipse cx=\"-40\" cy=\"-8\" rx=\"16\" ry=\"10\" fill=\"#9ccc65\"/>\n  <line x1=\"-20\" y1=\"-8\" x2=\"-20\" y2=\"-36\" stroke=\"#558b2f\" stroke-width=\"2\"/>\n  <line x1=\"-12\" y1=\"-8\" x2=\"-4\" y2=\"-36\" stroke=\"#558b2f\" stroke-width=\"2\"/>\n  <line x1=\"10\" y1=\"4\" x2=\"10\" y2=\"36\" stroke=\"#33691e\" stroke-width=\"3\"/>\n  <line x1=\"0\" y1=\"4\" x2=\"-8\" y2=\"36\" stroke=\"#33691e\" stroke-width=\"3\"/>\n  <line x1=\"20\" y1=\"4\" x2=\"28\" y2=\"36\" stroke=\"#33691e\" stroke-width=\"3\"/>\n  <circle cx=\"-48\" cy=\"-8\" r=\"3\" fill=\"#111\"/>\n<\/g>\n<text x=\"120\" y=\"148\" text-anchor=\"middle\" font-size=\"18\" font-weight=\"bold\">D 蝗蟲<\/text>\n<\/svg>", "fig8_yiA": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 160\" aria-hidden=\"true\" ><rect width=\"100%\" height=\"100%\" rx=\"16\" fill=\"#fff\" stroke=\"#cfd8dc\" stroke-width=\"3\"/>\n    <text x=\"40\" y=\"48\" font-size=\"28\" font-weight=\"bold\" fill=\"#1565c0\">A<\/text>\n    <text x=\"120\" y=\"100\" text-anchor=\"middle\" font-size=\"36\">🪞<\/text>\n    <text x=\"120\" y=\"140\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"bold\" fill=\"#37474f\">影響儀容<\/text>\n    <\/svg>", "fig8_yiB": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 160\" aria-hidden=\"true\" ><rect width=\"100%\" height=\"100%\" rx=\"16\" fill=\"#fff\" stroke=\"#cfd8dc\" stroke-width=\"3\"/>\n    <text x=\"40\" y=\"48\" font-size=\"28\" font-weight=\"bold\" fill=\"#2e7d32\">B<\/text>\n    <text x=\"120\" y=\"100\" text-anchor=\"middle\" font-size=\"36\">💪<\/text>\n    <text x=\"120\" y=\"140\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"bold\" fill=\"#37474f\">令身體更強壯<\/text>\n    <\/svg>", "fig8_yiC": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 160\" aria-hidden=\"true\" ><rect width=\"100%\" height=\"100%\" rx=\"16\" fill=\"#fff\" stroke=\"#cfd8dc\" stroke-width=\"3\"/>\n    <text x=\"40\" y=\"48\" font-size=\"28\" font-weight=\"bold\" fill=\"#e65100\">C<\/text>\n    <text x=\"120\" y=\"100\" text-anchor=\"middle\" font-size=\"36\">💢<\/text>\n    <text x=\"120\" y=\"140\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"bold\" fill=\"#37474f\">情緒和行為失控<\/text>\n    <\/svg>", "fig8_yiD": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 160\" aria-hidden=\"true\" ><rect width=\"100%\" height=\"100%\" rx=\"16\" fill=\"#fff\" stroke=\"#cfd8dc\" stroke-width=\"3\"/>\n    <text x=\"40\" y=\"48\" font-size=\"28\" font-weight=\"bold\" fill=\"#c62828\">D<\/text>\n    <text x=\"120\" y=\"100\" text-anchor=\"middle\" font-size=\"36\">💔<\/text>\n    <text x=\"120\" y=\"140\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"bold\" fill=\"#37474f\">失去生命<\/text>\n    <\/svg>", "fig8_bingA": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 160\" aria-hidden=\"true\" ><rect width=\"100%\" height=\"100%\" rx=\"16\" fill=\"#fff\" stroke=\"#cfd8dc\" stroke-width=\"3\"/>\n    <text x=\"40\" y=\"48\" font-size=\"28\" font-weight=\"bold\" fill=\"#2e7d32\">A<\/text>\n    <text x=\"120\" y=\"100\" text-anchor=\"middle\" font-size=\"36\">😊<\/text>\n    <text x=\"120\" y=\"140\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"bold\" fill=\"#37474f\">開心<\/text>\n    <\/svg>", "fig8_bingB": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 160\" aria-hidden=\"true\" ><rect width=\"100%\" height=\"100%\" rx=\"16\" fill=\"#fff\" stroke=\"#cfd8dc\" stroke-width=\"3\"/>\n    <text x=\"40\" y=\"48\" font-size=\"28\" font-weight=\"bold\" fill=\"#1565c0\">B<\/text>\n    <text x=\"120\" y=\"100\" text-anchor=\"middle\" font-size=\"36\">😢<\/text>\n    <text x=\"120\" y=\"140\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"bold\" fill=\"#37474f\">傷心<\/text>\n    <\/svg>", "fig8_bingC": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 160\" aria-hidden=\"true\" ><rect width=\"100%\" height=\"100%\" rx=\"16\" fill=\"#fff\" stroke=\"#cfd8dc\" stroke-width=\"3\"/>\n    <text x=\"40\" y=\"48\" font-size=\"28\" font-weight=\"bold\" fill=\"#f9a825\">C<\/text>\n    <text x=\"120\" y=\"100\" text-anchor=\"middle\" font-size=\"36\">🤩<\/text>\n    <text x=\"120\" y=\"140\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"bold\" fill=\"#37474f\">興奮<\/text>\n    <\/svg>", "fig8_bingD": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 160\" aria-hidden=\"true\" ><rect width=\"100%\" height=\"100%\" rx=\"16\" fill=\"#fff\" stroke=\"#cfd8dc\" stroke-width=\"3\"/>\n    <text x=\"40\" y=\"48\" font-size=\"28\" font-weight=\"bold\" fill=\"#c62828\">D<\/text>\n    <text x=\"120\" y=\"100\" text-anchor=\"middle\" font-size=\"36\">😠<\/text>\n    <text x=\"120\" y=\"140\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"bold\" fill=\"#37474f\">生氣<\/text>\n    <\/svg>", "fig9_scene": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 980 420\" aria-hidden=\"true\" >\n<rect width=\"980\" height=\"420\" fill=\"#fff8e7\"/>\n<rect x=\"0\" y=\"300\" width=\"980\" height=\"120\" fill=\"#d7ccc8\"/>\n<!-- bed / child resting left -->\n<rect x=\"30\" y=\"200\" width=\"220\" height=\"90\" rx=\"10\" fill=\"#90caf9\"/>\n<rect x=\"30\" y=\"250\" width=\"220\" height=\"50\" fill=\"#bbdefb\"/>\n<ellipse cx=\"90\" cy=\"230\" rx=\"28\" ry=\"18\" fill=\"#ffe0b2\"/>\n<rect x=\"110\" y=\"220\" width=\"90\" height=\"36\" rx=\"10\" fill=\"#64b5f6\"/>\n<text x=\"140\" y=\"190\" text-anchor=\"middle\" font-size=\"16\" fill=\"#1565c0\">子文在休息<\/text>\n<!-- medicine label - large and readable -->\n<g transform=\"translate(300,30)\">\n  <rect x=\"0\" y=\"0\" width=\"360\" height=\"280\" rx=\"12\" fill=\"#fffde7\" stroke=\"#f9a825\" stroke-width=\"4\"/>\n  <rect x=\"0\" y=\"0\" width=\"360\" height=\"44\" rx=\"12\" fill=\"#ffecb3\"/>\n  <rect x=\"0\" y=\"32\" width=\"360\" height=\"12\" fill=\"#ffecb3\"/>\n  <text x=\"180\" y=\"32\" text-anchor=\"middle\" font-size=\"22\" font-weight=\"bold\" fill=\"#e65100\">藥物標籤<\/text>\n  <text x=\"24\" y=\"80\" font-size=\"20\" fill=\"#222\">藥名：Coritab（效用：防敏感）<\/text>\n  <text x=\"24\" y=\"116\" font-size=\"22\" font-weight=\"bold\" fill=\"#222\">姓名：陳子文<\/text>\n  <text x=\"24\" y=\"156\" font-size=\"20\" fill=\"#222\">每日服 4 次<\/text>\n  <text x=\"24\" y=\"190\" font-size=\"22\" font-weight=\"bold\" fill=\"#b71c1c\">每隔 4 小時服 1 次<\/text>\n  <text x=\"24\" y=\"226\" font-size=\"20\" fill=\"#222\">每次服 1 粒<\/text>\n  <rect x=\"230\" y=\"236\" width=\"110\" height=\"32\" rx=\"6\" fill=\"#c62828\"/>\n  <text x=\"285\" y=\"258\" text-anchor=\"middle\" font-size=\"20\" font-weight=\"bold\" fill=\"#fff\">飯後<\/text>\n<\/g>\n<!-- three storage spots -->\n<g transform=\"translate(690,40)\">\n  <!-- window with sun -->\n  <rect x=\"0\" y=\"0\" width=\"120\" height=\"110\" rx=\"8\" fill=\"#e3f2fd\" stroke=\"#1565c0\" stroke-width=\"4\"/>\n  <circle cx=\"90\" cy=\"28\" r=\"16\" fill=\"#ffd54f\"/>\n  <line x1=\"60\" y1=\"55\" x2=\"60\" y2=\"110\" stroke=\"#1565c0\" stroke-width=\"3\"/>\n  <line x1=\"0\" y1=\"55\" x2=\"120\" y2=\"55\" stroke=\"#1565c0\" stroke-width=\"3\"/>\n  <text x=\"60\" y=\"150\" text-anchor=\"middle\" font-size=\"18\" font-weight=\"bold\" fill=\"#1565c0\">窗邊<\/text>\n  <!-- coffee table + child -->\n  <rect x=\"140\" y=\"50\" width=\"90\" height=\"28\" rx=\"4\" fill=\"#a1887f\"/>\n  <rect x=\"175\" y=\"78\" width=\"10\" height=\"30\" fill=\"#8d6e63\"/>\n  <circle cx=\"155\" cy=\"100\" r=\"14\" fill=\"#ffe0b2\"/>\n  <ellipse cx=\"155\" cy=\"120\" rx=\"14\" ry=\"10\" fill=\"#ef9a9a\"/>\n  <text x=\"185\" y=\"150\" text-anchor=\"middle\" font-size=\"18\" font-weight=\"bold\" fill=\"#6d4c41\">茶几<\/text>\n  <!-- high cabinet -->\n  <rect x=\"70\" y=\"180\" width=\"80\" height=\"110\" rx=\"4\" fill=\"#6d4c41\"/>\n  <line x1=\"70\" y1=\"216\" x2=\"150\" y2=\"216\" stroke=\"#d7ccc8\" stroke-width=\"2\"/>\n  <line x1=\"70\" y1=\"252\" x2=\"150\" y2=\"252\" stroke=\"#d7ccc8\" stroke-width=\"2\"/>\n  <rect x=\"100\" y=\"190\" width=\"22\" height=\"16\" fill=\"#ffe082\"/>\n  <text x=\"110\" y=\"315\" text-anchor=\"middle\" font-size=\"18\" font-weight=\"bold\" fill=\"#4e342e\">高櫃<\/text>\n<\/g>\n<\/svg>"};
+
+var mode = "start";
+var si = 0;
+var t0 = 0, tFinish = 0, tLimitAt = 0, timerId = null, submitted = false;
+var answers = {};
+var results = {};
+var partGot = {};
+var totalGot = 0;
+var ui = {blank:null, letter:null, left:null, item:null, slot:null};
+
+function $(id){return document.getElementById(id);}
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function jsq(s){return String(s==null?"":s).replace(/\\/g,"\\\\").replace(/'/g,"\\'");}
+function fig(id){return (id && FIGURES[id]) ? FIGURES[id] : "";}
+function partOf(sc){var i,p=QUESTIONS.parts||[];for(i=0;i<p.length;i++)if(p[i].id===sc.part)return p[i];return {id:sc.part,name:"第"+sc.part+"部分",max:0};}
+function letters(){return "ABCDEFGHIJKLMNOPQRSTUVWXYZ";}
+function idxOf(opt, list){var i;for(i=0;i<list.length;i++)if(list[i]===opt)return i;return -1;}
+
+function screenQids(sc){
+  var a=[],i;
+  if(sc.qid) a.push(sc.qid);
+  if(sc.items) for(i=0;i<sc.items.length;i++) if(sc.items[i].qid) a.push(sc.items[i].qid);
+  if(sc.lefts) for(i=0;i<sc.lefts.length;i++) a.push(sc.lefts[i].qid);
+  return a;
+}
+function screenOfQid(qid){
+  var i,s=QUESTIONS.screens;
+  for(i=0;i<s.length;i++) if(screenQids(s[i]).indexOf(qid)>=0) return i;
+  return 0;
+}
+function hasVal(v){
+  if(v==null) return false;
+  if(typeof v==="string") return v.replace(/\s+/g,"").length>0;
+  if(Object.prototype.toString.call(v)==="[object Array]"){
+    var i;for(i=1;i<v.length;i++) if(v[i]==null||v[i]==="") return false;
+    return v[0]!=null;
+  }
+  return true;
+}
+function isQidAnswered(qid){
+  if(qid==="7-1"){
+    var v=answers[qid];
+    return !!(v && v[1] && v[2] && v[3]);
+  }
+  return hasVal(answers[qid]);
+}
+
+function compact(s){return String(s==null?"":s).replace(/\s+/g,"");}
+function findGroup(text, groups){
+  var t=compact(text),g,k;
+  if(!t) return null;
+  for(g=0;g<groups.length;g++){
+    for(k=0;k<groups[g].keys.length;k++){
+      if(t.indexOf(compact(groups[g].keys[k]))>=0) return groups[g].id;
+    }
+  }
+  return null;
+}
+function hitsReject(text, keys){
+  var t=compact(text),i;
+  if(!t||!keys) return false;
+  for(i=0;i<keys.length;i++) if(keys[i] && t.indexOf(compact(keys[i]))>=0) return true;
+  return false;
+}
+function gradeShortText(text, groups, rejectKeys, qid){
+  var t=compact(text);
+  if(!t) return {answered:false, ok:false, id:null};
+  if(qid==="10-4"){
+    if(t.indexOf(compact("隨便食用野生"))>=0) return {answered:true, ok:false, id:null};
+    var hid=findGroup(text, groups);
+    if(hid) return {answered:true, ok:true, id:hid};
+    return {answered:true, ok:false, id:null};
+  }
+  if(hitsReject(text, rejectKeys)) return {answered:true, ok:false, id:null};
+  var id=findGroup(text, groups);
+  if(id) return {answered:true, ok:true, id:id};
+  return {answered:true, ok:false, id:null};
+}
+
+function stemText(sc, qid){
+  if(sc.type==="cloze_bank"){
+    var i,it;for(i=0;i<sc.items.length;i++){it=sc.items[i];if(it.qid===qid) return it.before+"______"+it.after;}
+  }
+  if(sc.type==="diagram_choice"){
+    var j,x;for(j=0;j<sc.items.length;j++){x=sc.items[j];if(x.qid===qid) return (sc.stem||"")+" "+x.label+" "+(x.hint||"");}
+  }
+  if(sc.type==="judge_group"){
+    var k,y;for(k=0;k<sc.items.length;k++){y=sc.items[k];if(y.qid===qid) return (sc.stem||"")+" "+y.text;}
+  }
+  if(sc.type==="match"){
+    var m,z;for(m=0;m<sc.lefts.length;m++){z=sc.lefts[m];if(z.qid===qid) return (sc.title||"")+" "+z.text;}
+  }
+  if(sc.type==="classify"){
+    var n,w;for(n=0;n<sc.items.length;n++){w=sc.items[n];if(w.qid===qid) return (sc.title||"")+" "+w.key+" "+w.text;}
+  }
+  if(sc.type==="short_pair") return sc.stem||"";
+  return sc.stem||sc.instruction||"";
+}
+
+function gradeAll(){
+  results={}; partGot={}; totalGot=0;
+  var i,p,sc;
+  for(i=0;i<(QUESTIONS.parts||[]).length;i++){p=QUESTIONS.parts[i];partGot[p.id]=0;}
+  for(i=0;i<QUESTIONS.screens.length;i++){
+    sc=QUESTIONS.screens[i];
+    if(sc.type==="cloze_bank") gradeCloze(sc);
+    else if(sc.type==="diagram_choice") gradeDiagram(sc);
+    else if(sc.type==="judge_group") gradeJudge(sc);
+    else if(sc.type==="mc") gradeMc(sc, true);
+    else if(sc.type==="mc_buttons") gradeMc(sc, false);
+    else if(sc.type==="match") gradeMatch(sc);
+    else if(sc.type==="order") gradeOrder(sc);
+    else if(sc.type==="classify") gradeClass(sc);
+    else if(sc.type==="short") gradeShort(sc);
+    else if(sc.type==="short_pair") gradePair(sc);
+  }
+}
+function put(qid, part, max, ok, answered, choice, picked, answer, text){
+  var got = (ok && answered) ? max : 0;
+  results[qid]={correct:!!(ok&&answered), answered:!!answered, score:got, max:max, choice:answered?choice:null, picked:answered?picked:null, answer:answer, text:text, part:part};
+  if(got){partGot[part]=(partGot[part]||0)+got; totalGot+=got;}
+}
+function gradeCloze(sc){
+  var i,it,val,ok;
+  for(i=0;i<sc.items.length;i++){
+    it=sc.items[i]; val=answers[it.qid];
+    ok = hasVal(val) && String(val)===String(it.answer);
+    put(it.qid, sc.part, it.score, ok, hasVal(val), hasVal(val)?val:null, hasVal(val)?val:null, it.answer, stemText(sc,it.qid));
+  }
+}
+function gradeDiagram(sc){
+  var i,it,val,ok;
+  for(i=0;i<sc.items.length;i++){
+    it=sc.items[i]; val=answers[it.qid];
+    ok = hasVal(val) && val===it.answer;
+    put(it.qid, sc.part, it.score, ok, hasVal(val), val, val, it.answer, stemText(sc,it.qid));
+  }
+}
+function gradeJudge(sc){
+  var i,it,val,ok;
+  for(i=0;i<sc.items.length;i++){
+    it=sc.items[i]; val=answers[it.qid];
+    ok = hasVal(val) && val===it.answer;
+    put(it.qid, sc.part, it.score, ok, hasVal(val), val, val, it.answer, stemText(sc,it.qid));
+  }
+}
+function gradeMc(sc, withLetter){
+  var val=answers[sc.qid], answered=hasVal(val), ok=false, choice=null, picked=null, ansText, idx, aidx;
+  if(withLetter){
+    aidx = letters().indexOf(sc.answer);
+    ansText = sc.answer+". "+(sc.options[aidx]||"");
+    if(answered){
+      idx = letters().indexOf(val);
+      choice = idx; picked = sc.options[idx]||val;
+      ok = val===sc.answer;
+    }
+  }else{
+    ansText = sc.answer;
+    if(answered){
+      idx = idxOf(val, sc.options);
+      choice = idx; picked = val;
+      ok = val===sc.answer;
+    }
+  }
+  put(sc.qid, sc.part, sc.score, ok, answered, choice, picked, ansText, stemText(sc,sc.qid));
+}
+function gradeMatch(sc){
+  var i,it,val,ok,ansMap={},r;
+  for(i=0;i<sc.rights.length;i++) ansMap[sc.rights[i].key]=sc.rights[i].text;
+  for(i=0;i<sc.lefts.length;i++){
+    it=sc.lefts[i]; val=answers[it.qid];
+    ok = hasVal(val) && val===it.answer;
+    r = (it.answer||"")+" "+(ansMap[it.answer]||"");
+    put(it.qid, sc.part, it.score, ok, hasVal(val), val, val, r, stemText(sc,it.qid));
+  }
+}
+function gradeOrder(sc){
+  var v=answers[sc.qid], answered=!!(v&&v[1]&&v[2]&&v[3]), ok=false, joined=null, ans=sc.answer.join("|");
+  if(answered){
+    joined=v.join("|");
+    ok = v[0]===sc.answer[0]&&v[1]===sc.answer[1]&&v[2]===sc.answer[2]&&v[3]===sc.answer[3];
+  }
+  put(sc.qid, sc.part, sc.score, ok, answered, joined, joined, ans, sc.stem);
+}
+function boxLabel(sc, id){
+  var i;for(i=0;i<sc.boxes.length;i++) if(sc.boxes[i].id===id) return sc.boxes[i].label;
+  return id;
+}
+function gradeClass(sc){
+  var i,it,val,ok;
+  for(i=0;i<sc.items.length;i++){
+    it=sc.items[i]; val=answers[it.qid];
+    ok = hasVal(val) && val===it.answer;
+    put(it.qid, sc.part, it.score, ok, hasVal(val), val, hasVal(val)?boxLabel(sc,val):null, boxLabel(sc,it.answer), stemText(sc,it.qid));
+  }
+}
+function gradeShort(sc){
+  var val=answers[sc.qid], g=gradeShortText(val, sc.acceptGroups, sc.rejectKeys, sc.qid);
+  put(sc.qid, sc.part, sc.score, g.ok, g.answered, g.answered?val:null, g.answered?val:null, sc.sample, sc.stem);
+}
+function gradePair(sc){
+  var a=gradeShortText(answers[sc.items[0].qid], sc.acceptGroups, sc.rejectKeys, sc.items[0].qid);
+  var b=gradeShortText(answers[sc.items[1].qid], sc.acceptGroups, sc.rejectKeys, sc.items[1].qid);
+  if(sc.distinct && a.ok && b.ok && a.id && a.id===b.id) b.ok=false;
+  put(sc.items[0].qid, sc.part, sc.items[0].score, a.ok, a.answered, a.answered?answers[sc.items[0].qid]:null, a.answered?answers[sc.items[0].qid]:null, sc.sample, sc.stem);
+  put(sc.items[1].qid, sc.part, sc.items[1].score, b.ok, b.answered, b.answered?answers[sc.items[1].qid]:null, b.answered?answers[sc.items[1].qid]:null, sc.sample, sc.stem);
+}
+
+function reportAll(){
+  var i,qid,r;
+  for(i=0;i<QUESTIONS.qids.length;i++){
+    qid=QUESTIONS.qids[i]; r=results[qid]||{};
+    elhReport({
+      type:"answer",
+      q:qid,
+      choice: r.answered ? r.choice : null,
+      correct: !!r.correct,
+      text: elhText(r.text),
+      picked: r.answered ? r.picked : null,
+      answer: elhText(r.answer)
+    });
+  }
+}
+
+function remainMs(){return Math.max(0, tLimitAt-Date.now());}
+function remainText(){
+  var s=Math.ceil(remainMs()/1000), m=Math.floor(s/60); s=s%60;
+  return (m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+}
+function usedMin(){
+  var end = submitted?tFinish:Date.now();
+  return Math.max(1, Math.round((end-t0)/60000));
+}
+function tick(){
+  if(submitted||mode==="start") return;
+  if(Date.now()>=tLimitAt){ doSubmit(true); return; }
+  var el=$("timer");
+  if(el){
+    el.textContent="剩餘 "+remainText();
+    if(remainMs()<=5*60*1000) el.classList.add("warn");
+    else el.classList.remove("warn");
+  }
+}
+
+function startExam(){
+  answers={}; results={}; partGot={}; totalGot=0; submitted=false;
+  ui={blank:null, letter:null, left:null, item:null, slot:null};
+  mode="exam"; si=0;
+  t0=Date.now(); tFinish=0;
+  tLimitAt=t0+((QUESTIONS.timeLimitSec||3600)*1000);
+  if(timerId) clearInterval(timerId);
+  timerId=setInterval(tick,400);
+  closeOv();
+  render();
+}
+function restart(){
+  if(timerId){clearInterval(timerId);timerId=null;}
+  answers={}; results={}; partGot={}; totalGot=0; submitted=false;
+  ui={blank:null, letter:null, left:null, item:null, slot:null};
+  mode="start"; si=0; t0=0; tFinish=0; tLimitAt=0;
+  closeOv();
+  render();
+}
+
+function unansweredCount(){
+  var i,n=0,qid;
+  for(i=0;i<QUESTIONS.qids.length;i++){
+    qid=QUESTIONS.qids[i];
+    if(!isQidAnswered(qid)) n++;
+  }
+  return n;
+}
+function askSubmit(){
+  if(submitted){showScore();return;}
+  var un=unansweredCount();
+  openOv('<div class="ovt">確定交卷？</div><div class="ovp">'+(un?('還有 <b>'+un+'</b> 格未作答。'):'全部題目已作答。')+'交卷後會顯示分數和答案，不能再修改。</div><div class="nav"><button onclick="closeOv()">返回檢查</button><button class="sub" onclick="doSubmit(true)">確定交卷</button></div>');
+}
+function doSubmit(ok){
+  if(!ok||submitted) return;
+  submitted=true; tFinish=Date.now();
+  if(timerId){clearInterval(timerId);timerId=null;}
+  gradeAll();
+  reportAll();
+  mode="review";
+  showScore();
+  render();
+}
+
+function showScore(){
+  var h='<div class="ovt">成績</div><div class="big">'+Math.round(totalGot)+' / 100 分</div>';
+  h+='<div class="ovp" style="text-align:center">用時約 '+usedMin()+' 分鐘'+(tFinish && tFinish-t0>=((QUESTIONS.timeLimitSec||3600)*1000-1000)?'（時間到，已自動交卷）':'')+'</div>';
+  h+='<div class="score-parts">';
+  var i,p;
+  for(i=0;i<(QUESTIONS.parts||[]).length;i++){
+    p=QUESTIONS.parts[i];
+    h+='<div class="score-row"><span>'+esc(p.name)+'</span><span>'+(partGot[p.id]||0)+' / '+p.max+' 分</span></div>';
+  }
+  h+='</div>';
+  h+='<div class="nav"><button class="go" onclick="closeOv();mode=&quot;review&quot;;render()">逐題覆核</button><button class="again" onclick="restart()">再做一次</button></div>';
+  h+='<div class="hint">點題號可覆核該題（綠色＝得分，紅色＝未得分）</div>';
+  h+=gridHtml();
+  openOv(h);
+}
+function gridHtml(){
+  var h='<div class="grid">',i,qid,r,cls,sc,lab;
+  for(i=0;i<QUESTIONS.qids.length;i++){
+    qid=QUESTIONS.qids[i];
+    r=results[qid];
+    cls = submitted ? (r&&r.correct?'g':'r') : (isQidAnswered(qid)?'done':'');
+    lab=qid.replace(/^.*-/,'');
+    if(qid.length<=4) lab=qid;
+    h+='<button class="'+cls+'" onclick="jumpQid(\''+qid+'\')">'+esc(qid)+'</button>';
+  }
+  return h+'</div>';
+}
+function jumpQid(qid){
+  si=screenOfQid(qid);
+  if(submitted) mode="review";
+  closeOv();
+  render();
+}
+function showGrid(){
+  openOv('<div class="ovt">題目一覽</div><div class="ovp">'+(submitted?'綠色＝得分，紅色＝未得分。點題號查看。':'藍色＝已作答。點題號跳到該題。')+'</div>'+gridHtml()+'<div class="nav"><button onclick="closeOv()">關閉</button>'+(submitted?'<button class="again" onclick="restart()">再做一次</button>':'')+'</div>');
+}
+function openOv(html){$("ovb").innerHTML=html;$("ov").style.display="flex";}
+function closeOv(){$("ov").style.display="none";$("ovb").innerHTML="";}
+function go(d){
+  var n=si+d;
+  if(n<0) return;
+  if(n>=QUESTIONS.screens.length){ if(!submitted) askSubmit(); return; }
+  ui={blank:null, letter:null, left:null, item:null, slot:null};
+  si=n; render();
+}
+
+function usedWords(shared, exceptQid){
+  var map={},i,j,sc,it,v;
+  for(i=0;i<QUESTIONS.screens.length;i++){
+    sc=QUESTIONS.screens[i];
+    if(sc.bankShared!==shared||!sc.items) continue;
+    for(j=0;j<sc.items.length;j++){
+      it=sc.items[j]; v=answers[it.qid];
+      if(it.qid!==exceptQid && hasVal(v)) map[v]=it.qid;
+    }
+  }
+  return map;
+}
+function setBlank(qid, word, shared){
+  var map=usedWords(shared, qid), other=map[word];
+  if(other) answers[other]="";
+  answers[qid]=word;
+  ui.blank=qid;
+  render();
+}
+function clearBlank(qid){answers[qid]=""; render();}
+
+function renderStart(){
+  var left=$("left"), right=$("right"), i,p,h;
+  left.innerHTML='<div class="start-title">'+esc(QUESTIONS.title||"3D 常識第一次考試｜考前模擬卷")+'</div>'+
+    '<div class="start-lead">這是一份考前模擬卷，共十部分，滿分 100 分，時限 60 分鐘。<br>作答期間不會顯示對錯。交卷後（或時間到）才會公布總分、各部分得分，並可逐題覆核。<br>可以提前交卷。準備好後，請按右邊的「開始作答」。計時會由按下該按鈕時開始。</div>'+
+    '<div class="hint" style="margin-top:1.4vmin">各部分佔分</div><div class="parts">'+
+    (QUESTIONS.parts||[]).map(function(p){return '<div>'+esc(p.name)+' '+p.max+'%</div>';}).join("")+
+    '</div>';
+  right.innerHTML='<div class="hint">適用於小三課堂投屏。開始後請專心作答。</div>'+
+    '<button class="hero" type="button" onclick="startExam()">開始作答</button>';
+}
+
+function metaHtml(sc){
+  var p=partOf(sc);
+  var t = (mode!=="start" && !submitted) ? '<span class="tag" id="timer">剩餘 '+remainText()+'</span>' : (submitted?'<span class="tag ok">已交卷</span>':'');
+  return '<div class="meta"><span class="tag">'+esc(p.name)+'</span><span>第 '+(si+1)+' / '+QUESTIONS.screens.length+' 屏</span>'+t+'</div>';
+}
+function navHtml(extraClass){
+  var last = si>=QUESTIONS.screens.length-1;
+  var nextLabel = (!submitted && last) ? "交卷" : "下一題";
+  var again = submitted ? '<button class="again" type="button" onclick="restart()">再做一次</button>' : '';
+  var sub = submitted ? '<button type="button" onclick="showScore()">看成績</button>' : '<button class="sub" type="button" onclick="askSubmit()">交卷</button>';
+  return '<div class="nav '+(extraClass||"")+'">'+
+    '<button type="button" onclick="go(-1)"'+(si===0?" disabled":"")+'>上一題</button>'+
+    '<button class="go" type="button" onclick="go(1)">'+nextLabel+'</button>'+
+    '<button type="button" onclick="showGrid()">題目一覽</button>'+sub+again+
+    '</div>';
+}
+function reviewBox(qid, extra){
+  if(!submitted) return "";
+  var r=results[qid]; if(!r) return "";
+  var cls=r.correct?"ok":"bad";
+  var msg=r.correct?"正確，得 "+r.score+" 分。":("未得分。"+(r.answered?"":"（未作答）"));
+  return '<div class="res '+cls+'">'+msg+" 正確答案："+esc(r.answer)+(extra?("<br>"+extra):"")+"</div>";
+}
+
+function renderExam(){
+  var sc=QUESTIONS.screens[si];
+  var left=$("left"), right=$("right");
+  ui._keep = {blank:ui.blank, letter:ui.letter, left:ui.left, item:ui.item, slot:ui.slot};
+  left.innerHTML=""; right.innerHTML="";
+  left.insertAdjacentHTML("beforeend", metaHtml(sc));
+  left.insertAdjacentHTML("beforeend", '<div class="part">'+esc(partOf(sc).name)+"</div>");
+  if(sc.instruction) left.insertAdjacentHTML("beforeend", '<div class="hint">'+esc(sc.instruction)+"</div>");
+  var fn = {
+    cloze_bank: renderCloze,
+    diagram_choice: renderDiagram,
+    judge_group: renderJudge,
+    mc: renderMc,
+    mc_buttons: renderButtons,
+    match: renderMatch,
+    order: renderOrder,
+    classify: renderClass,
+    short: renderShort,
+    short_pair: renderPair
+  }[sc.type];
+  if(fn) fn(sc,left,right);
+  else right.insertAdjacentHTML("beforeend","<div class='hint'>未知題型</div>");
+}
+
+function renderCloze(sc,left,right){
+  var i,it,html="",act,used,cls,revAll="";
+  if(sc.fig) left.insertAdjacentHTML("beforeend", '<div class="fig">'+fig(sc.fig)+"</div>");
+  if(sc.items.length===1 && !sc.fig){
+    it=sc.items[0];
+    left.insertAdjacentHTML("beforeend", '<div class="qno">'+esc(it.qid)+"</div>");
+  }
+  for(i=0;i<sc.items.length;i++){
+    it=sc.items[i];
+    if(!ui.blank && sc.items.length===1) ui.blank=it.qid;
+    act = (ui.blank===it.qid);
+    cls="blank"+(hasVal(answers[it.qid])?" filled":"")+(act?" active":"")+(submitted?(results[it.qid]&&results[it.qid].correct?" ok":" bad"):"");
+    html+='<div class="cloze-line">'+esc(it.before)+
+      '<button type="button" class="'+cls+'" onclick="onBlank(\''+it.qid+'\')">'+(hasVal(answers[it.qid])?esc(answers[it.qid]):"　　")+"</button>"+
+      esc(it.after)+"</div>";
+    if(submitted) revAll+=reviewBox(it.qid, it.review||sc.review||"");
+  }
+  left.insertAdjacentHTML("beforeend", html+revAll);
+  used=usedWords(sc.bankShared, null);
+  var bh='<div class="hint">字庫（點選填入橫線，可改填）</div><div class="bank">';
+  for(i=0;i<sc.bank.length;i++){
+    var w=sc.bank[i], isUsed=!!used[w], isSel=ui.letter===w;
+    bh+='<button type="button" class="'+(isUsed?"used ":"")+(isSel?"sel ":"")+'" onclick="onBankWord(\''+jsq(sc.bankShared)+'\',\''+jsq(w)+'\')">'+esc(w)+"</button>";
+  }
+  bh+="</div>";
+  right.insertAdjacentHTML("beforeend", bh+navHtml());
+}
+function onBlank(qid){
+  if(submitted) return;
+  if(ui.letter){
+    var sc=QUESTIONS.screens[si];
+    setBlank(qid, ui.letter, sc.bankShared);
+    ui.letter=null;
+    return;
+  }
+  if(ui.blank===qid && hasVal(answers[qid])){ clearBlank(qid); return; }
+  ui.blank=qid; render();
+}
+function onBankWord(shared, word){
+  if(submitted) return;
+  var q = ui.blank;
+  if(!q){
+    var sc=QUESTIONS.screens[si], i;
+    if(sc.items && sc.items.length===1) q=sc.items[0].qid;
+  }
+  if(q){ setBlank(q, word, shared); ui.letter=null; return; }
+  ui.letter=word; render();
+}
+
+function renderDiagram(sc,left,right){
+  left.insertAdjacentHTML("beforeend", '<div class="qtext">'+esc(sc.stem||"")+"</div>");
+  left.insertAdjacentHTML("beforeend", '<div class="fig">'+fig(sc.fig)+"</div>");
+  var h="",i,j,it,val,cls,rev="";
+  for(i=0;i<sc.items.length;i++){
+    it=sc.items[i]; val=answers[it.qid];
+    h+='<div class="hint" style="margin-top:.4vmin"><b>'+esc(it.label)+"</b>　"+esc(it.hint||"")+"</div><div class='diag-row'>";
+    for(j=0;j<sc.choices.length;j++){
+      cls="choicebtn"+(val===sc.choices[j]?" sel":"")+(submitted&&sc.choices[j]===it.answer?" right":"")+(submitted&&val===sc.choices[j]&&val!==it.answer?" wrong":"");
+      h+='<button type="button" class="'+cls+'" onclick="pickVal(\''+it.qid+'\',\''+jsq(sc.choices[j])+'\')">'+esc(sc.choices[j])+"</button>";
+    }
+    h+="</div>";
+    if(submitted) rev+=reviewBox(it.qid, it.review||"");
+  }
+  right.insertAdjacentHTML("beforeend", navHtml()+h+rev);
+}
+function pickVal(qid, val){
+  if(submitted) return;
+  answers[qid]=val; render();
+}
+
+function renderJudge(sc,left,right){
+  left.insertAdjacentHTML("beforeend", '<div class="qtext">'+esc(sc.stem||"")+"</div>");
+  var h='<div class="ggrid">',i,it,val,c1,c2;
+  for(i=0;i<sc.items.length;i++){
+    it=sc.items[i]; val=answers[it.qid];
+    c1="judgebtn"+(val==="✓"?" sel":"")+(submitted&&it.answer==="✓"?" right":"")+(submitted&&val==="✓"&&it.answer!=="✓"?" wrong":"");
+    c2="judgebtn"+(val==="✗"?" sel":"")+(submitted&&it.answer==="✗"?" right":"")+(submitted&&val==="✗"&&it.answer!=="✗"?" wrong":"");
+    h+='<div class="gitem"><div class="fig small">'+fig(it.fig)+'</div><div class="gt">'+esc(it.text)+'</div><div class="jrow">'+
+      '<button type="button" class="'+c1+'" onclick="pickVal(\''+it.qid+'\',\'✓\')">✓</button>'+
+      '<button type="button" class="'+c2+'" onclick="pickVal(\''+it.qid+'\',\'✗\')">✗</button></div></div>';
+  }
+  h+="</div>";
+  var rev="";
+  if(submitted) for(i=0;i<sc.items.length;i++) rev+=reviewBox(sc.items[i].qid, sc.items[i].review||"");
+  right.insertAdjacentHTML("beforeend", navHtml()+h+rev);
+}
+
+function renderMc(sc,left,right){
+  left.insertAdjacentHTML("beforeend", '<div class="qno">'+esc(sc.qid)+"</div><div class='qtext'>"+esc(sc.stem)+"</div>");
+  var h='<div class="mc">',i,L,cls,val=answers[sc.qid];
+  for(i=0;i<sc.options.length;i++){
+    L=letters().charAt(i);
+    cls="opt"+(val===L?" sel":"")+(submitted&&L===sc.answer?" right":"")+(submitted&&val===L&&L!==sc.answer?" wrong":"");
+    h+='<button type="button" class="'+cls+'" onclick="pickVal(\''+sc.qid+'\',\''+L+'\')">'+L+". "+esc(sc.options[i])+"</button>";
+  }
+  h+="</div>"+(submitted?reviewBox(sc.qid, sc.review||""):"")+navHtml();
+  right.insertAdjacentHTML("beforeend", h);
+}
+function renderButtons(sc,left,right){
+  if(sc.fig) left.insertAdjacentHTML("beforeend", '<div class="fig">'+fig(sc.fig)+"</div>");
+  left.insertAdjacentHTML("beforeend", '<div class="qno">'+esc(sc.qid)+"</div><div class='qtext'>"+esc(sc.stem)+"</div>");
+  var h='<div class="mc">',i,cls,val=answers[sc.qid];
+  for(i=0;i<sc.options.length;i++){
+    cls="choicebtn"+(val===sc.options[i]?" sel":"")+(submitted&&sc.options[i]===sc.answer?" right":"")+(submitted&&val===sc.options[i]&&val!==sc.answer?" wrong":"");
+    h+='<button type="button" class="'+cls+'" onclick="pickVal(\''+sc.qid+'\',\''+jsq(sc.options[i])+'\')">'+esc(sc.options[i])+"</button>";
+  }
+  h+="</div>"+(submitted?reviewBox(sc.qid, sc.review||""):"")+navHtml();
+  right.insertAdjacentHTML("beforeend", h);
+}
+
+function renderMatch(sc,left,right){
+  left.insertAdjacentHTML("beforeend", '<div class="qtext">'+esc(sc.title||"")+"</div>");
+  var h='<div class="match">',i,it,val,cls;
+  for(i=0;i<sc.lefts.length;i++){
+    it=sc.lefts[i]; val=answers[it.qid];
+    cls="blank"+(hasVal(val)?" filled":"")+(ui.left===it.qid?" active":"")+(submitted?(results[it.qid]&&results[it.qid].correct?" ok":" bad"):"");
+    h+='<div class="mrow"><div style="flex:1">'+esc((i+1)+". "+it.text)+'</div>'+
+      '<button type="button" class="'+cls+'" onclick="onMatchLeft(\''+it.qid+'\')">'+(hasVal(val)?esc(val):"　　")+"</button></div>";
+  }
+  h+="</div>";
+  if(submitted){
+    var rev=sc.review?'<div class="res ok">'+esc(sc.review)+"</div>":"";
+    for(i=0;i<sc.lefts.length;i++) rev+=reviewBox(sc.lefts[i].qid,"");
+    h+=rev;
+  }
+  left.insertAdjacentHTML("beforeend", h);
+  var used={}, rh='<div class="hint">選項（先點字母，再點橫線；或先點橫線再點字母）</div><div class="btns">';
+  for(i=0;i<sc.lefts.length;i++) if(hasVal(answers[sc.lefts[i].qid])) used[answers[sc.lefts[i].qid]]=sc.lefts[i].qid;
+  for(i=0;i<sc.rights.length;i++){
+    var k=sc.rights[i].key;
+    cls="opt"+(ui.letter===k?" sel":"")+(used[k]?" used":"")+(submitted&&false?"":"");
+    rh+='<button type="button" class="'+cls+'" onclick="onMatchLetter(\''+k+'\')"><b>'+esc(k)+"</b>　"+esc(sc.rights[i].text)+"</button>";
+  }
+  rh+="</div>"+navHtml();
+  right.insertAdjacentHTML("beforeend", rh);
+}
+function onMatchLeft(qid){
+  if(submitted) return;
+  if(ui.letter){
+    assignMatch(qid, ui.letter); ui.letter=null; ui.left=null; render(); return;
+  }
+  if(ui.left===qid && hasVal(answers[qid])){ answers[qid]=""; ui.left=null; render(); return; }
+  ui.left=qid; render();
+}
+function onMatchLetter(k){
+  if(submitted) return;
+  if(ui.left){ assignMatch(ui.left, k); ui.left=null; ui.letter=null; render(); return; }
+  ui.letter = (ui.letter===k?null:k); render();
+}
+function assignMatch(qid, k){
+  var sc=QUESTIONS.screens[si], i,it;
+  for(i=0;i<sc.lefts.length;i++){
+    it=sc.lefts[i];
+    if(it.qid!==qid && answers[it.qid]===k) answers[it.qid]="";
+  }
+  answers[qid]=k;
+}
+
+function renderOrder(sc,left,right){
+  left.insertAdjacentHTML("beforeend", '<div class="qtext">'+esc(sc.stem)+"</div>");
+  if(sc.fig) left.insertAdjacentHTML("beforeend", '<div class="fig">'+fig(sc.fig)+"</div>");
+  if(!answers[sc.qid]) answers[sc.qid]=sc.preset.slice();
+  var v=answers[sc.qid], h='<div class="slots">',i,cls;
+  for(i=0;i<4;i++){
+    if(i) h+='<span class="arrow">→</span>';
+    cls="blank"+(v[i]?" filled":"")+(ui.slot===i?" active":"")+(i===0?" locked":"")+(submitted?(results[sc.qid]&&results[sc.qid].correct?" ok":" bad"):"");
+    if(i===0) h+='<span class="'+cls+'">'+esc(v[0]||"B")+"</span>";
+    else h+='<button type="button" class="'+cls+'" onclick="onSlot('+i+')">'+(v[i]?esc(v[i]):"　")+"</button>";
+  }
+  h+="</div>";
+  if(submitted) h+=reviewBox(sc.qid, sc.review||"");
+  left.insertAdjacentHTML("beforeend", h);
+  var used={}, rh='<div class="hint">點選空位，再點字母（第一步 B 已鎖定）</div><div class="btns">';
+  for(i=1;i<4;i++) if(v[i]) used[v[i]]=i;
+  var keys=["A","C","D"], kk, step;
+  for(i=0;i<keys.length;i++){
+    kk=keys[i];
+    step=null; for(var s=0;s<sc.steps.length;s++) if(sc.steps[s].key===kk) step=sc.steps[s];
+    cls="opt"+(ui.letter===kk?" sel":"")+(used[kk]?" used":"");
+    rh+='<button type="button" class="'+cls+'" onclick="onOrderLetter(\''+kk+'\')"><b>'+kk+"</b>　"+esc(step?step.text:"")+"</button>";
+  }
+  // also show B as reference (locked)
+  var bstep=null; for(i=0;i<sc.steps.length;i++) if(sc.steps[i].key==="B") bstep=sc.steps[i];
+  rh+='<button type="button" class="opt used" disabled><b>B</b>　'+esc(bstep?bstep.text:"")+"（已鎖定）</button>";
+  rh+="</div>"+navHtml();
+  right.insertAdjacentHTML("beforeend", rh);
+}
+function onSlot(i){
+  if(submitted||i===0) return;
+  var qid=QUESTIONS.screens[si].qid;
+  if(!answers[qid]) answers[qid]=QUESTIONS.screens[si].preset.slice();
+  if(ui.letter){ assignSlot(i, ui.letter); ui.letter=null; ui.slot=null; render(); return; }
+  if(ui.slot===i && answers[qid][i]){ answers[qid][i]=null; ui.slot=null; render(); return; }
+  ui.slot=i; render();
+}
+function onOrderLetter(k){
+  if(submitted) return;
+  if(ui.slot!=null){ assignSlot(ui.slot, k); ui.slot=null; ui.letter=null; render(); return; }
+  ui.letter=(ui.letter===k?null:k); render();
+}
+function assignSlot(i,k){
+  var qid=QUESTIONS.screens[si].qid, v=answers[qid], j;
+  for(j=1;j<4;j++) if(j!==i && v[j]===k) v[j]=null;
+  v[i]=k;
+}
+
+function renderClass(sc,left,right){
+  left.insertAdjacentHTML("beforeend", '<div class="qtext">'+esc(sc.title||"")+"</div>");
+  var chips='<div class="chips">',i,it,val,cls, inBox={};
+  for(i=0;i<sc.items.length;i++){
+    it=sc.items[i]; val=answers[it.qid];
+    if(val) inBox[val]=inBox[val]||[];
+    if(val) inBox[val].push(it);
+    cls="chip"+(ui.item===it.qid?" sel":"")+(val?" used":"");
+    chips+='<button type="button" class="'+cls+'" onclick="onClassItem(\''+it.qid+'\')">'+
+      '<div class="fig small">'+fig(it.fig)+'</div>'+esc(it.key+" "+it.text)+"</button>";
+  }
+  chips+="</div>";
+  left.insertAdjacentHTML("beforeend", chips);
+  if(submitted){
+    var rev=""; for(i=0;i<sc.items.length;i++) rev+=reviewBox(sc.items[i].qid,"");
+    left.insertAdjacentHTML("beforeend", (sc.review?'<div class="res ok">'+esc(sc.review)+"</div>":"")+rev);
+  }
+  var bh='<div class="hint">先點選字母，再點所屬分類箱。可更改。</div><div class="boxes">',b,list,j;
+  for(i=0;i<sc.boxes.length;i++){
+    b=sc.boxes[i]; list=inBox[b.id]||[];
+    bh+='<div class="box'+(ui.item?" active":"")+'" onclick="onClassBox(\''+b.id+'\')"><h3>'+esc(b.label)+"</h3><div class='inbox'>";
+    for(j=0;j<list.length;j++) bh+='<span class="chip sel">'+esc(list[j].key+" "+list[j].text)+"</span>";
+    bh+="</div></div>";
+  }
+  bh+="</div>"+navHtml();
+  right.insertAdjacentHTML("beforeend", bh);
+}
+function onClassItem(qid){
+  if(submitted) return;
+  if(ui.item===qid && hasVal(answers[qid])){ answers[qid]=""; ui.item=null; render(); return; }
+  ui.item=qid; render();
+}
+function onClassBox(boxId){
+  if(submitted) return;
+  if(!ui.item) return;
+  answers[ui.item]=boxId; ui.item=null; render();
+}
+
+function renderShort(sc,left,right){
+  left.insertAdjacentHTML("beforeend", '<div class="qno">'+esc(sc.qid)+'</div><div class="qtext">'+esc(sc.stem)+"</div>");
+  if(submitted) left.insertAdjacentHTML("beforeend", reviewBox(sc.qid, sc.review||"")+'<div class="res ok">示範答案：'+esc(sc.sample)+"</div>");
+  var v=answers[sc.qid]||"";
+  right.innerHTML='<div class="short-wrap need-space"><div class="hint">請用完整句子或短句作答。</div>'+
+    '<textarea id="sa" inputmode="text" '+(submitted?"readonly":"")+' oninput="onShortInput(\''+sc.qid+'\',this.value)">'+esc(v)+"</textarea>"+
+    navHtml()+"</div>";
+}
+function renderPair(sc,left,right){
+  left.insertAdjacentHTML("beforeend", '<div class="qtext">'+esc(sc.stem)+"</div>"+(sc.instruction?'<div class="hint">'+esc(sc.instruction)+"</div>":""));
+  if(submitted){
+    left.insertAdjacentHTML("beforeend", reviewBox(sc.items[0].qid,"")+reviewBox(sc.items[1].qid,"")+'<div class="res ok">示範答案：'+esc(sc.sample)+(sc.review?("<br>"+esc(sc.review)):"")+"</div>");
+  }
+  var a=answers[sc.items[0].qid]||"", b=answers[sc.items[1].qid]||"";
+  right.innerHTML='<div class="short-wrap need-space"><div class="hint">'+esc(sc.items[0].label)+'</div>'+
+    '<textarea id="sa1" inputmode="text" '+(submitted?"readonly":"")+' oninput="onShortInput(\''+sc.items[0].qid+'\',this.value)">'+esc(a)+"</textarea>"+
+    '<div class="hint">'+esc(sc.items[1].label)+'</div>'+
+    '<textarea id="sa2" inputmode="text" '+(submitted?"readonly":"")+' oninput="onShortInput(\''+sc.items[1].qid+'\',this.value)">'+esc(b)+"</textarea>"+
+    navHtml()+"</div>";
+}
+function onShortInput(qid, val){ answers[qid]=val; }
+
+function render(){
+  if(mode==="start") renderStart();
+  else renderExam();
+}
+
+document.addEventListener("focusin",function(e){
+  var el=e.target;
+  if(el.matches && el.matches("input,textarea")) setTimeout(function(){el.scrollIntoView({block:"start",behavior:"smooth"});},150);
+});
+$("ov").addEventListener("click",function(e){ if(e.target===$("ov") && submitted) closeOv(); });
+
+elhReport({type:"init", total:67});
+render();
+
+</script>
+</body>
+</html>
