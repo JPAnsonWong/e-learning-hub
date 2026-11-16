@@ -37,7 +37,7 @@ input,textarea{scroll-margin-top:12vh}
   border:.35vmin solid #94a3b8;border-radius:1.2vmin;background:#fff;padding:.4vmin 1.6vmin;font-weight:bold
 }
 .bank button.used,.opt.used{opacity:.4;background:#f1f5f9}
-.bank button.sel,.opt.sel,.chip.sel,.boxbtn.sel,.choicebtn.sel{background:#2563eb;color:#fff;border-color:#2563eb}
+.bank button.sel,.opt.sel,.chip.sel,.boxbtn.sel,.choicebtn.sel,.judgebtn.sel{background:#2563eb;color:#fff;border-color:#2563eb}
 .bank button.picked{background:#dbeafe;border-color:#2563eb}
 .mc{display:flex;flex-direction:column;gap:1.2vmin}
 .mc .opt,.choicebtn{text-align:left;width:100%}
@@ -97,6 +97,15 @@ textarea,input[type=text]{width:100%;min-height:max(3rem,8vmin);font-size:clamp(
 .diag-row .choicebtn{flex:1;min-width:9vmin;width:auto;text-align:center;font-size:clamp(14px,2.7vmin,40px);padding:.2vmin .6vmin}
 .nav button:disabled{opacity:.45;cursor:default}
 .ggrid{align-content:start}
+.gitem .fig svg,.gitem svg{pointer-events:none}
+.judgebtn:active{background:#bfdbfe}
+#app.layout-judge{flex-direction:column;flex-wrap:nowrap}
+#app.layout-judge #left{flex:none;height:auto;overflow:visible}
+#app.layout-judge #right{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column}
+#app.layout-judge .nav{flex:none;margin-top:0;margin-bottom:1vmin}
+#app.layout-judge .ggrid{flex:1;min-height:0;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;align-content:stretch}
+#app.layout-judge .gitem{min-height:0;overflow:hidden}
+#app.layout-judge .fig.small svg,#app.layout-judge .gitem svg{max-height:16vmin}
 
 </style>
 </head>
@@ -508,6 +517,7 @@ function reviewBox(qid, extra){
 function renderExam(){
   var sc=QUESTIONS.screens[si];
   var left=$("left"), right=$("right");
+  $("app").classList.remove("layout-judge");
   ui._keep = {blank:ui.blank, letter:ui.letter, left:ui.left, item:ui.item, slot:ui.slot};
   left.innerHTML=""; right.innerHTML="";
   left.insertAdjacentHTML("beforeend", metaHtml(sc));
@@ -600,6 +610,7 @@ function pickVal(qid, val){
 }
 
 function renderJudge(sc,left,right){
+  $("app").classList.add("layout-judge");
   left.insertAdjacentHTML("beforeend", '<div class="qtext">'+esc(sc.stem||"")+"</div>");
   var h='<div class="ggrid">',i,it,val,c1,c2;
   for(i=0;i<sc.items.length;i++){
