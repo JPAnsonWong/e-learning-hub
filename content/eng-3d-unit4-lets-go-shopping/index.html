@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D Unit 4 Let's go shopping! 預習・練習・複習</title>
+<style>
+html,body,#app{height:100%;overflow:hidden;margin:0;padding:0}
+:root{--bg:#f4efe6;--card:#ffffff;--text:#22272b;--accent:#2d6cdf;--accent2:#1b4fb0;--green:#1e9e50;--red:#d93a3a;--line:#d8d2c6;--soft:#f0e9dc}
+*{box-sizing:border-box}
+body{font-family:"PingFang TC","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--text);touch-action:manipulation;-webkit-user-select:none;user-select:none}
+#app{display:grid;grid-template-columns:56% 44%;height:100%}
+.left{padding:1.6vmin 2vmin;overflow:auto;height:100%;border-right:2px solid var(--line)}
+.right{padding:1.6vmin 2vmin;overflow:auto;height:100%;background:var(--card)}
+h1{font-size:clamp(1.5rem,5vmin,3.2rem);margin:.2em 0}
+h2{font-size:clamp(1.3rem,4.2vmin,2.6rem);margin:.2em 0}
+h3{font-size:clamp(1.1rem,3.4vmin,2rem);margin:.3em 0}
+.topic{font-size:clamp(1.15rem,3.8vmin,2.4rem);margin:.5rem 0;line-height:1.35}
+.option{font-size:clamp(1.05rem,3.2vmin,2rem);margin:.3rem 0;line-height:1.3}
+.hint{font-size:clamp(0.95rem,2.4vmin,1.4rem);color:#5a5347;margin:.3rem 0;line-height:1.4}
+.small{font-size:clamp(0.9rem,2.4vmin,1.35rem);color:#6b6355}
+.btn{display:inline-block;min-height:max(3rem,7vmin);min-width:max(3rem,7vmin);padding:.35em .9em;background:var(--accent);color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:clamp(1rem,3vmin,1.7rem);font-family:inherit;touch-action:manipulation;margin:.25rem .25rem .25rem 0;line-height:1.2}
+.btn:active{transform:scale(.97)}
+.btn-secondary{background:#6c757d}
+.btn-green{background:var(--green)}
+.btn-red{background:var(--red)}
+.btn-ghost{background:#fff;color:var(--accent2);border:2px solid var(--accent2)}
+.btn-gray{background:#e9ecef;color:#212529}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.cover-btn{display:block;width:100%;min-height:max(3rem,14vmin);margin:1.2vmin 0;font-size:clamp(1.3rem,4.2vmin,2.6rem);background:#fff;border:3px solid var(--accent);color:var(--accent2);border-radius:14px;touch-action:manipulation;font-family:inherit;font-weight:700}
+.opt{display:block;width:100%;text-align:left;min-height:max(3rem,8vmin);margin:.4vmin 0;padding:.4em .8em;font-size:clamp(1.05rem,3.2vmin,2rem);border:2px solid var(--line);border-radius:10px;background:#fff;color:var(--text);font-family:inherit;touch-action:manipulation;line-height:1.3}
+.opt.ok{background:#d9f2e0;border-color:var(--green);color:#0d5c2c}
+.opt.bad{background:#fbdada;border-color:var(--red);color:#8a1414}
+.opt.sel{border-color:var(--accent);background:#e7efff}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.2vmin}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2vmin}
+.shop-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.8vmin;align-items:stretch}
+.shop-grid .opt{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;padding:.3em .3em .4em;min-height:max(3rem,7vmin);margin:0;font-size:clamp(0.9rem,2.4vmin,1.35rem);line-height:1.2}
+.shop-grid .opt svg{width:100%;height:auto;max-height:9vmin;display:block}
+.floor-grid .opt{margin:.3vmin 0}
+.card{min-height:max(3rem,9vmin);border:2px solid var(--line);border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;text-align:center;padding:.6vmin;font-size:clamp(1rem,3vmin,1.8rem);cursor:pointer;touch-action:manipulation;line-height:1.25}
+.card.ok{border-color:var(--green);background:#d9f2e0}
+.card.bad{border-color:var(--red);background:#fbdada}
+.card.pick{border-color:var(--accent);background:#e7efff}
+.card .svgwrap svg{width:100%;height:auto;max-height:11vmin}
+.pill{display:inline-block;background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:.15em .7em;margin:.15em .1em;font-size:clamp(1rem,3vmin,1.8rem);min-height:max(2.6rem,6vmin);line-height:1.4}
+.wordbank .pill{cursor:pointer}
+.wordbank .pill.used{opacity:.35;pointer-events:none}
+.sent .pill{cursor:pointer;background:#fff7e0;border-color:#d9b45c}
+.progress{font-size:clamp(1rem,2.8vmin,1.7rem);color:#4a4436;margin:.2rem 0;font-weight:700}
+.navrow{margin-top:1.2vmin}
+.passage{white-space:pre-wrap;font-size:clamp(1.05rem,3.2vmin,2rem);line-height:1.55;background:#fffdf7;border:1px solid var(--line);border-radius:10px;padding:1.4vmin}
+table.dir{border-collapse:collapse;width:100%;font-size:clamp(1rem,3vmin,1.8rem)}
+table.dir th,table.dir td{border:1px solid var(--line);padding:.5vmin .8vmin;text-align:left}
+table.dir th{background:#eef3ff}
+.speaker{display:inline-flex;align-items:center;justify-content:center;min-width:max(3rem,9vmin);min-height:max(3rem,9vmin);border-radius:50%;background:#fff3c4;border:2px solid #d9b45c;cursor:pointer;touch-action:manipulation;padding:.4vmin}
+.speaker svg{width:60%;height:auto}
+.bigspeaker{width:22vmin;height:22vmin;background:#ffe9a8;border:3px solid #d9b45c;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;margin:1vmin 0}
+.bigspeaker svg{width:60%;height:60%}
+.feedback{min-height:2.2em;font-size:clamp(1.05rem,3.2vmin,2rem);font-weight:700;margin:.4rem 0}
+.feedback.ok{color:var(--green)}
+.feedback.bad{color:var(--red)}
+.narrow{grid-template-columns:100% !important}
+.scroll-area::after{content:"";display:block;height:50vh}
+html{scroll-padding-top:12vh}
+input,textarea{scroll-margin-top:12vh}
+.mapbox{background:#fff;border:2px solid var(--line);border-radius:12px;padding:1vmin}
+.mapbox svg{width:100%;height:auto;display:block}
+.hl{fill:#ffe08a !important;stroke:#c98a00 !important;stroke-width:3}
+.centerwrap{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:2vmin}
+@media (max-width:900px),(orientation:portrait){
+  #app{grid-template-columns:100% !important;grid-template-rows:auto auto}
+  .left{height:auto;max-height:55%;border-right:none;border-bottom:2px solid var(--line)}
+  .right{height:auto;max-height:45%}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="left" id="left"></div>
+  <div class="right" id="right"></div>
+</div>
+
+<script>
+window.ELH_DATA = {"title":"3D Unit 4 Let's go shopping! 預習・練習・複習","total":123,"shops":[{"id":"hair-salon","en":"a hair salon","zh":"髮廊"},{"id":"pet-shop","en":"a pet shop","zh":"寵物店"},{"id":"bookshop","en":"a bookshop","zh":"書店"},{"id":"toy-shop","en":"a toy shop","zh":"玩具店"},{"id":"cafe","en":"a cafe","zh":"咖啡店"},{"id":"gift-shop","en":"a gift shop","zh":"禮品店"},{"id":"fast-food-shop","en":"a fast-food shop","zh":"快餐店"},{"id":"department-store","en":"a department store","zh":"百貨公司"},{"id":"shoe-shop","en":"a shoe shop","zh":"鞋店"},{"id":"sports-shop","en":"a sports shop","zh":"運動用品店"},{"id":"clothes-shop","en":"a clothes shop","zh":"服裝店"}],"floors":[{"id":"4f","short":"4/F","en":"fourth floor","tts":"the fourth floor"},{"id":"3f","short":"3/F","en":"third floor","tts":"the third floor"},{"id":"2f","short":"2/F","en":"second floor","tts":"the second floor"},{"id":"1f","short":"1/F","en":"first floor","tts":"the first floor"},{"id":"gf","short":"G/F","en":"ground floor","tts":"the ground floor"}],"passages":{"pv-t1":"There’s a new shopping centre near our school. It opens today.\n‘How can we get to the shopping centre?’ asks Julie.\n‘We can follow the directions on this flyer,’ replies Max. ‘Let’s go!’","pv-flyer":"Wonder Shopping Centre opens today\nDolly’s Chocolate Shop — join their free chocolate workshops\nFun Board Games Cafe — fun for all the family\nHow can you find us?\nGo out of the MTR station. Walk along Star Street. Then turn left. Wonder Shopping Centre is on your left. It is opposite the bank.\nVisit us today!","pv-t3":"‘Can you hear the sound of the lion dance?’ asks Julie.\n‘Look at the lion dance in front of the entrance!’ says Max.\nWhen they enter the shopping centre, they are surprised.\n‘Look at the long queues outside the clothes shop and the sports shop!’ says Max.","pv-t4":"‘Let’s go to Dolly’s Chocolate Shop first,’ says Julie. ‘How can we get to the chocolate shop?’\n‘We can look at the directory here,’ says Max. ‘Just go up four floors. We can also buy toys and books in the toy shop and the bookshop on the same floor. By the way, are you going to buy chocolate in the chocolate shop?’\n‘No,’ replies Julie. ‘I just want to make some in the workshop. We can join it for free!’","pr-t1":"Mia and Ken want to go to a new shopping centre after school. It is called Sunny Plaza.\n\n‘How can we get to Sunny Plaza?’ asks Mia.\n‘We can follow the directions on this flyer,’ says Ken. ‘Let’s go!’","pr-flyer":"Sunny Plaza opens today\nPat’s Gift Shop — buy birthday presents\nHappy Kids Toy Shop — toys for all the family\n\nHow can you find us?\nGo out of the bus stop. Walk along River Street. Then turn right. Sunny Plaza is on your right. It is opposite the park.\nVisit us today!","pr-t3":"They go into Sunny Plaza. There are long queues outside the shoe shop.","pr-t4":"‘Let’s go to the toy shop first,’ says Mia. ‘How can we get to the toy shop?’\n‘We can look at the directory here,’ says Ken. ‘Just go up two floors.’","pr-t5":"‘Are you going to buy a toy?’ asks Ken.\n‘Yes,’ says Mia. ‘I want a birthday present for my brother.’"},"directories":{"wonder":[{"floor":"4/F","shops":["New World Bookshop","Daydream Toy Shop","Dolly’s Chocolate Shop"]},{"floor":"3/F","shops":["Uncle Joe’s Restaurant","Good Day Restaurant","Happy Fast-food Shop"]},{"floor":"2/F","shops":["Fun Board Games Cafe","Collin’s Hair Salon","Nancy’s Gift Shop"]},{"floor":"1/F","shops":["Nana Department Store"]},{"floor":"G/F","shops":["Young Forever Clothes Shop","Top Sports Shop","Yummy Sweet Shop"]}],"sunny":[{"floor":"4/F","shops":["Star Bookshop"]},{"floor":"3/F","shops":["Green Cafe","Lucky Fast-food Shop"]},{"floor":"2/F","shops":["Happy Kids Toy Shop","Pat’s Gift Shop"]},{"floor":"1/F","shops":["Fashion Clothes Shop"]},{"floor":"G/F","shops":["Super Shoe Shop","Sporty Sports Shop"]}]},"sections":[{"id":"pv","title":"預習","modules":["pv-words","pv-text","pv-grammar"]},{"id":"pr","title":"練習","modules":["pr-words","pr-pos","pr-dir","pr-read"]},{"id":"rv","title":"複習","modules":["rv-words","rv-grammar"]}],"modules":[{"id":"pv-words","section":"pv","title":"必記單詞（聽讀點選、翻牌配對）","short":"必記單詞"},{"id":"pv-text","section":"pv","title":"課文重點（課本 pp.40–41）","short":"課文重點"},{"id":"pv-grammar","section":"pv","title":"重點語法（位置與問路）","short":"重點語法","demos":2},{"id":"pr-words","section":"pr","title":"單詞與樓層","short":"單詞與樓層"},{"id":"pr-pos","section":"pr","title":"位置（next to / between / opposite）","short":"位置"},{"id":"pr-dir","section":"pr","title":"問路與方向","short":"問路與方向"},{"id":"pr-read","section":"pr","title":"課文技能理解","short":"課文技能理解"},{"id":"rv-words","section":"rv","title":"必記單詞抽認","short":"單詞抽認"},{"id":"rv-grammar","section":"rv","title":"重點語法再練","short":"語法再練"}],"grammarDemos":[{"id":"demo-a","map":"mapA","title":"位置語法示範","lines":["The pet shop is next to the hair salon.","The pet shop is between the gift shop and the hair salon.","The pet shop is opposite the shoe shop."]},{"id":"demo-b","map":"mapB","title":"問路語法示範","lines":["Turn left.","Turn right.","Walk along Lake Street.","Walk across the road.","It is on your left.","It is on your right.","How can I get to the toy shop?"]}],"questions":[{"q":"pv-s01","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a hair salon","answer":"a hair salon","shop":"hair-salon","hint":"剛才聽到的是 a hair salon（髮廊）。"},{"q":"pv-s02","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a pet shop","answer":"a pet shop","shop":"pet-shop","hint":"剛才聽到的是 a pet shop（寵物店）。"},{"q":"pv-s03","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a bookshop","answer":"a bookshop","shop":"bookshop","hint":"剛才聽到的是 a bookshop（書店）。"},{"q":"pv-s04","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a toy shop","answer":"a toy shop","shop":"toy-shop","hint":"剛才聽到的是 a toy shop（玩具店）。"},{"q":"pv-s05","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a cafe","answer":"a cafe","shop":"cafe","hint":"剛才聽到的是 a cafe（咖啡店）。"},{"q":"pv-s06","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a gift shop","answer":"a gift shop","shop":"gift-shop","hint":"剛才聽到的是 a gift shop（禮品店）。"},{"q":"pv-s07","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a fast-food shop","answer":"a fast-food shop","shop":"fast-food-shop","hint":"剛才聽到的是 a fast-food shop（快餐店）。"},{"q":"pv-s08","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a department store","answer":"a department store","shop":"department-store","hint":"剛才聽到的是 a department store（百貨公司）。"},{"q":"pv-s09","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a shoe shop","answer":"a shoe shop","shop":"shoe-shop","hint":"剛才聽到的是 a shoe shop（鞋店）。"},{"q":"pv-s10","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a sports shop","answer":"a sports shop","shop":"sports-shop","hint":"剛才聽到的是 a sports shop（運動用品店）。"},{"q":"pv-s11","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a clothes shop","answer":"a clothes shop","shop":"clothes-shop","hint":"剛才聽到的是 a clothes shop（服裝店）。"},{"q":"pv-f01","module":"pv-words","type":"listen-floor","prompt":"點選你聽到的樓層","tts":"the fourth floor","answer":"4/F fourth floor","floor":"4f","hint":"剛才聽到的是 the fourth floor（4/F）。"},{"q":"pv-f02","module":"pv-words","type":"listen-floor","prompt":"點選你聽到的樓層","tts":"the third floor","answer":"3/F third floor","floor":"3f","hint":"剛才聽到的是 the third floor（3/F）。"},{"q":"pv-f03","module":"pv-words","type":"listen-floor","prompt":"點選你聽到的樓層","tts":"the second floor","answer":"2/F second floor","floor":"2f","hint":"剛才聽到的是 the second floor（2/F）。"},{"q":"pv-f04","module":"pv-words","type":"listen-floor","prompt":"點選你聽到的樓層","tts":"the first floor","answer":"1/F first floor","floor":"1f","hint":"剛才聽到的是 the first floor（1/F）。"},{"q":"pv-f05","module":"pv-words","type":"listen-floor","prompt":"點選你聽到的樓層","tts":"the ground floor","answer":"G/F ground floor","floor":"gf","hint":"剛才聽到的是 the ground floor（G/F）。"},{"q":"pv-m01","module":"pv-words","type":"match","prompt":"先點一張卡，再點另一張，把英文詞和圖示配成一對。","pairs":[{"id":"hair-salon","en":"a hair salon","kind":"shop"},{"id":"pet-shop","en":"a pet shop","kind":"shop"},{"id":"bookshop","en":"a bookshop","kind":"shop"},{"id":"toy-shop","en":"a toy shop","kind":"shop"},{"id":"cafe","en":"a cafe","kind":"shop"},{"id":"gift-shop","en":"a gift shop","kind":"shop"}],"answer":"a hair salon, a pet shop, a bookshop, a toy shop, a cafe, a gift shop","hint":"請把每個英文店名配上對應的圖示。"},{"q":"pv-m02","module":"pv-words","type":"match","prompt":"先點一張卡，再點另一張，把英文詞和圖示配成一對。","pairs":[{"id":"fast-food-shop","en":"a fast-food shop","kind":"shop"},{"id":"department-store","en":"a department store","kind":"shop"},{"id":"shoe-shop","en":"a shoe shop","kind":"shop"},{"id":"sports-shop","en":"a sports shop","kind":"shop"},{"id":"clothes-shop","en":"a clothes shop","kind":"shop"}],"answer":"a fast-food shop, a department store, a shoe shop, a sports shop, a clothes shop","hint":"請把每個英文店名配上對應的圖示。"},{"q":"pv-m03","module":"pv-words","type":"match","prompt":"先點一張卡，再點另一張，把樓層簡寫和英文名稱配成一對。","pairs":[{"id":"4f","en":"fourth floor","short":"4/F","kind":"floor"},{"id":"3f","en":"third floor","short":"3/F","kind":"floor"},{"id":"2f","en":"second floor","short":"2/F","kind":"floor"},{"id":"1f","en":"first floor","short":"1/F","kind":"floor"},{"id":"gf","en":"ground floor","short":"G/F","kind":"floor"}],"answer":"4/F fourth floor, 3/F third floor, 2/F second floor, 1/F first floor, G/F ground floor","hint":"4/F 是 fourth floor；3/F 是 third floor；2/F 是 second floor；1/F 是 first floor；G/F 是 ground floor。"},{"q":"pv-r01","module":"pv-text","type":"mcq","stem":"When does the new shopping centre open?","options":["today","tomorrow","next week"],"correct":0,"left":"pv-t1","hint":"Max 說 “It opens today.”"},{"q":"pv-r02","module":"pv-text","type":"mcq","stem":"Julie asks, “How can we get to the shopping centre?” What is Max’s solution?","options":["We can follow the directions on this flyer.","We can take a taxi.","We can call the shop."],"correct":0,"left":"pv-t1","hint":"解難常用 can / let’s。Max 說可以跟傳單上的路線走。"},{"q":"pv-r03","module":"pv-text","type":"mcq","stem":"What can people do at Dolly’s Chocolate Shop?","options":["join their free chocolate workshops","buy clothes","play sports"],"correct":0,"left":"pv-flyer"},{"q":"pv-r04","module":"pv-text","type":"mcq","stem":"What does the flyer say about Fun Board Games Cafe?","options":["It is fun for all the family.","It is only for children.","It is on the ground floor."],"correct":0,"left":"pv-flyer"},{"q":"pv-r05","module":"pv-text","type":"mcq","stem":"After you go out of the MTR station, walk along ______.","options":["Star Street","Moon Road","Bank Street"],"correct":0,"left":"pv-flyer"},{"q":"pv-r06","module":"pv-text","type":"mcq","stem":"Then ______.","options":["turn left","turn right","walk across the MTR station"],"correct":0,"left":"pv-flyer"},{"q":"pv-r07","module":"pv-text","type":"mcq","stem":"Wonder Shopping Centre is ______.","options":["on your left","on your right","next to the MTR station"],"correct":0,"left":"pv-flyer"},{"q":"pv-r08","module":"pv-text","type":"mcq","stem":"Wonder Shopping Centre is ______ the bank.","options":["opposite","next to","between"],"correct":0,"left":"pv-flyer"},{"q":"pv-r09","module":"pv-text","type":"mcq","stem":"What do Julie and Max see in front of the entrance?","options":["a lion dance","a bus","a taxi"],"correct":0,"left":"pv-t3"},{"q":"pv-r10","module":"pv-text","type":"mcq","stem":"What is outside the clothes shop and the sports shop?","options":["long queues","a chocolate workshop","a bank"],"correct":0,"left":"pv-t3"},{"q":"pv-r11","module":"pv-text","type":"mcq","stem":"How do Julie and Max find the chocolate shop?","options":["They look at the directory.","They call the shop.","They ask a policeman."],"correct":0,"left":"pv-dir"},{"q":"pv-r12","module":"pv-text","type":"mcq","stem":"Dolly’s Chocolate Shop is on the ______.","options":["fourth floor","second floor","ground floor"],"correct":0,"left":"pv-dir"},{"q":"pv-r13","module":"pv-text","type":"mcq","stem":"Which two shops are on the same floor as Dolly’s Chocolate Shop?","options":["New World Bookshop and Daydream Toy Shop","Fun Board Games Cafe and Nancy’s Gift Shop","Top Sports Shop and Yummy Sweet Shop"],"correct":0,"left":"pv-dir"},{"q":"pv-r14","module":"pv-text","type":"mcq","stem":"Fun Board Games Cafe is on ______.","options":["2/F","4/F","G/F"],"correct":0,"left":"pv-dir"},{"q":"pv-r15","module":"pv-text","type":"mcq","stem":"Young Forever Clothes Shop is on ______.","options":["the ground floor","the first floor","the third floor"],"correct":0,"left":"pv-dir"},{"q":"pv-r16","module":"pv-text","type":"mcq","stem":"What does Julie want to do in the chocolate shop?","options":["make chocolate in the workshop","buy some chocolate","buy a toy"],"correct":0,"left":"pv-dir"},{"q":"pv-r17","module":"pv-text","type":"mcq","stem":"Can Julie and Max join the workshop for free?","options":["Yes, they can.","No, they cannot.","We do not know."],"correct":0,"left":"pv-dir"},{"q":"pv-g01","module":"pv-grammar","type":"mcq","stem":"The pet shop is ______ the gift shop and the hair salon.","options":["between","next to","opposite"],"correct":0,"left":"mapA"},{"q":"pv-g02","module":"pv-grammar","type":"mcq","stem":"The pet shop is ______ the hair salon.","options":["next to","between","opposite"],"correct":0,"left":"mapA"},{"q":"pv-g03","module":"pv-grammar","type":"mcq","stem":"The pet shop is ______ the shoe shop.","options":["opposite","next to","between"],"correct":0,"left":"mapA"},{"q":"pv-g04","module":"pv-grammar","type":"mcq","stem":"The shoe shop is ______ the sports shop and the clothes shop.","options":["between","next to","opposite"],"correct":0,"left":"mapA"},{"q":"pv-g05","module":"pv-grammar","type":"mcq","stem":"The sports shop is ______ the gift shop.","options":["opposite","next to","between"],"correct":0,"left":"mapA"},{"q":"pv-g06","module":"pv-grammar","type":"mcq","stem":"The clothes shop is ______ the hair salon.","options":["opposite","next to","between"],"correct":0,"left":"mapA"},{"q":"pv-g07","module":"pv-grammar","type":"mcq","stem":"How can I get to the toy shop?","options":["Go out of the MTR station. Walk along Lake Street. Then turn left. The toy shop is on your left.","Go out of the MTR station. Walk along Lake Street. Then turn right. The toy shop is on your right.","Go out of the MTR station. Walk across Pine Street. Then turn right. The toy shop is on your left."],"correct":0,"left":"mapB"},{"q":"pv-g08","module":"pv-grammar","type":"mcq","stem":"After you turn left, the toy shop is ______.","options":["on your left","on your right","opposite the MTR station"],"correct":0,"left":"mapB"},{"q":"pv-g09","module":"pv-grammar","type":"mcq","stem":"How can I get to the bookshop?","options":["Go out of the MTR station. Walk along Lake Street. Then turn right. The bookshop is on your right.","Go out of the MTR station. Walk along Lake Street. Then turn left. The bookshop is on your left.","Go out of the MTR station. Walk across Lake Street. Then turn left. The bookshop is on your right."],"correct":0,"left":"mapB"},{"q":"pv-g10","module":"pv-grammar","type":"mcq","stem":"How can I get to the cafe?","options":["Go out of the MTR station. Walk along Lake Street. Then turn left. Walk across the road. The cafe is on your right.","Go out of the MTR station. Walk along Lake Street. Then turn right. Walk across the road. The cafe is on your left.","Go out of the MTR station. Turn right. The cafe is on your left."],"correct":0,"left":"mapB"},{"q":"pr-v01","module":"pr-words","type":"mcq","stem":"I want to get a haircut. I go to ______.","options":["a hair salon","a clothes shop","a gift shop"],"correct":0,"left":"shop-scene","icon":"hair-salon","hint":"正確是 a hair salon。"},{"q":"pr-v02","module":"pr-words","type":"mcq","stem":"I want to buy a pet. I go to ______.","options":["a pet shop","a toy shop","a bookshop"],"correct":0,"left":"shop-scene","icon":"pet-shop","hint":"正確是 a pet shop。"},{"q":"pr-v03","module":"pr-words","type":"mcq","stem":"I want to buy a book. I go to ______.","options":["a bookshop","a gift shop","a cafe"],"correct":0,"left":"shop-scene","icon":"bookshop","hint":"正確是 a bookshop。"},{"q":"pr-v04","module":"pr-words","type":"mcq","stem":"I want to buy a doll. I go to ______.","options":["a toy shop","a pet shop","a clothes shop"],"correct":0,"left":"shop-scene","icon":"toy-shop","hint":"正確是 a toy shop。"},{"q":"pr-v05","module":"pr-words","type":"mcq","stem":"I want to drink some tea. I go to ______.","options":["a cafe","a fast-food shop","a gift shop"],"correct":0,"left":"shop-scene","icon":"cafe","hint":"正確是 a cafe。"},{"q":"pr-v06","module":"pr-words","type":"mcq","stem":"I want to buy a present. I go to ______.","options":["a gift shop","a shoe shop","a sports shop"],"correct":0,"left":"shop-scene","icon":"gift-shop","hint":"正確是 a gift shop。"},{"q":"pr-v07","module":"pr-words","type":"mcq","stem":"I want to eat a hamburger. I go to ______.","options":["a fast-food shop","a cafe","a department store"],"correct":0,"left":"shop-scene","icon":"fast-food-shop","hint":"正確是 a fast-food shop。"},{"q":"pr-v08","module":"pr-words","type":"mcq","stem":"I want to buy many things in a big shop. I go to ______.","options":["a department store","a gift shop","a bookshop"],"correct":0,"left":"shop-scene","icon":"department-store","hint":"正確是 a department store。"},{"q":"pr-v09","module":"pr-words","type":"mcq","stem":"I want to buy a pair of shoes. I go to ______.","options":["a shoe shop","a sports shop","a clothes shop"],"correct":0,"left":"shop-scene","icon":"shoe-shop","hint":"正確是 a shoe shop。"},{"q":"pr-v10","module":"pr-words","type":"mcq","stem":"I want to buy a football. I go to ______.","options":["a sports shop","a shoe shop","a toy shop"],"correct":0,"left":"shop-scene","icon":"sports-shop","hint":"正確是 a sports shop。"},{"q":"pr-v11","module":"pr-words","type":"mcq","stem":"I want to buy a T-shirt. I go to ______.","options":["a clothes shop","a hair salon","a shoe shop"],"correct":0,"left":"shop-scene","icon":"clothes-shop","hint":"正確是 a clothes shop。"},{"q":"pr-v12","module":"pr-words","type":"mcq","stem":"4/F is the ______ floor.","options":["fourth","third","first"],"correct":0,"left":"floor-scene","icon":"4f","hint":"正確是 fourth。","floor":"4f"},{"q":"pr-v13","module":"pr-words","type":"mcq","stem":"3/F is the ______ floor.","options":["third","fourth","second"],"correct":0,"left":"floor-scene","icon":"3f","hint":"正確是 third。","floor":"3f"},{"q":"pr-v14","module":"pr-words","type":"mcq","stem":"2/F is the ______ floor.","options":["second","first","third"],"correct":0,"left":"floor-scene","icon":"2f","hint":"正確是 second。","floor":"2f"},{"q":"pr-v15","module":"pr-words","type":"mcq","stem":"1/F is the ______ floor.","options":["first","ground","second"],"correct":0,"left":"floor-scene","icon":"1f","hint":"正確是 first。","floor":"1f"},{"q":"pr-v16","module":"pr-words","type":"mcq","stem":"G/F is the ______ floor.","options":["ground","first","fourth"],"correct":0,"left":"floor-scene","icon":"gf","hint":"正確是 ground。","floor":"gf"},{"q":"pr-v17","module":"pr-words","type":"mcq","stem":"The first floor is ______.","options":["1/F","G/F","2/F"],"correct":0,"left":"floor-scene","icon":"1f","hint":"正確是 1/F。","floor":"1f"},{"q":"pr-v18","module":"pr-words","type":"mcq","stem":"The ground floor is ______.","options":["G/F","1/F","4/F"],"correct":0,"left":"floor-scene","icon":"gf","hint":"正確是 G/F。","floor":"gf"},{"q":"pr-v19","module":"pr-words","type":"mcq","stem":"Which one is correct?","options":["a bookshop","a books shop","a book shopes"],"correct":0,"left":"spell"},{"q":"pr-v20","module":"pr-words","type":"mcq","stem":"Which one is correct?","options":["a department store","a department shop","a depart store"],"correct":0,"left":"spell"},{"q":"pr-p01","module":"pr-pos","type":"mcq","stem":"Which shop is between the gift shop and the hair salon?","options":["the pet shop","the shoe shop","the sports shop"],"correct":0,"left":"mapA"},{"q":"pr-p02","module":"pr-pos","type":"mcq","stem":"Which shop is between the sports shop and the clothes shop?","options":["the shoe shop","the pet shop","the gift shop"],"correct":0,"left":"mapA"},{"q":"pr-p03","module":"pr-pos","type":"mcq","stem":"Which shop is opposite the clothes shop?","options":["the hair salon","the gift shop","the pet shop"],"correct":0,"left":"mapA"},{"q":"pr-p04","module":"pr-pos","type":"mcq","stem":"Which shop is opposite the sports shop?","options":["the gift shop","the hair salon","the shoe shop"],"correct":0,"left":"mapA"},{"q":"pr-p05","module":"pr-pos","type":"mcq","stem":"The hair salon is ______ the pet shop.","options":["next to","between","opposite"],"correct":0,"left":"mapA"},{"q":"pr-p06","module":"pr-pos","type":"mcq","stem":"Choose the correct sentence.","options":["The pet shop is between the gift shop and the hair salon.","The pet shop is between the sports shop and the clothes shop.","The pet shop is next to the clothes shop."],"correct":0,"left":"mapA"},{"q":"pr-p07","module":"pr-pos","type":"mcq","stem":"The clothes shop is ______ the shoe shop.","options":["next to","between","opposite"],"correct":0,"left":"mapA"},{"q":"pr-p08","module":"pr-pos","type":"mcq","stem":"Choose the correct sentence.","options":["The sports shop is opposite the gift shop.","The sports shop is next to the gift shop.","The sports shop is between the gift shop and the pet shop."],"correct":0,"left":"mapA"},{"q":"pr-d01","module":"pr-dir","type":"mcq","stem":"Choose the correct question. You want to find the toy shop.","options":["How can I get to the toy shop?","How can I get the toy shop?","Where can I get the toy shop?"],"correct":0,"left":"mapB"},{"q":"pr-d02","module":"pr-dir","type":"mcq","stem":"Walk ______ Lake Street.","options":["along","across","opposite"],"correct":0,"left":"mapB"},{"q":"pr-d03","module":"pr-dir","type":"mcq","stem":"Then ______ left.","options":["turn","walk","along"],"correct":0,"left":"mapB"},{"q":"pr-d04","module":"pr-dir","type":"mcq","stem":"The toy shop is ______.","options":["on your left","on your right","next to the MTR station"],"correct":0,"left":"mapB"},{"q":"pr-d05","module":"pr-dir","type":"mcq","stem":"How can I get to the bookshop?","options":["Go out of the MTR station. Walk along Lake Street. Then turn right. The bookshop is on your right.","Go out of the MTR station. Walk along Lake Street. Then turn left. The bookshop is on your left.","Go out of the MTR station. Walk across Pine Street. Then turn left. The bookshop is on your right."],"correct":0,"left":"mapB"},{"q":"pr-d06","module":"pr-dir","type":"mcq","stem":"After you turn right, the bookshop is ______.","options":["on your right","on your left","opposite the toy shop"],"correct":0,"left":"mapB"},{"q":"pr-d07","module":"pr-dir","type":"mcq","stem":"Walk ______ the road to the cafe.","options":["across","along","next to"],"correct":0,"left":"mapB"},{"q":"pr-d08","module":"pr-dir","type":"mcq","stem":"The cafe is ______ the toy shop.","options":["opposite","between","next to"],"correct":0,"left":"mapB"},{"q":"pr-d09","module":"pr-dir","type":"mcq","stem":"How can I get to the cafe?","options":["Go out of the MTR station. Walk along Lake Street. Then turn left. Walk across the road. The cafe is on your right.","Go out of the MTR station. Walk along Lake Street. Then turn right. The cafe is on your right.","Go out of the MTR station. Turn right. Walk along Pine Street. The cafe is on your left."],"correct":0,"left":"mapB"},{"q":"pr-d10","module":"pr-dir","type":"mcq","stem":"How can I get to the bank?","options":["Go out of the MTR station. Walk along Lake Street. Then turn right. The bank is on your left.","Go out of the MTR station. Walk along Lake Street. Then turn left. The bank is on your right.","Go out of the MTR station. Walk across the road. The bank is on your left."],"correct":0,"left":"mapB"},{"q":"pr-r01","module":"pr-read","type":"mcq","stem":"When do Mia and Ken want to go to Sunny Plaza?","options":["after school","in the morning","at night"],"correct":0,"left":"pr-t1"},{"q":"pr-r02","module":"pr-read","type":"mcq","stem":"Mia asks how to get there. What is Ken’s solution?","options":["We can follow the directions on this flyer.","We can look at the directory first.","We can wait at the park."],"correct":0,"left":"pr-t1"},{"q":"pr-r03","module":"pr-read","type":"mcq","stem":"After they go out of the bus stop, they walk along ______.","options":["River Street","Lake Street","Star Street"],"correct":0,"left":"pr-flyer"},{"q":"pr-r04","module":"pr-read","type":"mcq","stem":"Then they ______.","options":["turn right","turn left","walk across the park"],"correct":0,"left":"pr-flyer"},{"q":"pr-r05","module":"pr-read","type":"mcq","stem":"Sunny Plaza is ______.","options":["on your right","on your left","next to the bus stop"],"correct":0,"left":"pr-flyer"},{"q":"pr-r06","module":"pr-read","type":"mcq","stem":"Sunny Plaza is ______ the park.","options":["opposite","between","next to"],"correct":0,"left":"pr-flyer"},{"q":"pr-r07","module":"pr-read","type":"mcq","stem":"Where are the long queues?","options":["outside the shoe shop","outside the toy shop","outside the bookshop"],"correct":0,"left":"pr-t3"},{"q":"pr-r08","module":"pr-read","type":"mcq","stem":"How do Mia and Ken find the toy shop?","options":["They look at the directory.","They look at the flyer only.","They ask a policeman."],"correct":0,"left":"pr-t4dir"},{"q":"pr-r09","module":"pr-read","type":"mcq","stem":"Happy Kids Toy Shop is on the ______.","options":["second floor","fourth floor","ground floor"],"correct":0,"left":"pr-t4dir"},{"q":"pr-r10","module":"pr-read","type":"mcq","stem":"Which shop is on the same floor as Happy Kids Toy Shop?","options":["Pat’s Gift Shop","Star Bookshop","Super Shoe Shop"],"correct":0,"left":"pr-dir"},{"q":"pr-r11","module":"pr-read","type":"mcq","stem":"Super Shoe Shop is on ______.","options":["the ground floor","the first floor","the third floor"],"correct":0,"left":"pr-dir"},{"q":"pr-r12","module":"pr-read","type":"mcq","stem":"What does Mia want to buy?","options":["a birthday present for her brother","a pair of shoes for Ken","a book for her mum"],"correct":0,"left":"pr-t5"},{"q":"pr-r13","module":"pr-read","type":"build","stem":"Which shop is on 4/F? Write a complete sentence.","words":["Star Bookshop","is","on","the","fourth","floor","second","Gift","Shop","."],"answer":"Star Bookshop is on the fourth floor.","left":"pr-dir","hint":"目錄寫著 4/F Star Bookshop，所以完整句子是 Star Bookshop is on the fourth floor."},{"q":"rv-s01","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a hair salon","a clothes shop","a gift shop"],"correct":0,"left":"review-icon","icon":"scissors-hair","icon_zh":"剪刀／頭髮","tts":"a hair salon","hint":"正確是 a hair salon。"},{"q":"rv-s02","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a pet shop","a toy shop","a bookshop"],"correct":0,"left":"review-icon","icon":"dog","icon_zh":"小狗","tts":"a pet shop","hint":"正確是 a pet shop。"},{"q":"rv-s03","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a bookshop","a gift shop","a department store"],"correct":0,"left":"review-icon","icon":"book","icon_zh":"書本","tts":"a bookshop","hint":"正確是 a bookshop。"},{"q":"rv-s04","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a toy shop","a pet shop","a sports shop"],"correct":0,"left":"review-icon","icon":"toy","icon_zh":"玩具車／洋娃娃","tts":"a toy shop","hint":"正確是 a toy shop。"},{"q":"rv-s05","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a cafe","a fast-food shop","a gift shop"],"correct":0,"left":"review-icon","icon":"coffee","icon_zh":"咖啡杯","tts":"a cafe","hint":"正確是 a cafe。"},{"q":"rv-s06","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a gift shop","a bookshop","a clothes shop"],"correct":0,"left":"review-icon","icon":"gift","icon_zh":"禮盒","tts":"a gift shop","hint":"正確是 a gift shop。"},{"q":"rv-s07","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a fast-food shop","a cafe","a department store"],"correct":0,"left":"review-icon","icon":"burger","icon_zh":"漢堡","tts":"a fast-food shop","hint":"正確是 a fast-food shop。"},{"q":"rv-s08","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a department store","a clothes shop","a gift shop"],"correct":0,"left":"review-icon","icon":"dept","icon_zh":"高大百貨","tts":"a department store","hint":"正確是 a department store。"},{"q":"rv-s09","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a shoe shop","a sports shop","a clothes shop"],"correct":0,"left":"review-icon","icon":"shoes","icon_zh":"一雙鞋","tts":"a shoe shop","hint":"正確是 a shoe shop。"},{"q":"rv-s10","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a sports shop","a shoe shop","a toy shop"],"correct":0,"left":"review-icon","icon":"ball","icon_zh":"波／球拍","tts":"a sports shop","hint":"正確是 a sports shop。"},{"q":"rv-s11","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a clothes shop","a hair salon","a shoe shop"],"correct":0,"left":"review-icon","icon":"clothes","icon_zh":"衣服","tts":"a clothes shop","hint":"正確是 a clothes shop。"},{"q":"rv-f01","module":"rv-words","type":"mcq","stem":"4/F 是？","options":["fourth floor","third floor","first floor"],"correct":0,"left":"floor-scene","icon":"4f","tts":"the fourth floor","hint":"4/F 是 fourth floor。","floor":"4f"},{"q":"rv-f02","module":"rv-words","type":"mcq","stem":"3/F 是？","options":["third floor","fourth floor","second floor"],"correct":0,"left":"floor-scene","icon":"3f","tts":"the third floor","hint":"3/F 是 third floor。","floor":"3f"},{"q":"rv-f03","module":"rv-words","type":"mcq","stem":"2/F 是？","options":["second floor","first floor","third floor"],"correct":0,"left":"floor-scene","icon":"2f","tts":"the second floor","hint":"2/F 是 second floor。","floor":"2f"},{"q":"rv-f04","module":"rv-words","type":"mcq","stem":"1/F 是？","options":["first floor","ground floor","second floor"],"correct":0,"left":"floor-scene","icon":"1f","tts":"the first floor","hint":"1/F 是 first floor。","floor":"1f"},{"q":"rv-f05","module":"rv-words","type":"mcq","stem":"G/F 是？","options":["ground floor","first floor","fourth floor"],"correct":0,"left":"floor-scene","icon":"gf","tts":"the ground floor","hint":"G/F 是 ground floor。","floor":"gf"},{"q":"rv-g01","module":"rv-grammar","type":"mcq","stem":"The pet shop is ______ the gift shop and the hair salon.","options":["between","next to","opposite"],"correct":0,"left":"mapA","hint":"正確是 between。"},{"q":"rv-g02","module":"rv-grammar","type":"mcq","stem":"The shoe shop is ______ the sports shop and the clothes shop.","options":["between","next to","opposite"],"correct":0,"left":"mapA","hint":"正確是 between。"},{"q":"rv-g03","module":"rv-grammar","type":"mcq","stem":"The clothes shop is ______ the hair salon.","options":["opposite","next to","between"],"correct":0,"left":"mapA","hint":"正確是 opposite。"},{"q":"rv-g04","module":"rv-grammar","type":"mcq","stem":"The gift shop is ______ the pet shop.","options":["next to","opposite","between"],"correct":0,"left":"mapA","hint":"正確是 next to。"},{"q":"rv-g05","module":"rv-grammar","type":"mcq","stem":"Choose the correct question:","options":["How can I get to the toy shop?","How can I get the toy shop?","How I can get to the toy shop?"],"correct":0,"left":"mapB","hint":"正確是 How can I get to the toy shop?。"},{"q":"rv-g06","module":"rv-grammar","type":"mcq","stem":"Go out of the MTR station. ______ Lake Street.","options":["Walk along","Walk across","Turn along"],"correct":0,"left":"mapB","hint":"正確是 Walk along。"},{"q":"rv-g07","module":"rv-grammar","type":"mcq","stem":"Then ______. The bookshop is on your right.","options":["turn right","turn left","walk left"],"correct":0,"left":"mapB","hint":"正確是 turn right。"},{"q":"rv-g08","module":"rv-grammar","type":"mcq","stem":"The toy shop is ______.","options":["on your left","on your right","on your along"],"correct":0,"left":"mapB","hint":"正確是 on your left。"},{"q":"rv-g09","module":"rv-grammar","type":"mcq","stem":"Walk ______ the road.","options":["across","along","opposite"],"correct":0,"left":"mapB","hint":"正確是 across。"},{"q":"rv-g10","module":"rv-grammar","type":"mcq","stem":"How can I get to the cafe?","options":["Go out of the MTR station. Walk along Lake Street. Then turn left. Walk across the road. The cafe is on your right.","Go out of the MTR station. Walk along Lake Street. Then turn right. Walk across the road. The cafe is on your left.","Go out of the MTR station. Walk along Lake Street. Then turn left. The cafe is on your left."],"correct":0,"left":"mapB","hint":"正確是 Go out of the MTR station. Walk along Lake Street. Then turn left. Walk across the road. The cafe is on your right.。"}]};
+</script>
+<script>
+// ---- E_learning Hub 回報（只在被網站 iframe 載入時有效，單獨打開頁面時無任何作用）----
+function elhReport(m){
+  try{
+    if(location.search.indexOf("elhdebug")>=0)console.log("ELH",JSON.stringify(m));
+    if(window.parent!==window)window.parent.postMessage(Object.assign({elh:1},m),location.origin);
+  }catch(e){}
+}
+function elhText(h){return String(h==null?"":h).replace(/<[^>]*>/g,"").replace(/\s+/g," ").trim().slice(0,200);}
+
+const DATA = window.ELH_DATA;
+
+/* ============ 基本資料 ============ */
+var TOTAL = Number(DATA && DATA.total ? DATA.total : (DATA.questions ? DATA.questions.length : 0));
+var QUESTIONS = (DATA && DATA.questions) ? DATA.questions : [];
+var SHOPS = (DATA && DATA.shops) ? DATA.shops : [];
+var FLOORS = (DATA && DATA.floors) ? DATA.floors : [];
+var PASSAGES = (DATA && DATA.passages) ? DATA.passages : {};
+var DIRS = (DATA && DATA.directories) ? DATA.directories : {};
+var MODULES = (DATA && DATA.modules) ? DATA.modules : [];
+var SECTIONS = (DATA && DATA.sections) ? DATA.sections : [];
+var GRAMMAR_DEMOS = (DATA && DATA.grammarDemos) ? DATA.grammarDemos : [];
+
+function qByQid(qid){ for(var i=0;i<QUESTIONS.length;i++) if(QUESTIONS[i].q===qid) return QUESTIONS[i]; return null; }
+function qIndexByQid(qid){ for(var i=0;i<QUESTIONS.length;i++) if(QUESTIONS[i].q===qid) return i; return -1; }
+function moduleById(mid){ for(var i=0;i<MODULES.length;i++) if(MODULES[i].id===mid) return MODULES[i]; return null; }
+function sectionById(sid){ for(var i=0;i<SECTIONS.length;i++) if(SECTIONS[i].id===sid) return SECTIONS[i]; return null; }
+function shopById(id){ for(var i=0;i<SHOPS.length;i++) if(SHOPS[i].id===id) return SHOPS[i]; return {id:id,en:id,zh:id}; }
+function floorById(id){ for(var i=0;i<FLOORS.length;i++) if(FLOORS[i].id===id) return FLOORS[i]; return {id:id,short:id,en:id}; }
+function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+/* ============ 狀態 ============ */
+var view = "cover";          // cover | section | module | demo | q | rvend
+var sectionId = "";          // pv / pr / rv
+var seqMode = false;         // 依序做完本塊
+var moduleQueue = [];        // 依序模式排隊
+var moduleId = "";           // 目前模組
+var moduleQs = [];           // 目前模組的題目（物件陣列，含全局索引）
+var li = 0;                  // 模組內題序
+var demoStep = 0;            // 語法示範 1/2
+var demoMap = "";
+var demoLines = [];
+var demoNext = "q";
+var rvWrong = [];            // 本場 rv- 答錯（最後一次為錯）的 qid
+var redoList = [];           // 錯題重做清單
+var redoIdx = 0;
+
+var picked = {};             // qid -> choice（穩定序號或字串）
+var revealed = {};           // qid -> true
+var wrongOnce = {};          // qid -> true（本場曾答錯，用於提示）
+var lastResult = null;       // {qid, ok}
+
+var listenOrder = {};        // qid -> [穩定序號...]
+var matchOrder = {};         // qid -> [卡片索引...]
+var matchPairs = {};         // qid -> 已配對 key 字串
+var matchSel = {};           // qid -> 目前選中的卡片索引
+var buildSeq = {};           // qid -> 目前組句詞序（索引陣列）
+
+var praises = ["Great!", "That’s right!"];
+var praiseIdx = 0;
+
+/* ============ TTS ============ */
+function speak(text){
+  try{
+    if(!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = "en-GB";
+    var vs = window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
+    for(var i=0;i<vs.length;i++){
+      if(vs[i] && /en/i.test(vs[i].lang||"")){ u.voice = vs[i]; break; }
+    }
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+if(window.speechSynthesis && window.speechSynthesis.getVoices){ try{ window.speechSynthesis.getVoices(); }catch(e){} }
+
+/* ============ SVG 圖示 ============ */
+function shopSvg(id){
+  var s = shopById(id);
+  var label = s.zh || s.en;
+  var color = "#2d6cdf";
+  var body = "";
+  if(id==="sports-shop"){ body='<circle cx="26" cy="26" r="10" fill="#ffd23f" stroke="#333" stroke-width="1.5"/><path d="M16 26 h20 M26 16 v20" stroke="#333" stroke-width="1.5"/>'; }
+  else if(id==="shoe-shop"){ body='<path d="M12 34 h28 v-6 l-8-2 -4-8 -10 2 -6 6 z" fill="#8a5a2b" stroke="#333" stroke-width="1.5"/>'; }
+  else if(id==="clothes-shop"){ body='<path d="M20 14 l6 4 6-4 4 6 -4 4 v14 h-16 v-14 l-4-4 z" fill="#ff8fa3" stroke="#333" stroke-width="1.5"/>'; }
+  else if(id==="gift-shop"){ body='<rect x="14" y="20" width="24" height="20" fill="#ff6b6b" stroke="#333" stroke-width="1.5"/><rect x="24" y="20" width="4" height="20" fill="#ffe08a"/><path d="M20 20 c0-8 12-8 12 0" fill="none" stroke="#333" stroke-width="1.5"/>'; }
+  else if(id==="pet-shop"){ body='<circle cx="20" cy="24" r="5" fill="#c98a5a"/><circle cx="32" cy="24" r="5" fill="#c98a5a"/><ellipse cx="26" cy="32" rx="8" ry="6" fill="#c98a5a" stroke="#333" stroke-width="1.2"/>'; }
+  else if(id==="hair-salon"){ body='<circle cx="18" cy="18" r="6" fill="none" stroke="#d93a3a" stroke-width="2.5"/><circle cx="34" cy="34" r="6" fill="none" stroke="#d93a3a" stroke-width="2.5"/><path d="M22 22 L30 30" stroke="#d93a3a" stroke-width="2.5"/>'; }
+  else if(id==="star-bookshop"||id==="bookshop"){ body='<path d="M14 18 h10 v20 h-10 z M26 18 h10 v20 h-10 z" fill="#8ecae6" stroke="#333" stroke-width="1.5"/><path d="M24 20 v16" stroke="#333" stroke-width="1.5"/>'; }
+  else if(id==="toy-shop"){ body='<rect x="14" y="22" width="10" height="10" fill="#90be6d" stroke="#333"/><circle cx="32" cy="27" r="6" fill="#f9c74f" stroke="#333"/>'; }
+  else if(id==="cafe"){ body='<path d="M16 22 h18 v8 a9 9 0 0 1 -18 0 z" fill="#fff" stroke="#333" stroke-width="1.5"/><path d="M34 24 h4 a4 4 0 0 1 0 8 h-4" fill="none" stroke="#333" stroke-width="1.5"/><path d="M20 18 c0-3 3-3 3 0 M27 18 c0-3 3-3 3 0" fill="none" stroke="#999" stroke-width="1.2"/>'; }
+  else if(id==="bank"){ body='<path d="M14 22 L26 14 L38 22 z" fill="#ffd23f" stroke="#333" stroke-width="1.5"/><path d="M16 24 h20 M18 24 v10 M24 24 v10 M30 24 v10 M34 24 v10" stroke="#333" stroke-width="1.5"/>'; }
+  else if(id==="fast-food-shop"||id==="burger-shop"){ body='<path d="M14 24 a12 6 0 0 1 24 0 z" fill="#f4a261" stroke="#333"/><path d="M14 26 h24 v4 h-24 z" fill="#90be6d"/><path d="M14 32 h24 a4 4 0 0 1 -4 6 h-16 a4 4 0 0 1 -4-6 z" fill="#e76f51" stroke="#333"/>'; }
+  else if(id==="department-store"){ body='<rect x="14" y="16" width="24" height="26" fill="#bde0fe" stroke="#333" stroke-width="1.5"/><path d="M14 24 h24 M14 32 h24 M22 16 v26 M30 16 v26" stroke="#333" stroke-width="1"/>'; }
+  else { body='<rect x="14" y="18" width="24" height="22" fill="#e9ecef" stroke="#333" stroke-width="1.5"/><path d="M14 24 h24" stroke="#333"/>'; }
+  return '<svg viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+esc(label)+'">'+
+    '<rect x="2" y="2" width="48" height="48" rx="8" fill="#fff" stroke="'+color+'" stroke-width="2.5"/>'+
+    '<rect x="6" y="6" width="40" height="8" rx="3" fill="'+color+'"/>'+ body +
+    '<text x="26" y="48" text-anchor="middle" font-size="7" fill="#333" font-family="sans-serif">'+esc(label)+'</text></svg>';
+}
+function iconSvg(icon){
+  var inner = "";
+  if(icon==="scissors-hair"){ inner='<circle cx="16" cy="16" r="6" fill="none" stroke="#d93a3a" stroke-width="3"/><circle cx="36" cy="36" r="6" fill="none" stroke="#d93a3a" stroke-width="3"/><path d="M20 20 L32 32 M32 20 L20 32" stroke="#d93a3a" stroke-width="3"/>'; }
+  else if(icon==="dog"){ inner='<ellipse cx="26" cy="30" rx="12" ry="9" fill="#c98a5a"/><circle cx="16" cy="18" r="5" fill="#c98a5a"/><circle cx="36" cy="18" r="5" fill="#c98a5a"/><circle cx="26" cy="26" r="8" fill="#c98a5a"/><circle cx="23" cy="25" r="1.4" fill="#222"/><circle cx="29" cy="25" r="1.4" fill="#222"/><ellipse cx="26" cy="30" rx="3" ry="2.2" fill="#222"/>'; }
+  else if(icon==="book"){ inner='<path d="M10 14 h14 v26 h-14 z M28 14 h14 v26 h-14 z" fill="#8ecae6" stroke="#222" stroke-width="2"/><path d="M24 16 v24" stroke="#222" stroke-width="2"/>'; }
+  else if(icon==="toy"){ inner='<rect x="12" y="20" width="14" height="14" fill="#90be6d" stroke="#222" stroke-width="2"/><circle cx="36" cy="27" r="8" fill="#f9c74f" stroke="#222" stroke-width="2"/>'; }
+  else if(icon==="coffee"){ inner='<path d="M14 20 h20 v8 a10 10 0 0 1 -20 0 z" fill="#fff" stroke="#222" stroke-width="2"/><path d="M34 22 h4 a5 5 0 0 1 0 10 h-4" fill="none" stroke="#222" stroke-width="2"/><path d="M20 14 c0-4 4-4 4 0 M28 14 c0-4 4-4 4 0" fill="none" stroke="#999" stroke-width="2"/>'; }
+  else if(icon==="gift"){ inner='<rect x="12" y="20" width="28" height="22" fill="#ff6b6b" stroke="#222" stroke-width="2"/><rect x="24" y="20" width="4" height="22" fill="#ffe08a"/><path d="M18 20 c0-10 16-10 16 0" fill="none" stroke="#222" stroke-width="2"/>'; }
+  else if(icon==="burger"){ inner='<path d="M12 22 a14 7 0 0 1 28 0 z" fill="#f4a261" stroke="#222" stroke-width="2"/><path d="M12 24 h28" stroke="#222" stroke-width="2"/><path d="M12 28 h28 v4 h-28 z" fill="#90be6d"/><path d="M12 34 h28 a6 6 0 0 1 -6 8 h-16 a6 6 0 0 1 -6-8 z" fill="#e76f51" stroke="#222" stroke-width="2"/>'; }
+  else if(icon==="dept"){ inner='<rect x="12" y="14" width="28" height="30" fill="#bde0fe" stroke="#222" stroke-width="2"/><path d="M12 24 h28 M12 34 h28 M22 14 v30 M30 14 v30" stroke="#222" stroke-width="1.5"/>'; }
+  else if(icon==="shoes"){ inner='<path d="M10 34 h30 v-6 l-10-2 -5-8 -10 2 -5 6 z" fill="#8a5a2b" stroke="#222" stroke-width="2"/>'; }
+  else if(icon==="ball"){ inner='<circle cx="26" cy="26" r="14" fill="#ffd23f" stroke="#222" stroke-width="2"/><path d="M12 26 h28 M26 12 c6 6 6 22 0 28 M26 12 c-6 6 -6 22 0 28" fill="none" stroke="#222" stroke-width="1.5"/>'; }
+  else if(icon==="clothes"){ inner='<path d="M18 12 l8 5 8-5 6 8 -5 5 v20 h-22 v-20 l-5-5 z" fill="#ff8fa3" stroke="#222" stroke-width="2"/>'; }
+  else { inner='<rect x="12" y="14" width="28" height="26" fill="#e9ecef" stroke="#222" stroke-width="2"/>'; }
+  return '<svg viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg" role="img">'+inner+'</svg>';
+}
+function speakerSvg(big){
+  return '<svg viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg"><path d="M8 20 h10 l12-10 v32 l-12-10 h-10 z" fill="#2d6cdf"/><path d="M34 18 c5 4 5 12 0 16 M40 14 c8 7 8 17 0 24" fill="none" stroke="#2d6cdf" stroke-width="3" stroke-linecap="round"/></svg>';
+}
+
+/* ============ 地圖 ============ */
+function mapA(opt){
+  opt = opt || {};
+  var demo = !!opt.demo;
+  var cell = function(x,y,id,hl){
+    var s = shopById(id);
+    return '<g>'+
+      '<rect x="'+x+'" y="'+y+'" width="180" height="86" rx="8" fill="'+(hl?'#ffe08a':'#eaf3ff')+'" stroke="'+(hl?'#c98a00':'#2d6cdf')+'" stroke-width="3"/>'+
+      '<text x="'+(x+90)+'" y="'+(y+24)+'" text-anchor="middle" font-size="17" fill="#222" font-family="sans-serif">'+esc(s.en)+'</text>'+
+      '<foreignObject x="'+(x+55)+'" y="'+(y+30)+'" width="70" height="52"><div xmlns="http://www.w3.org/1999/xhtml">'+shopSvg(id)+'</div></foreignObject>'+
+      '</g>';
+  };
+  return '<div class="mapbox"><svg viewBox="0 0 580 300" xmlns="http://www.w3.org/2000/svg">'+
+    '<rect x="4" y="4" width="572" height="292" rx="12" fill="#fffdf7" stroke="#8a5a2b" stroke-width="4"/>'+
+    '<text x="290" y="30" text-anchor="middle" font-size="20" font-weight="bold" fill="#5a3a1a" font-family="sans-serif">Star Mall 地下</text>'+
+    '<rect x="20" y="120" width="540" height="40" fill="#e9e2d4" stroke="#b7a98c" stroke-width="2"/>'+
+    '<text x="290" y="146" text-anchor="middle" font-size="16" fill="#6b5d43" font-family="sans-serif">走廊 Corridor</text>'+
+    cell(30,44,"sports-shop",false)+cell(200,44,"shoe-shop",false)+cell(370,44,"clothes-shop",false)+
+    cell(30,176,"gift-shop",false)+cell(200,176,"pet-shop",demo)+cell(370,176,"hair-salon",false)+
+    (demo ? '<text x="290" y="282" text-anchor="middle" font-size="14" fill="#6b6355" font-family="sans-serif">示範：寵物店在髮廊旁邊，在禮品店與髮廊之間，在鞋店對面</text>' : '')+
+    '</svg></div>';
+}
+function mapB(){
+  return '<div class="mapbox"><svg viewBox="0 0 580 340" xmlns="http://www.w3.org/2000/svg">'+
+    '<rect x="4" y="4" width="572" height="332" rx="12" fill="#f2f8f2" stroke="#3a7d44" stroke-width="4"/>'+
+    '<text x="290" y="30" text-anchor="middle" font-size="20" font-weight="bold" fill="#234d2a" font-family="sans-serif">Green Town</text>'+
+    '<rect x="270" y="120" width="40" height="200" fill="#d9d9d9" stroke="#888" stroke-width="2"/>'+
+    '<text x="290" y="300" text-anchor="middle" font-size="14" fill="#555" font-family="sans-serif" transform="rotate(-90 290 300)"></text>'+
+    '<text x="252" y="230" text-anchor="middle" font-size="14" fill="#555" font-family="sans-serif">Lake Street</text>'+
+    '<rect x="60" y="110" width="460" height="36" fill="#d9d9d9" stroke="#888" stroke-width="2"/>'+
+    '<text x="290" y="133" text-anchor="middle" font-size="15" fill="#555" font-family="sans-serif">Pine Street</text>'+
+    '<rect x="258" y="290" width="64" height="34" rx="6" fill="#4a6fa5" stroke="#223" stroke-width="2"/>'+
+    '<text x="290" y="312" text-anchor="middle" font-size="15" fill="#fff" font-family="sans-serif">MTR</text>'+
+    '<text x="290" y="330" text-anchor="middle" font-size="13" fill="#223" font-family="sans-serif">Exit A</text>'+
+    '<path d="M290 286 L290 150" stroke="#2d6cdf" stroke-width="5" fill="none" marker-end="url(#arrowB)"/>'+
+    '<defs><marker id="arrowB" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L8 3 L0 6 z" fill="#2d6cdf"/></marker></defs>'+
+    '<g><rect x="80" y="52" width="150" height="52" rx="8" fill="#eaf3ff" stroke="#2d6cdf" stroke-width="3"/><text x="155" y="84" text-anchor="middle" font-size="16" fill="#333" font-family="sans-serif">a cafe</text></g>'+
+    '<g><rect x="350" y="52" width="150" height="52" rx="8" fill="#eaf3ff" stroke="#2d6cdf" stroke-width="3"/><text x="425" y="84" text-anchor="middle" font-size="16" fill="#333" font-family="sans-serif">a bank</text></g>'+
+    '<g><rect x="80" y="152" width="150" height="52" rx="8" fill="#eaf3ff" stroke="#2d6cdf" stroke-width="3"/><text x="155" y="184" text-anchor="middle" font-size="16" fill="#333" font-family="sans-serif">a toy shop</text></g>'+
+    '<g><rect x="350" y="152" width="150" height="52" rx="8" fill="#eaf3ff" stroke="#2d6cdf" stroke-width="3"/><text x="425" y="184" text-anchor="middle" font-size="16" fill="#333" font-family="sans-serif">a bookshop</text></g>'+
+    '<text x="290" y="340" text-anchor="middle" font-size="1" fill="none"></text>'+
+    '</svg></div>';
+}
+
+/* ============ 導航 ============ */
+function showCover(){
+  view="cover"; qIndex=-1;
+  setLeft('<div class="centerwrap">'+
+    '<h1>3D Unit 4 Let\'s go shopping!</h1>'+
+    '<p class="topic">預習・練習・複習</p>'+
+    '<p class="small">女兒 ・ 班別 3D</p>'+
+    '<button class="cover-btn" data-go="pv">預習</button>'+
+    '<button class="cover-btn" data-go="pr">練習</button>'+
+    '<button class="cover-btn" data-go="rv">複習</button>'+
+    '</div>');
+  setRight('<h2>使用方法</h2>'+
+    '<p class="option">1. 點選「預習」「練習」或「複習」開始。</p>'+
+    '<p class="option">2. 每個模塊做完，會自動回到目錄。</p>'+
+    '<p class="option">3. 聽讀題請先按喇叭，再點選答案。</p>'+
+    '<p class="option">4. 每題都有「看答案」與「下一題」。</p>'+
+    '<p class="hint">本教材共 '+TOTAL+' 題，網站會記錄進度與每題對錯。</p>');
+  bindNav();
+}
+function showSection(sid){
+  sectionId = sid;
+  var sec = sectionById(sid);
+  if(!sec) return;
+  var html = '<h2>'+esc(sec.title)+' 目錄</h2>';
+  html += '<p class="progress">'+esc(sec.title)+'｜'+esc(sec.id==="pv"?"預習":(sec.id==="pr"?"練習":"複習"))+'</p>';
+  html += '<p class="option">請選擇一個模塊，或依序做完本塊：</p>';
+  for(var i=0;i<MODULES.length;i++){
+    var m = MODULES[i];
+    if(m.section!==sid) continue;
+    var done = countModuleDone(m.id);
+    html += '<button class="opt" data-mod="'+esc(m.id)+'">'+esc(m.title)+' <span class="small">（'+done+'）</span></button>';
+  }
+  html += '<div class="navrow"><button class="btn btn-green" data-seq="1">依序做完本塊</button>'+
+          '<button class="btn btn-secondary" data-go="cover">返回封面</button></div>';
+  setLeft(html);
+  setRight('<h3>本塊模塊</h3><p class="hint">'+esc(sec.title)+' 共有 '+MODULES.filter(function(m){return m.section===sid;}).length+' 個模塊。依序模式會由第一個模塊自動做到最後一個。</p>');
+  bindNav();
+}
+function countModuleDone(mid){
+  var qs = questionsOfModule(mid);
+  var n=0; for(var i=0;i<qs.length;i++) if(revealed[qs[i].q.q]) n++;
+  return n+' / '+qs.length;
+}
+function questionsOfModule(mid){
+  var out=[];
+  for(var i=0;i<QUESTIONS.length;i++){
+    if(QUESTIONS[i].module===mid) out.push({q:QUESTIONS[i], idx:i});
+  }
+  return out;
+}
+function enterModule(mid, seq){
+  var m = moduleById(mid);
+  if(!m) return;
+  moduleId = mid;
+  moduleQs = questionsOfModule(mid);
+  li = 0;
+  if(m.demos && m.demos>0){
+    view="demo"; demoStep=1;
+    var gd = grammarDemoFor(mid);
+    demoMap = gd ? gd.map : "mapA";
+    demoLines = gd ? gd.lines : [];
+    demoNext = "q";
+    qIndex = qIndexByQid("pv-g01");
+    if(qIndex<0) qIndex = 0;
+    renderDemo();
+  }else{
+    startQuestion();
+  }
+}
+function grammarDemoFor(mid){
+  if(mid==="pv-g02") return GRAMMAR_DEMOS[1]||null;
+  return GRAMMAR_DEMOS[0]||null;
+}
+function currentDemo(){
+  var i = (demoStep===2) ? 1 : 0;
+  return GRAMMAR_DEMOS[i]||null;
+}
+function renderDemo(){
+  var gd = currentDemo();
+  if(gd && gd.lines) demoLines = gd.lines;
+  var left = (gd && gd.map==="mapB") || demoStep===2 ? mapB() : mapA({demo:true});
+  var right = '<h3>'+esc(gd?gd.title:'語法示範')+'</h3>';
+  if(demoLines){ for(var i=0;i<demoLines.length;i++) right += '<p class="option">'+esc(demoLines[i])+'</p>'; }
+  right += '<div class="navrow">';
+  if(demoStep===1) right += '<button class="btn" data-demo="2">下一頁</button>';
+  right += '<button class="btn btn-green" data-demo="start">開始作答</button>';
+  right += '<button class="btn btn-secondary" data-nav="module">返回本塊目錄</button>';
+  right += '<button class="btn btn-secondary" data-go="cover">返回封面</button></div>';
+  setLeft(left);
+  setRight(right);
+  bindDemo();
+  elhState();
+}
+function bindDemo(){
+  var bs = document.querySelectorAll("[data-demo]");
+  for(var i=0;i<bs.length;i++){
+    bs[i].onclick = (function(v){ return function(){
+      if(v==="2"){ demoStep=2; renderDemo(); }
+      else { startQuestion(); }
+    }; })(bs[i].getAttribute("data-demo"));
+  }
+}
+
+/* ============ 作答主流程 ============ */
+var qIndex = -1;   // 目前題目在全體 123 題中的索引
+function curQ(){ return (qIndex>=0 && qIndex<QUESTIONS.length) ? QUESTIONS[qIndex] : null; }
+function startQuestion(){
+  if(moduleQs && moduleQs.length){
+    if(li<0) li=0;
+    if(li>=moduleQs.length) li=moduleQs.length-1;
+    qIndex = moduleQs[li].idx;
+  }
+  view="q";
+  var q = curQ();
+  if(!q){ showSection(sectionId); return; }
+  lastResult = null;
+  if(q.type==="listen-shop" || q.type==="listen-floor"){
+    if(!listenOrder[q.q]){ listenOrder[q.q] = shuffledIndexes(q.type==="listen-shop"?SHOPS.length:FLOORS.length); }
+  }
+  if(q.type==="match"){
+    if(!matchOrder[q.q]){ matchOrder[q.q] = shuffledIndexes((q.pairs||[]).length*2); }
+    if(!matchPairs[q.q]) matchPairs[q.q] = {};
+    if(matchSel[q.q]==null) matchSel[q.q] = null;
+  }
+  if(q.type==="build"){
+    if(!buildSeq[q.q]) buildSeq[q.q] = [];
+  }
+  renderQuestion();
+  if(q.tts){ try{ speak(q.tts); }catch(e){} }
+}
+function shuffledIndexes(n){
+  var a=[]; for(var i=0;i<n;i++) a.push(i);
+  for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
+  return a;
+}
+function renderQuestion(){
+  var q = curQ(); if(!q) return;
+  var sec = sectionById(sectionId);
+  var mod = moduleById(moduleId);
+  var leftHtml = "", rightHtml = "";
+  var prog = esc(sec.title)+'｜'+esc(mod?mod.title:'')+'　'+(li+1)+' / '+moduleQs.length;
+  var head = '<p class="progress">'+prog+'</p>';
+
+  /* ---- 左欄 ---- */
+  leftHtml += head;
+  var leftId = q.left;
+  if(q.type==="listen-shop"){
+    leftHtml += '<p class="topic">請聽喇叭，點選正確的商店。</p>';
+    leftHtml += '<button class="bigspeaker" data-speak="1" aria-label="播放">'+speakerSvg(true)+'</button>';
+    leftHtml += '<p class="hint">進入題目時會自動播放一次，可重複按喇叭。</p>';
+  }else if(q.type==="listen-floor"){
+    leftHtml += '<p class="topic">請聽喇叭，點選正確的樓層。</p>';
+    leftHtml += '<button class="bigspeaker" data-speak="1" aria-label="播放">'+speakerSvg(true)+'</button>';
+  }else if(q.type==="match"){
+    leftHtml += '<p class="topic">翻牌配對：先點一張，再點另一張。</p>';
+    leftHtml += '<p class="hint">全部配對成功才算答對。</p>';
+  }else if(q.type==="mcq"){
+    leftHtml += '<p class="topic">'+esc(q.stem||'')+'</p>';
+    if(q.icon){ leftHtml += '<div style="width:16vmin">'+iconSvg(q.icon)+'</div>'; if(q.icon_zh) leftHtml += '<p class="hint">'+esc(q.icon_zh)+'</p>'; }
+    leftHtml += leftContent(leftId, q);
+  }else if(q.type==="build"){
+    leftHtml += '<p class="topic">'+esc(q.stem||'')+'</p>';
+    leftHtml += leftContent(leftId, q);
+  }
+  setLeft(leftHtml);
+
+  /* ---- 右欄 ---- */
+  rightHtml += '<p class="progress">第 '+(qIndex+1)+' / '+TOTAL+' 題（共 '+TOTAL+' 題）</p>';
+  if(q.type==="listen-shop"){
+    rightHtml += '<p class="topic">聽到哪一間商店？</p>';
+    rightHtml += '<div class="shop-grid">';
+    var order = listenOrder[q.q]||[];
+    for(var i=0;i<order.length;i++){
+      var si = order[i];
+      rightHtml += '<button class="opt" data-shop="'+si+'">'+shopSvg(SHOPS[si].id)+'<span>'+esc(SHOPS[si].en)+'</span></button>';
+    }
+    rightHtml += '</div>';
+  }else if(q.type==="listen-floor"){
+    rightHtml += '<p class="topic">聽到哪一層樓？</p><div class="floor-grid">';
+    var fo = listenOrder[q.q]||[];
+    for(var i=0;i<fo.length;i++){
+      var fi = fo[i];
+      rightHtml += '<button class="opt" data-floor="'+fi+'"><b>'+esc(FLOORS[fi].short)+'</b>　'+esc(FLOORS[fi].en)+'</button>';
+    }
+    rightHtml += '</div>';
+  }else if(q.type==="match"){
+    rightHtml += '<p class="topic">把相同的配對起來</p>';
+    rightHtml += matchGrid(q);
+  }else if(q.type==="mcq"){
+    rightHtml += '<p class="topic">請選擇正確答案。</p>';
+    var opts = q.options||[];
+    for(var i=0;i<opts.length;i++){
+      rightHtml += '<button class="opt" data-mcq="'+i+'">'+esc(opts[i])+'</button>';
+    }
+  }else if(q.type==="build"){
+    rightHtml += '<p class="topic">點詞語組句。</p>';
+    rightHtml += buildArea(q);
+  }
+  rightHtml += '<div class="feedback" id="fb"></div>';
+  rightHtml += '<div class="navrow">'+
+    '<button class="btn btn-ghost" data-act="showAnswer">看答案</button>'+
+    '<button class="btn" data-act="next" '+(revealed[q.q]?'':'disabled')+'>下一題</button>'+
+    '<button class="btn btn-secondary" data-act="prev" '+(li>0?'':'disabled')+'>上一題</button>'+
+    '<button class="btn btn-secondary" data-nav="module">返回本塊目錄</button>'+
+    '<button class="btn btn-secondary" data-go="cover">返回封面</button></div>';
+  if(q.hint && revealed[q.q]) rightHtml += '<p class="hint">提示：'+esc(q.hint)+'</p>';
+  setRight(rightHtml);
+
+  bindQuestion(q);
+  applyRevealed(q);
+  elhState();
+}
+function leftContent(leftId, q){
+  var h = "";
+  if(!leftId) return h;
+  if(leftId==="pv-dir"){
+    h += '<div class="passage">'+esc(PASSAGES["pv-t4"]||'')+'</div>';
+    h += dirTable("wonder");
+  }else if(leftId==="pr-t4dir"){
+    h += '<div class="passage">'+esc(PASSAGES["pr-t4"]||'')+'</div>';
+    h += dirTable("sunny");
+  }else if(leftId==="pr-dir"){
+    h += dirTable("sunny");
+  }else if(leftId==="mapA"){ h += mapA(); }
+  else if(leftId==="mapB"){ h += mapB(); }
+  else if(leftId==="shop-scene"){
+    h += '<p class="topic">'+esc(q.stem||'')+'</p>';
+    if(q.icon) h += '<div style="width:20vmin">'+shopSvg(q.icon)+'</div>';
+  }else if(leftId==="floor-scene"){
+    var f = q.floor!=null ? floorById(q.floor) : FLOORS[0];
+    h += '<div class="centerwrap" style="height:30vmin"><div style="font-size:clamp(3rem,12vmin,7rem);font-weight:800;color:#2d6cdf">'+esc(f?f.short:'')+'</div><p class="topic">'+esc(f?f.en:'')+'</p></div>';
+  }else if(leftId==="spell"){
+    h += '<div class="centerwrap" style="height:26vmin"><svg viewBox="0 0 52 52" style="width:18vmin"><path d="M8 12 h16 v28 h-16 z M28 12 h16 v28 h-16 z" fill="#8ecae6" stroke="#222" stroke-width="2"/><path d="M24 14 v24" stroke="#222" stroke-width="2"/></svg></div><p class="hint">Which one is correct? 點選正確的寫法。</p>';
+  }else if(leftId==="review-icon"){
+    if(q.icon) h += '<div style="width:22vmin">'+iconSvg(q.icon)+'</div>';
+    if(q.icon_zh) h += '<p class="hint">提示：'+esc(q.icon_zh)+'</p>';
+  }else if(PASSAGES[leftId]!=null){
+    h += '<div class="passage">'+esc(PASSAGES[leftId])+'</div>';
+  }else{
+    h += '<p class="hint">（左欄內容）</p>';
+  }
+  return h;
+}
+function dirTable(which){
+  var d = DIRS && DIRS[which] ? DIRS[which] : [];
+  var h = '<h3>'+(which==="wonder"?"Wonder 商場目錄":"Sunny 商場目錄")+'</h3><table class="dir"><tr><th>樓層</th><th>商店</th></tr>';
+  for(var i=0;i<d.length;i++){
+    h += '<tr><td>'+esc(d[i].floor)+'</td><td>'+esc(d[i].shops.join("、"))+'</td></tr>';
+  }
+  h += '</table>';
+  return h;
+}
+function matchGrid(q){
+  var pairs = q.pairs||[];
+  var order = matchOrder[q.q]||[];
+  var h = '<div class="grid2">';
+  for(var k=0;k<order.length;k++){
+    var c = order[k];
+    var pIdx = Math.floor(c/2), side = c%2;
+    var p = pairs[pIdx]||{};
+    var txt = "";
+    if(p.kind==="shop"){
+      if(side===0) txt = p.en;
+      else txt = shopSvg(p.id);
+    }else{
+      if(side===0) txt = p.short;
+      else txt = p.en;
+    }
+    var cls = "card";
+    if(matchPairs[q.q] && matchPairs[q.q][pIdx]) cls += " ok";
+    else if(matchSel[q.q]===c) cls += " pick";
+    h += '<div class="'+cls+'" data-card="'+c+'" data-p="'+pIdx+'">'+txt+'</div>';
+  }
+  h += '</div>';
+  return h;
+}
+function buildArea(q){
+  var words = q.words||[];
+  var seq = buildSeq[q.q]||[];
+  var used = {};
+  for(var i=0;i<seq.length;i++) used[seq[i]] = (used[seq[i]]||0)+1;
+  var h = '<p class="hint">詞庫（點選加入句子）：</p><div class="wordbank">';
+  for(var i=0;i<words.length;i++){
+    var cnt = used[i]||0;
+    h += '<span class="pill'+(cnt?' used':'')+'" data-word="'+i+'">'+esc(words[i])+'</span>';
+  }
+  h += '</div>';
+  h += '<p class="hint">你的句子：</p><div class="sent" id="buildSent">';
+  if(seq.length===0) h += '<span class="pill" style="opacity:.5">（尚未組句）</span>';
+  for(var i=0;i<seq.length;i++){
+    h += '<span class="pill" data-seq="'+i+'">'+esc(words[seq[i]])+'</span>';
+  }
+  h += '</div>';
+  h += '<div class="navrow">'+
+    '<button class="btn" data-build="back">退格</button>'+
+    '<button class="btn btn-secondary" data-build="clear">清除</button>'+
+    '<button class="btn btn-green" data-build="submit">提交</button></div>';
+  return h;
+}
+
+/* ---- 綁定與批改 ---- */
+function bindQuestion(q){
+  var sp = document.querySelectorAll("[data-speak]");
+  for(var i=0;i<sp.length;i++) sp[i].onclick = function(){ if(q.tts) speak(q.tts); };
+  var sh = document.querySelectorAll("[data-shop]");
+  for(var i=0;i<sh.length;i++) sh[i].onclick = (function(el){ return function(){ pickListen(q, Number(el.getAttribute("data-shop")), SHOPS[Number(el.getAttribute("data-shop"))].en, el); }; })(sh[i]);
+  var fl = document.querySelectorAll("[data-floor]");
+  for(var i=0;i<fl.length;i++) fl[i].onclick = (function(el){ return function(){ pickListen(q, Number(el.getAttribute("data-floor")), FLOORS[Number(el.getAttribute("data-floor"))].short+" "+FLOORS[Number(el.getAttribute("data-floor"))].en, el); }; })(fl[i]);
+  var cd = document.querySelectorAll("[data-card]");
+  for(var i=0;i<cd.length;i++) cd[i].onclick = (function(el){ return function(){ cardClick(q, Number(el.getAttribute("data-card"))); }; })(cd[i]);
+  var mc = document.querySelectorAll("[data-mcq]");
+  for(var i=0;i<mc.length;i++) mc[i].onclick = (function(el){ return function(){ pickMcq(q, Number(el.getAttribute("data-mcq")), el); }; })(mc[i]);
+  var wb = document.querySelectorAll("[data-word]");
+  for(var i=0;i<wb.length;i++) wb[i].onclick = (function(el){ return function(){ buildAdd(q, Number(el.getAttribute("data-word"))); }; })(wb[i]);
+  var sq = document.querySelectorAll("[data-seq]");
+  for(var i=0;i<sq.length;i++) sq[i].onclick = (function(el){ return function(){ buildRemoveAt(q, Number(el.getAttribute("data-seq"))); }; })(sq[i]);
+  var bb = document.querySelectorAll("[data-build]");
+  for(var i=0;i<bb.length;i++) bb[i].onclick = (function(el){ return function(){ buildAct(q, el.getAttribute("data-build")); }; })(bb[i]);
+  bindCommon(q);
+}
+function bindCommon(q){
+  var sa = document.querySelectorAll("[data-act]");
+  for(var i=0;i<sa.length;i++){
+    sa[i].onclick = (function(el){ return function(){
+      var a = el.getAttribute("data-act");
+      if(a==="showAnswer") showAnswer(q);
+      else if(a==="next") nextQ();
+      else if(a==="prev") prevQ();
+    }; })(sa[i]);
+  }
+}
+function bindNav(){
+  var g = document.querySelectorAll("[data-go]");
+  for(var i=0;i<g.length;i++) g[i].onclick = (function(el){ return function(){
+    var v = el.getAttribute("data-go");
+    if(v==="cover") showCover();
+    else showSection(v);
+  }; })(g[i]);
+  var m = document.querySelectorAll("[data-mod]");
+  for(var i=0;i<m.length;i++) m[i].onclick = (function(el){ return function(){ enterModule(el.getAttribute("data-mod"), false); }; })(m[i]);
+  var s = document.querySelectorAll("[data-seq]");
+  for(var i=0;i<s.length;i++) s[i].onclick = function(){ startSequential(); };
+  var n = document.querySelectorAll("[data-nav]");
+  for(var i=0;i<n.length;i++) n[i].onclick = (function(el){ return function(){
+    var v = el.getAttribute("data-nav");
+    if(v==="module") showSection(sectionId);
+  }; })(n[i]);
+}
+function pickListen(q, stableIdx, text, el){
+  var correct = false;
+  if(q.type==="listen-shop"){
+    correct = (SHOPS[stableIdx] && (SHOPS[stableIdx].en === q.answer || SHOPS[stableIdx].id === q.shop));
+  }else if(q.type==="listen-floor"){
+    correct = (FLOORS[stableIdx] && (FLOORS[stableIdx].id === q.floor || (FLOORS[stableIdx].short+" "+FLOORS[stableIdx].en) === q.answer));
+  }
+  applyPick(q, stableIdx, text, correct, el);
+}
+function pickMcq(q, idx, el){
+  var correct = (idx === q.correct);
+  applyPick(q, idx, q.options[idx], correct, el);
+}
+function applyPick(q, choice, text, correct, el){
+  picked[q.q] = choice;
+  if(correct){
+    revealed[q.q] = true;
+    if(el) el.classList.add("ok");
+    showFb(q, true);
+    reportAnswer(q, choice, true, text);
+    lastResult = {qid:q.q, ok:true};
+    if(sectionId==="rv") removeRvWrong(q.q);
+    renderQuestion();
+    var fb=document.getElementById("fb");
+    if(fb){ fb.className="feedback ok"; fb.textContent = (praises[(praiseIdx=praiseIdx%praises.length)]||"Great!"); praiseIdx++; }
+    elhState();
+  }else{
+    wrongOnce[q.q] = true;
+    if(sectionId==="rv"){ if(rvWrong.indexOf(q.q)<0) rvWrong.push(q.q); }
+    if(el) el.classList.add("bad");
+    showFb(q, false);
+    reportAnswer(q, choice, false, text);
+    lastResult = {qid:q.q, ok:false};
+    elhState();
+    setTimeout(function(){
+      revealed[q.q] = true;
+      renderQuestion();
+      var fb=document.getElementById("fb");
+      if(fb){ fb.className="feedback bad"; fb.textContent="正確答案："+answerText(q)+"。 "+(q.hint||""); }
+      elhState();
+    }, 450);
+  }
+}
+function showFb(q, ok){
+  var fb = document.getElementById("fb");
+  if(!fb) return;
+  if(ok){
+    praiseIdx = (praiseIdx+1)%praises.length;
+    fb.className = "feedback ok";
+    fb.textContent = praises[praiseIdx];
+  }else{
+    fb.className = "feedback bad";
+    fb.textContent = "再想想：" + (q.hint || "請看提示。");
+  }
+}
+function showAnswer(q){
+  if(!revealed[q.q] && picked[q.q]==null){
+    reportAnswer(q, null, false, null);
+  }
+  revealed[q.q] = true;
+  if(q.type==="match"){ matchPairs[q.q] = {}; for(var i=0;i<(q.pairs||[]).length;i++) matchPairs[q.q][i]=true; renderQuestion(); }
+  else renderQuestion();
+  var fb = document.getElementById("fb");
+  if(fb){ fb.className="feedback"; fb.textContent = "正確答案：" + answerText(q); }
+  elhState();
+}
+function answerText(q){
+  if(q.type==="listen-shop") return q.answer;
+  if(q.type==="listen-floor") return q.answer;
+  if(q.type==="match"){ var ps=q.pairs||[]; var a=[]; for(var i=0;i<ps.length;i++) a.push(ps[i].en); return a.join(" / "); }
+  if(q.type==="mcq") return q.options[q.correct];
+  if(q.type==="build") return q.answer;
+  return "";
+}
+function applyRevealed(q){
+  if(!revealed[q.q]) return;
+  if(q.type==="mcq"){
+    var opts = document.querySelectorAll("[data-mcq]");
+    for(var i=0;i<opts.length;i++){
+      var n = Number(opts[i].getAttribute("data-mcq"));
+      if(n===q.correct) opts[i].classList.add("ok");
+      else if(picked[q.q]!=null && n===picked[q.q] && n!==q.correct) opts[i].classList.add("bad");
+    }
+  }else if(q.type==="listen-shop"){
+    var sh = document.querySelectorAll("[data-shop]");
+    for(var i=0;i<sh.length;i++){
+      var si = Number(sh[i].getAttribute("data-shop"));
+      var isAns = SHOPS[si] && (SHOPS[si].en===q.answer || SHOPS[si].id===q.shop);
+      if(isAns) sh[i].classList.add("ok");
+      else if(picked[q.q]!=null && si===picked[q.q]) sh[i].classList.add("bad");
+    }
+  }else if(q.type==="listen-floor"){
+    var fl = document.querySelectorAll("[data-floor]");
+    for(var i=0;i<fl.length;i++){
+      var fi = Number(fl[i].getAttribute("data-floor"));
+      var isAnsF = FLOORS[fi] && (FLOORS[fi].id===q.floor || (FLOORS[fi].short+" "+FLOORS[fi].en)===q.answer);
+      if(isAnsF) fl[i].classList.add("ok");
+      else if(picked[q.q]!=null && fi===picked[q.q]) fl[i].classList.add("bad");
+    }
+  }else if(q.type==="match"){
+    var cd = document.querySelectorAll("[data-card]");
+    for(var i=0;i<cd.length;i++) cd[i].classList.add("ok");
+  }else if(q.type==="build"){
+    var bs = document.querySelectorAll("[data-seq]");
+    for(var i=0;i<bs.length;i++) bs[i].classList.add("ok");
+  }
+  var fb = document.getElementById("fb");
+  if(fb){ fb.className="feedback"; fb.textContent = "正確答案：" + answerText(q); }
+}
+function removeRvWrong(qid){
+  var out=[];
+  for(var i=0;i<rvWrong.length;i++) if(rvWrong[i]!==qid) out.push(rvWrong[i]);
+  rvWrong = out;
+}
+function nextQ(){
+  if(li < moduleQs.length-1){ li++; startQuestion(); }
+  else moduleDone();
+}
+function prevQ(){
+  if(li>0){ li--; startQuestion(); }
+}
+function moduleDone(){
+  if(seqMode && moduleQueue.length){
+    var next = moduleQueue.shift();
+    enterModule(next, true);
+    return;
+  }
+  if(sectionId==="rv"){
+    var gm = moduleById("rv-grammar");
+    var gmDone = true;
+    if(gm){
+      var gqs = questionsOfModule("rv-grammar");
+      for(var i=0;i<gqs.length;i++) if(!revealed[gqs[i].q.q]){ gmDone=false; break; }
+    }
+    if(gmDone){ showReviewEnd(); return; }
+    showSection("rv");
+    return;
+  }
+  showSection(sectionId);
+}
+
+/* ---- 翻牌 ---- */
+function cardClick(q, c){
+  if(revealed[q.q]) return;
+  var sel = matchSel[q.q];
+  if(sel===c){ matchSel[q.q]=null; renderQuestion(); return; }
+  if(sel==null){ matchSel[q.q]=c; renderQuestion(); return; }
+  var a=sel, b=c;
+  matchSel[q.q]=null;
+  var pa=Math.floor(a/2), pb=Math.floor(b/2);
+  if(pa===pb && a!==b){
+    matchPairs[q.q][pa]=true;
+    var all=true; for(var i=0;i<(q.pairs||[]).length;i++) if(!matchPairs[q.q][i]) all=false;
+    if(all){
+      revealed[q.q]=true;
+      var combo=[]; for(var j=0;j<(q.pairs||[]).length;j++) combo.push(q.pairs[j].en);
+      reportAnswer(q, 1, true, combo.join(" / "));
+      lastResult={qid:q.q, ok:true};
+      if(sectionId==="rv") removeRvWrong(q.q);
+    }
+  }else{
+    var ca=document.querySelector('[data-card="'+a+'"]'), cb=document.querySelector('[data-card="'+b+'"]');
+    if(ca) ca.classList.add("bad"); if(cb) cb.classList.add("bad");
+    setTimeout(function(){ if(!revealed[q.q]) renderQuestion(); }, 450);
+  }
+  renderQuestion();
+  elhState();
+}
+
+/* ---- 組句 ---- */
+function buildAdd(q, wi){
+  buildSeq[q.q].push(wi);
+  renderQuestion();
+  elhState();
+}
+function buildRemoveAt(q, pos){
+  buildSeq[q.q].splice(pos,1);
+  renderQuestion();
+  elhState();
+}
+function buildAct(q, act){
+  if(act==="back") buildSeq[q.q].pop();
+  else if(act==="clear") buildSeq[q.q]=[];
+  else if(act==="submit"){
+    var words=q.words||[];
+    var sent="";
+    for(var i=0;i<buildSeq[q.q].length;i++) sent += (i?" ":"") + words[buildSeq[q.q][i]];
+    sent = sent.replace(/\s+\./g,".").trim();
+    var ok = (sent === q.answer);
+    picked[q.q] = sent;
+    if(ok){
+      revealed[q.q]=true;
+      reportAnswer(q, sent, true, sent);
+      lastResult={qid:q.q, ok:true};
+      if(sectionId==="rv") removeRvWrong(q.q);
+    }else{
+      wrongOnce[q.q]=true;
+      revealed[q.q]=true;
+      if(sectionId==="rv"){ if(rvWrong.indexOf(q.q)<0) rvWrong.push(q.q); }
+      reportAnswer(q, sent, false, sent);
+      lastResult={qid:q.q, ok:false};
+    }
+    renderQuestion();
+    var fb=document.getElementById("fb");
+    if(fb){ fb.className="feedback "+(ok?"ok":"bad"); fb.textContent = ok ? praises[praiseIdx=(praiseIdx+1)%praises.length] : ("正確句是：" + q.answer + "。" + (q.hint||"")); }
+    elhState();
+    return;
+  }
+  renderQuestion();
+  elhState();
+}
+
+/* ---- 回報 ---- */
+function reportAnswer(q, choice, correct, pickedText){
+  elhReport({
+    type:"answer",
+    q: q.q,
+    choice: choice,
+    correct: !!correct,
+    text: elhText(q.stem || q.prompt || q.hint || ""),
+    picked: (pickedText==null? null : String(pickedText)),
+    answer: elhText(answerText(q))
+  });
+}
+
+/* ---- 斷點續做 ---- */
+function elhState(){
+  if(view==="cover" || view==="section" || view==="module" || qIndex<0) return;
+  var d = {
+    i: qIndex,
+    m: moduleId,
+    li: li,
+    loc: (view==="demo" ? ("demo"+demoStep) : (view==="rvend" ? "rvend" : (redoList.length? "redo":"q"))),
+    sec: sectionId,
+    seq: seqMode?1:0,
+    p: picked,
+    r: revealed,
+    lo: listenOrder,
+    mo: matchOrder,
+    mp: matchPairs,
+    ms: matchSel,
+    bs: buildSeq,
+    rw: rvWrong,
+    dl: redoList
+  };
+  elhReport({type:"state", data:d});
+}
+
+/* ---- 複習結尾與錯題重做 ---- */
+function showReviewEnd(){
+  view="rvend";
+  var lastIdx = qIndexByQid("rv-g10");
+  if(lastIdx<0) lastIdx = QUESTIONS.length-1;
+  qIndex = lastIdx;
+  var hasWrong = false;
+  for(var i=0;i<QUESTIONS.length;i++){
+    var q=QUESTIONS[i];
+    if(q.module && q.module.indexOf("rv-")===0 && rvWrong.indexOf(q.q)>=0) hasWrong=true;
+  }
+  var left = '<h2>複習完成</h2><p class="topic">本場複習已做完。</p>';
+  var right = "";
+  if(hasWrong){
+    right += '<p class="topic">本場有答錯的複習題，可以重做錯題。</p>';
+    right += '<button class="btn btn-green" data-redo="1">重做錯題</button>';
+  }else{
+    right += '<p class="topic" style="color:var(--green)">Well done! You can go back and practise again tomorrow.</p>';
+  }
+  right += '<div class="navrow"><button class="btn btn-secondary" data-nav="module">返回本塊目錄</button><button class="btn btn-secondary" data-go="cover">返回封面</button></div>';
+  setLeft(left); setRight(right);
+  bindNav();
+  var rb = document.querySelectorAll("[data-redo]");
+  for(var i=0;i<rb.length;i++) rb[i].onclick = function(){ startRedo(); };
+  elhState();
+}
+function startRedo(){
+  redoList = rvWrong.slice();
+  redoIdx = 0;
+  if(!redoList.length){ showReviewEnd(); return; }
+  var qid = redoList[redoIdx];
+  var idx = qIndexByQid(qid);
+  if(idx<0){ showReviewEnd(); return; }
+  qIndex = idx;
+  var q = QUESTIONS[idx];
+  moduleId = q.module; moduleQs = questionsOfModule(moduleId);
+  for(var i=0;i<moduleQs.length;i++) if(moduleQs[i].q && moduleQs[i].q.q===qid) li=i;
+  revealed[qid] = false;
+  view="q";
+  startQuestion();
+}
+function redoNext(){
+  redoIdx++;
+  if(redoIdx < redoList.length){
+    var qid = redoList[redoIdx];
+    var idx = qIndexByQid(qid);
+    if(idx>=0){
+      qIndex=idx; var q=QUESTIONS[idx];
+      moduleId=q.module; moduleQs=questionsOfModule(moduleId);
+      for(var i=0;i<moduleQs.length;i++) if(moduleQs[i].q && moduleQs[i].q.q===qid) li=i;
+      revealed[qid]=false;
+      startQuestion(); return;
+    }
+  }
+  showReviewEnd();
+}
+
+/* ---- 依序模式 ---- */
+function startSequential(){
+  seqMode = true;
+  moduleQueue = [];
+  for(var i=0;i<MODULES.length;i++) if(MODULES[i].section===sectionId) moduleQueue.push(MODULES[i].id);
+  var first = moduleQueue.shift();
+  enterModule(first, true);
+}
+
+/* ============ 畫面輔助 ============ */
+function setLeft(h){ document.getElementById("left").innerHTML = h; }
+function setRight(h){ document.getElementById("right").innerHTML = h; }
+function render(){
+  if(view==="cover") showCover();
+  else if(view==="section") showSection(sectionId);
+  else if(view==="demo") renderDemo();
+  else if(view==="rvend") showReviewEnd();
+  else if(view==="q") renderQuestion();
+}
+
+/* ============ restore ============ */
+window.addEventListener("message", function(e){
+  var m = e.data;
+  if(!m || m.elh!==1 || m.type!=="restore" || e.source!==window.parent) return;
+  var d = m.data || {};
+  if(typeof d.i !== "number" || d.i<0 || d.i>=TOTAL) return;
+  qIndex = d.i;
+  if(typeof d.m === "string") moduleId = d.m;
+  if(typeof d.li === "number") li = d.li;
+  if(typeof d.sec === "string") sectionId = d.sec;
+  if(typeof d.seq === "number") seqMode = !!d.seq;
+  if(d.p) picked = d.p;
+  if(d.r) revealed = d.r;
+  if(d.lo) listenOrder = d.lo;
+  if(d.mo) matchOrder = d.mo;
+  if(d.mp) matchPairs = d.mp;
+  if(d.ms) matchSel = d.ms;
+  if(d.bs) buildSeq = d.bs;
+  if(d.rw) rvWrong = d.rw;
+  if(d.dl) redoList = d.dl;
+  var loc = d.loc || "q";
+  if(loc==="demo1" || loc==="demo2"){ view="demo"; demoStep = (loc==="demo1"?1:2); renderDemo(); }
+  else if(loc==="rvend"){ showReviewEnd(); }
+  else { view="q"; var q=QUESTIONS[qIndex]; moduleId = q.module; moduleQs = questionsOfModule(moduleId); for(var i=0;i<moduleQs.length;i++) if(moduleQs[i].q===q.q) li=i; startQuestion(); }
+});
+
+/* ============ init ============ */
+elhReport({type:"init", total: TOTAL});
+showCover();
+</script>
+</body>
+</html>
