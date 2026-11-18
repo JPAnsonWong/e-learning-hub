@@ -48,7 +48,8 @@ h3{font-size:clamp(1.1rem,3.4vmin,2rem);margin:.3em 0}
 .wordbank .pill.used{opacity:.35;pointer-events:none}
 .sent .pill{cursor:pointer;background:#fff7e0;border-color:#d9b45c}
 .progress{font-size:clamp(1rem,2.8vmin,1.7rem);color:#4a4436;margin:.2rem 0;font-weight:700}
-.navrow{margin-top:1.2vmin}
+.navrow{position:sticky;top:0;z-index:3;margin:0 0 1.2vmin;padding:.4vmin 0 .8vmin;background:var(--card)}
+.left .navrow{background:var(--bg)}
 .passage{white-space:pre-wrap;font-size:clamp(1.05rem,3.2vmin,2rem);line-height:1.55;background:#fffdf7;border:1px solid var(--line);border-radius:10px;padding:1.4vmin}
 table.dir{border-collapse:collapse;width:100%;font-size:clamp(1rem,3vmin,1.8rem)}
 table.dir th,table.dir td{border:1px solid var(--line);padding:.5vmin .8vmin;text-align:left}
@@ -82,7 +83,7 @@ input,textarea{scroll-margin-top:12vh}
 </div>
 
 <script>
-window.ELH_DATA = {"title":"3D Unit 4 Let's go shopping! 預習・練習・複習","total":123,"shops":[{"id":"hair-salon","en":"a hair salon","zh":"髮廊"},{"id":"pet-shop","en":"a pet shop","zh":"寵物店"},{"id":"bookshop","en":"a bookshop","zh":"書店"},{"id":"toy-shop","en":"a toy shop","zh":"玩具店"},{"id":"cafe","en":"a cafe","zh":"咖啡店"},{"id":"gift-shop","en":"a gift shop","zh":"禮品店"},{"id":"fast-food-shop","en":"a fast-food shop","zh":"快餐店"},{"id":"department-store","en":"a department store","zh":"百貨公司"},{"id":"shoe-shop","en":"a shoe shop","zh":"鞋店"},{"id":"sports-shop","en":"a sports shop","zh":"運動用品店"},{"id":"clothes-shop","en":"a clothes shop","zh":"服裝店"}],"floors":[{"id":"4f","short":"4/F","en":"fourth floor","tts":"the fourth floor"},{"id":"3f","short":"3/F","en":"third floor","tts":"the third floor"},{"id":"2f","short":"2/F","en":"second floor","tts":"the second floor"},{"id":"1f","short":"1/F","en":"first floor","tts":"the first floor"},{"id":"gf","short":"G/F","en":"ground floor","tts":"the ground floor"}],"passages":{"pv-t1":"There’s a new shopping centre near our school. It opens today.\n‘How can we get to the shopping centre?’ asks Julie.\n‘We can follow the directions on this flyer,’ replies Max. ‘Let’s go!’","pv-flyer":"Wonder Shopping Centre opens today\nDolly’s Chocolate Shop — join their free chocolate workshops\nFun Board Games Cafe — fun for all the family\nHow can you find us?\nGo out of the MTR station. Walk along Star Street. Then turn left. Wonder Shopping Centre is on your left. It is opposite the bank.\nVisit us today!","pv-t3":"‘Can you hear the sound of the lion dance?’ asks Julie.\n‘Look at the lion dance in front of the entrance!’ says Max.\nWhen they enter the shopping centre, they are surprised.\n‘Look at the long queues outside the clothes shop and the sports shop!’ says Max.","pv-t4":"‘Let’s go to Dolly’s Chocolate Shop first,’ says Julie. ‘How can we get to the chocolate shop?’\n‘We can look at the directory here,’ says Max. ‘Just go up four floors. We can also buy toys and books in the toy shop and the bookshop on the same floor. By the way, are you going to buy chocolate in the chocolate shop?’\n‘No,’ replies Julie. ‘I just want to make some in the workshop. We can join it for free!’","pr-t1":"Mia and Ken want to go to a new shopping centre after school. It is called Sunny Plaza.\n\n‘How can we get to Sunny Plaza?’ asks Mia.\n‘We can follow the directions on this flyer,’ says Ken. ‘Let’s go!’","pr-flyer":"Sunny Plaza opens today\nPat’s Gift Shop — buy birthday presents\nHappy Kids Toy Shop — toys for all the family\n\nHow can you find us?\nGo out of the bus stop. Walk along River Street. Then turn right. Sunny Plaza is on your right. It is opposite the park.\nVisit us today!","pr-t3":"They go into Sunny Plaza. There are long queues outside the shoe shop.","pr-t4":"‘Let’s go to the toy shop first,’ says Mia. ‘How can we get to the toy shop?’\n‘We can look at the directory here,’ says Ken. ‘Just go up two floors.’","pr-t5":"‘Are you going to buy a toy?’ asks Ken.\n‘Yes,’ says Mia. ‘I want a birthday present for my brother.’"},"directories":{"wonder":[{"floor":"4/F","shops":["New World Bookshop","Daydream Toy Shop","Dolly’s Chocolate Shop"]},{"floor":"3/F","shops":["Uncle Joe’s Restaurant","Good Day Restaurant","Happy Fast-food Shop"]},{"floor":"2/F","shops":["Fun Board Games Cafe","Collin’s Hair Salon","Nancy’s Gift Shop"]},{"floor":"1/F","shops":["Nana Department Store"]},{"floor":"G/F","shops":["Young Forever Clothes Shop","Top Sports Shop","Yummy Sweet Shop"]}],"sunny":[{"floor":"4/F","shops":["Star Bookshop"]},{"floor":"3/F","shops":["Green Cafe","Lucky Fast-food Shop"]},{"floor":"2/F","shops":["Happy Kids Toy Shop","Pat’s Gift Shop"]},{"floor":"1/F","shops":["Fashion Clothes Shop"]},{"floor":"G/F","shops":["Super Shoe Shop","Sporty Sports Shop"]}]},"sections":[{"id":"pv","title":"預習","modules":["pv-words","pv-text","pv-grammar"]},{"id":"pr","title":"練習","modules":["pr-words","pr-pos","pr-dir","pr-read"]},{"id":"rv","title":"複習","modules":["rv-words","rv-grammar"]}],"modules":[{"id":"pv-words","section":"pv","title":"必記單詞（聽讀點選、翻牌配對）","short":"必記單詞"},{"id":"pv-text","section":"pv","title":"課文重點（課本 pp.40–41）","short":"課文重點"},{"id":"pv-grammar","section":"pv","title":"重點語法（位置與問路）","short":"重點語法","demos":2},{"id":"pr-words","section":"pr","title":"單詞與樓層","short":"單詞與樓層"},{"id":"pr-pos","section":"pr","title":"位置（next to / between / opposite）","short":"位置"},{"id":"pr-dir","section":"pr","title":"問路與方向","short":"問路與方向"},{"id":"pr-read","section":"pr","title":"課文技能理解","short":"課文技能理解"},{"id":"rv-words","section":"rv","title":"必記單詞抽認","short":"單詞抽認"},{"id":"rv-grammar","section":"rv","title":"重點語法再練","short":"語法再練"}],"grammarDemos":[{"id":"demo-a","map":"mapA","title":"位置語法示範","lines":["The pet shop is next to the hair salon.","The pet shop is between the gift shop and the hair salon.","The pet shop is opposite the shoe shop."]},{"id":"demo-b","map":"mapB","title":"問路語法示範","lines":["Turn left.","Turn right.","Walk along Lake Street.","Walk across the road.","It is on your left.","It is on your right.","How can I get to the toy shop?"]}],"questions":[{"q":"pv-s01","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a hair salon","answer":"a hair salon","shop":"hair-salon","hint":"剛才聽到的是 a hair salon（髮廊）。"},{"q":"pv-s02","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a pet shop","answer":"a pet shop","shop":"pet-shop","hint":"剛才聽到的是 a pet shop（寵物店）。"},{"q":"pv-s03","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a bookshop","answer":"a bookshop","shop":"bookshop","hint":"剛才聽到的是 a bookshop（書店）。"},{"q":"pv-s04","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a toy shop","answer":"a toy shop","shop":"toy-shop","hint":"剛才聽到的是 a toy shop（玩具店）。"},{"q":"pv-s05","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a cafe","answer":"a cafe","shop":"cafe","hint":"剛才聽到的是 a cafe（咖啡店）。"},{"q":"pv-s06","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a gift shop","answer":"a gift shop","shop":"gift-shop","hint":"剛才聽到的是 a gift shop（禮品店）。"},{"q":"pv-s07","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a fast-food shop","answer":"a fast-food shop","shop":"fast-food-shop","hint":"剛才聽到的是 a fast-food shop（快餐店）。"},{"q":"pv-s08","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a department store","answer":"a department store","shop":"department-store","hint":"剛才聽到的是 a department store（百貨公司）。"},{"q":"pv-s09","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a shoe shop","answer":"a shoe shop","shop":"shoe-shop","hint":"剛才聽到的是 a shoe shop（鞋店）。"},{"q":"pv-s10","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a sports shop","answer":"a sports shop","shop":"sports-shop","hint":"剛才聽到的是 a sports shop（運動用品店）。"},{"q":"pv-s11","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a clothes shop","answer":"a clothes shop","shop":"clothes-shop","hint":"剛才聽到的是 a clothes shop（服裝店）。"},{"q":"pv-f01","module":"pv-words","type":"listen-floor","prompt":"點選你聽到的樓層","tts":"the fourth floor","answer":"4/F fourth floor","floor":"4f","hint":"剛才聽到的是 the fourth floor（4/F）。"},{"q":"pv-f02","module":"pv-words","type":"listen-floor","prompt":"點選你聽到的樓層","tts":"the third floor","answer":"3/F third floor","floor":"3f","hint":"剛才聽到的是 the third floor（3/F）。"},{"q":"pv-f03","module":"pv-words","type":"listen-floor","prompt":"點選你聽到的樓層","tts":"the second floor","answer":"2/F second floor","floor":"2f","hint":"剛才聽到的是 the second floor（2/F）。"},{"q":"pv-f04","module":"pv-words","type":"listen-floor","prompt":"點選你聽到的樓層","tts":"the first floor","answer":"1/F first floor","floor":"1f","hint":"剛才聽到的是 the first floor（1/F）。"},{"q":"pv-f05","module":"pv-words","type":"listen-floor","prompt":"點選你聽到的樓層","tts":"the ground floor","answer":"G/F ground floor","floor":"gf","hint":"剛才聽到的是 the ground floor（G/F）。"},{"q":"pv-m01","module":"pv-words","type":"match","prompt":"先點一張卡，再點另一張，把英文詞和圖示配成一對。","pairs":[{"id":"hair-salon","en":"a hair salon","kind":"shop"},{"id":"pet-shop","en":"a pet shop","kind":"shop"},{"id":"bookshop","en":"a bookshop","kind":"shop"},{"id":"toy-shop","en":"a toy shop","kind":"shop"},{"id":"cafe","en":"a cafe","kind":"shop"},{"id":"gift-shop","en":"a gift shop","kind":"shop"}],"answer":"a hair salon, a pet shop, a bookshop, a toy shop, a cafe, a gift shop","hint":"請把每個英文店名配上對應的圖示。"},{"q":"pv-m02","module":"pv-words","type":"match","prompt":"先點一張卡，再點另一張，把英文詞和圖示配成一對。","pairs":[{"id":"fast-food-shop","en":"a fast-food shop","kind":"shop"},{"id":"department-store","en":"a department store","kind":"shop"},{"id":"shoe-shop","en":"a shoe shop","kind":"shop"},{"id":"sports-shop","en":"a sports shop","kind":"shop"},{"id":"clothes-shop","en":"a clothes shop","kind":"shop"}],"answer":"a fast-food shop, a department store, a shoe shop, a sports shop, a clothes shop","hint":"請把每個英文店名配上對應的圖示。"},{"q":"pv-m03","module":"pv-words","type":"match","prompt":"先點一張卡，再點另一張，把樓層簡寫和英文名稱配成一對。","pairs":[{"id":"4f","en":"fourth floor","short":"4/F","kind":"floor"},{"id":"3f","en":"third floor","short":"3/F","kind":"floor"},{"id":"2f","en":"second floor","short":"2/F","kind":"floor"},{"id":"1f","en":"first floor","short":"1/F","kind":"floor"},{"id":"gf","en":"ground floor","short":"G/F","kind":"floor"}],"answer":"4/F fourth floor, 3/F third floor, 2/F second floor, 1/F first floor, G/F ground floor","hint":"4/F 是 fourth floor；3/F 是 third floor；2/F 是 second floor；1/F 是 first floor；G/F 是 ground floor。"},{"q":"pv-r01","module":"pv-text","type":"mcq","stem":"When does the new shopping centre open?","options":["today","tomorrow","next week"],"correct":0,"left":"pv-t1","hint":"Max 說 “It opens today.”"},{"q":"pv-r02","module":"pv-text","type":"mcq","stem":"Julie asks, “How can we get to the shopping centre?” What is Max’s solution?","options":["We can follow the directions on this flyer.","We can take a taxi.","We can call the shop."],"correct":0,"left":"pv-t1","hint":"解難常用 can / let’s。Max 說可以跟傳單上的路線走。"},{"q":"pv-r03","module":"pv-text","type":"mcq","stem":"What can people do at Dolly’s Chocolate Shop?","options":["join their free chocolate workshops","buy clothes","play sports"],"correct":0,"left":"pv-flyer"},{"q":"pv-r04","module":"pv-text","type":"mcq","stem":"What does the flyer say about Fun Board Games Cafe?","options":["It is fun for all the family.","It is only for children.","It is on the ground floor."],"correct":0,"left":"pv-flyer"},{"q":"pv-r05","module":"pv-text","type":"mcq","stem":"After you go out of the MTR station, walk along ______.","options":["Star Street","Moon Road","Bank Street"],"correct":0,"left":"pv-flyer"},{"q":"pv-r06","module":"pv-text","type":"mcq","stem":"Then ______.","options":["turn left","turn right","walk across the MTR station"],"correct":0,"left":"pv-flyer"},{"q":"pv-r07","module":"pv-text","type":"mcq","stem":"Wonder Shopping Centre is ______.","options":["on your left","on your right","next to the MTR station"],"correct":0,"left":"pv-flyer"},{"q":"pv-r08","module":"pv-text","type":"mcq","stem":"Wonder Shopping Centre is ______ the bank.","options":["opposite","next to","between"],"correct":0,"left":"pv-flyer"},{"q":"pv-r09","module":"pv-text","type":"mcq","stem":"What do Julie and Max see in front of the entrance?","options":["a lion dance","a bus","a taxi"],"correct":0,"left":"pv-t3"},{"q":"pv-r10","module":"pv-text","type":"mcq","stem":"What is outside the clothes shop and the sports shop?","options":["long queues","a chocolate workshop","a bank"],"correct":0,"left":"pv-t3"},{"q":"pv-r11","module":"pv-text","type":"mcq","stem":"How do Julie and Max find the chocolate shop?","options":["They look at the directory.","They call the shop.","They ask a policeman."],"correct":0,"left":"pv-dir"},{"q":"pv-r12","module":"pv-text","type":"mcq","stem":"Dolly’s Chocolate Shop is on the ______.","options":["fourth floor","second floor","ground floor"],"correct":0,"left":"pv-dir"},{"q":"pv-r13","module":"pv-text","type":"mcq","stem":"Which two shops are on the same floor as Dolly’s Chocolate Shop?","options":["New World Bookshop and Daydream Toy Shop","Fun Board Games Cafe and Nancy’s Gift Shop","Top Sports Shop and Yummy Sweet Shop"],"correct":0,"left":"pv-dir"},{"q":"pv-r14","module":"pv-text","type":"mcq","stem":"Fun Board Games Cafe is on ______.","options":["2/F","4/F","G/F"],"correct":0,"left":"pv-dir"},{"q":"pv-r15","module":"pv-text","type":"mcq","stem":"Young Forever Clothes Shop is on ______.","options":["the ground floor","the first floor","the third floor"],"correct":0,"left":"pv-dir"},{"q":"pv-r16","module":"pv-text","type":"mcq","stem":"What does Julie want to do in the chocolate shop?","options":["make chocolate in the workshop","buy some chocolate","buy a toy"],"correct":0,"left":"pv-dir"},{"q":"pv-r17","module":"pv-text","type":"mcq","stem":"Can Julie and Max join the workshop for free?","options":["Yes, they can.","No, they cannot.","We do not know."],"correct":0,"left":"pv-dir"},{"q":"pv-g01","module":"pv-grammar","type":"mcq","stem":"The pet shop is ______ the gift shop and the hair salon.","options":["between","next to","opposite"],"correct":0,"left":"mapA"},{"q":"pv-g02","module":"pv-grammar","type":"mcq","stem":"The pet shop is ______ the hair salon.","options":["next to","between","opposite"],"correct":0,"left":"mapA"},{"q":"pv-g03","module":"pv-grammar","type":"mcq","stem":"The pet shop is ______ the shoe shop.","options":["opposite","next to","between"],"correct":0,"left":"mapA"},{"q":"pv-g04","module":"pv-grammar","type":"mcq","stem":"The shoe shop is ______ the sports shop and the clothes shop.","options":["between","next to","opposite"],"correct":0,"left":"mapA"},{"q":"pv-g05","module":"pv-grammar","type":"mcq","stem":"The sports shop is ______ the gift shop.","options":["opposite","next to","between"],"correct":0,"left":"mapA"},{"q":"pv-g06","module":"pv-grammar","type":"mcq","stem":"The clothes shop is ______ the hair salon.","options":["opposite","next to","between"],"correct":0,"left":"mapA"},{"q":"pv-g07","module":"pv-grammar","type":"mcq","stem":"How can I get to the toy shop?","options":["Go out of the MTR station. Walk along Lake Street. Then turn left. The toy shop is on your left.","Go out of the MTR station. Walk along Lake Street. Then turn right. The toy shop is on your right.","Go out of the MTR station. Walk across Pine Street. Then turn right. The toy shop is on your left."],"correct":0,"left":"mapB"},{"q":"pv-g08","module":"pv-grammar","type":"mcq","stem":"After you turn left, the toy shop is ______.","options":["on your left","on your right","opposite the MTR station"],"correct":0,"left":"mapB"},{"q":"pv-g09","module":"pv-grammar","type":"mcq","stem":"How can I get to the bookshop?","options":["Go out of the MTR station. Walk along Lake Street. Then turn right. The bookshop is on your right.","Go out of the MTR station. Walk along Lake Street. Then turn left. The bookshop is on your left.","Go out of the MTR station. Walk across Lake Street. Then turn left. The bookshop is on your right."],"correct":0,"left":"mapB"},{"q":"pv-g10","module":"pv-grammar","type":"mcq","stem":"How can I get to the cafe?","options":["Go out of the MTR station. Walk along Lake Street. Then turn left. Walk across the road. The cafe is on your right.","Go out of the MTR station. Walk along Lake Street. Then turn right. Walk across the road. The cafe is on your left.","Go out of the MTR station. Turn right. The cafe is on your left."],"correct":0,"left":"mapB"},{"q":"pr-v01","module":"pr-words","type":"mcq","stem":"I want to get a haircut. I go to ______.","options":["a hair salon","a clothes shop","a gift shop"],"correct":0,"left":"shop-scene","icon":"hair-salon","hint":"正確是 a hair salon。"},{"q":"pr-v02","module":"pr-words","type":"mcq","stem":"I want to buy a pet. I go to ______.","options":["a pet shop","a toy shop","a bookshop"],"correct":0,"left":"shop-scene","icon":"pet-shop","hint":"正確是 a pet shop。"},{"q":"pr-v03","module":"pr-words","type":"mcq","stem":"I want to buy a book. I go to ______.","options":["a bookshop","a gift shop","a cafe"],"correct":0,"left":"shop-scene","icon":"bookshop","hint":"正確是 a bookshop。"},{"q":"pr-v04","module":"pr-words","type":"mcq","stem":"I want to buy a doll. I go to ______.","options":["a toy shop","a pet shop","a clothes shop"],"correct":0,"left":"shop-scene","icon":"toy-shop","hint":"正確是 a toy shop。"},{"q":"pr-v05","module":"pr-words","type":"mcq","stem":"I want to drink some tea. I go to ______.","options":["a cafe","a fast-food shop","a gift shop"],"correct":0,"left":"shop-scene","icon":"cafe","hint":"正確是 a cafe。"},{"q":"pr-v06","module":"pr-words","type":"mcq","stem":"I want to buy a present. I go to ______.","options":["a gift shop","a shoe shop","a sports shop"],"correct":0,"left":"shop-scene","icon":"gift-shop","hint":"正確是 a gift shop。"},{"q":"pr-v07","module":"pr-words","type":"mcq","stem":"I want to eat a hamburger. I go to ______.","options":["a fast-food shop","a cafe","a department store"],"correct":0,"left":"shop-scene","icon":"fast-food-shop","hint":"正確是 a fast-food shop。"},{"q":"pr-v08","module":"pr-words","type":"mcq","stem":"I want to buy many things in a big shop. I go to ______.","options":["a department store","a gift shop","a bookshop"],"correct":0,"left":"shop-scene","icon":"department-store","hint":"正確是 a department store。"},{"q":"pr-v09","module":"pr-words","type":"mcq","stem":"I want to buy a pair of shoes. I go to ______.","options":["a shoe shop","a sports shop","a clothes shop"],"correct":0,"left":"shop-scene","icon":"shoe-shop","hint":"正確是 a shoe shop。"},{"q":"pr-v10","module":"pr-words","type":"mcq","stem":"I want to buy a football. I go to ______.","options":["a sports shop","a shoe shop","a toy shop"],"correct":0,"left":"shop-scene","icon":"sports-shop","hint":"正確是 a sports shop。"},{"q":"pr-v11","module":"pr-words","type":"mcq","stem":"I want to buy a T-shirt. I go to ______.","options":["a clothes shop","a hair salon","a shoe shop"],"correct":0,"left":"shop-scene","icon":"clothes-shop","hint":"正確是 a clothes shop。"},{"q":"pr-v12","module":"pr-words","type":"mcq","stem":"4/F is the ______ floor.","options":["fourth","third","first"],"correct":0,"left":"floor-scene","icon":"4f","hint":"正確是 fourth。","floor":"4f"},{"q":"pr-v13","module":"pr-words","type":"mcq","stem":"3/F is the ______ floor.","options":["third","fourth","second"],"correct":0,"left":"floor-scene","icon":"3f","hint":"正確是 third。","floor":"3f"},{"q":"pr-v14","module":"pr-words","type":"mcq","stem":"2/F is the ______ floor.","options":["second","first","third"],"correct":0,"left":"floor-scene","icon":"2f","hint":"正確是 second。","floor":"2f"},{"q":"pr-v15","module":"pr-words","type":"mcq","stem":"1/F is the ______ floor.","options":["first","ground","second"],"correct":0,"left":"floor-scene","icon":"1f","hint":"正確是 first。","floor":"1f"},{"q":"pr-v16","module":"pr-words","type":"mcq","stem":"G/F is the ______ floor.","options":["ground","first","fourth"],"correct":0,"left":"floor-scene","icon":"gf","hint":"正確是 ground。","floor":"gf"},{"q":"pr-v17","module":"pr-words","type":"mcq","stem":"The first floor is ______.","options":["1/F","G/F","2/F"],"correct":0,"left":"floor-scene","icon":"1f","hint":"正確是 1/F。","floor":"1f"},{"q":"pr-v18","module":"pr-words","type":"mcq","stem":"The ground floor is ______.","options":["G/F","1/F","4/F"],"correct":0,"left":"floor-scene","icon":"gf","hint":"正確是 G/F。","floor":"gf"},{"q":"pr-v19","module":"pr-words","type":"mcq","stem":"Which one is correct?","options":["a bookshop","a books shop","a book shopes"],"correct":0,"left":"spell"},{"q":"pr-v20","module":"pr-words","type":"mcq","stem":"Which one is correct?","options":["a department store","a department shop","a depart store"],"correct":0,"left":"spell"},{"q":"pr-p01","module":"pr-pos","type":"mcq","stem":"Which shop is between the gift shop and the hair salon?","options":["the pet shop","the shoe shop","the sports shop"],"correct":0,"left":"mapA"},{"q":"pr-p02","module":"pr-pos","type":"mcq","stem":"Which shop is between the sports shop and the clothes shop?","options":["the shoe shop","the pet shop","the gift shop"],"correct":0,"left":"mapA"},{"q":"pr-p03","module":"pr-pos","type":"mcq","stem":"Which shop is opposite the clothes shop?","options":["the hair salon","the gift shop","the pet shop"],"correct":0,"left":"mapA"},{"q":"pr-p04","module":"pr-pos","type":"mcq","stem":"Which shop is opposite the sports shop?","options":["the gift shop","the hair salon","the shoe shop"],"correct":0,"left":"mapA"},{"q":"pr-p05","module":"pr-pos","type":"mcq","stem":"The hair salon is ______ the pet shop.","options":["next to","between","opposite"],"correct":0,"left":"mapA"},{"q":"pr-p06","module":"pr-pos","type":"mcq","stem":"Choose the correct sentence.","options":["The pet shop is between the gift shop and the hair salon.","The pet shop is between the sports shop and the clothes shop.","The pet shop is next to the clothes shop."],"correct":0,"left":"mapA"},{"q":"pr-p07","module":"pr-pos","type":"mcq","stem":"The clothes shop is ______ the shoe shop.","options":["next to","between","opposite"],"correct":0,"left":"mapA"},{"q":"pr-p08","module":"pr-pos","type":"mcq","stem":"Choose the correct sentence.","options":["The sports shop is opposite the gift shop.","The sports shop is next to the gift shop.","The sports shop is between the gift shop and the pet shop."],"correct":0,"left":"mapA"},{"q":"pr-d01","module":"pr-dir","type":"mcq","stem":"Choose the correct question. You want to find the toy shop.","options":["How can I get to the toy shop?","How can I get the toy shop?","Where can I get the toy shop?"],"correct":0,"left":"mapB"},{"q":"pr-d02","module":"pr-dir","type":"mcq","stem":"Walk ______ Lake Street.","options":["along","across","opposite"],"correct":0,"left":"mapB"},{"q":"pr-d03","module":"pr-dir","type":"mcq","stem":"Then ______ left.","options":["turn","walk","along"],"correct":0,"left":"mapB"},{"q":"pr-d04","module":"pr-dir","type":"mcq","stem":"The toy shop is ______.","options":["on your left","on your right","next to the MTR station"],"correct":0,"left":"mapB"},{"q":"pr-d05","module":"pr-dir","type":"mcq","stem":"How can I get to the bookshop?","options":["Go out of the MTR station. Walk along Lake Street. Then turn right. The bookshop is on your right.","Go out of the MTR station. Walk along Lake Street. Then turn left. The bookshop is on your left.","Go out of the MTR station. Walk across Pine Street. Then turn left. The bookshop is on your right."],"correct":0,"left":"mapB"},{"q":"pr-d06","module":"pr-dir","type":"mcq","stem":"After you turn right, the bookshop is ______.","options":["on your right","on your left","opposite the toy shop"],"correct":0,"left":"mapB"},{"q":"pr-d07","module":"pr-dir","type":"mcq","stem":"Walk ______ the road to the cafe.","options":["across","along","next to"],"correct":0,"left":"mapB"},{"q":"pr-d08","module":"pr-dir","type":"mcq","stem":"The cafe is ______ the toy shop.","options":["opposite","between","next to"],"correct":0,"left":"mapB"},{"q":"pr-d09","module":"pr-dir","type":"mcq","stem":"How can I get to the cafe?","options":["Go out of the MTR station. Walk along Lake Street. Then turn left. Walk across the road. The cafe is on your right.","Go out of the MTR station. Walk along Lake Street. Then turn right. The cafe is on your right.","Go out of the MTR station. Turn right. Walk along Pine Street. The cafe is on your left."],"correct":0,"left":"mapB"},{"q":"pr-d10","module":"pr-dir","type":"mcq","stem":"How can I get to the bank?","options":["Go out of the MTR station. Walk along Lake Street. Then turn right. The bank is on your left.","Go out of the MTR station. Walk along Lake Street. Then turn left. The bank is on your right.","Go out of the MTR station. Walk across the road. The bank is on your left."],"correct":0,"left":"mapB"},{"q":"pr-r01","module":"pr-read","type":"mcq","stem":"When do Mia and Ken want to go to Sunny Plaza?","options":["after school","in the morning","at night"],"correct":0,"left":"pr-t1"},{"q":"pr-r02","module":"pr-read","type":"mcq","stem":"Mia asks how to get there. What is Ken’s solution?","options":["We can follow the directions on this flyer.","We can look at the directory first.","We can wait at the park."],"correct":0,"left":"pr-t1"},{"q":"pr-r03","module":"pr-read","type":"mcq","stem":"After they go out of the bus stop, they walk along ______.","options":["River Street","Lake Street","Star Street"],"correct":0,"left":"pr-flyer"},{"q":"pr-r04","module":"pr-read","type":"mcq","stem":"Then they ______.","options":["turn right","turn left","walk across the park"],"correct":0,"left":"pr-flyer"},{"q":"pr-r05","module":"pr-read","type":"mcq","stem":"Sunny Plaza is ______.","options":["on your right","on your left","next to the bus stop"],"correct":0,"left":"pr-flyer"},{"q":"pr-r06","module":"pr-read","type":"mcq","stem":"Sunny Plaza is ______ the park.","options":["opposite","between","next to"],"correct":0,"left":"pr-flyer"},{"q":"pr-r07","module":"pr-read","type":"mcq","stem":"Where are the long queues?","options":["outside the shoe shop","outside the toy shop","outside the bookshop"],"correct":0,"left":"pr-t3"},{"q":"pr-r08","module":"pr-read","type":"mcq","stem":"How do Mia and Ken find the toy shop?","options":["They look at the directory.","They look at the flyer only.","They ask a policeman."],"correct":0,"left":"pr-t4dir"},{"q":"pr-r09","module":"pr-read","type":"mcq","stem":"Happy Kids Toy Shop is on the ______.","options":["second floor","fourth floor","ground floor"],"correct":0,"left":"pr-t4dir"},{"q":"pr-r10","module":"pr-read","type":"mcq","stem":"Which shop is on the same floor as Happy Kids Toy Shop?","options":["Pat’s Gift Shop","Star Bookshop","Super Shoe Shop"],"correct":0,"left":"pr-dir"},{"q":"pr-r11","module":"pr-read","type":"mcq","stem":"Super Shoe Shop is on ______.","options":["the ground floor","the first floor","the third floor"],"correct":0,"left":"pr-dir"},{"q":"pr-r12","module":"pr-read","type":"mcq","stem":"What does Mia want to buy?","options":["a birthday present for her brother","a pair of shoes for Ken","a book for her mum"],"correct":0,"left":"pr-t5"},{"q":"pr-r13","module":"pr-read","type":"build","stem":"Which shop is on 4/F? Write a complete sentence.","words":["Star Bookshop","is","on","the","fourth","floor","second","Gift","Shop","."],"answer":"Star Bookshop is on the fourth floor.","left":"pr-dir","hint":"目錄寫著 4/F Star Bookshop，所以完整句子是 Star Bookshop is on the fourth floor."},{"q":"rv-s01","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a hair salon","a clothes shop","a gift shop"],"correct":0,"left":"review-icon","icon":"scissors-hair","icon_zh":"剪刀／頭髮","tts":"a hair salon","hint":"正確是 a hair salon。"},{"q":"rv-s02","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a pet shop","a toy shop","a bookshop"],"correct":0,"left":"review-icon","icon":"dog","icon_zh":"小狗","tts":"a pet shop","hint":"正確是 a pet shop。"},{"q":"rv-s03","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a bookshop","a gift shop","a department store"],"correct":0,"left":"review-icon","icon":"book","icon_zh":"書本","tts":"a bookshop","hint":"正確是 a bookshop。"},{"q":"rv-s04","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a toy shop","a pet shop","a sports shop"],"correct":0,"left":"review-icon","icon":"toy","icon_zh":"玩具車／洋娃娃","tts":"a toy shop","hint":"正確是 a toy shop。"},{"q":"rv-s05","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a cafe","a fast-food shop","a gift shop"],"correct":0,"left":"review-icon","icon":"coffee","icon_zh":"咖啡杯","tts":"a cafe","hint":"正確是 a cafe。"},{"q":"rv-s06","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a gift shop","a bookshop","a clothes shop"],"correct":0,"left":"review-icon","icon":"gift","icon_zh":"禮盒","tts":"a gift shop","hint":"正確是 a gift shop。"},{"q":"rv-s07","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a fast-food shop","a cafe","a department store"],"correct":0,"left":"review-icon","icon":"burger","icon_zh":"漢堡","tts":"a fast-food shop","hint":"正確是 a fast-food shop。"},{"q":"rv-s08","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a department store","a clothes shop","a gift shop"],"correct":0,"left":"review-icon","icon":"dept","icon_zh":"高大百貨","tts":"a department store","hint":"正確是 a department store。"},{"q":"rv-s09","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a shoe shop","a sports shop","a clothes shop"],"correct":0,"left":"review-icon","icon":"shoes","icon_zh":"一雙鞋","tts":"a shoe shop","hint":"正確是 a shoe shop。"},{"q":"rv-s10","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a sports shop","a shoe shop","a toy shop"],"correct":0,"left":"review-icon","icon":"ball","icon_zh":"波／球拍","tts":"a sports shop","hint":"正確是 a sports shop。"},{"q":"rv-s11","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a clothes shop","a hair salon","a shoe shop"],"correct":0,"left":"review-icon","icon":"clothes","icon_zh":"衣服","tts":"a clothes shop","hint":"正確是 a clothes shop。"},{"q":"rv-f01","module":"rv-words","type":"mcq","stem":"4/F 是？","options":["fourth floor","third floor","first floor"],"correct":0,"left":"floor-scene","icon":"4f","tts":"the fourth floor","hint":"4/F 是 fourth floor。","floor":"4f"},{"q":"rv-f02","module":"rv-words","type":"mcq","stem":"3/F 是？","options":["third floor","fourth floor","second floor"],"correct":0,"left":"floor-scene","icon":"3f","tts":"the third floor","hint":"3/F 是 third floor。","floor":"3f"},{"q":"rv-f03","module":"rv-words","type":"mcq","stem":"2/F 是？","options":["second floor","first floor","third floor"],"correct":0,"left":"floor-scene","icon":"2f","tts":"the second floor","hint":"2/F 是 second floor。","floor":"2f"},{"q":"rv-f04","module":"rv-words","type":"mcq","stem":"1/F 是？","options":["first floor","ground floor","second floor"],"correct":0,"left":"floor-scene","icon":"1f","tts":"the first floor","hint":"1/F 是 first floor。","floor":"1f"},{"q":"rv-f05","module":"rv-words","type":"mcq","stem":"G/F 是？","options":["ground floor","first floor","fourth floor"],"correct":0,"left":"floor-scene","icon":"gf","tts":"the ground floor","hint":"G/F 是 ground floor。","floor":"gf"},{"q":"rv-g01","module":"rv-grammar","type":"mcq","stem":"The pet shop is ______ the gift shop and the hair salon.","options":["between","next to","opposite"],"correct":0,"left":"mapA","hint":"正確是 between。"},{"q":"rv-g02","module":"rv-grammar","type":"mcq","stem":"The shoe shop is ______ the sports shop and the clothes shop.","options":["between","next to","opposite"],"correct":0,"left":"mapA","hint":"正確是 between。"},{"q":"rv-g03","module":"rv-grammar","type":"mcq","stem":"The clothes shop is ______ the hair salon.","options":["opposite","next to","between"],"correct":0,"left":"mapA","hint":"正確是 opposite。"},{"q":"rv-g04","module":"rv-grammar","type":"mcq","stem":"The gift shop is ______ the pet shop.","options":["next to","opposite","between"],"correct":0,"left":"mapA","hint":"正確是 next to。"},{"q":"rv-g05","module":"rv-grammar","type":"mcq","stem":"Choose the correct question:","options":["How can I get to the toy shop?","How can I get the toy shop?","How I can get to the toy shop?"],"correct":0,"left":"mapB","hint":"正確是 How can I get to the toy shop?。"},{"q":"rv-g06","module":"rv-grammar","type":"mcq","stem":"Go out of the MTR station. ______ Lake Street.","options":["Walk along","Walk across","Turn along"],"correct":0,"left":"mapB","hint":"正確是 Walk along。"},{"q":"rv-g07","module":"rv-grammar","type":"mcq","stem":"Then ______. The bookshop is on your right.","options":["turn right","turn left","walk left"],"correct":0,"left":"mapB","hint":"正確是 turn right。"},{"q":"rv-g08","module":"rv-grammar","type":"mcq","stem":"The toy shop is ______.","options":["on your left","on your right","on your along"],"correct":0,"left":"mapB","hint":"正確是 on your left。"},{"q":"rv-g09","module":"rv-grammar","type":"mcq","stem":"Walk ______ the road.","options":["across","along","opposite"],"correct":0,"left":"mapB","hint":"正確是 across。"},{"q":"rv-g10","module":"rv-grammar","type":"mcq","stem":"How can I get to the cafe?","options":["Go out of the MTR station. Walk along Lake Street. Then turn left. Walk across the road. The cafe is on your right.","Go out of the MTR station. Walk along Lake Street. Then turn right. Walk across the road. The cafe is on your left.","Go out of the MTR station. Walk along Lake Street. Then turn left. The cafe is on your left."],"correct":0,"left":"mapB","hint":"正確是 Go out of the MTR station. Walk along Lake Street. Then turn left. Walk across the road. The cafe is on your right.。"}]};
+window.ELH_DATA = {"title":"3D Unit 4 Let's go shopping! 預習・練習・複習","total":123,"shops":[{"id":"hair-salon","en":"a hair salon","zh":"髮廊"},{"id":"pet-shop","en":"a pet shop","zh":"寵物店"},{"id":"bookshop","en":"a bookshop","zh":"書店"},{"id":"toy-shop","en":"a toy shop","zh":"玩具店"},{"id":"cafe","en":"a cafe","zh":"咖啡店"},{"id":"gift-shop","en":"a gift shop","zh":"禮品店"},{"id":"fast-food-shop","en":"a fast-food shop","zh":"快餐店"},{"id":"department-store","en":"a department store","zh":"百貨公司"},{"id":"shoe-shop","en":"a shoe shop","zh":"鞋店"},{"id":"sports-shop","en":"a sports shop","zh":"運動用品店"},{"id":"clothes-shop","en":"a clothes shop","zh":"服裝店"}],"floors":[{"id":"4f","short":"4/F","en":"fourth floor","tts":"the fourth floor"},{"id":"3f","short":"3/F","en":"third floor","tts":"the third floor"},{"id":"2f","short":"2/F","en":"second floor","tts":"the second floor"},{"id":"1f","short":"1/F","en":"first floor","tts":"the first floor"},{"id":"gf","short":"G/F","en":"ground floor","tts":"the ground floor"}],"passages":{"pv-t1":"There’s a new shopping centre near our school. It opens today.\n‘How can we get to the shopping centre?’ asks Julie.\n‘We can follow the directions on this flyer,’ replies Max. ‘Let’s go!’","pv-flyer":"Wonder Shopping Centre opens today\nDolly’s Chocolate Shop — join their free chocolate workshops\nFun Board Games Cafe — fun for all the family\nHow can you find us?\nGo out of the MTR station. Walk along Star Street. Then turn left. Wonder Shopping Centre is on your left. It is opposite the bank.\nVisit us today!","pv-t3":"‘Can you hear the sound of the lion dance?’ asks Julie.\n‘Look at the lion dance in front of the entrance!’ says Max.\nWhen they enter the shopping centre, they are surprised.\n‘Look at the long queues outside the clothes shop and the sports shop!’ says Max.","pv-t4":"‘Let’s go to Dolly’s Chocolate Shop first,’ says Julie. ‘How can we get to the chocolate shop?’\n‘We can look at the directory here,’ says Max. ‘Just go up four floors. We can also buy toys and books in the toy shop and the bookshop on the same floor. By the way, are you going to buy chocolate in the chocolate shop?’\n‘No,’ replies Julie. ‘I just want to make some in the workshop. We can join it for free!’","pr-t1":"Mia and Ken want to go to a new shopping centre after school. It is called Sunny Plaza.\n\n‘How can we get to Sunny Plaza?’ asks Mia.\n‘We can follow the directions on this flyer,’ says Ken. ‘Let’s go!’","pr-flyer":"Sunny Plaza opens today\nPat’s Gift Shop — buy birthday presents\nHappy Kids Toy Shop — toys for all the family\n\nHow can you find us?\nGo out of the bus stop. Walk along River Street. Then turn right. Sunny Plaza is on your right. It is opposite the park.\nVisit us today!","pr-t3":"They go into Sunny Plaza. There are long queues outside the shoe shop.","pr-t4":"‘Let’s go to the toy shop first,’ says Mia. ‘How can we get to the toy shop?’\n‘We can look at the directory here,’ says Ken. ‘Just go up two floors.’","pr-t5":"‘Are you going to buy a toy?’ asks Ken.\n‘Yes,’ says Mia. ‘I want a birthday present for my brother.’"},"directories":{"wonder":[{"floor":"4/F","shops":["New World Bookshop","Daydream Toy Shop","Dolly’s Chocolate Shop"]},{"floor":"3/F","shops":["Uncle Joe’s Restaurant","Good Day Restaurant","Happy Fast-food Shop"]},{"floor":"2/F","shops":["Fun Board Games Cafe","Collin’s Hair Salon","Nancy’s Gift Shop"]},{"floor":"1/F","shops":["Nana Department Store"]},{"floor":"G/F","shops":["Young Forever Clothes Shop","Top Sports Shop","Yummy Sweet Shop"]}],"sunny":[{"floor":"4/F","shops":["Star Bookshop"]},{"floor":"3/F","shops":["Green Cafe","Lucky Fast-food Shop"]},{"floor":"2/F","shops":["Happy Kids Toy Shop","Pat’s Gift Shop"]},{"floor":"1/F","shops":["Fashion Clothes Shop"]},{"floor":"G/F","shops":["Super Shoe Shop","Sporty Sports Shop"]}]},"sections":[{"id":"pv","title":"預習","modules":["pv-words","pv-text","pv-grammar"]},{"id":"pr","title":"練習","modules":["pr-words","pr-pos","pr-dir","pr-read"]},{"id":"rv","title":"複習","modules":["rv-words","rv-grammar"]}],"modules":[{"id":"pv-words","section":"pv","title":"必記單詞（聽讀點選、翻牌配對）","short":"必記單詞"},{"id":"pv-text","section":"pv","title":"課文重點（課本 pp.40–41）","short":"課文重點"},{"id":"pv-grammar","section":"pv","title":"重點語法（位置與問路）","short":"重點語法","demos":2},{"id":"pr-words","section":"pr","title":"單詞與樓層","short":"單詞與樓層"},{"id":"pr-pos","section":"pr","title":"位置（next to / between / opposite）","short":"位置"},{"id":"pr-dir","section":"pr","title":"問路與方向","short":"問路與方向"},{"id":"pr-read","section":"pr","title":"課文技能理解","short":"課文技能理解"},{"id":"rv-words","section":"rv","title":"必記單詞抽認","short":"單詞抽認"},{"id":"rv-grammar","section":"rv","title":"重點語法再練","short":"語法再練"}],"grammarDemos":[{"id":"demo-a","map":"mapA","title":"位置語法示範","lines":["The pet shop is next to the hair salon.","The pet shop is between the gift shop and the hair salon.","The pet shop is opposite the shoe shop."]},{"id":"demo-b","map":"mapB","title":"問路語法示範","lines":["Turn left.","Turn right.","Walk along Lake Street.","Walk across the road.","It is on your left.","It is on your right.","How can I get to the toy shop?"]}],"questions":[{"q":"pv-s01","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a hair salon","answer":"a hair salon","shop":"hair-salon","hint":"剛才聽到的是 a hair salon（髮廊）。"},{"q":"pv-s02","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a pet shop","answer":"a pet shop","shop":"pet-shop","hint":"剛才聽到的是 a pet shop（寵物店）。"},{"q":"pv-s03","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a bookshop","answer":"a bookshop","shop":"bookshop","hint":"剛才聽到的是 a bookshop（書店）。"},{"q":"pv-s04","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a toy shop","answer":"a toy shop","shop":"toy-shop","hint":"剛才聽到的是 a toy shop（玩具店）。"},{"q":"pv-s05","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a cafe","answer":"a cafe","shop":"cafe","hint":"剛才聽到的是 a cafe（咖啡店）。"},{"q":"pv-s06","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a gift shop","answer":"a gift shop","shop":"gift-shop","hint":"剛才聽到的是 a gift shop（禮品店）。"},{"q":"pv-s07","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a fast-food shop","answer":"a fast-food shop","shop":"fast-food-shop","hint":"剛才聽到的是 a fast-food shop（快餐店）。"},{"q":"pv-s08","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a department store","answer":"a department store","shop":"department-store","hint":"剛才聽到的是 a department store（百貨公司）。"},{"q":"pv-s09","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a shoe shop","answer":"a shoe shop","shop":"shoe-shop","hint":"剛才聽到的是 a shoe shop（鞋店）。"},{"q":"pv-s10","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a sports shop","answer":"a sports shop","shop":"sports-shop","hint":"剛才聽到的是 a sports shop（運動用品店）。"},{"q":"pv-s11","module":"pv-words","type":"listen-shop","prompt":"點選你聽到的商店","tts":"a clothes shop","answer":"a clothes shop","shop":"clothes-shop","hint":"剛才聽到的是 a clothes shop（服裝店）。"},{"q":"pv-f01","module":"pv-words","type":"listen-floor","prompt":"點選你聽到的樓層","tts":"the fourth floor","answer":"4/F fourth floor","floor":"4f","hint":"剛才聽到的是 the fourth floor（4/F）。"},{"q":"pv-f02","module":"pv-words","type":"listen-floor","prompt":"點選你聽到的樓層","tts":"the third floor","answer":"3/F third floor","floor":"3f","hint":"剛才聽到的是 the third floor（3/F）。"},{"q":"pv-f03","module":"pv-words","type":"listen-floor","prompt":"點選你聽到的樓層","tts":"the second floor","answer":"2/F second floor","floor":"2f","hint":"剛才聽到的是 the second floor（2/F）。"},{"q":"pv-f04","module":"pv-words","type":"listen-floor","prompt":"點選你聽到的樓層","tts":"the first floor","answer":"1/F first floor","floor":"1f","hint":"剛才聽到的是 the first floor（1/F）。"},{"q":"pv-f05","module":"pv-words","type":"listen-floor","prompt":"點選你聽到的樓層","tts":"the ground floor","answer":"G/F ground floor","floor":"gf","hint":"剛才聽到的是 the ground floor（G/F）。"},{"q":"pv-m01","module":"pv-words","type":"match","prompt":"先點一張卡，再點另一張，把英文詞和圖示配成一對。","pairs":[{"id":"hair-salon","en":"a hair salon","kind":"shop"},{"id":"pet-shop","en":"a pet shop","kind":"shop"},{"id":"bookshop","en":"a bookshop","kind":"shop"},{"id":"toy-shop","en":"a toy shop","kind":"shop"},{"id":"cafe","en":"a cafe","kind":"shop"},{"id":"gift-shop","en":"a gift shop","kind":"shop"}],"answer":"a hair salon, a pet shop, a bookshop, a toy shop, a cafe, a gift shop","hint":"請把每個英文店名配上對應的圖示。"},{"q":"pv-m02","module":"pv-words","type":"match","prompt":"先點一張卡，再點另一張，把英文詞和圖示配成一對。","pairs":[{"id":"fast-food-shop","en":"a fast-food shop","kind":"shop"},{"id":"department-store","en":"a department store","kind":"shop"},{"id":"shoe-shop","en":"a shoe shop","kind":"shop"},{"id":"sports-shop","en":"a sports shop","kind":"shop"},{"id":"clothes-shop","en":"a clothes shop","kind":"shop"}],"answer":"a fast-food shop, a department store, a shoe shop, a sports shop, a clothes shop","hint":"請把每個英文店名配上對應的圖示。"},{"q":"pv-m03","module":"pv-words","type":"match","prompt":"先點一張卡，再點另一張，把樓層簡寫和英文名稱配成一對。","pairs":[{"id":"4f","en":"fourth floor","short":"4/F","kind":"floor"},{"id":"3f","en":"third floor","short":"3/F","kind":"floor"},{"id":"2f","en":"second floor","short":"2/F","kind":"floor"},{"id":"1f","en":"first floor","short":"1/F","kind":"floor"},{"id":"gf","en":"ground floor","short":"G/F","kind":"floor"}],"answer":"4/F fourth floor, 3/F third floor, 2/F second floor, 1/F first floor, G/F ground floor","hint":"4/F 是 fourth floor；3/F 是 third floor；2/F 是 second floor；1/F 是 first floor；G/F 是 ground floor。"},{"q":"pv-r01","module":"pv-text","type":"mcq","stem":"When does the new shopping centre open?","options":["tomorrow","next week","today"],"correct":2,"left":"pv-t1","hint":"Max 說 “It opens today.”"},{"q":"pv-r02","module":"pv-text","type":"mcq","stem":"Julie asks, “How can we get to the shopping centre?” What is Max’s solution?","options":["We can take a taxi.","We can call the shop.","We can follow the directions on this flyer."],"correct":2,"left":"pv-t1","hint":"解難常用 can / let’s。Max 說可以跟傳單上的路線走。"},{"q":"pv-r03","module":"pv-text","type":"mcq","stem":"What can people do at Dolly’s Chocolate Shop?","options":["join their free chocolate workshops","buy clothes","play sports"],"correct":0,"left":"pv-flyer"},{"q":"pv-r04","module":"pv-text","type":"mcq","stem":"What does the flyer say about Fun Board Games Cafe?","options":["It is on the ground floor.","It is fun for all the family.","It is only for children."],"correct":1,"left":"pv-flyer"},{"q":"pv-r05","module":"pv-text","type":"mcq","stem":"After you go out of the MTR station, walk along ______.","options":["Bank Street","Star Street","Moon Road"],"correct":1,"left":"pv-flyer"},{"q":"pv-r06","module":"pv-text","type":"mcq","stem":"Then ______.","options":["turn left","turn right","walk across the MTR station"],"correct":0,"left":"pv-flyer"},{"q":"pv-r07","module":"pv-text","type":"mcq","stem":"Wonder Shopping Centre is ______.","options":["next to the MTR station","on your left","on your right"],"correct":1,"left":"pv-flyer"},{"q":"pv-r08","module":"pv-text","type":"mcq","stem":"Wonder Shopping Centre is ______ the bank.","options":["opposite","next to","between"],"correct":0,"left":"pv-flyer"},{"q":"pv-r09","module":"pv-text","type":"mcq","stem":"What do Julie and Max see in front of the entrance?","options":["a lion dance","a bus","a taxi"],"correct":0,"left":"pv-t3"},{"q":"pv-r10","module":"pv-text","type":"mcq","stem":"What is outside the clothes shop and the sports shop?","options":["a chocolate workshop","a bank","long queues"],"correct":2,"left":"pv-t3"},{"q":"pv-r11","module":"pv-text","type":"mcq","stem":"How do Julie and Max find the chocolate shop?","options":["They call the shop.","They ask a policeman.","They look at the directory."],"correct":2,"left":"pv-dir"},{"q":"pv-r12","module":"pv-text","type":"mcq","stem":"Dolly’s Chocolate Shop is on the ______.","options":["second floor","ground floor","fourth floor"],"correct":2,"left":"pv-dir"},{"q":"pv-r13","module":"pv-text","type":"mcq","stem":"Which two shops are on the same floor as Dolly’s Chocolate Shop?","options":["Top Sports Shop and Yummy Sweet Shop","New World Bookshop and Daydream Toy Shop","Fun Board Games Cafe and Nancy’s Gift Shop"],"correct":1,"left":"pv-dir"},{"q":"pv-r14","module":"pv-text","type":"mcq","stem":"Fun Board Games Cafe is on ______.","options":["4/F","G/F","2/F"],"correct":2,"left":"pv-dir"},{"q":"pv-r15","module":"pv-text","type":"mcq","stem":"Young Forever Clothes Shop is on ______.","options":["the third floor","the ground floor","the first floor"],"correct":1,"left":"pv-dir"},{"q":"pv-r16","module":"pv-text","type":"mcq","stem":"What does Julie want to do in the chocolate shop?","options":["make chocolate in the workshop","buy some chocolate","buy a toy"],"correct":0,"left":"pv-dir"},{"q":"pv-r17","module":"pv-text","type":"mcq","stem":"Can Julie and Max join the workshop for free?","options":["Yes, they can.","No, they cannot.","We do not know."],"correct":0,"left":"pv-dir"},{"q":"pv-g01","module":"pv-grammar","type":"mcq","stem":"The pet shop is ______ the gift shop and the hair salon.","options":["next to","opposite","between"],"correct":2,"left":"mapA"},{"q":"pv-g02","module":"pv-grammar","type":"mcq","stem":"The pet shop is ______ the hair salon.","options":["next to","between","opposite"],"correct":0,"left":"mapA"},{"q":"pv-g03","module":"pv-grammar","type":"mcq","stem":"The pet shop is ______ the shoe shop.","options":["between","opposite","next to"],"correct":1,"left":"mapA"},{"q":"pv-g04","module":"pv-grammar","type":"mcq","stem":"The shoe shop is ______ the sports shop and the clothes shop.","options":["between","next to","opposite"],"correct":0,"left":"mapA"},{"q":"pv-g05","module":"pv-grammar","type":"mcq","stem":"The sports shop is ______ the gift shop.","options":["opposite","next to","between"],"correct":0,"left":"mapA"},{"q":"pv-g06","module":"pv-grammar","type":"mcq","stem":"The clothes shop is ______ the hair salon.","options":["next to","between","opposite"],"correct":2,"left":"mapA"},{"q":"pv-g07","module":"pv-grammar","type":"mcq","stem":"How can I get to the toy shop?","options":["Go out of the MTR station. Walk across Pine Street. Then turn right. The toy shop is on your left.","Go out of the MTR station. Walk along Lake Street. Then turn left. The toy shop is on your left.","Go out of the MTR station. Walk along Lake Street. Then turn right. The toy shop is on your right."],"correct":1,"left":"mapB"},{"q":"pv-g08","module":"pv-grammar","type":"mcq","stem":"After you turn left, the toy shop is ______.","options":["on your right","opposite the MTR station","on your left"],"correct":2,"left":"mapB"},{"q":"pv-g09","module":"pv-grammar","type":"mcq","stem":"How can I get to the bookshop?","options":["Go out of the MTR station. Walk across Lake Street. Then turn left. The bookshop is on your right.","Go out of the MTR station. Walk along Lake Street. Then turn right. The bookshop is on your right.","Go out of the MTR station. Walk along Lake Street. Then turn left. The bookshop is on your left."],"correct":1,"left":"mapB"},{"q":"pv-g10","module":"pv-grammar","type":"mcq","stem":"How can I get to the cafe?","options":["Go out of the MTR station. Walk along Lake Street. Then turn right. Walk across the road. The cafe is on your left.","Go out of the MTR station. Turn right. The cafe is on your left.","Go out of the MTR station. Walk along Lake Street. Then turn left. Walk across the road. The cafe is on your right."],"correct":2,"left":"mapB"},{"q":"pr-v01","module":"pr-words","type":"mcq","stem":"I want to get a haircut. I go to ______.","options":["a gift shop","a hair salon","a clothes shop"],"correct":1,"left":"shop-scene","icon":"hair-salon","hint":"正確是 a hair salon。"},{"q":"pr-v02","module":"pr-words","type":"mcq","stem":"I want to buy a pet. I go to ______.","options":["a toy shop","a bookshop","a pet shop"],"correct":2,"left":"shop-scene","icon":"pet-shop","hint":"正確是 a pet shop。"},{"q":"pr-v03","module":"pr-words","type":"mcq","stem":"I want to buy a book. I go to ______.","options":["a cafe","a bookshop","a gift shop"],"correct":1,"left":"shop-scene","icon":"bookshop","hint":"正確是 a bookshop。"},{"q":"pr-v04","module":"pr-words","type":"mcq","stem":"I want to buy a doll. I go to ______.","options":["a pet shop","a clothes shop","a toy shop"],"correct":2,"left":"shop-scene","icon":"toy-shop","hint":"正確是 a toy shop。"},{"q":"pr-v05","module":"pr-words","type":"mcq","stem":"I want to drink some tea. I go to ______.","options":["a fast-food shop","a gift shop","a cafe"],"correct":2,"left":"shop-scene","icon":"cafe","hint":"正確是 a cafe。"},{"q":"pr-v06","module":"pr-words","type":"mcq","stem":"I want to buy a present. I go to ______.","options":["a shoe shop","a sports shop","a gift shop"],"correct":2,"left":"shop-scene","icon":"gift-shop","hint":"正確是 a gift shop。"},{"q":"pr-v07","module":"pr-words","type":"mcq","stem":"I want to eat a hamburger. I go to ______.","options":["a fast-food shop","a cafe","a department store"],"correct":0,"left":"shop-scene","icon":"fast-food-shop","hint":"正確是 a fast-food shop。"},{"q":"pr-v08","module":"pr-words","type":"mcq","stem":"I want to buy many things in a big shop. I go to ______.","options":["a bookshop","a department store","a gift shop"],"correct":1,"left":"shop-scene","icon":"department-store","hint":"正確是 a department store。"},{"q":"pr-v09","module":"pr-words","type":"mcq","stem":"I want to buy a pair of shoes. I go to ______.","options":["a shoe shop","a sports shop","a clothes shop"],"correct":0,"left":"shop-scene","icon":"shoe-shop","hint":"正確是 a shoe shop。"},{"q":"pr-v10","module":"pr-words","type":"mcq","stem":"I want to buy a football. I go to ______.","options":["a shoe shop","a toy shop","a sports shop"],"correct":2,"left":"shop-scene","icon":"sports-shop","hint":"正確是 a sports shop。"},{"q":"pr-v11","module":"pr-words","type":"mcq","stem":"I want to buy a T-shirt. I go to ______.","options":["a clothes shop","a hair salon","a shoe shop"],"correct":0,"left":"shop-scene","icon":"clothes-shop","hint":"正確是 a clothes shop。"},{"q":"pr-v12","module":"pr-words","type":"mcq","stem":"4/F is the ______ floor.","options":["first","fourth","third"],"correct":1,"left":"floor-scene","icon":"4f","hint":"正確是 fourth。","floor":"4f"},{"q":"pr-v13","module":"pr-words","type":"mcq","stem":"3/F is the ______ floor.","options":["fourth","second","third"],"correct":2,"left":"floor-scene","icon":"3f","hint":"正確是 third。","floor":"3f"},{"q":"pr-v14","module":"pr-words","type":"mcq","stem":"2/F is the ______ floor.","options":["third","second","first"],"correct":1,"left":"floor-scene","icon":"2f","hint":"正確是 second。","floor":"2f"},{"q":"pr-v15","module":"pr-words","type":"mcq","stem":"1/F is the ______ floor.","options":["second","first","ground"],"correct":1,"left":"floor-scene","icon":"1f","hint":"正確是 first。","floor":"1f"},{"q":"pr-v16","module":"pr-words","type":"mcq","stem":"G/F is the ______ floor.","options":["fourth","ground","first"],"correct":1,"left":"floor-scene","icon":"gf","hint":"正確是 ground。","floor":"gf"},{"q":"pr-v17","module":"pr-words","type":"mcq","stem":"The first floor is ______.","options":["1/F","G/F","2/F"],"correct":0,"left":"floor-scene","icon":"1f","hint":"正確是 1/F。","floor":"1f"},{"q":"pr-v18","module":"pr-words","type":"mcq","stem":"The ground floor is ______.","options":["4/F","G/F","1/F"],"correct":1,"left":"floor-scene","icon":"gf","hint":"正確是 G/F。","floor":"gf"},{"q":"pr-v19","module":"pr-words","type":"mcq","stem":"Which one is correct?","options":["a books shop","a book shopes","a bookshop"],"correct":2,"left":"spell"},{"q":"pr-v20","module":"pr-words","type":"mcq","stem":"Which one is correct?","options":["a department shop","a depart store","a department store"],"correct":2,"left":"spell"},{"q":"pr-p01","module":"pr-pos","type":"mcq","stem":"Which shop is between the gift shop and the hair salon?","options":["the pet shop","the shoe shop","the sports shop"],"correct":0,"left":"mapA"},{"q":"pr-p02","module":"pr-pos","type":"mcq","stem":"Which shop is between the sports shop and the clothes shop?","options":["the gift shop","the shoe shop","the pet shop"],"correct":1,"left":"mapA"},{"q":"pr-p03","module":"pr-pos","type":"mcq","stem":"Which shop is opposite the clothes shop?","options":["the hair salon","the gift shop","the pet shop"],"correct":0,"left":"mapA"},{"q":"pr-p04","module":"pr-pos","type":"mcq","stem":"Which shop is opposite the sports shop?","options":["the gift shop","the hair salon","the shoe shop"],"correct":0,"left":"mapA"},{"q":"pr-p05","module":"pr-pos","type":"mcq","stem":"The hair salon is ______ the pet shop.","options":["opposite","next to","between"],"correct":1,"left":"mapA"},{"q":"pr-p06","module":"pr-pos","type":"mcq","stem":"Choose the correct sentence.","options":["The pet shop is next to the clothes shop.","The pet shop is between the gift shop and the hair salon.","The pet shop is between the sports shop and the clothes shop."],"correct":1,"left":"mapA"},{"q":"pr-p07","module":"pr-pos","type":"mcq","stem":"The clothes shop is ______ the shoe shop.","options":["next to","between","opposite"],"correct":0,"left":"mapA"},{"q":"pr-p08","module":"pr-pos","type":"mcq","stem":"Choose the correct sentence.","options":["The sports shop is between the gift shop and the pet shop.","The sports shop is opposite the gift shop.","The sports shop is next to the gift shop."],"correct":1,"left":"mapA"},{"q":"pr-d01","module":"pr-dir","type":"mcq","stem":"Choose the correct question. You want to find the toy shop.","options":["How can I get to the toy shop?","How can I get the toy shop?","Where can I get the toy shop?"],"correct":0,"left":"mapB"},{"q":"pr-d02","module":"pr-dir","type":"mcq","stem":"Walk ______ Lake Street.","options":["across","opposite","along"],"correct":2,"left":"mapB"},{"q":"pr-d03","module":"pr-dir","type":"mcq","stem":"Then ______ left.","options":["turn","walk","along"],"correct":0,"left":"mapB"},{"q":"pr-d04","module":"pr-dir","type":"mcq","stem":"The toy shop is ______.","options":["on your right","next to the MTR station","on your left"],"correct":2,"left":"mapB"},{"q":"pr-d05","module":"pr-dir","type":"mcq","stem":"How can I get to the bookshop?","options":["Go out of the MTR station. Walk across Pine Street. Then turn left. The bookshop is on your right.","Go out of the MTR station. Walk along Lake Street. Then turn right. The bookshop is on your right.","Go out of the MTR station. Walk along Lake Street. Then turn left. The bookshop is on your left."],"correct":1,"left":"mapB"},{"q":"pr-d06","module":"pr-dir","type":"mcq","stem":"After you turn right, the bookshop is ______.","options":["opposite the toy shop","on your right","on your left"],"correct":1,"left":"mapB"},{"q":"pr-d07","module":"pr-dir","type":"mcq","stem":"Walk ______ the road to the cafe.","options":["along","next to","across"],"correct":2,"left":"mapB"},{"q":"pr-d08","module":"pr-dir","type":"mcq","stem":"The cafe is ______ the toy shop.","options":["between","next to","opposite"],"correct":2,"left":"mapB"},{"q":"pr-d09","module":"pr-dir","type":"mcq","stem":"How can I get to the cafe?","options":["Go out of the MTR station. Walk along Lake Street. Then turn left. Walk across the road. The cafe is on your right.","Go out of the MTR station. Walk along Lake Street. Then turn right. The cafe is on your right.","Go out of the MTR station. Turn right. Walk along Pine Street. The cafe is on your left."],"correct":0,"left":"mapB"},{"q":"pr-d10","module":"pr-dir","type":"mcq","stem":"How can I get to the bank?","options":["Go out of the MTR station. Walk across the road. The bank is on your left.","Go out of the MTR station. Walk along Lake Street. Then turn right. The bank is on your left.","Go out of the MTR station. Walk along Lake Street. Then turn left. The bank is on your right."],"correct":1,"left":"mapB"},{"q":"pr-r01","module":"pr-read","type":"mcq","stem":"When do Mia and Ken want to go to Sunny Plaza?","options":["after school","in the morning","at night"],"correct":0,"left":"pr-t1"},{"q":"pr-r02","module":"pr-read","type":"mcq","stem":"Mia asks how to get there. What is Ken’s solution?","options":["We can follow the directions on this flyer.","We can look at the directory first.","We can wait at the park."],"correct":0,"left":"pr-t1"},{"q":"pr-r03","module":"pr-read","type":"mcq","stem":"After they go out of the bus stop, they walk along ______.","options":["River Street","Lake Street","Star Street"],"correct":0,"left":"pr-flyer"},{"q":"pr-r04","module":"pr-read","type":"mcq","stem":"Then they ______.","options":["walk across the park","turn right","turn left"],"correct":1,"left":"pr-flyer"},{"q":"pr-r05","module":"pr-read","type":"mcq","stem":"Sunny Plaza is ______.","options":["on your left","next to the bus stop","on your right"],"correct":2,"left":"pr-flyer"},{"q":"pr-r06","module":"pr-read","type":"mcq","stem":"Sunny Plaza is ______ the park.","options":["next to","opposite","between"],"correct":1,"left":"pr-flyer"},{"q":"pr-r07","module":"pr-read","type":"mcq","stem":"Where are the long queues?","options":["outside the toy shop","outside the bookshop","outside the shoe shop"],"correct":2,"left":"pr-t3"},{"q":"pr-r08","module":"pr-read","type":"mcq","stem":"How do Mia and Ken find the toy shop?","options":["They look at the directory.","They look at the flyer only.","They ask a policeman."],"correct":0,"left":"pr-t4dir"},{"q":"pr-r09","module":"pr-read","type":"mcq","stem":"Happy Kids Toy Shop is on the ______.","options":["ground floor","second floor","fourth floor"],"correct":1,"left":"pr-t4dir"},{"q":"pr-r10","module":"pr-read","type":"mcq","stem":"Which shop is on the same floor as Happy Kids Toy Shop?","options":["Pat’s Gift Shop","Star Bookshop","Super Shoe Shop"],"correct":0,"left":"pr-dir"},{"q":"pr-r11","module":"pr-read","type":"mcq","stem":"Super Shoe Shop is on ______.","options":["the first floor","the third floor","the ground floor"],"correct":2,"left":"pr-dir"},{"q":"pr-r12","module":"pr-read","type":"mcq","stem":"What does Mia want to buy?","options":["a pair of shoes for Ken","a book for her mum","a birthday present for her brother"],"correct":2,"left":"pr-t5"},{"q":"pr-r13","module":"pr-read","type":"build","stem":"Which shop is on 4/F? Write a complete sentence.","words":["Star Bookshop","is","on","the","fourth","floor","second","Gift","Shop","."],"answer":"Star Bookshop is on the fourth floor.","left":"pr-dir","hint":"目錄寫著 4/F Star Bookshop，所以完整句子是 Star Bookshop is on the fourth floor."},{"q":"rv-s01","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a clothes shop","a gift shop","a hair salon"],"correct":2,"left":"review-icon","icon":"scissors-hair","icon_zh":"剪刀／頭髮","tts":"a hair salon","hint":"正確是 a hair salon。"},{"q":"rv-s02","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a toy shop","a bookshop","a pet shop"],"correct":2,"left":"review-icon","icon":"dog","icon_zh":"小狗","tts":"a pet shop","hint":"正確是 a pet shop。"},{"q":"rv-s03","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a department store","a bookshop","a gift shop"],"correct":1,"left":"review-icon","icon":"book","icon_zh":"書本","tts":"a bookshop","hint":"正確是 a bookshop。"},{"q":"rv-s04","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a sports shop","a toy shop","a pet shop"],"correct":1,"left":"review-icon","icon":"toy","icon_zh":"玩具車／洋娃娃","tts":"a toy shop","hint":"正確是 a toy shop。"},{"q":"rv-s05","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a fast-food shop","a gift shop","a cafe"],"correct":2,"left":"review-icon","icon":"coffee","icon_zh":"咖啡杯","tts":"a cafe","hint":"正確是 a cafe。"},{"q":"rv-s06","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a bookshop","a clothes shop","a gift shop"],"correct":2,"left":"review-icon","icon":"gift","icon_zh":"禮盒","tts":"a gift shop","hint":"正確是 a gift shop。"},{"q":"rv-s07","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a cafe","a department store","a fast-food shop"],"correct":2,"left":"review-icon","icon":"burger","icon_zh":"漢堡","tts":"a fast-food shop","hint":"正確是 a fast-food shop。"},{"q":"rv-s08","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a clothes shop","a gift shop","a department store"],"correct":2,"left":"review-icon","icon":"dept","icon_zh":"高大百貨","tts":"a department store","hint":"正確是 a department store。"},{"q":"rv-s09","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a clothes shop","a shoe shop","a sports shop"],"correct":1,"left":"review-icon","icon":"shoes","icon_zh":"一雙鞋","tts":"a shoe shop","hint":"正確是 a shoe shop。"},{"q":"rv-s10","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a sports shop","a shoe shop","a toy shop"],"correct":0,"left":"review-icon","icon":"ball","icon_zh":"波／球拍","tts":"a sports shop","hint":"正確是 a sports shop。"},{"q":"rv-s11","module":"rv-words","type":"mcq","stem":"選正確的英文。","options":["a clothes shop","a hair salon","a shoe shop"],"correct":0,"left":"review-icon","icon":"clothes","icon_zh":"衣服","tts":"a clothes shop","hint":"正確是 a clothes shop。"},{"q":"rv-f01","module":"rv-words","type":"mcq","stem":"4/F 是？","options":["third floor","first floor","fourth floor"],"correct":2,"left":"floor-scene","icon":"4f","tts":"the fourth floor","hint":"4/F 是 fourth floor。","floor":"4f"},{"q":"rv-f02","module":"rv-words","type":"mcq","stem":"3/F 是？","options":["third floor","fourth floor","second floor"],"correct":0,"left":"floor-scene","icon":"3f","tts":"the third floor","hint":"3/F 是 third floor。","floor":"3f"},{"q":"rv-f03","module":"rv-words","type":"mcq","stem":"2/F 是？","options":["first floor","third floor","second floor"],"correct":2,"left":"floor-scene","icon":"2f","tts":"the second floor","hint":"2/F 是 second floor。","floor":"2f"},{"q":"rv-f04","module":"rv-words","type":"mcq","stem":"1/F 是？","options":["second floor","first floor","ground floor"],"correct":1,"left":"floor-scene","icon":"1f","tts":"the first floor","hint":"1/F 是 first floor。","floor":"1f"},{"q":"rv-f05","module":"rv-words","type":"mcq","stem":"G/F 是？","options":["first floor","fourth floor","ground floor"],"correct":2,"left":"floor-scene","icon":"gf","tts":"the ground floor","hint":"G/F 是 ground floor。","floor":"gf"},{"q":"rv-g01","module":"rv-grammar","type":"mcq","stem":"The pet shop is ______ the gift shop and the hair salon.","options":["between","next to","opposite"],"correct":0,"left":"mapA","hint":"正確是 between。"},{"q":"rv-g02","module":"rv-grammar","type":"mcq","stem":"The shoe shop is ______ the sports shop and the clothes shop.","options":["between","next to","opposite"],"correct":0,"left":"mapA","hint":"正確是 between。"},{"q":"rv-g03","module":"rv-grammar","type":"mcq","stem":"The clothes shop is ______ the hair salon.","options":["next to","between","opposite"],"correct":2,"left":"mapA","hint":"正確是 opposite。"},{"q":"rv-g04","module":"rv-grammar","type":"mcq","stem":"The gift shop is ______ the pet shop.","options":["next to","opposite","between"],"correct":0,"left":"mapA","hint":"正確是 next to。"},{"q":"rv-g05","module":"rv-grammar","type":"mcq","stem":"Choose the correct question:","options":["How I can get to the toy shop?","How can I get to the toy shop?","How can I get the toy shop?"],"correct":1,"left":"mapB","hint":"正確是 How can I get to the toy shop?。"},{"q":"rv-g06","module":"rv-grammar","type":"mcq","stem":"Go out of the MTR station. ______ Lake Street.","options":["Turn along","Walk along","Walk across"],"correct":1,"left":"mapB","hint":"正確是 Walk along。"},{"q":"rv-g07","module":"rv-grammar","type":"mcq","stem":"Then ______. The bookshop is on your right.","options":["turn left","walk left","turn right"],"correct":2,"left":"mapB","hint":"正確是 turn right。"},{"q":"rv-g08","module":"rv-grammar","type":"mcq","stem":"The toy shop is ______.","options":["on your left","on your right","on your along"],"correct":0,"left":"mapB","hint":"正確是 on your left。"},{"q":"rv-g09","module":"rv-grammar","type":"mcq","stem":"Walk ______ the road.","options":["across","along","opposite"],"correct":0,"left":"mapB","hint":"正確是 across。"},{"q":"rv-g10","module":"rv-grammar","type":"mcq","stem":"How can I get to the cafe?","options":["Go out of the MTR station. Walk along Lake Street. Then turn left. Walk across the road. The cafe is on your right.","Go out of the MTR station. Walk along Lake Street. Then turn right. Walk across the road. The cafe is on your left.","Go out of the MTR station. Walk along Lake Street. Then turn left. The cafe is on your left."],"correct":0,"left":"mapB","hint":"正確是 Go out of the MTR station. Walk along Lake Street. Then turn left. Walk across the road. The cafe is on your right.。"}]};
 </script>
 <script>
 // ---- E_learning Hub 回報（只在被網站 iframe 載入時有效，單獨打開頁面時無任何作用）----
@@ -145,21 +146,76 @@ var buildSeq = {};           // qid -> 目前組句詞序（索引陣列）
 var praises = ["Great!", "That’s right!"];
 var praiseIdx = 0;
 
+
 /* ============ TTS ============ */
-function speak(text){
-  try{
-    if(!window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    var u = new SpeechSynthesisUtterance(text);
-    u.lang = "en-GB";
-    var vs = window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
+var voiceList = [];
+var speechUnlocked = false;
+var speakTimer = null;
+var SPEECH_HINT = "這個瀏覽器暫時不能發聲，請看著英文自己讀。";
+function canSpeak(){ return !!(window.speechSynthesis && window.SpeechSynthesisUtterance); }
+function cacheVoices(){
+  if(!canSpeak() || !window.speechSynthesis.getVoices) return [];
+  try{ voiceList = window.speechSynthesis.getVoices() || []; }catch(e){ voiceList = []; }
+  return voiceList;
+}
+function pickVoice(){
+  var vs = (voiceList && voiceList.length) ? voiceList : cacheVoices();
+  var prefs = [/^en-GB/i, /^en-US/i, /^en/i];
+  for(var k=0;k<prefs.length;k++){
     for(var i=0;i<vs.length;i++){
-      if(vs[i] && /en/i.test(vs[i].lang||"")){ u.voice = vs[i]; break; }
+      if(vs[i] && prefs[k].test(vs[i].lang||"")) return vs[i];
     }
+  }
+  return null;
+}
+function pickLang(v){
+  if(v && /^en-GB/i.test(v.lang||"")) return "en-GB";
+  if(v && /^en-US/i.test(v.lang||"")) return "en-US";
+  if(v && /^en/i.test(v.lang||"")) return v.lang;
+  return "en-GB";
+}
+function unlockSpeech(){
+  if(speechUnlocked || !canSpeak()) return;
+  speechUnlocked = true;
+  try{
+    var u = new SpeechSynthesisUtterance(" ");
+    u.volume = 0; u.lang = "en-GB";
+    var v = pickVoice(); if(v) u.voice = v;
     window.speechSynthesis.speak(u);
+    window.speechSynthesis.cancel();
   }catch(e){}
 }
-if(window.speechSynthesis && window.speechSynthesis.getVoices){ try{ window.speechSynthesis.getVoices(); }catch(e){} }
+function speak(text, fromGesture){
+  if(!text) return;
+  if(!canSpeak()) return;
+  try{
+    if(speakTimer){ clearTimeout(speakTimer); speakTimer=null; }
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(String(text));
+    var v = pickVoice();
+    if(v) u.voice = v;
+    u.lang = pickLang(v);
+    var go = function(){ try{ window.speechSynthesis.speak(u); }catch(e){} };
+    if(fromGesture){
+      go();
+      speakTimer = setTimeout(function(){
+        if(!window.speechSynthesis.speaking && !window.speechSynthesis.pending) go();
+      }, 80);
+    }else{
+      speakTimer = setTimeout(go, 80);
+    }
+  }catch(e){}
+}
+if(canSpeak()){
+  cacheVoices();
+  try{
+    if(window.speechSynthesis.addEventListener){
+      window.speechSynthesis.addEventListener("voiceschanged", function(){ cacheVoices(); });
+    }else{
+      window.speechSynthesis.onvoiceschanged = function(){ cacheVoices(); };
+    }
+  }catch(e){}
+}
 
 /* ============ SVG 圖示 ============ */
 function shopSvg(id){
@@ -256,9 +312,9 @@ function showCover(){
     '<h1>3D Unit 4 Let\'s go shopping!</h1>'+
     '<p class="topic">預習・練習・複習</p>'+
     '<p class="small">女兒 ・ 班別 3D</p>'+
-    '<button class="cover-btn" data-go="pv">預習</button>'+
-    '<button class="cover-btn" data-go="pr">練習</button>'+
-    '<button class="cover-btn" data-go="rv">複習</button>'+
+    '<button class="cover-btn" data-go="pv" type="button">預習</button>'+
+    '<button class="cover-btn" data-go="pr" type="button">練習</button>'+
+    '<button class="cover-btn" data-go="rv" type="button">複習</button>'+
     '</div>');
   setRight('<h2>使用方法</h2>'+
     '<p class="option">1. 點選「預習」「練習」或「複習」開始。</p>'+
@@ -266,12 +322,12 @@ function showCover(){
     '<p class="option">3. 聽讀題請先按喇叭，再點選答案。</p>'+
     '<p class="option">4. 每題都有「看答案」與「下一題」。</p>'+
     '<p class="hint">本教材共 '+TOTAL+' 題，網站會記錄進度與每題對錯。</p>');
-  bindNav();
 }
 function showSection(sid){
-  sectionId = sid;
   var sec = sectionById(sid);
   if(!sec) return;
+  sectionId = sid;
+  view = "section";
   var html = '<h2>'+esc(sec.title)+' 目錄</h2>';
   html += '<p class="progress">'+esc(sec.title)+'｜'+esc(sec.id==="pv"?"預習":(sec.id==="pr"?"練習":"複習"))+'</p>';
   html += '<p class="option">請選擇一個模塊，或依序做完本塊：</p>';
@@ -279,13 +335,12 @@ function showSection(sid){
     var m = MODULES[i];
     if(m.section!==sid) continue;
     var done = countModuleDone(m.id);
-    html += '<button class="opt" data-mod="'+esc(m.id)+'">'+esc(m.title)+' <span class="small">（'+done+'）</span></button>';
+    html += '<button class="opt" data-mod="'+esc(m.id)+'" type="button">'+esc(m.title)+' <span class="small">（'+done+'）</span></button>';
   }
-  html += '<div class="navrow"><button class="btn btn-green" data-seq="1">依序做完本塊</button>'+
-          '<button class="btn btn-secondary" data-go="cover">返回封面</button></div>';
+  html += '<div class="navrow"><button class="btn btn-green" data-seq="1" type="button">依序做完本塊</button>'+
+          '<button class="btn btn-secondary" data-go="cover" type="button">返回封面</button></div>';
   setLeft(html);
   setRight('<h3>本塊模塊</h3><p class="hint">'+esc(sec.title)+' 共有 '+MODULES.filter(function(m){return m.section===sid;}).length+' 個模塊。依序模式會由第一個模塊自動做到最後一個。</p>');
-  bindNav();
 }
 function countModuleDone(mid){
   var qs = questionsOfModule(mid);
@@ -330,27 +385,105 @@ function renderDemo(){
   var gd = currentDemo();
   if(gd && gd.lines) demoLines = gd.lines;
   var left = (gd && gd.map==="mapB") || demoStep===2 ? mapB() : mapA({demo:true});
-  var right = '<h3>'+esc(gd?gd.title:'語法示範')+'</h3>';
+  var right = '<div class="navrow">';
+  if(demoStep===1) right += '<button class="btn" data-demo="2" type="button">下一頁</button>';
+  right += '<button class="btn btn-green" data-demo="start" type="button">開始作答</button>';
+  right += '<button class="btn btn-secondary" data-nav="module" type="button">返回本塊目錄</button>';
+  right += '<button class="btn btn-secondary" data-go="cover" type="button">返回封面</button></div>';
+  right += '<h3>'+esc(gd?gd.title:'語法示範')+'</h3>';
   if(demoLines){ for(var i=0;i<demoLines.length;i++) right += '<p class="option">'+esc(demoLines[i])+'</p>'; }
-  right += '<div class="navrow">';
-  if(demoStep===1) right += '<button class="btn" data-demo="2">下一頁</button>';
-  right += '<button class="btn btn-green" data-demo="start">開始作答</button>';
-  right += '<button class="btn btn-secondary" data-nav="module">返回本塊目錄</button>';
-  right += '<button class="btn btn-secondary" data-go="cover">返回封面</button></div>';
   setLeft(left);
   setRight(right);
-  bindDemo();
   elhState();
 }
-function bindDemo(){
-  var bs = document.querySelectorAll("[data-demo]");
-  for(var i=0;i<bs.length;i++){
-    bs[i].onclick = (function(v){ return function(){
-      if(v==="2"){ demoStep=2; renderDemo(); }
-      else { startQuestion(); }
-    }; })(bs[i].getAttribute("data-demo"));
+
+function isDisabled(el){
+  return !!(el && (el.disabled || el.getAttribute("disabled")!=null));
+}
+function onDocClick(e){
+  var t = e.target;
+  if(!t || !t.closest) return;
+  unlockSpeech();
+  var el;
+  if((el = t.closest("[data-go]")) && !isDisabled(el)){
+    var v = el.getAttribute("data-go");
+    if(v==="cover") showCover();
+    else showSection(v);
+    return;
+  }
+  if((el = t.closest("[data-nav]")) && !isDisabled(el)){
+    if(el.getAttribute("data-nav")==="module") showSection(sectionId);
+    return;
+  }
+  if((el = t.closest("[data-mod]")) && !isDisabled(el)){
+    enterModule(el.getAttribute("data-mod"), false);
+    return;
+  }
+  if((el = t.closest("[data-demo]")) && !isDisabled(el)){
+    var d = el.getAttribute("data-demo");
+    if(d==="2"){ demoStep=2; renderDemo(); }
+    else startQuestion();
+    return;
+  }
+  if((el = t.closest("[data-redo]")) && !isDisabled(el)){
+    startRedo();
+    return;
+  }
+  if((el = t.closest("[data-speak]")) && !isDisabled(el)){
+    var q = curQ();
+    if(q && q.tts) speak(q.tts, true);
+    return;
+  }
+  if((el = t.closest("[data-shop]")) && !isDisabled(el)){
+    var q = curQ(); if(!q) return;
+    var si = Number(el.getAttribute("data-shop"));
+    pickListen(q, si, SHOPS[si].en, el);
+    return;
+  }
+  if((el = t.closest("[data-floor]")) && !isDisabled(el)){
+    var q = curQ(); if(!q) return;
+    var fi = Number(el.getAttribute("data-floor"));
+    pickListen(q, fi, FLOORS[fi].short+" "+FLOORS[fi].en, el);
+    return;
+  }
+  if((el = t.closest("[data-mcq]")) && !isDisabled(el)){
+    var q = curQ(); if(!q) return;
+    pickMcq(q, Number(el.getAttribute("data-mcq")), el);
+    return;
+  }
+  if((el = t.closest("[data-card]")) && !isDisabled(el)){
+    var q = curQ(); if(!q) return;
+    cardClick(q, Number(el.getAttribute("data-card")));
+    return;
+  }
+  if((el = t.closest("[data-word]")) && !isDisabled(el)){
+    var q = curQ(); if(!q) return;
+    buildAdd(q, Number(el.getAttribute("data-word")));
+    return;
+  }
+  if((el = t.closest("[data-build]")) && !isDisabled(el)){
+    var q = curQ(); if(!q) return;
+    buildAct(q, el.getAttribute("data-build"));
+    return;
+  }
+  if((el = t.closest("[data-act]")) && !isDisabled(el)){
+    var q = curQ();
+    var a = el.getAttribute("data-act");
+    if(a==="showAnswer" && q) showAnswer(q);
+    else if(a==="next") nextQ();
+    else if(a==="prev") prevQ();
+    return;
+  }
+  if((el = t.closest("[data-seq]")) && !isDisabled(el)){
+    if(view==="section"){ startSequential(); return; }
+    var q = curQ();
+    if(q && q.type==="build") buildRemoveAt(q, Number(el.getAttribute("data-seq")));
+    return;
   }
 }
+
+function bindDemo(){ /* events: onDocClick */ }
+
 
 /* ============ 作答主流程 ============ */
 var qIndex = -1;   // 目前題目在全體 123 題中的索引
@@ -377,7 +510,7 @@ function startQuestion(){
     if(!buildSeq[q.q]) buildSeq[q.q] = [];
   }
   renderQuestion();
-  if(q.tts){ try{ speak(q.tts); }catch(e){} }
+  if(q.tts){ try{ speak(q.tts, false); }catch(e){} }
 }
 function shuffledIndexes(n){
   var a=[]; for(var i=0;i<n;i++) a.push(i);
@@ -397,17 +530,23 @@ function renderQuestion(){
   var leftId = q.left;
   if(q.type==="listen-shop"){
     leftHtml += '<p class="topic">請聽喇叭，點選正確的商店。</p>';
-    leftHtml += '<button class="bigspeaker" data-speak="1" aria-label="播放">'+speakerSvg(true)+'</button>';
+    leftHtml += '<button class="bigspeaker" data-speak="1" aria-label="播放" type="button">'+speakerSvg(true)+'</button>';
     leftHtml += '<p class="hint">進入題目時會自動播放一次，可重複按喇叭。</p>';
+    if(!canSpeak()) leftHtml += '<p class="hint">'+SPEECH_HINT+'</p>';
   }else if(q.type==="listen-floor"){
     leftHtml += '<p class="topic">請聽喇叭，點選正確的樓層。</p>';
-    leftHtml += '<button class="bigspeaker" data-speak="1" aria-label="播放">'+speakerSvg(true)+'</button>';
+    leftHtml += '<button class="bigspeaker" data-speak="1" aria-label="播放" type="button">'+speakerSvg(true)+'</button>';
+    if(!canSpeak()) leftHtml += '<p class="hint">'+SPEECH_HINT+'</p>';
   }else if(q.type==="match"){
     leftHtml += '<p class="topic">翻牌配對：先點一張，再點另一張。</p>';
     leftHtml += '<p class="hint">全部配對成功才算答對。</p>';
   }else if(q.type==="mcq"){
     leftHtml += '<p class="topic">'+esc(q.stem||'')+'</p>';
-    if(q.icon){ leftHtml += '<div style="width:16vmin">'+iconSvg(q.icon)+'</div>'; if(q.icon_zh) leftHtml += '<p class="hint">'+esc(q.icon_zh)+'</p>'; }
+    var leftDrawsVisual = (leftId==="shop-scene" || leftId==="floor-scene" || leftId==="review-icon");
+    if(q.icon && !leftDrawsVisual){
+      leftHtml += '<div style="width:16vmin">'+iconSvg(q.icon)+'</div>';
+      if(q.icon_zh) leftHtml += '<p class="hint">'+esc(q.icon_zh)+'</p>';
+    }
     leftHtml += leftContent(leftId, q);
   }else if(q.type==="build"){
     leftHtml += '<p class="topic">'+esc(q.stem||'')+'</p>';
@@ -417,13 +556,19 @@ function renderQuestion(){
 
   /* ---- 右欄 ---- */
   rightHtml += '<p class="progress">第 '+(qIndex+1)+' / '+TOTAL+' 題（共 '+TOTAL+' 題）</p>';
+  rightHtml += '<div class="navrow">'+
+    '<button class="btn btn-ghost" data-act="showAnswer" type="button">看答案</button>'+
+    '<button class="btn" data-act="next" '+(revealed[q.q]?'':'disabled')+' type="button">下一題</button>'+
+    '<button type="button" class="btn btn-secondary" data-act="prev" '+(li>0?'':'disabled')+'>上一題</button>'+
+    '<button class="btn btn-secondary" data-nav="module" type="button">返回本塊目錄</button>'+
+    '<button class="btn btn-secondary" data-go="cover" type="button">返回封面</button></div>';
   if(q.type==="listen-shop"){
     rightHtml += '<p class="topic">聽到哪一間商店？</p>';
     rightHtml += '<div class="shop-grid">';
     var order = listenOrder[q.q]||[];
     for(var i=0;i<order.length;i++){
       var si = order[i];
-      rightHtml += '<button class="opt" data-shop="'+si+'">'+shopSvg(SHOPS[si].id)+'<span>'+esc(SHOPS[si].en)+'</span></button>';
+      rightHtml += '<button class="opt" data-shop="'+si+'" type="button">'+shopSvg(SHOPS[si].id)+'<span>'+esc(SHOPS[si].en)+'</span></button>';
     }
     rightHtml += '</div>';
   }else if(q.type==="listen-floor"){
@@ -431,7 +576,7 @@ function renderQuestion(){
     var fo = listenOrder[q.q]||[];
     for(var i=0;i<fo.length;i++){
       var fi = fo[i];
-      rightHtml += '<button class="opt" data-floor="'+fi+'"><b>'+esc(FLOORS[fi].short)+'</b>　'+esc(FLOORS[fi].en)+'</button>';
+      rightHtml += '<button class="opt" data-floor="'+fi+'" type="button"><b>'+esc(FLOORS[fi].short)+'</b>　'+esc(FLOORS[fi].en)+'</button>';
     }
     rightHtml += '</div>';
   }else if(q.type==="match"){
@@ -441,23 +586,15 @@ function renderQuestion(){
     rightHtml += '<p class="topic">請選擇正確答案。</p>';
     var opts = q.options||[];
     for(var i=0;i<opts.length;i++){
-      rightHtml += '<button class="opt" data-mcq="'+i+'">'+esc(opts[i])+'</button>';
+      rightHtml += '<button class="opt" data-mcq="'+i+'" type="button">'+esc(opts[i])+'</button>';
     }
   }else if(q.type==="build"){
     rightHtml += '<p class="topic">點詞語組句。</p>';
     rightHtml += buildArea(q);
   }
   rightHtml += '<div class="feedback" id="fb"></div>';
-  rightHtml += '<div class="navrow">'+
-    '<button class="btn btn-ghost" data-act="showAnswer">看答案</button>'+
-    '<button class="btn" data-act="next" '+(revealed[q.q]?'':'disabled')+'>下一題</button>'+
-    '<button class="btn btn-secondary" data-act="prev" '+(li>0?'':'disabled')+'>上一題</button>'+
-    '<button class="btn btn-secondary" data-nav="module">返回本塊目錄</button>'+
-    '<button class="btn btn-secondary" data-go="cover">返回封面</button></div>';
   if(q.hint && revealed[q.q]) rightHtml += '<p class="hint">提示：'+esc(q.hint)+'</p>';
   setRight(rightHtml);
-
-  bindQuestion(q);
   applyRevealed(q);
   elhState();
 }
@@ -475,7 +612,6 @@ function leftContent(leftId, q){
   }else if(leftId==="mapA"){ h += mapA(); }
   else if(leftId==="mapB"){ h += mapB(); }
   else if(leftId==="shop-scene"){
-    h += '<p class="topic">'+esc(q.stem||'')+'</p>';
     if(q.icon) h += '<div style="width:20vmin">'+shopSvg(q.icon)+'</div>';
   }else if(leftId==="floor-scene"){
     var f = q.floor!=null ? floorById(q.floor) : FLOORS[0];
@@ -543,60 +679,19 @@ function buildArea(q){
   }
   h += '</div>';
   h += '<div class="navrow">'+
-    '<button class="btn" data-build="back">退格</button>'+
-    '<button class="btn btn-secondary" data-build="clear">清除</button>'+
-    '<button class="btn btn-green" data-build="submit">提交</button></div>';
+    '<button class="btn" data-build="back" type="button">退格</button>'+
+    '<button class="btn btn-secondary" data-build="clear" type="button">清除</button>'+
+    '<button class="btn btn-green" data-build="submit" type="button">提交</button></div>';
   return h;
 }
 
 /* ---- 綁定與批改 ---- */
-function bindQuestion(q){
-  var sp = document.querySelectorAll("[data-speak]");
-  for(var i=0;i<sp.length;i++) sp[i].onclick = function(){ if(q.tts) speak(q.tts); };
-  var sh = document.querySelectorAll("[data-shop]");
-  for(var i=0;i<sh.length;i++) sh[i].onclick = (function(el){ return function(){ pickListen(q, Number(el.getAttribute("data-shop")), SHOPS[Number(el.getAttribute("data-shop"))].en, el); }; })(sh[i]);
-  var fl = document.querySelectorAll("[data-floor]");
-  for(var i=0;i<fl.length;i++) fl[i].onclick = (function(el){ return function(){ pickListen(q, Number(el.getAttribute("data-floor")), FLOORS[Number(el.getAttribute("data-floor"))].short+" "+FLOORS[Number(el.getAttribute("data-floor"))].en, el); }; })(fl[i]);
-  var cd = document.querySelectorAll("[data-card]");
-  for(var i=0;i<cd.length;i++) cd[i].onclick = (function(el){ return function(){ cardClick(q, Number(el.getAttribute("data-card"))); }; })(cd[i]);
-  var mc = document.querySelectorAll("[data-mcq]");
-  for(var i=0;i<mc.length;i++) mc[i].onclick = (function(el){ return function(){ pickMcq(q, Number(el.getAttribute("data-mcq")), el); }; })(mc[i]);
-  var wb = document.querySelectorAll("[data-word]");
-  for(var i=0;i<wb.length;i++) wb[i].onclick = (function(el){ return function(){ buildAdd(q, Number(el.getAttribute("data-word"))); }; })(wb[i]);
-  var sq = document.querySelectorAll("[data-seq]");
-  for(var i=0;i<sq.length;i++) sq[i].onclick = (function(el){ return function(){ buildRemoveAt(q, Number(el.getAttribute("data-seq"))); }; })(sq[i]);
-  var bb = document.querySelectorAll("[data-build]");
-  for(var i=0;i<bb.length;i++) bb[i].onclick = (function(el){ return function(){ buildAct(q, el.getAttribute("data-build")); }; })(bb[i]);
-  bindCommon(q);
-}
-function bindCommon(q){
-  var sa = document.querySelectorAll("[data-act]");
-  for(var i=0;i<sa.length;i++){
-    sa[i].onclick = (function(el){ return function(){
-      var a = el.getAttribute("data-act");
-      if(a==="showAnswer") showAnswer(q);
-      else if(a==="next") nextQ();
-      else if(a==="prev") prevQ();
-    }; })(sa[i]);
-  }
-}
-function bindNav(){
-  var g = document.querySelectorAll("[data-go]");
-  for(var i=0;i<g.length;i++) g[i].onclick = (function(el){ return function(){
-    var v = el.getAttribute("data-go");
-    if(v==="cover") showCover();
-    else showSection(v);
-  }; })(g[i]);
-  var m = document.querySelectorAll("[data-mod]");
-  for(var i=0;i<m.length;i++) m[i].onclick = (function(el){ return function(){ enterModule(el.getAttribute("data-mod"), false); }; })(m[i]);
-  var s = document.querySelectorAll("[data-seq]");
-  for(var i=0;i<s.length;i++) s[i].onclick = function(){ startSequential(); };
-  var n = document.querySelectorAll("[data-nav]");
-  for(var i=0;i<n.length;i++) n[i].onclick = (function(el){ return function(){
-    var v = el.getAttribute("data-nav");
-    if(v==="module") showSection(sectionId);
-  }; })(n[i]);
-}
+function bindQuestion(q){ /* events: onDocClick */ }
+
+function bindCommon(q){ /* events: onDocClick */ }
+
+function bindNav(){ /* events: onDocClick */ }
+
 function pickListen(q, stableIdx, text, el){
   var correct = false;
   if(q.type==="listen-shop"){
@@ -857,18 +952,14 @@ function showReviewEnd(){
     if(q.module && q.module.indexOf("rv-")===0 && rvWrong.indexOf(q.q)>=0) hasWrong=true;
   }
   var left = '<h2>複習完成</h2><p class="topic">本場複習已做完。</p>';
-  var right = "";
+  var right = '<div class="navrow"><button class="btn btn-secondary" data-nav="module" type="button">返回本塊目錄</button><button class="btn btn-secondary" data-go="cover" type="button">返回封面</button></div>';
   if(hasWrong){
     right += '<p class="topic">本場有答錯的複習題，可以重做錯題。</p>';
-    right += '<button class="btn btn-green" data-redo="1">重做錯題</button>';
+    right += '<button class="btn btn-green" data-redo="1" type="button">重做錯題</button>';
   }else{
     right += '<p class="topic" style="color:var(--green)">Well done! You can go back and practise again tomorrow.</p>';
   }
-  right += '<div class="navrow"><button class="btn btn-secondary" data-nav="module">返回本塊目錄</button><button class="btn btn-secondary" data-go="cover">返回封面</button></div>';
   setLeft(left); setRight(right);
-  bindNav();
-  var rb = document.querySelectorAll("[data-redo]");
-  for(var i=0;i<rb.length;i++) rb[i].onclick = function(){ startRedo(); };
   elhState();
 }
 function startRedo(){
@@ -949,6 +1040,10 @@ window.addEventListener("message", function(e){
 });
 
 /* ============ init ============ */
+if(!window.__elhClickBound){
+  window.__elhClickBound = true;
+  document.addEventListener("click", onDocClick);
+}
 elhReport({type:"init", total: TOTAL});
 showCover();
 </script>
