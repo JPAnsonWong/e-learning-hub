@@ -119,5 +119,22 @@ eq('摘要：今日必做還剩 1 項（選填不算）', sm.todayRequiredLeft, 
 eq('摘要：今天 11:59 昨日還沒確認', rules.summarize(sumRows, '2026-11-20', HK('2026-11-20T11:59:00')).yesterdayConfirmed, false);
 eq('摘要：今天 12:00 昨日已確認', rules.summarize(sumRows, '2026-11-20', HK('2026-11-20T12:00:00')).yesterdayConfirmed, true);
 
+// ---------- 獎勵兌換 ----------
+const reds = [
+  { rewardId: 'tv', status: 'approved', cost: 40, date: '2026-11-16' },   // 本週一，已批准
+  { rewardId: 'tv', status: 'pending', cost: 40, date: '2026-11-20' },    // 本週，申請中（先凍結）
+  { rewardId: 'tv', status: 'rejected', cost: 40, date: '2026-11-21' },   // 已拒絕：退回，不佔用
+  { rewardId: 'tv', status: 'approved', cost: 40, date: '2026-11-15' },   // 上週日：不算本週
+  { rewardId: 'game', status: 'pending', cost: 60, date: '2026-11-20' },
+];
+eq('凍結與已兌換：申請中和已批准都佔用，已拒絕退回', rules.holdOf(reds), 40 + 40 + 40 + 60);
+eq('每週用量：本週（週一到週日）申請中和已批准都算，拒絕和上週不算', rules.weekUsed(reds, 'tv', '2026-11-21'), 2);
+eq('每週用量：週日 11-22 仍屬同一週', rules.weekUsed(reds, 'tv', '2026-11-22'), 2);
+eq('每週用量：下週一重新計算', rules.weekUsed(reds, 'tv', '2026-11-23'), 0);
+eq('可申請', rules.redeemCheck({ cost: 40, limit: 3 }, 100, 2), { ok: true });
+eq('本週已達上限', rules.redeemCheck({ cost: 40, limit: 2 }, 100, 2), { ok: false, reason: 'limit' });
+eq('積分不足（顯示還差多少）', rules.redeemCheck({ cost: 150, limit: null }, 100, 0), { ok: false, reason: 'points', need: 50 });
+eq('沒有每週上限的獎勵不受限制', rules.redeemCheck({ cost: 40, limit: null }, 100, 99), { ok: true });
+
 export const failures = () => fail;
 if (process.argv[1] && process.argv[1].endsWith('daily-rules.test.mjs')) process.exit(fail ? 1 : 0);

@@ -12,6 +12,7 @@
 <div class="elh-wrap">
   <header class="elh-top">
     <h1>📚 E_learning Hub</h1>
+    <a class="btn btn-outline-secondary elh-btn" href="board.html">📺 家庭看板</a>
     <span class="spacer"></span>
   </header>
   <div id="app"><p class="elh-empty">載入中…</p></div>
@@ -35,7 +36,10 @@
             <div class="pts">⭐ ${ELH.totalPoints(s.id).toLocaleString()} 分</div>
             <div class="stats">已完成 ${ELH.doneCount(s.id)} / ${total} 份教材</div>
           </a>
-          <a class="elh-checkin-btn" href="checkin.html?s=${encodeURIComponent(s.id)}">✅ 今日打卡</a>
+          <div class="elh-student-actions">
+            <a class="elh-sq" href="checkin.html?s=${encodeURIComponent(s.id)}"><span>✅</span><b>今日打卡</b></a>
+            <a class="elh-sq alt" href="rewards.html?s=${encodeURIComponent(s.id)}"><span>🎁</span><b>獎勵兌換</b></a>
+          </div>
         </div>`;
       }).join('');
       const cards = (list) => list.map((i) => ELH.card(d, i, { showStudent: true })).join('');

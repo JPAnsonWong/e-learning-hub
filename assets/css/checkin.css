@@ -71,3 +71,65 @@
 .ck-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 @media (max-width: 980px) { .ck-layout { grid-template-columns: 1fr; } .ck-side { position: static; } .ck-clock .time { font-size: 3.4rem; } }
+
+/* 頁首：時鐘放在最上面（右側），標題旁是常用入口 */
+.ck-top { align-items: center; gap: .8rem; margin-bottom: .8rem; }
+.ck-link-btn { background: var(--accent); color: #fff; border-color: transparent; font-weight: 800; }
+.ck-link-btn:hover { color: #fff; filter: brightness(1.08); }
+.ck-clock-top { text-align: right; line-height: 1.1; min-width: 14rem; }
+.ck-clock-top .top-line { display: flex; justify-content: flex-end; gap: .9rem; font-size: 1.05rem; font-weight: 700; color: var(--muted); }
+.ck-clock-top .time { font-variant-numeric: tabular-nums; font-weight: 800; font-size: 3rem; letter-spacing: .02em; }
+.ck-clock-top .sec { font-size: 1.6rem; color: var(--accent); display: inline-block; min-width: 2.4ch; text-align: left; }
+.ck-clock-top .sec.tick { animation: ckSec .5s ease-out; }
+.ck-clock-top .ck-dayline { margin-top: .2rem; font-size: .85rem; }
+.ck-clock-top .ck-bar { height: .45rem; }
+@media (max-width: 700px) { .ck-clock-top { width: 100%; text-align: left; } .ck-clock-top .top-line { justify-content: flex-start; } .ck-clock-top .time { font-size: 2.6rem; } }
+
+/* ===== 家庭看板（65 寸、16:9 橫向、一屏看完） ===== */
+.bd .elh-wrap { padding-bottom: 1rem; }
+.bd-head { margin-bottom: .6rem; }
+.bd-top { display: grid; grid-template-columns: auto 1fr; gap: 1rem; margin-bottom: .8rem; align-items: stretch; }
+.bd-clock { text-align: center; min-width: 22rem; }
+.bd-clock .date { font-size: 1.3rem; font-weight: 700; }
+.bd-clock .time { font-variant-numeric: tabular-nums; font-weight: 800; font-size: 5.2rem; line-height: 1.05; letter-spacing: .02em; }
+.bd-clock .sec { font-size: 2.4rem; color: var(--accent); display: inline-block; min-width: 2.4ch; text-align: left; }
+.bd-clock .sec.tick { animation: ckSec .5s ease-out; }
+.bd-cds { grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); }
+.bd-cds .ck-cd b { font-size: 2.3rem; }
+.bd-kids { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: start; }
+.bd-kid { border: 3px solid var(--accent); }
+.bd-kid-head { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: .5rem; }
+.bd-kid-head h2 { margin: 0; font-size: 1.8rem; color: var(--accent); flex: 1; }
+.bd-ring { --p: 0; width: 4.2rem; height: 4.2rem; border-radius: 50%; background: conic-gradient(var(--accent) calc(var(--p) * 1%), #eee6d6 0); display: flex; align-items: center; justify-content: center; font-weight: 800; flex: 0 0 auto; }
+.bd-ring span { background: var(--card); width: 78%; height: 78%; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.05rem; }
+.bd-meta { display: flex; gap: .7rem; align-items: center; flex-wrap: wrap; }
+.bd-meta > div { background: #f6efe0; border-radius: .8rem; padding: .25rem .9rem; text-align: center; }
+.bd-meta small { display: block; color: var(--muted); font-size: .78rem; font-weight: 700; }
+.bd-meta b { font-size: 1.5rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.bd-meta .exp b { color: #b26a00; }
+.bd-meta .bump { animation: ckBump .5s ease-out; }
+.bd-go { font-weight: 700; color: var(--muted); padding: .3rem .4rem; }
+/* 看板的任務卡片：兩欄、緊湊 */
+.bd-kid .ck-tasks { grid-template-columns: 1fr 1fr; gap: .5rem; }
+.bd-kid .ck-cat { font-size: 1.05rem; margin: .7rem 0 .4rem; }
+.bd-kid .ck-task { min-height: max(3.2rem, 6.6vmin); padding: .4rem .8rem; gap: .6rem; border-radius: .8rem; }
+.bd-kid .ck-ttl { font-size: 1rem; }
+.bd-kid .ck-ttl small, .bd-kid .ck-fix { font-size: .75rem; }
+.bd-kid .ck-chk { width: 2.5rem; height: 2.5rem; }
+.bd-kid .ck-pt { font-size: .85rem; padding: .1rem .5rem; }
+@media (max-width: 1100px) { .bd-kid .ck-tasks { grid-template-columns: 1fr; } }
+@media (max-width: 980px) { .bd-top, .bd-kids { grid-template-columns: 1fr; } .bd-clock { min-width: 0; } .bd-clock .time { font-size: 3.6rem; } }
+
+/* ===== 獎勵兌換 ===== */
+.rw-avail { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; justify-content: space-between; }
+.rw-lab { font-size: 1.2rem; font-weight: 800; color: var(--muted); }
+.rw-avail b { font-size: 3.2rem; color: #b26a00; font-variant-numeric: tabular-nums; }
+.rw-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); margin-top: 1rem; }
+.rw-card { text-align: center; }
+.rw-ico { font-size: 3rem; line-height: 1.2; }
+.rw-card h3 { margin: .2rem 0; font-size: 1.2rem; font-weight: 800; }
+.rw-cost { font-weight: 800; color: #b26a00; font-size: 1.3rem; }
+.rw-btn { width: 100%; min-height: max(3rem, 6.5vmin); margin-top: .6rem; border-radius: .8rem; border: 0; background: var(--accent); color: #fff; font-size: 1.1rem; font-weight: 800; }
+.rw-btn:disabled { background: #d8d0c0; color: #6b6558; cursor: not-allowed; }
+.rw-st { padding: .1rem .7rem; border-radius: 99px; font-weight: 800; font-size: .85rem; white-space: nowrap; }
+.rw-st.p { background: #fff0c9; color: #8a5a12; } .rw-st.a { background: #dff6e8; color: #157a3a; } .rw-st.r { background: #fde8e6; color: #b42318; }

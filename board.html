@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>家庭看板 · E_learning Hub</title>
+<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/css/app.css">
+<link rel="stylesheet" href="assets/css/checkin.css">
+</head>
+<body class="bd">
+<div class="elh-wrap" id="wrap">
+  <header class="elh-top bd-head">
+    <a class="btn btn-outline-secondary elh-btn" href="index.html">← 首頁</a>
+    <h1>📺 家庭看板</h1>
+    <span class="spacer"></span>
+    <button class="btn btn-outline-secondary elh-btn" id="fsBtn" type="button">⛶ 全螢幕</button>
+  </header>
+  <div id="app"><p class="elh-empty">載入中…</p></div>
+</div>
+<div class="ck-toast" id="toast"></div>
+<script src="assets/js/points.js"></script>
+<script src="assets/js/daily-rules.js"></script>
+<script src="assets/js/common.js"></script>
+<script src="assets/js/sync.js"></script>
+<script src="assets/js/fx.js"></script>
+<script src="assets/js/checkin-core.js"></script>
+<script>
+(async () => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const esc = ELH.esc, DR = ELH_DAILY, FX = ELH_FX, CK = ELH_CK;
+  const app = $('#app');
+  const toast = CK.makeToast($('#toast'));
+  $('#fsBtn').onclick = () => { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); };
+
+  try {
+    const d = await ELH.loadAll();
+    const today = DR.hkDate(Date.now());
+
+    // ---------- 版面：上方時鐘＋全家倒數日，下方兩位孩子並排 ----------
+    app.innerHTML = `
+      <div class="bd-top">
+        <div class="ck-card bd-clock"><div class="date" id="bdDate"></div><div class="time"><span id="bdHm"></span><span class="sec" id="bdSec"></span></div>
+          <div class="ck-dayline"><span id="bdGreet"></span><div class="ck-bar"><i id="bdBar"></i></div><span id="bdPct"></span></div></div>
+        <div class="ck-card"><h2>⏳ 倒數日（全家）</h2><div class="ck-cds bd-cds" id="bdCds"><div class="ck-hint">載入中…</div></div></div>
+      </div>
+      <div class="bd-kids">${d.students.map((s) => `
+        <div class="ck-card bd-kid" id="kid-${esc(s.id)}" style="--accent:${s.color};--tint:${s.color}1f">
+          <div class="bd-kid-head">
+            <div class="bd-ring" id="ring-${esc(s.id)}" style="--p:0"><span>0/0</span></div>
+            <h2>${esc(s.icon)} ${esc(s.name)}</h2>
+            <div class="bd-meta">
+              <div class="exp" id="exp-${esc(s.id)}"><small>待確認</small><b data-v="0">0</b></div>
+              <div><small>總分</small><b id="tot-${esc(s.id)}" data-v="0">0</b></div>
+              <a class="bd-go" href="checkin.html?s=${encodeURIComponent(s.id)}" title="打開完整的打卡頁">打卡頁 ›</a>
+            </div>
+          </div>
+          <div id="list-${esc(s.id)}"><p class="ck-empty">載入中…</p></div>
+        </div>`).join('')}</div>`;
+    CK.startClock({ date: 'bdDate', hm: 'bdHm', sec: 'bdSec', greet: 'bdGreet', pct: 'bdPct', bar: 'bdBar' }, today);
+
+    await ELH_SYNC.init();
+    const F = await ELH_SYNC.getFs();
+    if (!F) { app.insertAdjacentHTML('afterbegin', '<p class="ck-empty">家庭看板需要連線 Firebase。請確認網站已登入家庭密碼，或稍後再試。</p>'); return; }
+
+    const emptyHTML = '<p class="ck-empty">今天還沒有任務（同步程式約每 15 分鐘從 Notion 建立）。</p>';
+    const kids = Object.fromEntries(d.students.map((s) => [s.id, { stu: s, list: CK.createTaskList($(`#list-${s.id}`), { today, week: true, emptyHTML }), rows: [], celebrated: false }]));
+
+    function renderKid(k) {
+      const sm = DR.summarize(k.rows, today, Date.now());
+      const todayRows = k.rows.filter((r) => r.date === today && r.cat !== 'week');
+      const done = todayRows.filter(CK.isDone).length;
+      const ring = $(`#ring-${k.stu.id}`);
+      ring.style.setProperty('--p', todayRows.length ? Math.round((done / todayRows.length) * 100) : 0);
+      $('span', ring).textContent = `${done}/${todayRows.length}`;
+      FX.countTo($(`#exp-${k.stu.id} b`), sm.pending, 500);
+      FX.countTo($(`#tot-${k.stu.id}`), ELH.totalPoints(k.stu.id), 700);
+    }
+
+    CK.watch(F, today, (all) => {
+      for (const k of Object.values(kids)) {
+        k.rows = all.filter((r) => r.student === k.stu.id);
+        const changed = k.list.update(k.rows);
+        renderKid(k);
+        const s = DR.summarize(k.rows, today, Date.now());
+        const required = k.rows.filter((r) => r.date === today && r.cat !== 'week' && !r.optional);
+        if (required.length && s.todayRequiredLeft === 0) { if (!k.celebrated && changed.length) { FX.sfx.fanfare(); toast(`🎉 ${k.stu.name}今天的任務全部完成了！太棒了！`); } k.celebrated = true; } else k.celebrated = false;
+      }
+    }, (e) => {
+      console.warn('snapshot', e);
+      app.insertAdjacentHTML('afterbegin', `<p class="ck-empty">${e && e.code === 'permission-denied' ? '還沒有讀取權限。請爸爸先到 Firebase 更新 Firestore 安全規則（見 docs/DAILY-CHECKIN-SETUP.md）。' : '讀取今天的任務失敗，請稍後再試。'}</p>`);
+    });
+
+    // 點任務卡片打卡（兩位孩子各自的清單）
+    for (const k of Object.values(kids)) {
+      const box = $(`#list-${k.stu.id}`);
+      box.addEventListener('click', (e) => { const t = e.target.closest('.ck-task'); if (t) CK.toggle(F, k.list.get(t.dataset.id), t, $(`#exp-${k.stu.id}`), toast); });
+      box.addEventListener('keydown', (e) => { if ((e.key === ' ' || e.key === 'Enter') && e.target.classList.contains('ck-task')) { e.preventDefault(); e.target.click(); } });
+    }
+
+    CK.loadCountdowns(F).then((cds) => { $('#bdCds').innerHTML = CK.countdownsHTML(cds, null, today, (id) => (ELH.student(d, id) || {}).name || id); })
+      .catch(() => { $('#bdCds').innerHTML = '<div class="ck-hint">暫時讀不到倒數日</div>'; });
+
+    ELH_SYNC.pullAll(d.students).then(() => Object.values(kids).forEach(renderKid));
+    setInterval(() => Object.values(kids).forEach(renderKid), 60000);
+  } catch (e) { ELH.fail(app, e); }
+})();
+</script>
+</body>
+</html>

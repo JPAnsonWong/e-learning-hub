@@ -11,12 +11,16 @@
 </head>
 <body>
 <div class="elh-wrap" id="wrap">
-  <header class="elh-top">
+  <header class="elh-top ck-top">
     <a class="btn btn-outline-secondary elh-btn" href="index.html">← 首頁</a>
     <h1 id="title">✅ 今日打卡</h1>
+    <a class="btn elh-btn ck-link-btn" id="rewardBtn" href="rewards.html">🎁 獎勵兌換</a>
     <span class="spacer"></span>
-    <button class="btn btn-outline-secondary elh-btn" id="soundBtn" type="button">🔊 音效</button>
-    <button class="btn btn-outline-secondary elh-btn" id="motionBtn" type="button">✨ 動畫</button>
+    <div class="ck-clock-top">
+      <div class="top-line"><span id="cDate"></span><span id="cGreet"></span></div>
+      <div class="time"><span id="cHm"></span><span class="sec" id="cSec"></span></div>
+      <div class="ck-dayline"><div class="ck-bar"><i id="cBar"></i></div><span id="cPct"></span></div>
+    </div>
   </header>
   <div id="app"><p class="elh-empty">載入中…</p></div>
 </div>
@@ -26,15 +30,13 @@
 <script src="assets/js/common.js"></script>
 <script src="assets/js/sync.js"></script>
 <script src="assets/js/fx.js"></script>
+<script src="assets/js/checkin-core.js"></script>
 <script>
 (async () => {
   const $ = (s, r = document) => r.querySelector(s);
-  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-  const esc = ELH.esc, DR = ELH_DAILY, FX = ELH_FX;
+  const esc = ELH.esc, DR = ELH_DAILY, FX = ELH_FX, CK = ELH_CK;
   const app = $('#app');
-  const toastEl = $('#toast'); let toastT;
-  const toast = (m) => { toastEl.textContent = m; toastEl.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => toastEl.classList.remove('show'), 2800); };
-  const tick = '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  const toast = CK.makeToast($('#toast'));
 
   try {
     const d = await ELH.loadAll();
@@ -44,14 +46,9 @@
     if (!stu) { app.innerHTML = '<p class="elh-empty">找不到這個學習空間。<a href="index.html">回首頁</a></p>'; return; }
     document.title = `${stu.name} 今日打卡 · E_learning Hub`;
     $('#title').textContent = `✅ ${stu.name}今日打卡`;
+    $('#rewardBtn').href = `rewards.html?s=${encodeURIComponent(sid)}`;
     $('#wrap').style.setProperty('--accent', stu.color);
     document.documentElement.style.setProperty('--tint', stu.color + '1f');
-
-    // 音效、動畫開關
-    const syncBtns = () => { $('#soundBtn').textContent = FX.sound ? '🔊 音效開' : '🔇 音效關'; $('#motionBtn').textContent = FX.calm ? '🧘 動畫少' : '✨ 動畫開'; };
-    $('#soundBtn').onclick = () => { FX.setSound(!FX.sound); syncBtns(); };
-    $('#motionBtn').onclick = () => { FX.setCalm(!FX.calm); syncBtns(); };
-    syncBtns();
 
     // ---------- 版面 ----------
     app.innerHTML = `
@@ -59,8 +56,6 @@
       <div class="ck-layout">
         <div class="ck-card" id="taskCol"><p class="ck-empty">載入今天的任務…</p></div>
         <div class="ck-side">
-          <div class="ck-card ck-clock"><div class="date" id="cDate"></div><div class="time"><span id="cHm"></span><span class="sec" id="cSec"></span></div>
-            <div class="ck-dayline"><span id="cGreet"></span><div class="ck-bar"><i id="cBar"></i></div><span id="cPct"></span></div></div>
           <div class="ck-card"><h2>⏳ 倒數日</h2><div class="ck-cds" id="cds"><div class="ck-hint">載入中…</div></div></div>
           <div class="ck-card"><h2>⭐ 積分</h2>
             <div class="ck-pts3"><div><small id="yLabel">昨日</small><b id="yPts">+0</b></div><div class="exp" id="expBox"><small>待確認</small><b id="expPts" data-v="0">0</b></div><div><small>總分</small><b id="totalPts" data-v="0">0</b></div></div>
@@ -68,25 +63,9 @@
             <details class="ck-more"><summary>▸ 看明細</summary><div id="ptsDetail"></div></details></div>
         </div>
       </div>`;
-    ELH.mountLinks();
 
-    // ---------- 時鐘（用裝置時間顯示；資料日期一律用香港時間） ----------
-    const cn = '日一二三四五六';
-    let today = DR.hkDate(Date.now()), lastSec = -1;
-    function tickClock() {
-      const n = new Date(), sec = n.getSeconds();
-      if (DR.hkDate(Date.now()) !== today) { location.reload(); return; } // 跨過午夜：換成新的一天
-      if (sec === lastSec) return; lastSec = sec;
-      const hh = String(n.getHours()).padStart(2, '0'), mm = String(n.getMinutes()).padStart(2, '0');
-      const h = n.getHours(), pct = Math.round(((n - new Date(n.getFullYear(), n.getMonth(), n.getDate())) / 86400000) * 100);
-      $('#cDate').textContent = `${n.getFullYear()} 年 ${n.getMonth() + 1} 月 ${n.getDate()} 日　星期${cn[n.getDay()]}`;
-      $('#cHm').textContent = `${hh}:${mm}`;
-      const s = $('#cSec'); s.textContent = ':' + String(sec).padStart(2, '0');
-      if (!FX.isCalm()) { s.classList.remove('tick'); void s.offsetWidth; s.classList.add('tick'); }
-      $('#cGreet').textContent = h < 6 ? '夜深了' : h < 12 ? '早上好' : h < 14 ? '中午好' : h < 18 ? '下午好' : '晚上好';
-      $('#cPct').textContent = `今天已過 ${pct}%`; $('#cBar').style.width = pct + '%';
-    }
-    tickClock(); setInterval(tickClock, 250);
+    const today = DR.hkDate(Date.now());
+    CK.startClock({ date: 'cDate', hm: 'cHm', sec: 'cSec', greet: 'cGreet', pct: 'cPct', bar: 'cBar' }, today);
 
     // ---------- 資料 ----------
     await ELH_SYNC.init();
@@ -95,45 +74,12 @@
       $('#taskCol').innerHTML = '<p class="ck-empty">今日打卡需要連線 Firebase。請確認網站已登入家庭密碼（右下角顯示「☁ 已連線」），或稍後再試。</p>';
       return;
     }
-    const { db, fs } = F;
-    let rows = [], rowMap = new Map(), ready = false;
+    const emptyHTML = '<p class="ck-empty">今天還沒有任務。<br>任務會在每天開始後，由同步程式從 Notion 自動建立（約每 15 分鐘檢查一次）。如果剛設定好，請稍候，或請爸爸到 GitHub 手動執行一次同步。</p>';
+    const list = CK.createTaskList($('#taskCol'), { today, week: true, emptyHTML });
+    let rows = [], celebrated = false;
 
-    const catOrder = { learn: 0, habit: 1, week: 2 };
-    const catName = { learn: '📚 學習任務', habit: '🌱 日常習慣', week: '📅 每周任務' };
-    const sortRows = (a, b) => (catOrder[a.cat] - catOrder[b.cat]) || ((a.optional ? 1 : 0) - (b.optional ? 1 : 0)) || ((a.order ?? 999) - (b.order ?? 999)) || String(a.title).localeCompare(b.title, 'zh-Hant');
-    const isDone = (r) => !!r.done && r.fix !== 'untick';
-    const corrected = (r) => r.basePoints != null && r.points != null && r.points !== r.basePoints;
-
-    function taskHTML(r) {
-      const done = isDone(r), fixed = r.fix === 'untick';
-      const pt = r.points == null ? '<span class="ck-pt na">待評分</span>' : `<span class="ck-pt">+${r.points}${corrected(r) ? '（已更正）' : ''}</span>`;
-      const note = r.note ? `（${esc(r.note)}）` : '';
-      let fix = '';
-      if (fixed) fix = `<div class="ck-fix">👨 爸爸已更正：這項未通過${note}</div>`;
-      else if (corrected(r) && r.done) fix = `<div class="ck-fix">👨 爸爸已更正：+${r.basePoints} → +${r.points}${note}</div>`;
-      else if (r.note) fix = `<small>${esc(r.note)}</small>`;
-      const sub = r.cat === 'week' && !fix ? '<small>本週內完成一次打卡</small>' : (done && r.points == null && !fix ? '<small>已打卡，等爸爸評分</small>' : '');
-      return `<div class="ck-task${done ? ' done' : ''}${fixed ? ' fixed' : ''}" data-id="${esc(r.id)}" role="checkbox" aria-checked="${done}" tabindex="0"><div class="ck-ttl">${esc(r.title)}${r.optional ? '<span class="ck-opt">選填</span>' : ''}${fix || sub}</div>${pt}<div class="ck-chk">${tick}</div></div>`;
-    }
-    function renderTasks() {
-      // 清單只顯示今天的任務和本週的每周任務；昨天、上週的列只用來計算積分
-      const monday = DR.mondayOf(today);
-      const list = rows.filter((r) => r.date === today || (r.cat === 'week' && r.date === monday)).sort(sortRows);
-      if (!list.length) {
-        $('#taskCol').innerHTML = ready ? '<p class="ck-empty">今天還沒有任務。<br>任務會在每天開始後，由同步程式從 Notion 自動建立（約每 15 分鐘檢查一次）。如果剛設定好，請稍候，或請爸爸到 GitHub 手動執行一次同步。</p>' : '<p class="ck-empty">載入今天的任務…</p>';
-        return;
-      }
-      $('#taskCol').innerHTML = ['learn', 'habit', 'week'].map((c) => {
-        const items = list.filter((r) => r.cat === c); if (!items.length) return '';
-        return `<div class="ck-cat">${catName[c]}</div><div class="ck-tasks">${items.map(taskHTML).join('')}</div>`;
-      }).join('');
-    }
-    const sig = (r) => [r.done, r.fix, r.points, r.note, r.title, r.basePoints, r.optional].join('|');
-
-    // ---------- 積分 ----------
-    let lastExp = 0;
     function renderPoints() {
-      const nowMs = Date.now(), s = DR.summarize(rows, today, nowMs), ex = ELH.extraOf(sid);
+      const s = DR.summarize(rows, today, Date.now()), ex = ELH.extraOf(sid);
       FX.countTo($('#expPts'), s.pending, 500);
       FX.countTo($('#totalPts'), ELH.totalPoints(sid), 700);
       $('#yPts').textContent = '+' + s.yesterday; $('#yLabel').textContent = s.yesterdayConfirmed ? '昨日確認' : '昨日（待確認）';
@@ -141,62 +87,26 @@
         ? `待確認 +${s.pending}${s.pendingUnscored ? `（另有 ${s.pendingUnscored} 項待爸爸評分）` : ''}，還沒進入總分；次日 12:00 前沒被爸爸更正就自動確認。`
         : '點一下任務卡片打卡，積分會先變成「待確認」，爸爸沒有更正就會自動確認。';
       $('#ptsDetail').innerHTML = `<div class="ck-row2"><span>舊總分（起始，已凍結）</span><b>${ex.base}</b></div><div class="ck-row2"><span>學習積分（作答）</span><b>${ELH.points(sid)}</b></div><div class="ck-row2"><span>打卡積分（已確認）</span><b>${ex.confirmed}</b></div>`;
-      lastExp = s.pending;
     }
 
-    // ---------- 打卡 ----------
-    let celebrated = false;
-    async function toggle(id, node) {
-      const r = rowMap.get(id); if (!r) return;
-      if (r.fix === 'untick') { toast('這項已被爸爸更正，不能再改喔'); return; }
-      if (DR.isFinalized(r, Date.now())) { toast('這天的積分已經確認了，不能再改'); return; }
-      const done = !r.done;
-      if (done) {
-        FX.sfx.tick(); FX.buzz(30);
-        if (node) { node.classList.add('pop'); FX.burst($('.ck-chk', node)); }
-        if (r.points != null) FX.flyStars($('.ck-chk', node), $('#expBox'), r.points); else toast('已打卡！這項由爸爸評分，評分後才會計入');
-      } else FX.sfx.untick();
-      try {
-        await fs.updateDoc(fs.doc(db, 'checkins', id), { done, doneAt: done ? Date.now() : null, updatedAt: fs.serverTimestamp() });
-      } catch (e) {
-        console.warn('checkin update', e);
-        toast(e && e.code === 'permission-denied' ? '打卡失敗：還沒有寫入權限，請爸爸先更新 Firestore 安全規則' : '打卡失敗，請稍後再試');
-      }
-    }
-    $('#taskCol').addEventListener('click', (e) => { const t = e.target.closest('.ck-task'); if (t) toggle(t.dataset.id, t); });
+    $('#taskCol').addEventListener('click', (e) => { const t = e.target.closest('.ck-task'); if (t) CK.toggle(F, list.get(t.dataset.id), t, $('#expBox'), toast); });
     $('#taskCol').addEventListener('keydown', (e) => { if ((e.key === ' ' || e.key === 'Enter') && e.target.classList.contains('ck-task')) { e.preventDefault(); e.target.click(); } });
 
-    // ---------- 即時監聽今天、昨天、本週一、上週一的打卡 ----------
-    const dates = DR.watchDates(today);
-    fs.onSnapshot(fs.query(fs.collection(db, 'checkins'), fs.where('date', 'in', dates)), (snap) => {
-      const next = snap.docs.map((x) => ({ id: x.id, ...x.data() })).filter((r) => r.student === sid);
-      const sameSet = ready && next.length === rows.length && next.every((r) => rowMap.has(r.id));
-      const changed = sameSet ? next.filter((r) => sig(r) !== sig(rowMap.get(r.id))) : [];
-      rows = next; rowMap = new Map(next.map((r) => [r.id, r])); ready = true;
-      if (!sameSet) renderTasks();
-      else for (const r of changed) { const el = $(`.ck-task[data-id="${CSS.escape(r.id)}"]`); if (el) { const pop = el.classList.contains('pop'); el.outerHTML = taskHTML(r); if (pop) $(`.ck-task[data-id="${CSS.escape(r.id)}"]`)?.classList.add('pop'); } }
+    CK.watch(F, today, (all) => {
+      rows = all.filter((r) => r.student === sid);
+      const changed = list.update(rows);
       renderPoints();
       const s = DR.summarize(rows, today, Date.now());
-      const todayRows = rows.filter((r) => r.date === today && r.cat !== 'week' && !r.optional);
-      if (todayRows.length && s.todayRequiredLeft === 0) { if (!celebrated && changed.length) { FX.sfx.fanfare(); toast('🎉 今天的任務全部完成了！太棒了！'); } celebrated = true; } else celebrated = false;
+      const required = rows.filter((r) => r.date === today && r.cat !== 'week' && !r.optional);
+      if (required.length && s.todayRequiredLeft === 0) { if (!celebrated && changed.length) { FX.sfx.fanfare(); toast('🎉 今天的任務全部完成了！太棒了！'); } celebrated = true; } else celebrated = false;
     }, (e) => {
       console.warn('snapshot', e);
       $('#taskCol').innerHTML = `<p class="ck-empty">${e && e.code === 'permission-denied' ? '還沒有讀取權限。請爸爸先到 Firebase 更新 Firestore 安全規則（見 docs/DAILY-CHECKIN-SETUP.md）。' : '讀取今天的任務失敗，請稍後再試。'}</p>`;
     });
 
-    // ---------- 倒數日 ----------
-    function renderCountdowns(list) {
-      const items = list.filter((c) => (c.who || []).includes(sid)).map((c) => ({ ...c, days: DR.daysBetween(today, c.date) })).filter((c) => c.days >= 0).sort((a, b) => a.days - b.days);
-      $('#cds').innerHTML = items.length ? items.map((c) => {
-        const cls = c.days <= 3 ? 'hot' : c.days <= 7 ? 'warn' : '';
-        const dt = new Date(c.date + 'T00:00:00Z');
-        return `<div class="ck-cd ${cls}"><b>${c.days === 0 ? '🎯' : c.days}</b><div>離「${esc(c.title)}」${c.days === 0 ? '就是今天！' : `還有 ${c.days} 天`}<small>${dt.getUTCMonth() + 1} 月 ${dt.getUTCDate()} 日（週${cn[dt.getUTCDay()]}）${c.note ? '・' + esc(c.note) : ''}</small></div></div>`;
-      }).join('') : '<div class="ck-hint">暫無倒數事項（可以在 Notion「重要日子」新增）</div>';
-    }
-    fs.getDocs(fs.collection(db, 'countdowns')).then((snap) => renderCountdowns(snap.docs.map((x) => x.data())))
+    CK.loadCountdowns(F).then((cds) => { $('#cds').innerHTML = CK.countdownsHTML(cds, sid, today); })
       .catch(() => { $('#cds').innerHTML = '<div class="ck-hint">暫時讀不到倒數日</div>'; });
 
-    // ---------- 總分（從其他頁面共用的快取，連線後更新） ----------
     renderPoints();
     ELH_SYNC.pull(sid).then(() => renderPoints());
     setInterval(renderPoints, 60000); // 每分鐘更新一次（跨過次日 12:00 時，昨日積分會變成「已確認」）

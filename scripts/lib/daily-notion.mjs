@@ -1,6 +1,6 @@
 // Notion 讀寫（每日打卡專用）：把 Notion 的頁面屬性轉成程式用的物件，以及建立、更新每日任務列。
 // 只讀寫每日打卡需要的資料庫與欄位；不讀 People 的「Goals」等自由文字欄位。
-import { CHILD } from './daily-sync.mjs';
+import { CHILD, CHILD_NAME } from './daily-sync.mjs';
 
 const plain = (a) => (a || []).map((t) => t.plain_text).join('');
 const sel = (p) => p?.select?.name ?? '';
@@ -31,7 +31,7 @@ export async function locate(notion, parentId) {
     if (!hit) throw new Error(`找不到資料庫「${title}」，請確認已分享給連線並執行過 notion-setup-daily`);
     return hit.id;
   };
-  return { daily: get('每日任務'), days: get('重要日子'), routine: get('Routine Items'), people: get('People') };
+  return { daily: get('每日任務'), days: get('重要日子'), routine: get('Routine Items'), people: get('People'), rewards: get('獎勵'), redemptions: get('兌換記錄') };
 }
 
 export async function readPeople(notion, dbId) {
@@ -116,4 +116,38 @@ export async function readCountdowns(notion, dbId) {
     });
   }
   return out;
+}
+
+// ---------- 獎勵與兌換 ----------
+// 獎勵清單：略過「停用」的、沒有名稱或所需積分的
+export async function readRewards(notion, dbId) {
+  const out = [];
+  for (const p of await queryAll(notion, dbId)) {
+    const pr = p.properties;
+    const name = titleOf(pr['名稱']), cost = num(pr['所需積分']);
+    if (!name || cost == null || cost <= 0 || chk(pr['停用'])) continue;
+    out.push({ id: compactId(p.id), data: { name, cost, icon: rich(pr['圖示']) || '🎁', limit: num(pr['每週上限']) || null, desc: rich(pr['說明']) } });
+  }
+  return out;
+}
+// 孩子在網站提出的兌換申請 → 在 Notion「兌換記錄」建立一列（狀態：申請中），爸爸在 Notion 改成「已批准」或「已拒絕」
+export async function createRedemptionRow(notion, dbId, d, docId) {
+  return notion.call('POST', '/pages', {
+    parent: { database_id: dbId },
+    properties: {
+      獎勵: { title: t(d.name) }, 孩子: { select: { name: CHILD_NAME[d.student] || d.student } }, 日期: { date: { start: d.date } },
+      扣除積分: { number: d.cost }, 狀態: { select: { name: '申請中' } }, Key: { rich_text: t(docId) },
+    },
+  });
+}
+// 讀取兌換列的目前狀態；爸爸把整列刪掉（或封存）視為拒絕
+export async function readRedemptionRow(notion, page) {
+  try {
+    const p = await notion.call('GET', `/pages/${page}`);
+    if (p.archived) return { gone: true };
+    return { status: sel(p.properties['狀態']), note: rich(p.properties['備註']) };
+  } catch (e) {
+    if (e.status === 404 || e.status === 400) return { gone: true };
+    throw e;
+  }
 }

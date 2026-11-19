@@ -1,12 +1,8 @@
-// 打卡動畫與音效：全部自己寫，不依賴任何外部資源。可靜音、可減少動畫，也尊重系統的「減少動態」設定。
+// 打卡動畫與音效：全部自己寫，不依賴任何外部資源。動畫和音效固定開啟（家裡專用，不提供開關；
+// 也不跟隨系統的「減少動態」設定，避免大屏電腦關掉系統動畫後看起來像壞掉）。
 const ELH_FX = (() => {
-  const KEY = 'elh.fx.v1';
-  let sound = true;
-  let calm = false;
-  try { const o = JSON.parse(localStorage.getItem(KEY) || '{}'); sound = o.sound !== false; calm = !!o.calm; } catch { /* 用預設 */ }
-  const sysCalm = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch { return false; } };
-  const isCalm = () => calm || sysCalm();
-  const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ sound, calm })); } catch { /* 忽略 */ } };
+  const sound = true;
+  const isCalm = () => false;
 
   // ---------- 音效（Web Audio 合成） ----------
   let ac = null;
@@ -85,8 +81,5 @@ const ELH_FX = (() => {
 
   return {
     sfx, buzz, countTo, bump, flyStars, burst, isCalm,
-    get sound() { return sound; }, get calm() { return calm; },
-    setSound(v) { sound = !!v; save(); if (sound) sfx.tick(); },
-    setCalm(v) { calm = !!v; save(); },
   };
 })();

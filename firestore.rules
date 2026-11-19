@@ -24,6 +24,22 @@ service cloud.firestore {
     match /countdowns/{id} { allow read: if isFamily(); }
     match /checkin_totals/{id} { allow read: if isFamily(); }
 
+    // ---- 獎勵兌換 ----
+    // 獎勵清單由同步程式（Admin）從 Notion 寫入；孩子只能「提出申請」（狀態固定為 pending，積分必須和獎勵清單一致），
+    // 批准或拒絕由爸爸在 Notion 決定，網站不能改、不能刪。
+    match /rewards/{id} { allow read: if isFamily(); }
+    match /redemptions/{id} {
+      allow read: if isFamily();
+      allow create: if isFamily()
+        && request.resource.data.keys().hasOnly(['student', 'rewardId', 'name', 'icon', 'cost', 'status', 'date', 'requestedAt', 'note', 'page'])
+        && request.resource.data.status == 'pending'
+        && request.resource.data.student in ['daughter', 'son']
+        && request.resource.data.cost is number && request.resource.data.cost > 0
+        && exists(/databases/$(database)/documents/rewards/$(request.resource.data.rewardId))
+        && get(/databases/$(database)/documents/rewards/$(request.resource.data.rewardId)).data.cost == request.resource.data.cost;
+      allow update, delete: if false;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }
