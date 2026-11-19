@@ -29,7 +29,7 @@ const add = (db, properties) => { const id = pad('3cf4d146' + String(++seq).padS
 const person = (name, total) => add(DB.people, { Name: { title: rt(name) }, 'Total Points': { number: total } });
 const routineRow = (o) => add(DB.routine, {
   Title: { title: rt(o.title) }, Person: { relation: o.persons.map((id) => ({ id })) }, Category: { select: { name: o.cat } }, Frequency: { select: { name: o.freq } },
-  Points: { number: o.points ?? null }, Active: { checkbox: o.active !== false }, 適用星期: { multi_select: (o.wd || []).map((name) => ({ name })) }, 選填: { checkbox: !!o.optional },
+  Points: { number: o.points ?? null }, Description: { rich_text: rt(o.desc || '') }, Active: { checkbox: o.active !== false }, 適用星期: { multi_select: (o.wd || []).map((name) => ({ name })) }, 選填: { checkbox: !!o.optional },
 });
 const rewardRow = (name, cost, o = {}) => add(DB.rewards, { 名稱: { title: rt(name) }, 所需積分: { number: cost }, 停用: { checkbox: !!o.off }, 每週上限: { number: o.limit ?? null }, 圖示: { rich_text: rt(o.icon || '') }, 說明: { rich_text: rt('') } });
 const countdownRow = (title, date, who, hidden = false) => add(DB.days, { 事項: { title: rt(title) }, 日期: { date: { start: date } }, 對象: { select: { name: who } }, 說明: { rich_text: rt('') }, 隱藏: { checkbox: hidden }, 類型: { select: { name: '考試' } } });
@@ -89,7 +89,7 @@ const notion = createNotion({ token: 't', base: `http://localhost:${server.addre
 
 // ---- 種子資料 ----
 P.girl = person('女兒', 87); P.boy = person('兒子', 21); P.dad = person('爸爸', 15); P.mom = person('媽媽', null);
-routineRow({ title: '學校功課', persons: [P.boy], cat: '學習任務', freq: 'Daily', points: 1 });
+const sonHwTpl = routineRow({ title: '學校功課', persons: [P.boy], cat: '學習任務', freq: 'Daily', points: 1, desc: '完成當天所有學校功課' });
 routineRow({ title: '學校功課', persons: [P.girl], cat: '學習任務', freq: 'Daily', points: 1 });
 routineRow({ title: '練琴', persons: [P.girl, P.boy], cat: '日常習慣', freq: 'Daily', points: 2 });
 routineRow({ title: '補習功課（若有）', persons: [P.boy], cat: '學習任務', freq: 'Daily', points: 1, wd: ['週一', '週三'], optional: true });
@@ -129,6 +129,19 @@ eq('A11 ID 前綴相同的任務不會撞在一起：Firestore 文件數 = Notio
 
 s = await run(FRI + 60000);
 eq('B 第二次執行：沒有新生成、沒有更新（冪等）', [s.generated, s.created, s.updated, s.pushed, s.countdowns], [0, 0, 0, 0, 0]);
+
+// ---- 任務說明（Routine Items 的 Description）----
+const hwSon = async () => (await doc('2026-11-20', 'son', '學校功課'));
+eq('M1 範本的說明帶到網站', (await hwSon()).desc, '完成當天所有學校功課');
+eq('M2 沒有說明的範本 → 空字串', (await doc('2026-11-20', 'son', '練琴')).desc, '');
+pages.get(sonHwTpl).properties.Description = { rich_text: rt('改過的說明') };
+s = await run(FRI + 95000);
+eq('M3 爸爸改範本的說明 → 下一輪同步就更新（不必等明天重新生成）', [(await hwSon()).desc, s.generated], ['改過的說明', 0]);
+pages.get(sonHwTpl).properties.Description = { rich_text: [] };
+await run(FRI + 96000);
+eq('M4 說明清空 → 網站也清空', (await hwSon()).desc, '');
+pages.get(sonHwTpl).properties.Description = { rich_text: rt('完成當天所有學校功課') };
+await run(FRI + 97000);
 
 // 生成記號遺失（例如上次生成到一半失敗）後重跑：已存在的列不能重複建立
 await store.deleteDoc('daily_gen', 'D_2026-11-20'); await store.deleteDoc('daily_gen', 'W_2026-11-16');

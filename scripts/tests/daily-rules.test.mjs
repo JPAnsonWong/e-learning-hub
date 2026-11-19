@@ -83,6 +83,12 @@ eq('爸爸改積分與備註 → 更新到網站，basePoints 不變', [r.update
 // 取消 fix 狀態下雙方都沒變 → 保持
 eq('fix 狀態雙方都沒變 → 不動', mergeRow({ ...n0, checked: false }, { ...f0, done: false, notionDone: false, fix: 'untick' }, NOW), { update: null, notionPatch: null });
 
+// 任務說明（來自 Routine Items 的 Description）
+eq('沒有說明 → 空字串', mergeRow(n0, null, NOW).create.desc, '');
+eq('新文件帶出說明', mergeRow({ ...n0, desc: '完成當天所有功課' }, null, NOW).create.desc, '完成當天所有功課');
+eq('範本的說明改了 → 更新到網站（其他欄位不變）', Object.keys(mergeRow({ ...n0, desc: '新說明' }, { ...f0, desc: '舊說明' }, NOW).update), ['desc']);
+eq('說明沒變 → 不產生更新', mergeRow({ ...n0, desc: '同一句' }, { ...f0, desc: '同一句' }, NOW).update, null);
+
 // ---------- 快速打卡 ----------
 const mk = (id, student, t) => ({ id, student, done: true, doneAt: t });
 const five = [0, 3000, 6000, 9000, 12000].map((t, i) => mk('a' + i, 'son', 1e6 + t));
