@@ -48,7 +48,8 @@ eq('「女兒／兒子」兩人都生成', fri.daily.filter((r) => r.title === '
 eq('沒分數的任務保持 null（待評分）', fri.daily.find((r) => r.title === '待評分任務').points, null);
 const mon = planGeneration({ routine, today: '2026-11-16' });
 eq('週一：補習功課出現且標為選填', mon.daily.filter((r) => r.title.startsWith('補習')).map((r) => [r.student, r.optional]), [['son', true]]);
-eq('Key 穩定且不含完整 ID', keyFor('2026-11-20', 'son', 'aaaaaaaa-1'), '2026-11-20|son|aaaaaaaa');
+eq('Key 用完整範本 ID（截短會撞在一起）', keyFor('2026-11-20', 'son', 'aaaaaaaa-1'), '2026-11-20|son|aaaaaaaa1');
+eq('前綴相同的兩個範本 ID 產生不同的文件 ID', docIdFor(keyFor('2026-11-20', 'son', '3cf4d146aaaa')) !== docIdFor(keyFor('2026-11-20', 'son', '3cf4d146bbbb')), true);
 eq('docId 為 20 位十六進位', /^[0-9a-f]{20}$/.test(docIdFor('x')), true);
 
 // ---------- 合併規則 ----------

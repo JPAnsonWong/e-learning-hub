@@ -8,8 +8,10 @@ import { locate, readPeople, readRoutine, readDailyRows, createDailyRow, patchDa
 
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
-export async function runDailySync({ notion, store, parentId, now = Date.now(), log = () => {} }) {
-  const summary = { generated: 0, created: 0, updated: 0, pushed: 0, flagged: 0, countdowns: 0, totalsChanged: 0 };
+const MISSING_GRACE_MS = 20 * 60 * 1000; // Notion 讀不到的文件，連續超過 20 分鐘才從網站移除（避免 Notion 查詢偶爾延遲而誤刪）
+
+export async function runDailySync({ notion, store, parentId, now = Date.now(), log = () => {}, purgeOrphans = false }) {
+  const summary = { generated: 0, created: 0, updated: 0, pushed: 0, flagged: 0, removed: 0, countdowns: 0, totalsChanged: 0 };
   const ids = await locate(notion, parentId);
   const today = hkDate(now), monday = mondayOf(today);
   const people = await readPeople(notion, ids.people);
@@ -57,6 +59,14 @@ export async function runDailySync({ notion, store, parentId, now = Date.now(), 
     }
     if (update) { await store.setDoc('checkins', id, { ...update, updatedAt: store.ts() }, { merge: true }); summary.updated++; }
     docs.set(id, { ...f, ...(update || {}), id });
+  }
+
+  // ---------- 2b) 清除網站上多餘的文件 ----------
+  // Notion 裡已刪除的任務（或舊版識別碼留下的殘留）不該繼續顯示。連續 20 分鐘都讀不到才移除；purgeOrphans 則立刻移除。
+  for (const f of await store.listByDates('checkins', rules.watchDates(today))) {
+    if (byId.has(f.id)) { if (f.missingSince) await store.setDoc('checkins', f.id, { missingSince: null }, { merge: true }); continue; }
+    if (purgeOrphans || (f.missingSince && now - f.missingSince > MISSING_GRACE_MS)) { await store.deleteDoc('checkins', f.id); summary.removed++; }
+    else if (!f.missingSince) await store.setDoc('checkins', f.id, { missingSince: now }, { merge: true });
   }
 
   // ---------- 3) 快速打卡標記（只標記，不清除） ----------

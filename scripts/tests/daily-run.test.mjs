@@ -4,6 +4,7 @@ import http from 'node:http';
 import { createNotion } from '../lib/notion.mjs';
 import { runDailySync } from '../lib/daily-run.mjs';
 import { docIdFor, keyFor } from '../lib/daily-sync.mjs';
+import { DAILY_SCHEMAS } from '../lib/daily-schema.mjs';
 
 let fail = 0;
 const eq = (name, got, want) => {
@@ -23,7 +24,8 @@ const rt = (s) => [{ plain_text: s, text: { content: s } }];
 const norm = (props) => Object.fromEntries(Object.entries(props).map(([k, v]) => [k, v.title ? { title: v.title.map((x) => ({ plain_text: x.text.content })) } : v.rich_text ? { rich_text: v.rich_text.map((x) => ({ plain_text: x.text.content })) } : v]));
 // 真實的 Notion 會回傳資料庫的每個欄位（沒填的是預設值），模擬也這樣做
 const DEFAULTS = { 打卡: { checkbox: false }, 選填: { checkbox: false }, '⚠ 連續快速打卡': { checkbox: false }, 打卡時間: { date: null }, 積分: { number: null }, 備註: { rich_text: [] }, Key: { rich_text: [] }, 排序: { number: null } };
-const add = (db, properties) => { const id = pad('9' + String(++seq).padStart(3, '0')); pages.set(id, { id, db, properties: db === DB.daily ? { ...DEFAULTS, ...properties } : properties }); return id; };
+// 真實的 Notion 頁面 ID 開頭幾乎一樣（同一批建立），所以測試也用相同的前綴，才抓得到「截短 ID 撞在一起」的問題
+const add = (db, properties) => { const id = pad('3cf4d146' + String(++seq).padStart(4, '0')); pages.set(id, { id, db, properties: db === DB.daily ? { ...DEFAULTS, ...properties } : properties }); return id; };
 const person = (name, total) => add(DB.people, { Name: { title: rt(name) }, 'Total Points': { number: total } });
 const routineRow = (o) => add(DB.routine, {
   Title: { title: rt(o.title) }, Person: { relation: o.persons.map((id) => ({ id })) }, Category: { select: { name: o.cat } }, Frequency: { select: { name: o.freq } },
@@ -50,10 +52,13 @@ const server = http.createServer((req, res) => {
       }
       return send({ results: rows, has_more: false });
     }
-    if (req.method === 'POST' && url === '/v1/pages') { const id = add(j.parent.database_id, norm(j.properties)); return send({ id }); }
+    // 像真的 Notion 一樣：寫入資料庫沒有的欄位會被拒絕（上線時就是因為少了「排序」欄位被擋下過）
+    const unknownProp = (db, props) => (db === DB.daily ? Object.keys(props || {}).find((k) => !(k in DAILY_SCHEMAS.daily.props)) : undefined);
+    if (req.method === 'POST' && url === '/v1/pages') { const bad = unknownProp(j.parent.database_id, j.properties); if (bad) return send({ message: bad + ' is not a property that exists.' }, 400); const id = add(j.parent.database_id, norm(j.properties)); return send({ id }); }
     if (req.method === 'PATCH' && (m = url.match(/^\/v1\/pages\/([0-9a-f]{32})$/))) {
       if (failNextPatch) { failNextPatch = false; return send({ message: 'simulated' }, 400); }
       const p = pages.get(m[1]); if (!p) return send({ message: 'nf' }, 404);
+      const bad = unknownProp(p.db, j.properties); if (bad) return send({ message: bad + ' is not a property that exists.' }, 400);
       Object.assign(p.properties, norm(j.properties)); return send({ id: p.id });
     }
     send({ message: 'unhandled ' + req.method + ' ' + url }, 400);
@@ -110,10 +115,17 @@ eq('A6 每周任務日期是本週一', byTitle('每周閱讀', '女兒').proper
 eq('A7 週五不生成「補習功課（若有）」', dailyRows().some((p) => p.properties['任務'].title[0].plain_text.startsWith('補習')), false);
 eq('A8 起始總分取自 People（女兒 87、兒子 21）', [(await store.getDoc('checkin_totals', 'daughter')).base, (await store.getDoc('checkin_totals', 'son')).base], [87, 21]);
 eq('A9 倒數日同步（隱藏的不同步）', (await store.listIds('countdowns')).length, 2);
-eq('A10 倒數日對象：兒子的考試只給兒子，全家給兩人', [(await store.getDoc('countdowns', pad('9' + '009'))) ?.who ?? null].length, 1);
+const cdDocs = await Promise.all((await store.listIds('countdowns')).map((id) => store.getDoc('countdowns', id)));
+eq('A10 倒數日對象：兒子的考試只給兒子，全家給兩人', cdDocs.map((c) => [c.title, c.who.join('+')]).sort(), [['媽媽生日', 'daughter+son'], ['第一次考試', 'son']]);
+eq('A11 ID 前綴相同的任務不會撞在一起：Firestore 文件數 = Notion 列數', [store.cols.checkins.size, new Set([...store.cols.checkins.values()].map((d) => d.page)).size], [6, 6]);
 
 s = await run(FRI + 60000);
 eq('B 第二次執行：沒有新生成、沒有更新（冪等）', [s.generated, s.created, s.updated, s.pushed, s.countdowns], [0, 0, 0, 0, 0]);
+
+// 生成記號遺失（例如上次生成到一半失敗）後重跑：已存在的列不能重複建立
+await store.deleteDoc('daily_gen', 'D_2026-11-20'); await store.deleteDoc('daily_gen', 'W_2026-11-16');
+s = await run(FRI + 90000);
+eq('B2 生成記號被清掉後重跑：不重複建立任何列（識別碼在生成與讀取兩邊一致）', [s.generated, dailyRows().length], [0, 6]);
 
 // 孩子在網站打卡
 const girlHw = await doc('2026-11-20', 'daughter', '學校功課');
@@ -146,10 +158,13 @@ await run(FRI + 310000);
 const pianoDoc = await doc('2026-11-20', 'son', '練琴');
 eq('E2 爸爸改積分與備註 → 網站更新，原始分數保留', [pianoDoc.points, pianoDoc.note, pianoDoc.basePoints], [0, '只彈了一半', 2]);
 
-// 爸爸刪除一個任務 → 不重新生成
+// 爸爸刪除一個任務 → 不重新生成，網站上也要消失（先標記，連續 20 分鐘讀不到才移除）
 pages.delete(byTitle('待評分任務', '兒子').id);
 await run(FRI + 320000);
-eq('F 爸爸刪掉的任務不會被重新生成', dailyRows().some((p) => p.properties['任務'].title[0].plain_text === '待評分任務'), false);
+eq('F1 爸爸刪掉的任務不會被重新生成', dailyRows().some((p) => p.properties['任務'].title[0].plain_text === '待評分任務'), false);
+eq('F2 剛刪掉：網站上先保留並標記', [!!(await doc('2026-11-20', 'son', '待評分任務')), !!(await doc('2026-11-20', 'son', '待評分任務'))?.missingSince], [true, true]);
+await run(FRI + 320000 + 25 * 60000);
+eq('F3 連續 20 分鐘讀不到 → 從網站移除', await doc('2026-11-20', 'son', '待評分任務'), undefined);
 
 // 爸爸手動新增一列（沒有 Key、沒有排序）
 add(DB.daily, { 任務: { title: rt('臨時：整理房間') }, 日期: { date: { start: '2026-11-20' } }, 孩子: { select: { name: '女兒' } }, 分類: { select: { name: '日常習慣' } }, 積分: { number: 2 } });

@@ -11,7 +11,8 @@ export const CHILD_NAME = { daughter: '女兒', son: '兒子' };
 export const CAT = { 學習任務: 'learn', 日常習慣: 'habit', 每周任務: 'week' };
 
 const compact = (id) => String(id || '').replace(/-/g, '');
-export const keyFor = (date, student, templateId) => `${date}|${student}|${compact(templateId).slice(0, 8)}`;
+// 注意：必須用完整的 ID。Notion 同一批建立的頁面，ID 開頭幾乎一樣，截短會讓不同任務撞成同一個識別碼。
+export const keyFor = (date, student, templateId) => `${date}|${student}|${compact(templateId)}`;
 export const docIdFor = (key) => createHash('sha1').update(key).digest('hex').slice(0, 20);
 
 // ---------- 生成當日（和本週）任務 ----------
