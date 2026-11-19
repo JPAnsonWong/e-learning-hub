@@ -111,3 +111,11 @@ body.elh-viewer .elh-sync { display: none; }
 .elh-links-menu a { display: flex; align-items: center; min-height: max(3rem, 6vmin); padding: .4rem 1rem; border-radius: .7rem;
   font-size: 1.15rem; font-weight: 700; white-space: nowrap; }
 .elh-links-menu a:active { background: #efe7d8; }
+
+/* 首頁學生卡片：主要區域可點進學習空間，下面一顆大按鈕進今日打卡 */
+.elh-student { display: flex; flex-direction: column; gap: .9rem; padding: 0; overflow: hidden; }
+.elh-student-main { display: block; padding: 1.6rem 1.6rem .4rem; }
+.elh-checkin-btn { display: flex; align-items: center; justify-content: center; min-height: max(3.4rem, 7.5vmin); margin: 0 1.2rem 1.2rem; border-radius: 1rem; background: var(--accent); color: #fff; font-size: 1.35rem; font-weight: 800; }
+.elh-checkin-btn:active { transform: scale(.98); }
+.elh-checkin-top { background: var(--accent); color: #fff; border-color: transparent; font-weight: 800; }
+.elh-checkin-top:hover { color: #fff; filter: brightness(1.08); }

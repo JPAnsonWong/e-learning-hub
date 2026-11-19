@@ -14,3 +14,7 @@ jobs:
           node-version: 22
       - name: 驗證教材 metadata 與設定
         run: node scripts/build-catalog.mjs --check
+      - name: 每日打卡規則與同步測試（模擬 Notion，不需要任何密鑰）
+        run: |
+          node scripts/tests/daily-rules.test.mjs
+          node scripts/tests/daily-run.test.mjs

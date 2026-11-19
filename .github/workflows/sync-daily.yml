@@ -1,0 +1,45 @@
+name: Sync daily check-in
+on:
+  schedule:
+    - cron: '*/15 * * * *'    # 每 15 分鐘：Notion 每日任務 ⇄ 網站打卡（GitHub 實際執行可能延遲數分鐘）
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: '演練模式：只讀取、不寫入 Notion 和 Firestore，只印數量'
+        type: boolean
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: daily-sync
+  cancel-in-progress: false
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+      NOTION_DAILY_PARENT_ID: ${{ secrets.NOTION_DAILY_PARENT_ID }}
+      FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      DRY_RUN: ${{ inputs.dry_run }}
+    steps:
+      - name: 檢查是否已設定 Secrets
+        id: gate
+        run: |
+          if [ -z "$NOTION_TOKEN" ] || [ -z "$NOTION_DAILY_PARENT_ID" ] || [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "尚未設定 NOTION_TOKEN / NOTION_DAILY_PARENT_ID / FIREBASE_SERVICE_ACCOUNT，略過每日打卡同步。"
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.run == 'true'
+      - uses: actions/setup-node@v4
+        if: steps.gate.outputs.run == 'true'
+        with:
+          node-version: 22
+      - name: 安裝 firebase-admin（不寫入倉庫）
+        if: steps.gate.outputs.run == 'true'
+        run: npm install --no-save --no-package-lock firebase-admin@12.7.0
+      - name: 同步（日誌只印數量，不印任何 Notion 內容）
+        if: steps.gate.outputs.run == 'true'
+        run: node scripts/sync-daily.mjs

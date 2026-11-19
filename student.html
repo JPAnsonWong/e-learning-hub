@@ -13,6 +13,7 @@
   <div id="app"><p class="elh-empty">載入中…</p></div>
 </div>
 <script src="assets/js/points.js"></script>
+<script src="assets/js/daily-rules.js"></script>
 <script src="assets/js/common.js"></script>
 <script src="assets/js/sync.js"></script>
 <script>
@@ -38,6 +39,7 @@
         <a class="btn btn-outline-secondary elh-btn" href="index.html">← 首頁</a>
         <h1 style="color:var(--accent)">${ELH.esc(stu.icon)} ${ELH.esc(stu.name)}的學習空間</h1>
         <span class="spacer"></span>
+        <a class="btn elh-btn elh-checkin-top" href="checkin.html?s=${encodeURIComponent(sid)}">✅ 今日打卡</a>
         <a class="btn btn-outline-secondary elh-btn" href="records.html?s=${encodeURIComponent(sid)}">📊 學習記錄</a>
         <span class="pts" id="pts" style="font-size:1.5rem;font-weight:800;color:#b26a00"></span>
       </header>
@@ -81,7 +83,7 @@
     };
 
     function render() {
-      document.getElementById('pts').textContent = `⭐ ${ELH.points(sid)} 分`;
+      document.getElementById('pts').textContent = `⭐ ${ELH.totalPoints(sid).toLocaleString()} 分`;
       const cards = (l) => l.map((i) => ELH.card(d, i)).join('');
       document.getElementById('extras').innerHTML =
         (ELH.recent(d, sid, 4).length ? ELH.section('最近學習', cards(ELH.recent(d, sid, 4)), '') : '') +

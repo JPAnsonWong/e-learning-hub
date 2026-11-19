@@ -49,7 +49,7 @@ const ELH_SYNC = (() => {
         const [appMod, authMod, fsMod] = await Promise.all([
           import(base + 'firebase-app.js'), import(base + 'firebase-auth.js'), import(base + 'firebase-firestore.js')]);
         const app = appMod.initializeApp(cfg.firebase);
-        const db = fsMod.initializeFirestore(app, { localCache: fsMod.persistentLocalCache() }); // 離線寫入會排隊
+        const db = fsMod.initializeFirestore(app, { localCache: fsMod.persistentLocalCache({ tabManager: fsMod.persistentMultipleTabManager() }) }); // 離線寫入會排隊；可同時開多個分頁
         fb = { authMod, fsMod, auth: authMod.getAuth(app), db };
         await new Promise((res) => { const un = authMod.onAuthStateChanged(fb.auth, (u) => { un(); fb.user = u; res(); }); });
         if (!fb.user && !(await loginUI())) return false;
@@ -101,11 +101,22 @@ const ELH_SYNC = (() => {
       ]), timeout]);
       mats.forEach((d) => ELH.applyRemote(sid, d.id, d.data()));
       sess.forEach((d) => ELH.mergeSession({ id: d.id, ...d.data(), updatedAt: undefined }));
+      await pullTotals(sid); // 打卡積分總表（失敗不影響其他功能，例如安全規則還沒更新時）
       setState('online');
       return true;
     } catch (e) { console.warn('pull', e); setState(navigator.onLine ? 'error' : 'offline'); return false; }
   }
+  // 每日打卡：起始總分與已確認的打卡積分（由同步程式寫入 checkin_totals/{孩子}）
+  async function pullTotals(sid) {
+    const f = await ok(); if (!f) return;
+    try {
+      const snap = await f.fsMod.getDoc(f.fsMod.doc(f.db, 'checkin_totals', sid));
+      if (snap.exists()) ELH.setExtra(sid, { base: Number(snap.data().base) || 0, confirmed: Number(snap.data().confirmed) || 0 });
+    } catch (e) { /* 沒有權限或離線就沿用本機快取 */ }
+  }
+  // 讓其他頁面（例如打卡頁）直接使用 Firestore
+  async function getFs() { const f = await ok(); return f ? { db: f.db, fs: f.fsMod } : null; }
   async function pullAll(students) { return (await Promise.all(students.map((s) => pull(s.id)))).some(Boolean); }
 
-  return { init, pull, pullAll, get state() { return state; } };
+  return { init, pull, pullAll, pullTotals, getFs, get state() { return state; } };
 })();
