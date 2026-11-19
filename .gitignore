@@ -11,3 +11,6 @@ e-Learning_SN.txt
 catalog.json
 node_modules/
 .claude/
+
+# 本機備份（含任務內容，不上傳）
+backups/
