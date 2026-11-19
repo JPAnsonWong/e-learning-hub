@@ -65,7 +65,8 @@ export function toRow(p) {
   if (!date || !student) return null; // 缺日期或孩子的列沒辦法顯示，略過
   const at = dateStart(pr['打卡時間']);
   return {
-    page: p.id, key: rich(pr.Key) || `${date}|${student}|m${compactId(p.id).slice(0, 7)}`, // 爸爸手動新增的列沒有 Key，用頁面 ID 產生
+    // 識別碼：日期＋孩子＋範本 Key（完整 ID）。爸爸手動新增的列沒有範本 Key，就用它自己的完整頁面 ID。不使用 Key 欄位（舊版本寫入的值可能被截短）
+    page: p.id, key: `${date}|${student}|${rich(pr['範本 Key']) || 'm' + compactId(p.id)}`,
     date, student, title: titleOf(pr['任務']) || '（無標題）', catName: sel(pr['分類']) || '日常習慣', optional: chk(pr['選填']),
     points: num(pr['積分']), note: rich(pr['備註']), order: num(pr['排序']),
     checked: chk(pr['打卡']), checkedAt: at ? Date.parse(at) : null, quick: chk(pr['⚠ 連續快速打卡']),

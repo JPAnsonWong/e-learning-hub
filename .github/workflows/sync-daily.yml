@@ -8,6 +8,10 @@ on:
         description: '演練模式：只讀取、不寫入 Notion 和 Firestore，只印數量'
         type: boolean
         default: false
+      purge_orphans:
+        description: '立刻移除網站上多餘的打卡文件（平常不需要；修復資料時用）'
+        type: boolean
+        default: false
 permissions:
   contents: read
 concurrency:
@@ -21,6 +25,7 @@ jobs:
       NOTION_DAILY_PARENT_ID: ${{ secrets.NOTION_DAILY_PARENT_ID }}
       FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
       DRY_RUN: ${{ inputs.dry_run }}
+      PURGE_ORPHANS: ${{ inputs.purge_orphans }}
     steps:
       - name: 檢查是否已設定 Secrets
         id: gate
