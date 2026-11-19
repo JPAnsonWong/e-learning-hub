@@ -19,6 +19,7 @@ const realStore = {
   async getDoc(col, id) { const s = await db.collection(col).doc(id).get(); return s.exists ? s.data() : null; },
   async setDoc(col, id, data, { merge = true } = {}) { await db.collection(col).doc(id).set(data, { merge }); },
   async deleteDoc(col, id) { await db.collection(col).doc(id).delete(); },
+  async listWhere(col, field, value) { return (await db.collection(col).where(field, '==', value).get()).docs.map((d) => ({ id: d.id, ...d.data() })); },
   async listIds(col) { return (await db.collection(col).select().get()).docs.map((d) => d.id); },
   async listByDates(col, dates) {
     const out = [];
@@ -42,7 +43,7 @@ try {
     console.log('【演練模式】只讀取，不會寫入 Notion 或 Firestore。');
   }
   const s = await runDailySync({ notion, store, parentId: pageIdFrom(NOTION_DAILY_PARENT_ID), log: console.log, purgeOrphans: process.env.PURGE_ORPHANS === 'true' });
-  console.log(`完成：新生成 ${s.generated} 列、新同步 ${s.created} 筆、更新 ${s.updated} 筆、推送打卡到 Notion ${s.pushed} 筆、標記快速打卡 ${s.flagged} 筆、移除多餘文件 ${s.removed} 筆、倒數日變動 ${s.countdowns} 筆、積分總表更新 ${s.totalsChanged} 筆`);
+  console.log(`完成：新生成 ${s.generated} 列、新同步 ${s.created} 筆、更新 ${s.updated} 筆、推送打卡到 Notion ${s.pushed} 筆、標記快速打卡 ${s.flagged} 筆、移除多餘文件 ${s.removed} 筆、倒數日變動 ${s.countdowns} 筆、獎勵清單變動 ${s.rewards} 筆、兌換申請新建 ${s.redeemCreated} 筆、兌換狀態更新 ${s.redeemUpdated} 筆、積分總表更新 ${s.totalsChanged} 筆`);
 } catch (e) {
   console.error('同步失敗：' + e.message);
   process.exit(1);

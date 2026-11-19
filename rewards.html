@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>獎勵兌換 · E_learning Hub</title>
+<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/css/app.css">
+<link rel="stylesheet" href="assets/css/checkin.css">
+</head>
+<body>
+<div class="elh-wrap" id="wrap">
+  <header class="elh-top">
+    <a class="btn btn-outline-secondary elh-btn" href="index.html">← 首頁</a>
+    <h1 id="title">🎁 獎勵兌換</h1>
+    <a class="btn elh-btn ck-link-btn" id="checkinBtn" href="checkin.html">✅ 今日打卡</a>
+    <span class="spacer"></span>
+  </header>
+  <div id="app"><p class="elh-empty">載入中…</p></div>
+</div>
+<div class="ck-toast" id="toast"></div>
+<script src="assets/js/points.js"></script>
+<script src="assets/js/daily-rules.js"></script>
+<script src="assets/js/common.js"></script>
+<script src="assets/js/sync.js"></script>
+<script src="assets/js/fx.js"></script>
+<script src="assets/js/checkin-core.js"></script>
+<script>
+(async () => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const esc = ELH.esc, DR = ELH_DAILY, FX = ELH_FX, CK = ELH_CK;
+  const app = $('#app');
+  const toast = CK.makeToast($('#toast'));
+  const STATUS = { pending: ['申請中', 'p'], approved: ['已批准', 'a'], rejected: ['已拒絕', 'r'] };
+
+  try {
+    const d = await ELH.loadAll();
+    const sid = new URLSearchParams(location.search).get('s') || d.students[0].id;
+    const stu = ELH.student(d, sid);
+    if (!stu) { app.innerHTML = '<p class="elh-empty">找不到這個學習空間。<a href="index.html">回首頁</a></p>'; return; }
+    document.title = `${stu.name}的獎勵兌換 · E_learning Hub`;
+    $('#title').textContent = `🎁 ${stu.name}的獎勵兌換`;
+    $('#checkinBtn').href = `checkin.html?s=${encodeURIComponent(sid)}`;
+    $('#wrap').style.setProperty('--accent', stu.color);
+    const today = DR.hkDate(Date.now());
+
+    app.innerHTML = `
+      <div class="ck-who">${d.students.map((s) => `<a href="rewards.html?s=${encodeURIComponent(s.id)}" class="${s.id === sid ? 'on' : ''}" style="${s.id === sid ? 'background:' + s.color : ''}">${esc(s.icon)} ${esc(s.name)}</a>`).join('')}</div>
+      <div class="ck-card rw-avail">
+        <div><span class="rw-lab">可用積分</span> <b id="avail" data-v="0">0</b></div>
+        <div class="ck-hint" id="availHint"></div>
+      </div>
+      <div class="rw-grid" id="rewards"><p class="ck-empty">載入獎勵清單…</p></div>
+      <div class="ck-card" style="margin-top:1rem"><h2>兌換記錄</h2><div id="history"><div class="ck-hint">載入中…</div></div></div>`;
+
+    await ELH_SYNC.init();
+    const F = await ELH_SYNC.getFs();
+    if (!F) { $('#rewards').innerHTML = '<p class="ck-empty">獎勵兌換需要連線 Firebase。請確認網站已登入家庭密碼，或稍後再試。</p>'; return; }
+    const { db, fs } = F;
+    let rewards = [], reds = [], prevStatus = new Map(), firstSnap = true;
+
+    const available = () => ELH.totalPoints(sid) - DR.holdOf(reds);
+
+    function renderPoints() {
+      const hold = DR.holdOf(reds), total = ELH.totalPoints(sid);
+      FX.countTo($('#avail'), total - hold, 700);
+      $('#availHint').textContent = `總分 ${total.toLocaleString()}${hold ? `，申請中和已兌換共 ${hold.toLocaleString()}` : ''}。申請時會先「凍結」積分，爸爸批准後正式扣除，拒絕就退回。`;
+    }
+    function renderRewards() {
+      if (!rewards.length) { $('#rewards').innerHTML = '<p class="ck-empty">獎勵清單是空的。請爸爸在 Notion「獎勵」資料庫新增（名稱、所需積分，可選每週上限和圖示）。</p>'; return; }
+      const av = available();
+      $('#rewards').innerHTML = [...rewards].sort((a, b) => a.cost - b.cost).map((w) => {
+        const used = DR.weekUsed(reds, w.id, today), chk = DR.redeemCheck(w, av, used);
+        const lim = w.limit ? `每週最多 ${w.limit} 次（本週已 ${used} 次）` : '';
+        const btn = chk.ok ? `<button class="rw-btn" data-rw="${esc(w.id)}">申請兌換</button>`
+          : `<button class="rw-btn" disabled>${chk.reason === 'limit' ? '本週已達上限' : '還差 ' + chk.need.toLocaleString() + ' 分'}</button>`;
+        return `<div class="ck-card rw-card"><div class="rw-ico">${esc(w.icon || '🎁')}</div><h3>${esc(w.name)}</h3><div class="rw-cost">⭐ ${w.cost.toLocaleString()}</div>${lim ? `<div class="ck-hint">${esc(lim)}</div>` : ''}${w.desc ? `<div class="ck-hint">${esc(w.desc)}</div>` : ''}${btn}</div>`;
+      }).join('');
+    }
+    function renderHistory() {
+      const list = [...reds].sort((a, b) => (b.requestedAt || 0) - (a.requestedAt || 0));
+      $('#history').innerHTML = list.length ? list.map((x) => {
+        const [label, cls] = STATUS[x.status] || ['', ''];
+        return `<div class="ck-row2"><span>${esc(x.icon || '🎁')} ${esc(x.name)}（⭐ ${Number(x.cost).toLocaleString()}）<br><small class="ck-hint">${esc(x.date || '')}${x.note ? '・' + esc(x.note) : ''}</small></span><span class="rw-st ${cls}">${label}</span></div>`;
+      }).join('') : '<div class="ck-hint">還沒有兌換記錄</div>';
+    }
+
+    // ---------- 申請兌換（先確認） ----------
+    function confirmBox(w) {
+      return new Promise((resolve) => {
+        const ov = document.createElement('div'); ov.className = 'elh-login';
+        ov.innerHTML = `<div class="elh-login-box" style="text-align:center"><div style="font-size:3.4rem">${esc(w.icon || '🎁')}</div><h2>確定申請兌換？</h2><p><b>${esc(w.name)}</b><br>需要 ⭐ ${w.cost.toLocaleString()} 分</p><p class="ck-hint">申請後先凍結這些積分，等爸爸批准才正式扣除；被拒絕會退回。</p><div class="row-btns"><button class="btn btn-primary" id="rwGo">確定申請</button><button class="btn btn-outline-secondary" id="rwNo">取消</button></div></div>`;
+        document.body.appendChild(ov);
+        ov.querySelector('#rwGo').onclick = () => { ov.remove(); resolve(true); };
+        ov.querySelector('#rwNo').onclick = () => { ov.remove(); resolve(false); };
+      });
+    }
+    $('#rewards').addEventListener('click', async (e) => {
+      const b = e.target.closest('[data-rw]'); if (!b || b.disabled) return;
+      const w = rewards.find((x) => x.id === b.dataset.rw); if (!w) return;
+      // 再檢查一次（資料可能剛變動）
+      const chk = DR.redeemCheck(w, available(), DR.weekUsed(reds, w.id, today));
+      if (!chk.ok) { toast(chk.reason === 'limit' ? '這個獎勵本週已達上限' : '積分不夠喔'); renderRewards(); return; }
+      if (!(await confirmBox(w))) return;
+      b.disabled = true;
+      try {
+        await fs.addDoc(fs.collection(db, 'redemptions'), { student: sid, rewardId: w.id, name: w.name, icon: w.icon || '🎁', cost: w.cost, status: 'pending', date: DR.hkDate(Date.now()), requestedAt: Date.now(), note: '', page: null });
+        FX.sfx.coin(); FX.burst(b); toast('已送出申請，等爸爸確認 🎁');
+      } catch (err) {
+        console.warn('redeem', err);
+        toast(err && err.code === 'permission-denied' ? '申請失敗：還沒有寫入權限，請爸爸先更新 Firestore 安全規則' : '申請失敗，請稍後再試');
+        b.disabled = false;
+      }
+    });
+
+    // ---------- 即時資料 ----------
+    const onErr = (e) => { console.warn('rewards', e); $('#rewards').innerHTML = `<p class="ck-empty">${e && e.code === 'permission-denied' ? '還沒有讀取權限。請爸爸先到 Firebase 更新 Firestore 安全規則（見 docs/DAILY-CHECKIN-SETUP.md）。' : '讀取獎勵資料失敗，請稍後再試。'}</p>`; };
+    fs.onSnapshot(fs.collection(db, 'rewards'), (snap) => { rewards = snap.docs.map((x) => ({ id: x.id, ...x.data() })); renderRewards(); renderPoints(); }, onErr);
+    fs.onSnapshot(fs.query(fs.collection(db, 'redemptions'), fs.where('student', '==', sid)), (snap) => {
+      reds = snap.docs.map((x) => ({ id: x.id, ...x.data() }));
+      for (const x of reds) { // 爸爸批准或拒絕時，頁面開著就立刻通知
+        const before = prevStatus.get(x.id);
+        if (!firstSnap && before === 'pending' && x.status === 'approved') { FX.sfx.fanfare(); toast(`🎉 爸爸批准了：${x.name}`); }
+        else if (!firstSnap && before === 'pending' && x.status === 'rejected') toast(`爸爸沒有批准：${x.name}${x.note ? '（' + x.note + '）' : ''}，積分已退回`);
+        prevStatus.set(x.id, x.status);
+      }
+      firstSnap = false;
+      renderRewards(); renderHistory(); renderPoints();
+    }, onErr);
+
+    renderPoints();
+    ELH_SYNC.pull(sid).then(() => { renderPoints(); renderRewards(); });
+    setInterval(() => { renderPoints(); renderRewards(); }, 60000);
+  } catch (e) { ELH.fail(app, e); }
+})();
+</script>
+</body>
+</html>

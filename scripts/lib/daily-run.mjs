@@ -2,16 +2,17 @@
 //   store.getDoc(col, id) → 資料或 null
 //   store.setDoc(col, id, data, { merge }) / store.deleteDoc(col, id) / store.listIds(col)
 //   store.listByDates(col, dates) → [{id, ...data}]   （依 date 欄位）
+//   store.listWhere(col, field, value) → [{id, ...data}]   （欄位等於某值）
 //   store.ts() → 伺服器時間戳（測試用毫秒）
 import { hkDate, addDays, mondayOf, lastEligible, planGeneration, mergeRow, quickIds, confirmedBetween, docIdFor, CHILD_NAME, rules } from './daily-sync.mjs';
-import { locate, readPeople, readRoutine, readDailyRows, createDailyRow, patchDailyRow, readCountdowns } from './daily-notion.mjs';
+import { locate, readPeople, readRoutine, readDailyRows, createDailyRow, patchDailyRow, readCountdowns, readRewards, createRedemptionRow, readRedemptionRow } from './daily-notion.mjs';
 
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
 const MISSING_GRACE_MS = 20 * 60 * 1000; // Notion 讀不到的文件，連續超過 20 分鐘才從網站移除（避免 Notion 查詢偶爾延遲而誤刪）
 
 export async function runDailySync({ notion, store, parentId, now = Date.now(), log = () => {}, purgeOrphans = false }) {
-  const summary = { generated: 0, created: 0, updated: 0, pushed: 0, flagged: 0, removed: 0, countdowns: 0, totalsChanged: 0 };
+  const summary = { generated: 0, created: 0, updated: 0, pushed: 0, flagged: 0, removed: 0, countdowns: 0, rewards: 0, redeemCreated: 0, redeemUpdated: 0, totalsChanged: 0 };
   const ids = await locate(notion, parentId);
   const today = hkDate(now), monday = mondayOf(today);
   const people = await readPeople(notion, ids.people);
@@ -84,6 +85,28 @@ export async function runDailySync({ notion, store, parentId, now = Date.now(), 
     have.delete(c.id);
   }
   for (const id of have) { await store.deleteDoc('countdowns', id); summary.countdowns++; }
+
+  // ---------- 4b) 獎勵清單與兌換申請 ----------
+  const rewardList = await readRewards(notion, ids.rewards);
+  const haveRewards = new Set(await store.listIds('rewards'));
+  for (const w of rewardList) {
+    if (!same(await store.getDoc('rewards', w.id), w.data)) { await store.setDoc('rewards', w.id, w.data, { merge: false }); summary.rewards++; }
+    haveRewards.delete(w.id);
+  }
+  for (const id of haveRewards) { await store.deleteDoc('rewards', id); summary.rewards++; }
+  // 只追蹤「申請中」的兌換：新的在 Notion 建立一列；舊的讀取爸爸的批准或拒絕
+  for (const rd of await store.listWhere('redemptions', 'status', 'pending')) {
+    if (!rd.page) {
+      const p = await createRedemptionRow(notion, ids.redemptions, rd, rd.id);
+      await store.setDoc('redemptions', rd.id, { page: p.id }, { merge: true });
+      summary.redeemCreated++;
+      continue;
+    }
+    const nr = await readRedemptionRow(notion, rd.page);
+    const status = nr.gone ? 'rejected' : nr.status === '已批准' ? 'approved' : nr.status === '已拒絕' ? 'rejected' : 'pending';
+    const note = nr.gone ? '這筆申請已被爸爸刪除' : (nr.note || '');
+    if (status !== rd.status || note !== (rd.note || '')) { await store.setDoc('redemptions', rd.id, { status, note }, { merge: true }); summary.redeemUpdated++; }
+  }
 
   // ---------- 5) 已確認的打卡積分（次日 12:00 後才計入；起始總分只在第一次建立時凍結） ----------
   const last = lastEligible(now);

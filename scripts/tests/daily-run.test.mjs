@@ -15,7 +15,7 @@ const eq = (name, got, want) => {
 const HK = (s) => Date.parse(s + '+08:00');
 
 // ================= 模擬 Notion =================
-const ROOT = 'a'.repeat(32), DB = { daily: 'd1'.padEnd(32, '0'), days: 'd2'.padEnd(32, '0'), routine: 'd3'.padEnd(32, '0'), people: 'd4'.padEnd(32, '0') };
+const ROOT = 'a'.repeat(32), DB = { daily: 'd1'.padEnd(32, '0'), days: 'd2'.padEnd(32, '0'), routine: 'd3'.padEnd(32, '0'), people: 'd4'.padEnd(32, '0'), rewards: 'd5'.padEnd(32, '0'), redemptions: 'd6'.padEnd(32, '0') };
 const pad = (s) => s.padEnd(32, '0');
 const P = {};
 const pages = new Map(); // id → {id, db, properties}
@@ -31,6 +31,7 @@ const routineRow = (o) => add(DB.routine, {
   Title: { title: rt(o.title) }, Person: { relation: o.persons.map((id) => ({ id })) }, Category: { select: { name: o.cat } }, Frequency: { select: { name: o.freq } },
   Points: { number: o.points ?? null }, Active: { checkbox: o.active !== false }, 適用星期: { multi_select: (o.wd || []).map((name) => ({ name })) }, 選填: { checkbox: !!o.optional },
 });
+const rewardRow = (name, cost, o = {}) => add(DB.rewards, { 名稱: { title: rt(name) }, 所需積分: { number: cost }, 停用: { checkbox: !!o.off }, 每週上限: { number: o.limit ?? null }, 圖示: { rich_text: rt(o.icon || '') }, 說明: { rich_text: rt('') } });
 const countdownRow = (title, date, who, hidden = false) => add(DB.days, { 事項: { title: rt(title) }, 日期: { date: { start: date } }, 對象: { select: { name: who } }, 說明: { rich_text: rt('') }, 隱藏: { checkbox: hidden }, 類型: { select: { name: '考試' } } });
 
 const server = http.createServer((req, res) => {
@@ -40,7 +41,7 @@ const server = http.createServer((req, res) => {
     let m;
     if (req.method === 'GET' && (m = url.match(/^\/v1\/blocks\/([0-9a-f]{32})\/children$/))) {
       if (m[1] !== ROOT) return send({ results: [], has_more: false });
-      const t = { daily: '每日任務', days: '重要日子', routine: 'Routine Items', people: 'People' };
+      const t = { daily: '每日任務', days: '重要日子', routine: 'Routine Items', people: 'People', rewards: '獎勵', redemptions: '兌換記錄' };
       return send({ results: [...Object.entries(DB).map(([k, id]) => ({ id, type: 'child_database', child_database: { title: t[k] } })), { id: pad('e1'), type: 'child_database', child_database: { title: 'Routine Items - 棄用' } }], has_more: false });
     }
     if (req.method === 'POST' && (m = url.match(/^\/v1\/databases\/([0-9a-f]{32})\/query$/))) {
@@ -53,8 +54,10 @@ const server = http.createServer((req, res) => {
       return send({ results: rows, has_more: false });
     }
     // 像真的 Notion 一樣：寫入資料庫沒有的欄位會被拒絕（上線時就是因為少了「排序」欄位被擋下過）
-    const unknownProp = (db, props) => (db === DB.daily ? Object.keys(props || {}).find((k) => !(k in DAILY_SCHEMAS.daily.props)) : undefined);
+    const schemaOf = (db) => (db === DB.daily ? DAILY_SCHEMAS.daily : db === DB.redemptions ? DAILY_SCHEMAS.redemptions : db === DB.rewards ? DAILY_SCHEMAS.rewards : null);
+    const unknownProp = (db, props) => { const sc = schemaOf(db); return sc ? Object.keys(props || {}).find((k) => !(k in sc.props)) : undefined; };
     if (req.method === 'POST' && url === '/v1/pages') { const bad = unknownProp(j.parent.database_id, j.properties); if (bad) return send({ message: bad + ' is not a property that exists.' }, 400); const id = add(j.parent.database_id, norm(j.properties)); return send({ id }); }
+    if (req.method === 'GET' && (m = url.match(/^\/v1\/pages\/([0-9a-f]{32})$/))) { const p = pages.get(m[1]); return p ? send({ id: p.id, archived: false, properties: p.properties }) : send({ message: 'not found' }, 404); }
     if (req.method === 'PATCH' && (m = url.match(/^\/v1\/pages\/([0-9a-f]{32})$/))) {
       if (failNextPatch) { failNextPatch = false; return send({ message: 'simulated' }, 400); }
       const p = pages.get(m[1]); if (!p) return send({ message: 'nf' }, 404);
@@ -75,6 +78,7 @@ function memoryStore() {
     async setDoc(c, id, data, { merge = true } = {}) { col(c).set(id, merge ? { ...(col(c).get(id) || {}), ...data } : { ...data }); },
     async deleteDoc(c, id) { col(c).delete(id); },
     async listIds(c) { return [...col(c).keys()]; },
+    async listWhere(c, field, value) { return [...col(c)].filter(([, d]) => d[field] === value).map(([id, d]) => ({ id, ...d })); },
     async listByDates(c, dates) { return [...col(c)].filter(([, d]) => dates.includes(d.date)).map(([id, d]) => ({ id, ...d })); },
     ts: () => 'TS',
   };
@@ -97,6 +101,10 @@ countdownRow('第一次考試', '2026-12-01', '兒子');
 countdownRow('媽媽生日', '2026-12-14', '全家');
 countdownRow('隱藏的', '2026-12-20', '全家', true);
 
+const tvId = rewardRow('看電視 30 分鐘', 40, { limit: 3, icon: '📺' });
+rewardRow('玩遊戲 30 分鐘', 40);
+rewardRow('已下架的獎勵', 10, { off: true });
+rewardRow('沒有積分的獎勵', 0);
 const store = memoryStore();
 const dailyRows = () => [...pages.values()].filter((p) => p.db === DB.daily);
 const byTitle = (title, kid) => dailyRows().find((p) => p.properties['任務'].title[0].plain_text === title && p.properties['孩子'].select.name === kid);
@@ -205,6 +213,46 @@ eq('I6 起始總分不會被改動', [(await store.getDoc('checkin_totals', 'dau
 pages.delete([...pages.values()].find((p) => p.db === DB.days && p.properties['事項'].title[0].plain_text === '媽媽生日').id);
 await run(HK('2026-11-21T14:00:00'));
 eq('J 倒數日在 Notion 刪除後，網站端也移除', (await store.listIds('countdowns')).length, 1);
+
+// ---- 獎勵與兌換 ----
+const redRows = () => [...pages.values()].filter((p) => p.db === DB.redemptions);
+const RW = (await store.listIds('rewards')).length;
+eq('L1 獎勵清單同步：停用和沒積分的不同步（共 2 項）', RW, 2);
+const tvDoc = (await Promise.all((await store.listIds('rewards')).map(async (id) => ({ id, ...(await store.getDoc('rewards', id)) })))).find((x) => x.name.startsWith('看電視'));
+eq('L2 獎勵內容：積分、每週上限、圖示', [tvDoc.cost, tvDoc.limit, tvDoc.icon], [40, 3, '📺']);
+
+const REDEEM_AT = HK('2026-11-21T15:00:00');
+await store.setDoc('redemptions', 'rq1', { student: 'daughter', rewardId: tvDoc.id, name: '看電視 30 分鐘', icon: '📺', cost: 40, status: 'pending', date: '2026-11-21', requestedAt: REDEEM_AT, note: '', page: null }, { merge: false });
+await store.setDoc('redemptions', 'rq2', { student: 'son', rewardId: tvDoc.id, name: '看電視 30 分鐘', icon: '📺', cost: 40, status: 'pending', date: '2026-11-21', requestedAt: REDEEM_AT, note: '', page: null }, { merge: false });
+s = await run(REDEEM_AT + 60000);
+eq('L3 新的兌換申請 → Notion 兌換記錄建立 2 列（狀態：申請中）', [s.redeemCreated, redRows().length, [...new Set(redRows().map((p) => p.properties['狀態'].select.name))]], [2, 2, ['申請中']]);
+const r1 = redRows().find((p) => p.properties['孩子'].select.name === '女兒');
+eq('L4 兌換列內容：獎勵名稱、扣除積分、日期', [r1.properties['獎勵'].title[0].plain_text, r1.properties['扣除積分'].number, r1.properties['日期'].date.start], ['看電視 30 分鐘', 40, '2026-11-21']);
+eq('L5 文件記下 Notion 頁面 ID', !!(await store.getDoc('redemptions', 'rq1')).page, true);
+s = await run(REDEEM_AT + 120000);
+eq('L6 再執行：不重複建立、沒有變動', [s.redeemCreated, s.redeemUpdated, redRows().length], [0, 0, 2]);
+
+pages.get(r1.id).properties['狀態'] = { select: { name: '已批准' } };
+pages.get(r1.id).properties['備註'] = { rich_text: rt('週末可以看') };
+const r2 = redRows().find((p) => p.properties['孩子'].select.name === '兒子');
+pages.get(r2.id).properties['狀態'] = { select: { name: '已拒絕' } };
+s = await run(REDEEM_AT + 180000);
+const a1 = await store.getDoc('redemptions', 'rq1'), a2 = await store.getDoc('redemptions', 'rq2');
+eq('L7 爸爸批准 → approved 並帶回備註', [a1.status, a1.note, s.redeemUpdated], ['approved', '週末可以看', 2]);
+eq('L8 爸爸拒絕 → rejected', a2.status, 'rejected');
+s = await run(REDEEM_AT + 240000);
+eq('L9 已批准、已拒絕之後不再被追蹤', [s.redeemCreated, s.redeemUpdated], [0, 0]);
+
+await store.setDoc('redemptions', 'rq3', { student: 'daughter', rewardId: tvDoc.id, name: '看電視 30 分鐘', icon: '📺', cost: 40, status: 'pending', date: '2026-11-21', requestedAt: REDEEM_AT, note: '', page: null }, { merge: false });
+await run(REDEEM_AT + 300000);
+pages.delete(redRows().find((p) => p.properties['日期'] && !['rq1', 'rq2'].includes(p.properties['Key']?.rich_text?.[0]?.plain_text)).id);
+s = await run(REDEEM_AT + 360000);
+const a3 = await store.getDoc('redemptions', 'rq3');
+eq('L10 爸爸把申請列整個刪掉 → 視為拒絕', [a3.status, a3.note], ['rejected', '這筆申請已被爸爸刪除']);
+
+pages.delete([...pages.values()].find((p) => p.db === DB.rewards && p.properties['名稱'].title[0].plain_text === '玩遊戲 30 分鐘').id);
+await run(REDEEM_AT + 420000);
+eq('L11 獎勵在 Notion 刪除後，網站端也移除', (await store.listIds('rewards')).length, 1);
 
 // 日誌不洩漏內容：整合測試只確認回傳是數字摘要
 eq('K 同步摘要只有數字', Object.values(s).every((v) => typeof v === 'number'), true);

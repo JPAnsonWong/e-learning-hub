@@ -43,7 +43,20 @@
     };
   }
 
-  const api = { DAY, HK, hkDate, addDays, weekdayIndex, mondayOf, daysBetween, WEEKDAY_NAMES, lastEligible, effectiveDate, isFinalized, countsForPoints, rowPoints, watchDates, summarize };
+  // ---------- 獎勵兌換 ----------
+  // 申請中（先凍結）和已批准的都算「佔用」積分；已拒絕的退回。
+  const heldStatus = (x) => x.status === 'pending' || x.status === 'approved';
+  const holdOf = (list) => list.filter(heldStatus).reduce((a, x) => a + (Number(x.cost) || 0), 0);
+  // 本週（週一到週日）已用幾次這個獎勵（申請中和已批准都算）
+  const weekUsed = (list, rewardId, today) => { const mon = mondayOf(today), sun = addDays(mon, 6); return list.filter((x) => x.rewardId === rewardId && heldStatus(x) && x.date >= mon && x.date <= sun).length; };
+  // 能不能申請這個獎勵：{ok} 或 {ok:false, reason:'limit'|'points', need}
+  function redeemCheck(reward, available, used) {
+    if (reward.limit && used >= reward.limit) return { ok: false, reason: 'limit' };
+    if (available < reward.cost) return { ok: false, reason: 'points', need: reward.cost - available };
+    return { ok: true };
+  }
+
+  const api = { DAY, HK, hkDate, addDays, weekdayIndex, mondayOf, daysBetween, WEEKDAY_NAMES, lastEligible, effectiveDate, isFinalized, countsForPoints, rowPoints, watchDates, summarize, holdOf, weekUsed, redeemCheck };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.ELH_DAILY = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);
