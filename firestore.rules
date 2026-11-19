@@ -11,6 +11,19 @@ service cloud.firestore {
     match /sessions/{sessionId} {
       allow read, write: if isFamily();
     }
+    // ---- 每日打卡 ----
+    // 打卡任務由同步程式（Admin）建立；網站只能切換「打卡」狀態，不能新增、刪除，也不能改分數、標題。
+    match /checkins/{id} {
+      allow read: if isFamily();
+      allow update: if isFamily()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['done', 'doneAt', 'updatedAt'])
+        && request.resource.data.done is bool
+        && (request.resource.data.doneAt == null || request.resource.data.doneAt is number);
+      allow create, delete: if false;
+    }
+    match /countdowns/{id} { allow read: if isFamily(); }
+    match /checkin_totals/{id} { allow read: if isFamily(); }
+
     match /{document=**} {
       allow read, write: if false;
     }

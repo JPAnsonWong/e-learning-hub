@@ -17,6 +17,7 @@
   <div id="app"><p class="elh-empty">載入中…</p></div>
 </div>
 <script src="assets/js/points.js"></script>
+<script src="assets/js/daily-rules.js"></script>
 <script src="assets/js/common.js"></script>
 <script src="assets/js/sync.js"></script>
 <script>
@@ -27,12 +28,15 @@
     const render = () => {
       const students = d.students.map((s) => {
         const total = d.items.filter((i) => i.student === s.id).length;
-        return `<a class="elh-student" href="student.html?s=${encodeURIComponent(s.id)}" style="--accent:${s.color}">
-          <div class="icon">${ELH.esc(s.icon)}</div>
-          <div class="name">${ELH.esc(s.name)}</div>
-          <div class="pts">⭐ ${ELH.points(s.id)} 分</div>
-          <div class="stats">已完成 ${ELH.doneCount(s.id)} / ${total} 份教材</div>
-        </a>`;
+        return `<div class="elh-student" style="--accent:${s.color}">
+          <a class="elh-student-main" href="student.html?s=${encodeURIComponent(s.id)}">
+            <div class="icon">${ELH.esc(s.icon)}</div>
+            <div class="name">${ELH.esc(s.name)}</div>
+            <div class="pts">⭐ ${ELH.totalPoints(s.id).toLocaleString()} 分</div>
+            <div class="stats">已完成 ${ELH.doneCount(s.id)} / ${total} 份教材</div>
+          </a>
+          <a class="elh-checkin-btn" href="checkin.html?s=${encodeURIComponent(s.id)}">✅ 今日打卡</a>
+        </div>`;
       }).join('');
       const cards = (list) => list.map((i) => ELH.card(d, i, { showStudent: true })).join('');
       app.innerHTML =

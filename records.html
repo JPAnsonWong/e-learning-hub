@@ -27,6 +27,7 @@
 <body>
 <div class="elh-wrap" id="wrap"><div id="app"><p class="elh-empty">載入中…</p></div></div>
 <script src="assets/js/points.js"></script>
+<script src="assets/js/daily-rules.js"></script>
 <script src="assets/js/common.js"></script>
 <script src="assets/js/sync.js"></script>
 <script>
@@ -65,7 +66,7 @@
           <h1 style="color:var(--accent)">${esc(stu.icon)} ${esc(stu.name)}的學習記錄</h1>
         </header>
         <div class="rec-stats">
-          <div class="rec-stat">積分<b>⭐ ${ELH.points(sid)}</b><small>舊積分 ${pinfo.legacy}（已凍結）＋ 新積分 ${pinfo.fresh}</small></div>
+          <div class="rec-stat">總積分<b>⭐ ${ELH.totalPoints(sid).toLocaleString()}</b><small>學習積分 ${ELH.points(sid)}（含舊「點完成」積分 ${pinfo.legacy}）＋ 打卡積分 ${ELH.extraOf(sid).confirmed} ＋ 舊總分起始值 ${ELH.extraOf(sid).base}</small></div>
           <div class="rec-stat">已完成教材<b>${ELH.doneCount(sid)} / ${mine.length}</b></div>
           <div class="rec-stat">累計學習時間<b>${esc(mins(totalSec))}</b></div>
           <div class="rec-stat">作答正確率<b>${sum.t ? Math.round((sum.c / sum.t) * 100) + '%' : '—'}</b></div>

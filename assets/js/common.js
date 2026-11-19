@@ -62,7 +62,13 @@ const ELH = (() => {
     const legacy = ELH_POINTS.legacyPoints(items, pointsCfg);
     return (memo[sid] = { legacy, fresh: fresh.total, total: legacy + fresh.total, bySession: fresh.bySession, validCount: fresh.validCount });
   }
-  const points = (sid) => pointsInfo(sid).total;
+  const points = (sid) => pointsInfo(sid).total; // 學習積分（作答 + 舊「點完成」積分）
+  // 打卡系統的積分（舊 Notion 總分起始值、已確認的打卡積分）由同步程式寫入 Firestore，這裡只存本機快取
+  const XKEY = 'elh.extra.v1';
+  const readExtraAll = () => { try { return JSON.parse(localStorage.getItem(XKEY) || '{}'); } catch { return {}; } };
+  const extraOf = (sid) => ({ base: 0, confirmed: 0, ...(readExtraAll()[sid] || {}) });
+  function setExtra(sid, v) { const o = readExtraAll(); o[sid] = { base: v.base || 0, confirmed: v.confirmed || 0 }; try { localStorage.setItem(XKEY, JSON.stringify(o)); } catch { /* 忽略 */ } }
+  const totalPoints = (sid) => points(sid) + extraOf(sid).base + extraOf(sid).confirmed; // 合併總分
   // 完成次數 = 舊的完成記錄（cutover 前）+ 有效場次數
   function completedTimes(sid, id) {
     if (!pointsCfg || typeof ELH_POINTS === 'undefined') return 0;
@@ -245,7 +251,7 @@ const ELH = (() => {
     el.innerHTML = `<p class="elh-empty">載入失敗：${esc(e.message)}。請確認是透過網址（不是直接雙擊檔案）打開。</p>`;
   }
 
-  return { loadAll, hooks, itemState, getRaw, mergeItem, applyRemote, points, pointsInfo, completedTimes, doneCount, markStart, complete, toggleReview, getResume, setResume, sessionById,
+  return { loadAll, hooks, itemState, getRaw, mergeItem, applyRemote, points, totalPoints, extraOf, setExtra, pointsInfo, completedTimes, doneCount, markStart, complete, toggleReview, getResume, setResume, sessionById,
     saveSession, mergeSession, sessionsOf, summarize,
     esc, stageLabel, typeLabel, student, subject, badges, isNew, card, recent, reviewList, latest, section, mountLinks, fail };
 })();

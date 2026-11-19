@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>每日打卡效果預覽（示範資料）</title>
+<style>
+  :root { --bg:#f6f1e8; --ink:#1d2733; --muted:#5d6877; --card:#fffdf9; --line:#e3d9c9; --accent:#d6457f; --gold:#b26a00; --good:#157a3a; --bad:#b42318; --tint:#fdeaf2; }
+  html { font-size: clamp(15px, 1.55vmin, 44px); }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:"Noto Sans TC","PingFang TC","PingFang HK","Microsoft JhengHei",sans-serif; line-height:1.45; -webkit-tap-highlight-color:transparent; touch-action:manipulation; }
+  button { font-family:inherit; cursor:pointer; }
+  .top { display:flex; align-items:center; gap:1rem; flex-wrap:wrap; padding:.8rem clamp(1rem,2.5vmin,3rem); background:var(--card); border-bottom:1px solid var(--line); position:sticky; top:0; z-index:20; }
+  .brand { font-weight:800; font-size:1.3rem; color:#8b2e2e; white-space:nowrap; }
+  .tag { font-size:.8rem; background:#fff0c9; color:#8a5a12; border-radius:999px; padding:.15rem .7rem; font-weight:700; margin-left:.5rem; }
+  .tabs { display:flex; gap:.5rem; flex-wrap:wrap; margin-left:auto; }
+  .tabs button, .tool { min-height:max(3rem,6.5vmin); padding:.3rem 1.2rem; border-radius:999px; border:1px solid var(--line); background:var(--bg); font-size:1.05rem; font-weight:800; color:var(--ink); }
+  .tabs button.on { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .tool { font-weight:700; }
+  main { padding:1.2rem clamp(1rem,2.5vmin,3rem) 5rem; }
+  .tab { display:none; } .tab.on { display:block; }
+
+  /* ---- 打卡頁 ---- */
+  .who { display:flex; gap:.6rem; margin-bottom:1rem; flex-wrap:wrap; }
+  .who button { min-height:max(3rem,6.5vmin); padding:.3rem 1.4rem; border-radius:999px; border:2px solid var(--line); background:var(--card); font-size:1.2rem; font-weight:800; }
+  .who button.on { color:#fff; border-color:transparent; }
+  .layout { display:grid; grid-template-columns:1.45fr 1fr; gap:1.4rem; align-items:start; }
+  .col-side { display:grid; gap:.7rem; position:sticky; top:5.2rem; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:1.2rem; padding:.85rem 1.2rem; box-shadow:0 .4rem 1.2rem rgba(29,39,51,.06); }
+  .card h2 { margin:0 0 .45rem; font-size:1.15rem; font-weight:800; color:var(--muted); }
+  .catname { font-size:1.2rem; font-weight:800; margin:1.2rem 0 .6rem; }
+  .catname:first-child { margin-top:0; }
+  .tasks { display:grid; gap:.8rem; grid-template-columns:repeat(auto-fill,minmax(min(100%,21rem),1fr)); }
+
+  .clock { text-align:center; }
+  .clock .date { font-size:1.3rem; font-weight:700; }
+  .clock .time { font-variant-numeric:tabular-nums; font-weight:800; font-size:3.9rem; line-height:1.05; letter-spacing:.02em; }
+  .clock .sec { font-size:2rem; color:var(--accent); display:inline-block; min-width:2.4ch; text-align:left; }
+  .clock .sec.tick { animation:secpulse .5s ease-out; }
+  @keyframes secpulse { 0% { transform:scale(1.22); } 100% { transform:scale(1); } }
+  .dayline { display:flex; align-items:center; gap:.8rem; margin-top:.3rem; color:var(--muted); font-weight:700; }
+  .bar { flex:1; height:.7rem; background:#eee6d6; border-radius:99px; overflow:hidden; } .bar i { display:block; height:100%; background:var(--accent); border-radius:99px; transition:width 1s linear; }
+
+  .cds { display:grid; gap:.45rem; }
+  .cd { display:flex; align-items:center; gap:.9rem; padding:.45rem .9rem; border-radius:.9rem; background:#f6efe0; }
+  .cd b { font-size:2rem; line-height:1; min-width:3.2ch; text-align:center; font-variant-numeric:tabular-nums; }
+  .cd small { display:block; color:var(--muted); font-size:.85rem; }
+  .cd.warn { background:#fff0c9; } .cd.warn b { color:#a05a00; } .cd.hot { background:#fde8e6; } .cd.hot b { color:var(--bad); animation:hot 1.4s ease-in-out infinite; }
+  @keyframes hot { 50% { transform:scale(1.08); } }
+
+  .pts3 { display:grid; grid-template-columns:repeat(3,1fr); gap:.6rem; text-align:center; }
+  .pts3 > div { background:#f6efe0; border-radius:.9rem; padding:.6rem .3rem; }
+  .pts3 small { display:block; color:var(--muted); font-size:.82rem; font-weight:700; }
+  .pts3 b { font-size:1.75rem; line-height:1.15; font-variant-numeric:tabular-nums; }
+  .pts3 .exp b { color:var(--gold); } .pts3 .exp.bump { animation:bump .5s ease-out; }
+  @keyframes bump { 30% { transform:scale(1.18); background:#fff0c9; } 100% { transform:scale(1); } }
+  .hint { font-size:.85rem; color:var(--muted); margin-top:.5rem; }
+  details.more { margin-top:.5rem; } details.more summary { cursor:pointer; font-weight:700; color:var(--muted); min-height:2.4rem; display:flex; align-items:center; }
+  .row2 { display:flex; justify-content:space-between; padding:.25rem 0; border-bottom:1px dashed var(--line); font-size:.95rem; } .row2:last-child { border:0; }
+  .corr { color:var(--bad); font-weight:700; }
+
+  .streak { display:flex; align-items:center; gap:1rem; }
+  .flame { font-size:2.2rem; display:inline-block; animation:flame 1.2s ease-in-out infinite; transform-origin:50% 90%; }
+  @keyframes flame { 0%,100% { transform:scale(1) rotate(-3deg); } 50% { transform:scale(1.12) rotate(3deg); } }
+  .streak b { font-size:1.9rem; }
+  .week { display:grid; grid-template-columns:repeat(7,1fr); gap:.3rem; margin-top:.4rem; text-align:center; font-size:.85rem; color:var(--muted); font-weight:700; }
+  .week span { display:flex; align-items:center; justify-content:center; width:100%; aspect-ratio:1; max-width:3rem; margin:.15rem auto 0; border-radius:50%; background:#eee6d6; font-size:1.1rem; }
+  .week .ok span { background:var(--accent); color:#fff; } .week .miss span { background:#f3dcd8; color:var(--bad); } .week .today span { outline:3px solid var(--accent); outline-offset:2px; }
+  .week .today.ok span { animation:bump .6s ease-out; }
+
+  .task { position:relative; display:flex; align-items:center; gap:.9rem; min-height:max(4.4rem,9.5vmin); padding:.7rem 1rem; border-radius:1rem; background:var(--card); border:2px solid var(--line); cursor:pointer; user-select:none; transition:background .25s, border-color .25s, transform .15s; }
+  .task:active { transform:scale(.985); }
+  .task.done { background:var(--tint); border-color:var(--accent); }
+  .task.pop { animation:pop .5s cubic-bezier(.3,1.6,.5,1); }
+  @keyframes pop { 0% { transform:scale(1); } 40% { transform:scale(1.07) rotate(-1deg); } 100% { transform:scale(1); } }
+  .ico { font-size:1.9rem; width:2.4rem; text-align:center; }
+  .ttl { flex:1; font-size:1.15rem; font-weight:800; line-height:1.3; }
+  .ttl small { display:block; font-size:.82rem; color:var(--muted); font-weight:600; margin-top:.1rem; }
+  .pt { font-weight:800; color:var(--gold); background:#fff0c9; padding:.15rem .7rem; border-radius:99px; font-size:.95rem; white-space:nowrap; }
+  .pt.na { color:var(--muted); background:#ece6d9; }
+  .chk { flex:0 0 auto; width:3rem; height:3rem; border-radius:50%; border:3px solid #cbbfa9; display:flex; align-items:center; justify-content:center; background:#fff; transition:background .2s, border-color .2s; }
+  .task.done .chk { background:var(--accent); border-color:var(--accent); }
+  .chk svg { width:70%; height:70%; } .chk path { fill:none; stroke:#fff; stroke-width:4; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:30; stroke-dashoffset:30; transition:stroke-dashoffset .35s ease .05s; }
+  .task.done .chk path { stroke-dashoffset:0; }
+  .fix { margin-top:.35rem; font-size:.85rem; color:var(--bad); font-weight:700; }
+  .flyer { position:fixed; z-index:80; font-size:1.7rem; pointer-events:none; will-change:transform; }
+  .spark { position:fixed; z-index:80; width:.5rem; height:.5rem; border-radius:50%; pointer-events:none; }
+
+  /* ---- 看板 ---- */
+  .board { display:grid; gap:1.2rem; }
+  .board-head { display:grid; grid-template-columns:auto 1fr; gap:1.4rem; align-items:center; }
+  .board .clock .time { font-size:9vmin; } .board .clock .sec { font-size:4.4vmin; } .board .clock .date { font-size:2.6vmin; }
+  .board .cds { grid-template-columns:repeat(auto-fit,minmax(18rem,1fr)); }
+  .board .cd b { font-size:2.6rem; }
+  .kids { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; }
+  .kid { border:3px solid var(--accent); }
+  .kid h3 { margin:0; font-size:1.7rem; color:var(--accent); display:flex; align-items:center; gap:.8rem; flex-wrap:wrap; }
+  .kid .meta { display:flex; gap:1rem; flex-wrap:wrap; margin:.6rem 0 .8rem; color:var(--muted); font-weight:700; font-size:1.05rem; }
+  .kid .meta b { color:var(--ink); font-size:1.4rem; }
+  .kid .tasks { grid-template-columns:1fr 1fr; gap:.55rem; }
+  .kid .task { min-height:max(3.4rem,7vmin); padding:.45rem .8rem; gap:.6rem; } .kid .ttl { font-size:1rem; } .kid .ico { font-size:1.6rem; width:2rem; } .kid .chk { width:2.6rem; height:2.6rem; } .kid .pt { font-size:.85rem; padding:.1rem .5rem; }
+  .ring { --p:0; width:4.2rem; height:4.2rem; border-radius:50%; background:conic-gradient(var(--accent) calc(var(--p)*1%), #eee6d6 0); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem; flex:0 0 auto; }
+  .ring span { background:var(--card); width:78%; height:78%; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+
+  /* ---- 獎勵 ---- */
+  .avail { display:flex; align-items:baseline; gap:1rem; flex-wrap:wrap; }
+  .avail b { font-size:3rem; color:var(--gold); font-variant-numeric:tabular-nums; }
+  .rewards { display:grid; gap:1rem; grid-template-columns:repeat(auto-fill,minmax(min(100%,17rem),1fr)); margin-top:1rem; }
+  .rw { text-align:center; } .rw .big { font-size:3rem; } .rw h3 { margin:.2rem 0; font-size:1.2rem; } .rw .cost { font-weight:800; color:var(--gold); font-size:1.3rem; }
+  .rw button { width:100%; min-height:max(3rem,6.5vmin); margin-top:.6rem; border-radius:.8rem; border:0; background:var(--accent); color:#fff; font-size:1.1rem; font-weight:800; }
+  .rw button:disabled { background:#d8d0c0; color:#6b6558; cursor:not-allowed; }
+  .rw .need { font-size:.85rem; color:var(--muted); margin-top:.3rem; }
+  .st { padding:.1rem .7rem; border-radius:99px; font-weight:800; font-size:.85rem; } .st.p { background:#fff0c9; color:#8a5a12; } .st.a { background:#dff6e8; color:var(--good); } .st.r { background:#fde8e6; color:var(--bad); }
+
+  /* ---- 說明頁 ---- */
+  .doc h2 { font-size:1.5rem; margin:1.6rem 0 .6rem; } .doc h2:first-child { margin-top:0; } .doc h3 { margin:1rem 0 .4rem; font-size:1.15rem; }
+  .doc table { width:100%; border-collapse:collapse; background:var(--card); border-radius:.8rem; overflow:hidden; font-size:.95rem; margin-bottom:.8rem; }
+  .doc th, .doc td { padding:.5rem .7rem; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; } .doc th { background:#efe7d8; white-space:nowrap; }
+  .scroll { overflow-x:auto; }
+  .flow { display:flex; align-items:stretch; gap:.5rem; flex-wrap:wrap; margin:.6rem 0 1rem; }
+  .flow .node { background:var(--card); border:2px solid var(--line); border-radius:.9rem; padding:.7rem 1rem; text-align:center; min-width:9rem; font-weight:700; } .flow .node small { display:block; font-weight:500; color:var(--muted); }
+  .flow .arrow { align-self:center; font-size:1.6rem; color:var(--muted); font-weight:800; text-align:center; }
+  .tl { display:grid; grid-template-columns:repeat(auto-fit,minmax(11rem,1fr)); gap:.6rem; margin:.6rem 0 1rem; } .tl div { background:var(--card); border-left:.4rem solid var(--accent); border-radius:.7rem; padding:.6rem .8rem; } .tl b { display:block; }
+  .todo { background:#fff0c9; border-radius:1rem; padding:.8rem 1.2rem; } .todo li { margin:.3rem 0; }
+
+  /* ---- 共用層 ---- */
+  .demo { position:fixed; left:.8rem; bottom:.8rem; z-index:40; }
+  .demo summary { list-style:none; background:#1d2733; color:#fff; border-radius:99px; padding:.5rem 1.1rem; font-weight:800; cursor:pointer; min-height:2.8rem; display:flex; align-items:center; }
+  .demo .panel { position:absolute; bottom:3.4rem; left:0; width:min(22rem,86vw); background:var(--card); border:1px solid var(--line); border-radius:1rem; padding:.8rem; display:grid; gap:.5rem; box-shadow:0 .6rem 1.6rem rgba(29,39,51,.25); }
+  .demo .panel button { min-height:2.9rem; border-radius:.7rem; border:1px solid var(--line); background:var(--bg); font-weight:700; font-size:.95rem; text-align:left; padding:.3rem .8rem; }
+  #celebrate { position:fixed; inset:0; z-index:90; background:rgba(20,28,38,.86); display:none; align-items:center; justify-content:center; text-align:center; color:#fff; padding:1rem; }
+  #celebrate.show { display:flex; } #celebrate h1 { font-size:5vmin; margin:.3rem 0; } #celebrate .big { font-size:12vmin; animation:flame 1.2s ease-in-out infinite; } #celebrate p { font-size:2.4vmin; margin:.3rem 0 1.2rem; }
+  #celebrate button { min-height:max(3.2rem,7vmin); padding:.4rem 2rem; border-radius:99px; border:0; background:#fff; font-size:1.3rem; font-weight:800; }
+  #confetti { position:fixed; inset:0; z-index:91; pointer-events:none; }
+  #toast { position:fixed; left:50%; bottom:1.6rem; transform:translateX(-50%) translateY(2rem); background:#1d2733; color:#fff; padding:.8rem 1.6rem; border-radius:99px; font-size:1.2rem; font-weight:800; z-index:95; opacity:0; transition:opacity .25s, transform .25s; pointer-events:none; max-width:92vw; text-align:center; }
+  #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  #modal { position:fixed; inset:0; z-index:92; background:rgba(20,28,38,.6); display:none; align-items:center; justify-content:center; padding:1rem; } #modal.show { display:flex; }
+  #modal .box { background:var(--card); border-radius:1.2rem; padding:1.6rem; width:min(100%,28rem); text-align:center; } #modal .box h2 { margin:0 0 .6rem; } #modal .row { display:flex; gap:.8rem; margin-top:1rem; } #modal .row button { flex:1; min-height:max(3rem,6.5vmin); border-radius:.8rem; border:1px solid var(--line); background:var(--bg); font-size:1.1rem; font-weight:800; } #modal .row .go { background:var(--accent); color:#fff; border-color:var(--accent); }
+  body.reduced .flame, body.reduced .cd.hot b, body.reduced #celebrate .big { animation:none; }
+
+  @media (max-width:1100px) { .kid .tasks { grid-template-columns:1fr; } }
+  @media (max-width:980px) { .layout, .board-head, .kids { grid-template-columns:1fr; } .col-side { position:static; } .clock .time { font-size:3.6rem; } .tabs { margin-left:0; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">📚 E_learning Hub<span class="tag">效果預覽・示範資料</span></div>
+  <nav class="tabs" role="tablist" id="tabs">
+    <button data-tab="checkin" class="on">✅ 今日打卡</button>
+    <button data-tab="board">📺 家庭看板</button>
+    <button data-tab="rewards">🎁 獎勵兌換</button>
+    <button data-tab="notion">🗂️ Notion 結構與規則</button>
+  </nav>
+  <button class="tool" id="soundBtn" title="音效開關">🔊 音效開</button>
+  <button class="tool" id="motionBtn" title="減少動畫">✨ 動畫開</button>
+  <button class="tool" id="fsBtn">⛶ 全螢幕</button>
+</header>
+
+<main>
+  <!-- 今日打卡 -->
+  <section id="tab-checkin" class="tab on">
+    <div class="who" id="who"></div>
+    <div class="layout">
+      <div id="taskCol"></div>
+      <div class="col-side">
+        <div class="card clock" id="clockCard"></div>
+        <div class="card"><h2>⏳ 倒數日</h2><div class="cds" id="cds"></div></div>
+        <div class="card" id="ptsCard"></div>
+        <div class="card" id="streakCard"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 家庭看板 -->
+  <section id="tab-board" class="tab">
+    <div class="board">
+      <div class="board-head">
+        <div class="card clock" id="boardClock"></div>
+        <div class="card"><h2>⏳ 倒數日（全家）</h2><div class="cds" id="boardCds"></div></div>
+      </div>
+      <div class="kids" id="kids"></div>
+    </div>
+  </section>
+
+  <!-- 獎勵 -->
+  <section id="tab-rewards" class="tab">
+    <div class="who" id="who2"></div>
+    <div class="card">
+      <div class="avail"><span>可用積分</span><b id="avail">0</b><span class="hint" id="availHint"></span></div>
+      <div class="rewards" id="rewards"></div>
+    </div>
+    <div class="card" style="margin-top:1rem"><h2>兌換記錄</h2><div id="history"></div></div>
+  </section>
+
+  <!-- Notion 結構與規則 -->
+  <section id="tab-notion" class="tab doc">
+    <h2>1. 資料怎麼流動</h2>
+    <div class="flow">
+      <div class="node">Notion<small>任務、倒數日、獎勵<br>爸爸在這裡維護和更正</small></div>
+      <div class="arrow">⇄<br><small>每 15 分鐘</small></div>
+      <div class="node">GitHub Actions<small>定時同步程式<br>每天自動生成當日任務</small></div>
+      <div class="arrow">⇄</div>
+      <div class="node">Firebase<small>私有資料庫<br>只有家庭帳號能讀寫</small></div>
+      <div class="arrow">⇄<br><small>即時</small></div>
+      <div class="node">網站<small>孩子在這裡打卡<br>手機、平板、65 寸觸控屏</small></div>
+    </div>
+    <p>孩子打卡在網站上<b>立刻生效</b>；Notion 上的任務變動和爸爸的更正，約 15 到 30 分鐘內出現在網站（急用可手動觸發同步）。</p>
+
+    <h2>2. 積分與確認時間線</h2>
+    <div class="tl">
+      <div><b>打卡當下</b>孩子點任務，只增加「今日預計積分」。</div>
+      <div><b>當天任何時候</b>爸爸在 Notion 看到「積分」欄，不對就改分、改 0 或取消打卡；沒事就不用做任何事。</div>
+      <div><b>次日 12:00</b>沒被改動的，自動計入「已確認」，進入總分。</div>
+      <div><b>之後</b>網站顯示「昨日確認積分」，總分增加。</div>
+    </div>
+    <p><b>總分</b> ＝ 舊 Notion 總分（凍結的起始值）＋ 學習積分（作答、網站已有）＋ 打卡積分（已確認部分）。可展開看明細。</p>
+
+    <h2>3. Notion 資料庫</h2>
+    <h3>每日任務（新建）— 每天每個孩子每個任務一列</h3>
+    <div class="scroll"><table>
+      <tr><th>欄位</th><th>類型</th><th>誰寫入</th><th>說明</th></tr>
+      <tr><td>任務</td><td>標題</td><td>系統／爸爸</td><td>例：閱讀 20 分鐘</td></tr>
+      <tr><td>日期</td><td>日期</td><td>系統</td><td>當天（香港時間）</td></tr>
+      <tr><td>孩子</td><td>選項</td><td>系統／爸爸</td><td>女兒／兒子</td></tr>
+      <tr><td>分類</td><td>選項</td><td>系統</td><td>學習任務／日常習慣／每周任務</td></tr>
+      <tr><td>選填</td><td>勾選</td><td>系統</td><td>來自 Routine Items 的「選填」（例如「若有」的補習功課）；選填任務不影響「全部完成」慶祝和連續打卡</td></tr>
+      <tr><td>範本 Key</td><td>文字</td><td>系統</td><td>對應 Routine Items，防止重複生成</td></tr>
+      <tr><td>打卡</td><td>勾選</td><td>網站（同步寫入）</td><td>孩子打卡後同步勾上；爸爸在 Notion 取消＝更正，網站顯示「爸爸已更正」</td></tr>
+      <tr><td>打卡時間</td><td>日期時間</td><td>網站</td><td>精確到秒，方便你判斷是不是亂點</td></tr>
+      <tr><td>積分</td><td>數字</td><td>系統預設，爸爸可改</td><td>預設＝任務分數；<b>空白＝待評分</b>（你填了才計入）；網站永遠不會覆蓋它</td></tr>
+      <tr><td>備註</td><td>文字</td><td>爸爸</td><td>更正原因，網站會顯示給孩子看</td></tr>
+      <tr><td>⚠ 連續快速打卡</td><td>勾選</td><td>系統</td><td>數秒內連續打卡多項時自動勾上，只給你看</td></tr>
+    </table></div>
+    <h3>重要日子（新建）— 倒數日</h3>
+    <div class="scroll"><table>
+      <tr><th>欄位</th><th>類型</th><th>說明</th></tr>
+      <tr><td>事項</td><td>標題</td><td>例：第一次考試</td></tr>
+      <tr><td>日期</td><td>日期</td><td>網站每天自動算剩餘天數（不受同步延遲影響）</td></tr>
+      <tr><td>對象</td><td>選項</td><td>女兒／兒子／全家，決定顯示在誰的頁面</td></tr>
+      <tr><td>說明</td><td>文字</td><td>顯示在天數旁的小字</td></tr>
+      <tr><td>隱藏</td><td>勾選</td><td>勾選就暫時隱藏這個倒數日（預設顯示，新增一列不用額外操作）</td></tr>
+      <tr><td>類型</td><td>選項</td><td>考試／假期／生日／其他（決定圖示和顏色）</td></tr>
+    </table></div>
+    <h3>獎勵（新建）與 兌換記錄（新建）</h3>
+    <div class="scroll"><table>
+      <tr><th>資料庫</th><th>欄位</th></tr>
+      <tr><td>獎勵</td><td>名稱、所需積分、停用（勾選＝暫時下架，預設可兌換）、每週上限、圖示、說明</td></tr>
+      <tr><td>兌換記錄</td><td>獎勵、孩子、日期、扣除積分、狀態（申請中／已批准／已拒絕）、備註</td></tr>
+    </table></div>
+    <h3>Routine Items（沿用）</h3>
+    <p>欄位照舊（標題、人、分類、頻率、分數、啟用），<b>新增「適用星期」多選欄位</b>，空白＝每天。例：週一至週五有「完成功課」，週末有「整理房間」。另新增「選填」勾選框：勾選的任務不影響「全部完成」慶祝。</p>
+
+    <h2>4. 其他規則</h2>
+    <ul>
+      <li><b>衝突規則</b>：「積分」只由爸爸改，網站不覆蓋；「打卡」若爸爸在 Notion 取消，以 Notion 為準。</li>
+      <li><b>連續打卡</b>：當天有任何一項打卡就算達標。連續 7 天、30 天等解鎖徽章。</li>
+      <li><b>待評分</b>：沒有分數的任務打卡後顯示「待爸爸評分」，你填了分數才計入。</li>
+      <li><b>每周任務</b>：每週一生成一列，整週內打卡一次計一次分。</li>
+      <li><b>獎勵</b>：孩子申請時先「凍結」對應積分，爸爸批准後正式扣除，拒絕就退回。</li>
+      <li>動畫和音效都內建，不用外部資源；可一鍵靜音或減少動畫，也會尊重系統的「減少動態」設定。</li>
+      <li>舊的 Windows 排程要停掉，避免重複計分；舊 Python 程式碼不沿用。</li>
+    </ul>
+
+    <h2>5. 已確認的決定</h2>
+    <ul>
+      <li>每周任務：每週一生成一列，整週內打卡一次計一次分。</li>
+      <li>獎勵：申請時先「凍結」積分，爸爸批准後正式扣除，拒絕就退回。</li>
+      <li>不需要讓孩子各自輸入密碼（同一個家庭密碼）。</li>
+      <li>手機版維持目前的樣子。</li>
+      <li>連續打卡：當天有任何一項打卡就算達標。</li>
+    </ul>
+  </section>
+</main>
+
+<details class="demo"><summary>🎛 示範控制</summary>
+  <div class="panel">
+    <button id="dCorr">👨 模擬：爸爸在 Notion 更正一項</button>
+    <button id="dAll">🎉 全部打卡（看慶祝）</button>
+    <button id="dNext">🌅 模擬：到了次日 12:00（自動確認）</button>
+    <button id="dStreak">🔥 把連續天數調到 6（再打卡一項看徽章）</button>
+    <button id="dApprove">🎁 模擬：爸爸批准一個兌換申請</button>
+    <button id="dReset">↺ 重設示範</button>
+  </div>
+</details>
+
+<div id="celebrate"><div><div class="big">🎉</div><h1 id="celTitle">今天全部完成！</h1><p id="celText"></p><button id="celClose">繼續</button></div></div>
+<canvas id="confetti"></canvas>
+<div id="toast"></div>
+<div id="modal"><div class="box"><h2 id="mTitle"></h2><div id="mBody"></div><div class="row"><button id="mNo">取消</button><button class="go" id="mYes">確定</button></div></div></div>
+
+<script>
+(() => {
+  'use strict';
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const DAY = 86400000;
+  const today0 = (() => { const d = new Date(); d.setHours(0, 0, 0, 0); return d; })();
+  const addDays = (n) => new Date(today0.getTime() + n * DAY);
+  const cn = '日一二三四五六';
+
+  // ================= 示範資料（全部是假資料） =================
+  const DATA = () => ({
+    daughter: { name: '女兒', icon: '🌸', color: '#d6457f', tint: '#fdeaf2',
+      base: 800, learning: 312, checkin: 174, yesterday: 12, streak0: 6, missDay: -1,
+      tasks: [
+        { id: 1, cat: 'learn', ico: '📝', t: '完成學校功課', p: 3 }, { id: 2, cat: 'learn', ico: '📖', t: '閱讀 20 分鐘', p: 2 },
+        { id: 3, cat: 'learn', ico: '➗', t: '數學練習一頁', p: 2 }, { id: 4, cat: 'learn', ico: '🔤', t: '英文單詞溫習', p: 2 },
+        { id: 5, cat: 'habit', ico: '🎒', t: '整理書包', p: 1 }, { id: 6, cat: 'habit', ico: '🌙', t: '早睡（9:30 前上床）', p: 1 },
+        { id: 7, cat: 'habit', ico: '🧹', t: '幫忙做家務', p: null, note: '由爸爸評分' }, { id: 8, cat: 'habit', ico: '🎹', t: '練琴 15 分鐘', p: 2 },
+        { id: 9, cat: 'week', ico: '🏃', t: '運動 3 次（本週）', p: 5, note: '本週內完成一次打卡' } ],
+      cds: [ { t: '3D 第一次考試', d: 3, who: '女兒', k: '考試' }, { t: '學校旅行', d: 20, who: '女兒', k: '活動' }, { t: '媽媽生日', d: 25, who: '全家', k: '生日' } ],
+      yList: [ ['完成學校功課', 3, 3], ['閱讀 20 分鐘', 2, 2], ['練琴 15 分鐘', 2, 1, '爸爸改為 +1：練琴時間不夠'], ['整理書包', 1, 1], ['早睡', 1, 1] ] },
+    son: { name: '兒子', icon: '🚀', color: '#2a6fdb', tint: '#e6effc',
+      base: 650, learning: 205, checkin: 96, yesterday: 9, streak0: 3, missDay: 1,
+      tasks: [
+        { id: 1, cat: 'learn', ico: '📝', t: '完成學校功課', p: 3 }, { id: 2, cat: 'learn', ico: '✍️', t: '中文默書溫習', p: 2 },
+        { id: 3, cat: 'learn', ico: '📚', t: '英文閱讀 15 分鐘', p: 2 }, { id: 4, cat: 'learn', ico: '🔬', t: '科學小筆記', p: 2 },
+        { id: 5, cat: 'habit', ico: '🗂️', t: '整理書桌', p: 1 }, { id: 6, cat: 'habit', ico: '⚽', t: '運動 30 分鐘', p: 2 },
+        { id: 7, cat: 'habit', ico: '🧹', t: '幫忙做家務', p: null, note: '由爸爸評分' }, { id: 8, cat: 'habit', ico: '🌙', t: '早睡', p: 1 },
+        { id: 9, cat: 'week', ico: '🧺', t: '整理房間（本週）', p: 4, note: '本週內完成一次打卡' } ],
+      cds: [ { t: '第一次考試', d: 12, who: '兒子', k: '考試' }, { t: '聖誕假期', d: 31, who: '兒子', k: '假期' }, { t: '媽媽生日', d: 25, who: '全家', k: '生日' } ],
+      yList: [ ['完成學校功課', 3, 3], ['中文默書溫習', 2, 2], ['運動 30 分鐘', 2, 2], ['早睡', 1, 0, '爸爸取消：昨晚太晚睡'] ] } });
+  const REWARDS = [
+    { id: 'tv', ico: '📺', n: '看電視 30 分鐘', c: 40, lim: '每週最多 3 次' }, { id: 'game', ico: '🎮', n: '玩遊戲 30 分鐘', c: 40, lim: '每週最多 3 次' },
+    { id: 'dinner', ico: '🍕', n: '選擇今晚的晚餐', c: 60, lim: '每週最多 1 次' }, { id: 'book', ico: '📕', n: '買一本喜歡的書', c: 300, lim: '每月最多 1 次' },
+    { id: 'trip', ico: '🎡', n: '週末家庭活動由你決定', c: 1500, lim: '每月最多 1 次' } ];
+
+  // 連續天數要和本週日曆一致：兒子在週一缺打卡，之後每天都有打卡
+  const fixKid = (D) => { const wd = today0.getDay(); D.son.missDay = wd >= 3 ? 1 : -1; D.son.streak0 = wd >= 3 ? wd - 2 : 3; return D; };
+  let S = {}, cur = 'daughter', tab = 'checkin';
+  let hist = { daughter: [], son: [] };
+  let sound = true, calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reset = () => { S = fixKid(DATA()); for (const k in S) { S[k].tasks.forEach((t) => { t.done = false; t.fix = null; }); } hist = { daughter: [ { n: '看電視 30 分鐘', c: 40, st: 'a', d: '上週六' } ], son: [ { n: '玩遊戲 30 分鐘', c: 40, st: 'r', d: '上週日', note: '功課未完成' } ] }; };
+  reset(); if (calm) document.body.classList.add('reduced');
+
+  // ================= 計算 =================
+  const ptsOf = (t) => (t.fix && t.fix.type === 'points' ? t.fix.to : t.p);
+  const isDone = (t) => t.done && !(t.fix && t.fix.type === 'untick');
+  const expected = (s) => s.tasks.reduce((a, t) => a + (isDone(t) && ptsOf(t) != null ? ptsOf(t) : 0), 0);
+  const pending = (s) => s.tasks.filter((t) => isDone(t) && t.p == null).length;
+  const anyDone = (s) => s.tasks.some(isDone);
+  const streakOf = (s) => s.streak0 + (anyDone(s) ? 1 : 0);
+  const total = (s) => s.base + s.learning + s.checkin;
+  const spent = (k) => hist[k].filter((h) => h.st === 'a' || h.st === 'p').reduce((a, h) => a + h.c, 0);
+  const avail = (k) => total(S[k]) - spent(k);
+
+  // ================= 音效與動畫 =================
+  let ac = null;
+  function tone(f, t0, d, type = 'sine', v = .14) {
+    if (!sound) return;
+    try {
+      ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+      const o = ac.createOscillator(), g = ac.createGain(), t = ac.currentTime + t0;
+      o.type = type; o.frequency.value = f; g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(v, t + .015); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+      o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + d + .03);
+    } catch (e) { /* 沒有音效裝置就略過 */ }
+  }
+  const sfx = {
+    tick() { tone(660, 0, .12); tone(990, .09, .2); }, untick() { tone(330, 0, .14, 'triangle'); },
+    star() { tone(1320, 0, .07, 'sine', .06); }, coin() { tone(880, 0, .1, 'square', .05); tone(1175, .09, .22, 'square', .05); },
+    fanfare() { [523, 659, 784, 1047].forEach((f, i) => tone(f, i * .13, .32, 'triangle', .17)); tone(1319, .55, .7, 'triangle', .17); } };
+  const buzz = (n) => { try { navigator.vibrate && navigator.vibrate(n); } catch (e) { /* 忽略 */ } };
+  const toastEl = $('#toast'); let toastT;
+  function toast(msg) { toastEl.textContent = msg; toastEl.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => toastEl.classList.remove('show'), 2600); }
+  function countTo(el, to, ms = 600) {
+    if (!el) return; const from = Number(el.dataset.v ?? el.textContent.replace(/[^\d-]/g, '')) || 0; el.dataset.v = to;
+    if (calm || from === to) { el.textContent = to.toLocaleString(); return; }
+    const t0 = performance.now(); const step = (t) => { const p = Math.max(0, Math.min(1, (t - t0) / ms)); el.textContent = Math.round(from + (to - from) * (1 - Math.pow(1 - p, 3))).toLocaleString(); if (p < 1) requestAnimationFrame(step); }; requestAnimationFrame(step);
+  }
+  const visible = (sel) => $$(sel).find((e) => e.offsetParent !== null);
+  function bump(el) { if (!el) return; const box = el.closest('.exp') || el; box.classList.remove('bump'); void box.offsetWidth; box.classList.add('bump'); }
+  function flyStars(from, to, n) {
+    if (calm || !from || !to) { bump(to); return; }
+    const a = from.getBoundingClientRect(), b = to.getBoundingClientRect(); n = Math.max(1, Math.min(5, n));
+    for (let k = 0; k < n; k++) {
+      const s = document.createElement('div'); s.className = 'flyer'; s.textContent = '⭐';
+      const x0 = a.left + a.width / 2, y0 = a.top + a.height / 2, dx = b.left + b.width / 2 - x0, dy = b.top + b.height / 2 - y0, w = (Math.random() - .5) * 140;
+      s.style.left = x0 + 'px'; s.style.top = y0 + 'px'; document.body.appendChild(s);
+      const an = s.animate([
+        { transform: 'translate(-50%,-50%) scale(.5)', opacity: 1 },
+        { transform: `translate(calc(-50% + ${dx * .45 + w}px), calc(-50% + ${dy * .45 - 90}px)) scale(1.35)`, opacity: 1, offset: .45 },
+        { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(.45)`, opacity: .9 } ], { duration: 780 + k * 80, delay: k * 70, easing: 'cubic-bezier(.3,.7,.3,1)', fill: 'backwards' });
+      an.onfinish = () => { s.remove(); sfx.star(); if (k === n - 1) bump(to); };
+    }
+  }
+  function burst(el) {
+    if (calm || !el) return; const r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+    const cols = ['#ffb703', '#fb5607', '#ff006e', '#3a86ff', '#06d6a0'];
+    for (let k = 0; k < 10; k++) {
+      const p = document.createElement('div'); p.className = 'spark'; p.style.left = x + 'px'; p.style.top = y + 'px'; p.style.background = cols[k % cols.length]; document.body.appendChild(p);
+      const ang = (k / 10) * Math.PI * 2, d = 34 + Math.random() * 30;
+      p.animate([{ transform: 'translate(-50%,-50%) scale(1)', opacity: 1 }, { transform: `translate(calc(-50% + ${Math.cos(ang) * d}px), calc(-50% + ${Math.sin(ang) * d}px)) scale(.2)`, opacity: 0 }], { duration: 520, easing: 'ease-out' }).onfinish = () => p.remove();
+    }
+  }
+  // 彩帶
+  const cv = $('#confetti'), cx = cv.getContext('2d'); let parts = [], raf = 0;
+  function confetti() {
+    if (calm) return; cv.width = innerWidth; cv.height = innerHeight; const cols = ['#ffb703', '#fb5607', '#ff006e', '#3a86ff', '#06d6a0', '#8338ec'];
+    parts = Array.from({ length: 170 }, () => ({ x: Math.random() * cv.width, y: -20 - Math.random() * cv.height * .5, w: 8 + Math.random() * 8, h: 5 + Math.random() * 7, vx: (Math.random() - .5) * 4, vy: 3 + Math.random() * 5, r: Math.random() * 6, vr: (Math.random() - .5) * .3, c: cols[(Math.random() * cols.length) | 0] }));
+    const t0 = performance.now(); cancelAnimationFrame(raf);
+    const loop = (t) => { cx.clearRect(0, 0, cv.width, cv.height); parts.forEach((p) => { p.x += p.vx; p.y += p.vy; p.vy += .06; p.r += p.vr; cx.save(); cx.translate(p.x, p.y); cx.rotate(p.r); cx.fillStyle = p.c; cx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); cx.restore(); });
+      if (t - t0 < 4200) raf = requestAnimationFrame(loop); else cx.clearRect(0, 0, cv.width, cv.height); };
+    raf = requestAnimationFrame(loop);
+  }
+
+  // ================= 繪製 =================
+  const CAT = { learn: '📚 學習任務', habit: '🌱 日常習慣', week: '📅 每周任務' };
+  const tickSvg = '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  function taskHTML(k, t) {
+    const done = isDone(t);
+    const pt = t.p == null ? '<span class="pt na">待評分</span>' : `<span class="pt">+${ptsOf(t)}${t.fix && t.fix.type === 'points' ? '（已更正）' : ''}</span>`;
+    const fix = t.fix ? `<div class="fix">👨 爸爸已更正：${t.fix.type === 'untick' ? '這項未通過' : '+' + t.fix.from + ' → +' + t.fix.to}（${t.fix.note}）</div>` : '';
+    const sub = t.note && !fix ? `<small>${t.note}${done && t.p == null ? '・已打卡，等爸爸評分' : ''}</small>` : '';
+    return `<div class="task${done ? ' done' : ''}" data-k="${k}" data-id="${t.id}" role="checkbox" aria-checked="${done}" tabindex="0"><div class="ico">${t.ico}</div><div class="ttl">${t.t}${sub}${fix}</div>${pt}<div class="chk">${tickSvg}</div></div>`;
+  }
+  function tasksHTML(k) { return ['learn', 'habit', 'week'].map((c) => `<div class="catname">${CAT[c]}</div><div class="tasks">${S[k].tasks.filter((t) => t.cat === c).map((t) => taskHTML(k, t)).join('')}</div>`).join(''); }
+  function clockHTML() { return `<div class="date" data-r="date"></div><div class="time"><span data-r="hm"></span><span class="sec" data-r="sec"></span></div><div class="dayline"><span data-r="greet"></span><div class="bar"><i data-r="bar"></i></div><span data-r="pct"></span></div>`; }
+  function cdHTML(list, k) {
+    const items = list.map((c) => ({ ...c, d: c.d })).filter((c) => c.d >= 0).sort((a, b) => a.d - b.d);
+    return items.map((c) => { const cls = c.d <= 3 ? 'hot' : c.d <= 7 ? 'warn' : ''; const when = c.d === 0 ? '就是今天！' : `${addDays(c.d).getMonth() + 1} 月 ${addDays(c.d).getDate()} 日（週${cn[addDays(c.d).getDay()]}）`;
+      return `<div class="cd ${cls}"><b>${c.d === 0 ? '🎯' : c.d}</b><div>${c.who === '全家' && k ? '' : ''}<span>${c.who === '全家' ? '全家：' : c.who + '：'}離「${c.t}」還有${c.d === 0 ? '' : ' ' + c.d + ' 天'}<small>${when}・${c.k}</small></span></div></div>`; }).join('') || '<div class="hint">暫無倒數事項</div>';
+  }
+  function ptsHTML(k) {
+    const s = S[k], e = expected(s), p = pending(s);
+    return `<h2>⭐ 積分</h2><div class="pts3"><div><small>昨日確認</small><b>+${s.yesterday}</b></div><div class="exp" data-target="pts" data-k="${k}"><small>今日預計</small><b data-r="exp" data-v="${e}">${e}</b></div><div><small>總分</small><b data-r="total" data-v="${total(s)}">${total(s).toLocaleString()}</b></div></div>
+      <div class="hint" data-r="hint"></div>
+      <details class="more"><summary>▸ 看明細</summary><div class="row2"><span>舊總分（起始，已凍結）</span><b>${s.base}</b></div><div class="row2"><span>學習積分（作答）</span><b>${s.learning}</b></div><div class="row2"><span>打卡積分（已確認）</span><b>${s.checkin}</b></div>
+      <div class="row2"><span>昨日明細</span><b></b></div>${s.yList.map((y) => `<div class="row2"><span>${y[0]}${y[3] ? `<br><span class="corr">👨 ${y[3]}</span>` : ''}</span><b>${y[1] !== y[2] ? '+' + y[1] + ' → ' : ''}+${y[2]}</b></div>`).join('')}</details>`;
+  }
+  function streakHTML(k) {
+    const s = S[k], st = streakOf(s), wd = today0.getDay(); let cells = '';
+    for (let i = 0; i < 7; i++) {
+      let cls = '', mark = '';
+      if (i < wd) { if (i === s.missDay && wd > s.missDay + 0) { cls = 'miss'; mark = '✕'; } else { cls = 'ok'; mark = '✓'; } } else if (i === wd) { cls = 'today' + (anyDone(s) ? ' ok' : ''); mark = anyDone(s) ? '✓' : '•'; } else { mark = ''; }
+      cells += `<div class="${cls}">${cn[i]}<span>${mark}</span></div>`; }
+    return `<div class="streak"><span class="flame">🔥</span><div><b data-r="streak">${st}</b> 天連續打卡<div class="hint" style="margin:0">${st >= 7 ? '🏅 已解鎖「七天達人」徽章' : '再 ' + (7 - st) + ' 天解鎖「七天達人」徽章'}</div></div></div><div class="week">${cells}</div>`;
+  }
+  function kidHTML(k) {
+    const s = S[k], d = s.tasks.filter(isDone).length, n = s.tasks.length;
+    return `<div class="card kid" style="--accent:${s.color};--tint:${s.tint}"><h3><div class="ring" style="--p:${Math.round(d / n * 100)}"><span>${d}/${n}</span></div>${s.icon} ${s.name}</h3>
+      <div class="meta"><span>🔥 連續 <b>${streakOf(s)}</b> 天</span><span class="exp" data-target="pts" data-k="${k}">今日預計 <b data-r="exp" data-v="${expected(s)}">${expected(s)}</b></span><span>總分 <b>${total(s).toLocaleString()}</b></span></div>
+      <div class="tasks">${s.tasks.filter((t) => t.cat !== 'week').map((t) => taskHTML(k, t)).join('')}</div></div>`;
+  }
+  function whoHTML(id) { return Object.keys(S).map((k) => `<button data-who="${k}" class="${k === cur ? 'on' : ''}" style="${k === cur ? 'background:' + S[k].color : ''}">${S[k].icon} ${S[k].name}</button>`).join(''); }
+
+  function renderAll() {
+    const s = S[cur]; document.documentElement.style.setProperty('--accent', s.color); document.documentElement.style.setProperty('--tint', s.tint);
+    $('#who').innerHTML = whoHTML(); $('#who2').innerHTML = whoHTML();
+    $('#taskCol').innerHTML = `<div class="card">${tasksHTML(cur)}</div>`;
+    $('#clockCard').innerHTML = clockHTML(); $('#boardClock').innerHTML = clockHTML();
+    $('#cds').innerHTML = cdHTML(s.cds.concat(S[cur === 'daughter' ? 'son' : 'daughter'].cds.filter((c) => c.who === '全家' && !s.cds.some((x) => x.t === c.t))), cur);
+    const all = []; Object.values(S).forEach((x) => x.cds.forEach((c) => { if (!all.some((y) => y.t === c.t && y.who === c.who)) all.push(c); }));
+    $('#boardCds').innerHTML = cdHTML(all);
+    $('#ptsCard').innerHTML = ptsHTML(cur); $('#streakCard').innerHTML = streakHTML(cur);
+    $('#kids').innerHTML = Object.keys(S).map(kidHTML).join('');
+    renderHints(); renderRewards(); tickClock(true);
+  }
+  function renderHints() {
+    const s = S[cur], e = expected(s), p = pending(s);
+    const h = $('#ptsCard [data-r=hint]'); if (h) h.innerHTML = e || p ? `今日預計 <b>+${e}</b>${p ? `（另有 ${p} 項待爸爸評分）` : ''}，還沒進入總分；次日 12:00 前沒被更正就自動確認。` : '點一下任務卡片打卡，今日預計積分會增加。';
+  }
+  function renderRewards() {
+    const k = cur, s = S[k], a = avail(k);
+    countTo($('#avail'), a); $('#availHint').textContent = `總分 ${total(s).toLocaleString()}${spent(k) ? `，申請中／已兌換 ${spent(k)}` : ''}`;
+    $('#rewards').innerHTML = REWARDS.map((r) => { const ok = a >= r.c; return `<div class="card rw"><div class="big">${r.ico}</div><h3>${r.n}</h3><div class="cost">⭐ ${r.c}</div><div class="hint">${r.lim}</div><button data-rw="${r.id}" ${ok ? '' : 'disabled'}>${ok ? '申請兌換' : '還差 ' + (r.c - a) + ' 分'}</button></div>`; }).join('');
+    $('#history').innerHTML = hist[k].length ? hist[k].slice().reverse().map((h) => `<div class="row2"><span>${h.n}（⭐ ${h.c}）<br><small class="hint">${h.d}${h.note ? '・' + h.note : ''}</small></span><span class="st ${h.st}">${{ p: '申請中', a: '已批准', r: '已拒絕' }[h.st]}</span></div>`).join('') : '<div class="hint">還沒有兌換記錄</div>';
+  }
+  function refreshNumbers(k) {
+    const s = S[k];
+    $$(`[data-target="pts"][data-k="${k}"] [data-r=exp]`).forEach((el) => countTo(el, expected(s), 500));
+    if (k === cur) { renderHints(); $('#streakCard').innerHTML = streakHTML(cur); }
+    $$('#kids .kid').forEach((el, i) => { const kk = Object.keys(S)[i]; const ss = S[kk]; const d = ss.tasks.filter(isDone).length; const ring = $('.ring', el); ring.style.setProperty('--p', Math.round(d / ss.tasks.length * 100)); $('.ring span', el).textContent = d + '/' + ss.tasks.length; const b = $$('.meta b', el); b[0].textContent = streakOf(ss); });
+  }
+  function syncTask(k, t) { $$(`.task[data-k="${k}"][data-id="${t.id}"]`).forEach((el) => { el.outerHTML = taskHTML(k, t); }); }
+
+  // ================= 動作 =================
+  function toggle(k, id, el) {
+    const s = S[k], t = s.tasks.find((x) => x.id === id), before = streakOf(s), allBefore = s.tasks.filter((x) => x.cat !== 'week').every(isDone);
+    if (t.fix) { toast('這項已被爸爸更正，不能再改喔'); return; }
+    t.done = !t.done; syncTask(k, t);
+    const node = $$(`.task[data-k="${k}"][data-id="${id}"]`).find((e) => e.offsetParent !== null) || $(`.task[data-k="${k}"][data-id="${id}"]`);
+    if (t.done) {
+      sfx.tick(); buzz(30); if (node) { node.classList.add('pop'); burst($('.chk', node)); }
+      if (t.p != null) { flyStars($('.chk', node), visible(`[data-target="pts"][data-k="${k}"]`), t.p); } else toast('已打卡！這項由爸爸評分，評分後才會計入');
+    } else { sfx.untick(); }
+    refreshNumbers(k);
+    const after = streakOf(s);
+    if (after > before && after === 7) setTimeout(() => { sfx.coin(); toast('🏅 解鎖徽章：連續 7 天打卡！'); }, 900);
+    const all = s.tasks.filter((x) => x.cat !== 'week').every(isDone);
+    if (all && !allBefore) setTimeout(() => celebrate(k), 1100);
+  }
+  function celebrate(k) {
+    const s = S[k]; $('#celTitle').textContent = `${s.name}，今天全部完成！`; $('#celText').textContent = `今日預計 +${expected(s)} 分・連續打卡 ${streakOf(s)} 天・爸爸一定會為你驕傲`;
+    $('#celebrate').classList.add('show'); sfx.fanfare(); buzz([60, 40, 60, 40, 120]); confetti();
+  }
+  function correct() {
+    const s = S[cur]; let t = s.tasks.find((x) => isDone(x) && x.p != null && !x.fix);
+    if (!t) { t = s.tasks.find((x) => x.p != null && x.p > 1 && !x.fix); if (!t) return; t.done = true; }
+    t.fix = t.p > 1 ? { type: 'points', from: t.p, to: 1, note: '只做了一半' } : { type: 'untick', note: '還沒做完' };
+    syncTask(cur, t); refreshNumbers(cur); toast('👨 爸爸在 Notion 更正了一項（打卡後約 15 到 30 分鐘會同步到網站）');
+  }
+  function nextDay() {
+    const s = S[cur], e = expected(s); if (!e && !anyDone(s)) { toast('先打卡幾項，再來看自動確認'); return; }
+    s.checkin += e; s.yesterday = e; s.streak0 = streakOf(s); s.yList = s.tasks.filter((t) => isDone(t) && t.p != null).map((t) => [t.t, t.p, ptsOf(t), t.fix ? '爸爸更正：' + t.fix.note : '']);
+    s.tasks.forEach((t) => { t.done = false; t.fix = null; }); renderAll(); countTo($('[data-r=total]'), total(s), 900); toast(`🌅 新的一天！昨天的 +${e} 分已確認，總分增加了`);
+  }
+  function openModal(title, body, yes) { $('#mTitle').textContent = title; $('#mBody').innerHTML = body; $('#modal').classList.add('show'); $('#mYes').onclick = () => { $('#modal').classList.remove('show'); yes(); }; }
+  $('#mNo').onclick = () => $('#modal').classList.remove('show');
+  function redeem(id) {
+    const r = REWARDS.find((x) => x.id === id);
+    openModal('確定申請兌換？', `<div style="font-size:3rem">${r.ico}</div><p><b>${r.n}</b><br>需要 ⭐ ${r.c} 分</p><p class="hint">申請後先「凍結」這些積分，等爸爸批准才正式扣除；如果被拒絕，積分會退回。</p>`, () => {
+      hist[cur].push({ n: r.n, c: r.c, st: 'p', d: '剛剛' }); sfx.coin(); renderRewards(); toast('已送出申請，等爸爸確認 🎁'); });
+  }
+  function approve() {
+    const p = hist[cur].find((h) => h.st === 'p'); if (!p) { toast('目前沒有申請中的兌換'); return; }
+    p.st = 'a'; p.d = '剛剛'; sfx.fanfare(); renderRewards(); toast('👨 爸爸批准了：' + p.n + ' 🎉'); if (!calm) confetti();
+  }
+
+  // ================= 時鐘 =================
+  let lastSec = -1;
+  function tickClock(force) {
+    const n = new Date(), sec = n.getSeconds(); if (!force && sec === lastSec) return; lastSec = sec;
+    const hh = String(n.getHours()).padStart(2, '0'), mm = String(n.getMinutes()).padStart(2, '0'), ss = String(sec).padStart(2, '0');
+    const gr = n.getHours() < 6 ? '夜深了' : n.getHours() < 12 ? '早上好' : n.getHours() < 14 ? '中午好' : n.getHours() < 18 ? '下午好' : '晚上好';
+    const pct = Math.round(((n - today0) / DAY) * 100);
+    $$('[data-r=date]').forEach((e) => { e.textContent = `${n.getFullYear()} 年 ${n.getMonth() + 1} 月 ${n.getDate()} 日　星期${cn[n.getDay()]}`; });
+    $$('[data-r=hm]').forEach((e) => { e.textContent = `${hh}:${mm}`; });
+    $$('[data-r=sec]').forEach((e) => { e.textContent = ':' + ss; if (!calm) { e.classList.remove('tick'); void e.offsetWidth; e.classList.add('tick'); } });
+    $$('[data-r=greet]').forEach((e) => { e.textContent = gr; }); $$('[data-r=pct]').forEach((e) => { e.textContent = `今天已過 ${pct}%`; }); $$('[data-r=bar]').forEach((e) => { e.style.width = pct + '%'; });
+  }
+  setInterval(() => tickClock(false), 250);
+
+  // ================= 事件 =================
+  document.addEventListener('click', (e) => {
+    const task = e.target.closest('.task'); if (task) { toggle(task.dataset.k, Number(task.dataset.id), task); return; }
+    const w = e.target.closest('[data-who]'); if (w) { cur = w.dataset.who; renderAll(); return; }
+    const rw = e.target.closest('[data-rw]'); if (rw && !rw.disabled) { redeem(rw.dataset.rw); }
+  });
+  document.addEventListener('keydown', (e) => { if ((e.key === ' ' || e.key === 'Enter') && e.target.classList && e.target.classList.contains('task')) { e.preventDefault(); e.target.click(); } });
+  $('#tabs').addEventListener('click', (e) => { const b = e.target.closest('[data-tab]'); if (!b) return; tab = b.dataset.tab; $$('#tabs button').forEach((x) => x.classList.toggle('on', x === b)); $$('.tab').forEach((x) => x.classList.toggle('on', x.id === 'tab-' + tab)); window.scrollTo(0, 0); tickClock(true); });
+  $('#soundBtn').onclick = () => { sound = !sound; $('#soundBtn').textContent = sound ? '🔊 音效開' : '🔇 音效關'; if (sound) sfx.tick(); };
+  $('#motionBtn').onclick = () => { calm = !calm; document.body.classList.toggle('reduced', calm); $('#motionBtn').textContent = calm ? '🧘 動畫減少' : '✨ 動畫開'; };
+  $('#fsBtn').onclick = () => { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); };
+  $('#celClose').onclick = () => $('#celebrate').classList.remove('show');
+  $('#dCorr').onclick = correct;
+  $('#dAll').onclick = () => { const s = S[cur]; const rest = s.tasks.filter((t) => t.cat !== 'week' && !t.done); if (!rest.length) { celebrate(cur); return; } rest.forEach((t, i) => setTimeout(() => { const el = $$(`.task[data-k="${cur}"][data-id="${t.id}"]`).find((x) => x.offsetParent !== null); toggle(cur, t.id, el); }, i * 450)); };
+  $('#dNext').onclick = nextDay;
+  $('#dStreak').onclick = () => { const s = S[cur]; s.tasks.forEach((t) => { t.done = false; t.fix = null; syncTask(cur, t); }); s.streak0 = 6; s.missDay = -1; refreshNumbers(cur); $('#streakCard').innerHTML = streakHTML(cur); toast('連續天數已調到 6，現在打卡任何一項就會變 7 並解鎖徽章'); };
+  $('#dApprove').onclick = approve;
+  $('#dReset').onclick = () => { reset(); renderAll(); toast('已重設示範'); };
+
+  renderAll();
+  // 網址帶 #board / #rewards / #notion 可直接開啟對應分頁
+  const h0 = location.hash.slice(1); const hb = h0 && $(`#tabs [data-tab="${h0}"]`); if (hb) hb.click();
+})();
+</script>
+</body>
+</html>

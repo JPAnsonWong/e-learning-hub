@@ -23,6 +23,7 @@
 <iframe class="elh-frame" id="frame" title="教材內容" allow="fullscreen" allowfullscreen></iframe>
 <div class="elh-toast" id="toast"></div>
 <script src="assets/js/points.js"></script>
+<script src="assets/js/daily-rules.js"></script>
 <script src="assets/js/common.js"></script>
 <script src="assets/js/sync.js"></script>
 <script>
@@ -136,7 +137,7 @@
 
     const refresh = () => {
       const st = ELH.itemState(sid, id);
-      $('pts').textContent = '⭐ ' + ELH.points(sid) + ' 分';
+      $('pts').textContent = '⭐ ' + ELH.totalPoints(sid).toLocaleString() + ' 分';
       $('review').classList.toggle('btn-danger', st.review);
       $('review').classList.toggle('btn-outline-danger', !st.review);
       $('review').textContent = st.review ? '✓ 待複習中' : '待複習';
