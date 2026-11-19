@@ -13,7 +13,7 @@ const ELH_CK = (() => {
     || ((a.order ?? 999) - (b.order ?? 999)) || String(a.title).localeCompare(b.title, 'zh-Hant');
   // 清單只顯示今天的任務和本週的每周任務；昨天、上週的列只用來計算積分
   const shownRows = (rows, today) => { const monday = DR.mondayOf(today); return rows.filter((r) => r.date === today || (r.cat === 'week' && r.date === monday)).sort(sortRows); };
-  const sig = (r) => [r.done, r.fix, r.points, r.note, r.title, r.basePoints, r.optional].join('|');
+  const sig = (r) => [r.done, r.fix, r.points, r.note, r.title, r.basePoints, r.optional, r.desc].join('|');
 
   function taskHTML(r) {
     const done = isDone(r), fixed = r.fix === 'untick';
@@ -24,7 +24,9 @@ const ELH_CK = (() => {
     else if (corrected(r) && r.done) fix = `<div class="ck-fix">👨 爸爸已更正：+${r.basePoints} → +${r.points}${note}</div>`;
     else if (r.note) fix = `<small>${esc(r.note)}</small>`;
     const sub = r.cat === 'week' && !fix ? '<small>本週內完成一次打卡</small>' : (done && r.points == null && !fix ? '<small>已打卡，等爸爸評分</small>' : '');
-    return `<div class="ck-task${done ? ' done' : ''}${fixed ? ' fixed' : ''}" data-id="${esc(r.id)}" role="checkbox" aria-checked="${done}" tabindex="0"><div class="ck-ttl">${esc(r.title)}${r.optional ? '<span class="ck-opt">選填</span>' : ''}${fix || sub}</div>${pt}<div class="ck-chk">${TICK}</div></div>`;
+    // 任務說明（Routine Items 的 Description）：淺色小字、單行不撐大卡片；放不下時出現 ▾，點一下展開
+    const desc = r.desc ? `<div class="ck-descrow"><span class="ck-desc">${esc(r.desc)}</span><span class="ck-dx" aria-hidden="true">▾</span></div>` : '';
+    return `<div class="ck-task${done ? ' done' : ''}${fixed ? ' fixed' : ''}" data-id="${esc(r.id)}" role="checkbox" aria-checked="${done}" tabindex="0"><div class="ck-ttl">${esc(r.title)}${r.optional ? '<span class="ck-opt">選填</span>' : ''}${desc}${fix || sub}</div>${pt}<div class="ck-chk">${TICK}</div></div>`;
   }
 
   // 任務清單：第一次完整繪製；之後只更新有變動的卡片（不會打斷動畫）。
@@ -32,6 +34,22 @@ const ELH_CK = (() => {
   function createTaskList(container, { today, week = true, emptyHTML = '' }) {
     let rows = [], map = new Map(), ready = false;
     const cats = week ? ['learn', 'habit', 'week'] : ['learn', 'habit'];
+    // 說明放不下（被截斷）才顯示 ▾；已展開的保持展開
+    const markOverflow = () => container.querySelectorAll('.ck-descrow:not(.open)').forEach((row) => {
+      const d = row.querySelector('.ck-desc');
+      row.classList.toggle('has-more', d.scrollWidth > d.clientWidth + 1);
+    });
+    const scheduleMark = () => { requestAnimationFrame(markOverflow); setTimeout(markOverflow, 500); };
+    let resizeT; window.addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTimeout(markOverflow, 150); });
+    // 點說明展開／收合：只在「放得下」以外（被截斷或已展開）時攔截，不會誤觸打卡；放得下的說明點下去仍然是打卡
+    container.addEventListener('click', (e) => {
+      const row = e.target.closest('.ck-descrow');
+      if (!row || !(row.classList.contains('has-more') || row.classList.contains('open'))) return;
+      e.stopImmediatePropagation(); e.preventDefault();
+      const open = row.classList.toggle('open');
+      row.querySelector('.ck-dx').textContent = open ? '▴' : '▾';
+      if (!open) markOverflow();
+    }, true);
     function full() {
       const list = shownRows(rows, today).filter((r) => week || r.cat !== 'week');
       if (!list.length) { container.innerHTML = ready ? emptyHTML : '<p class="ck-empty">載入今天的任務…</p>'; return; }
@@ -39,6 +57,7 @@ const ELH_CK = (() => {
         const items = list.filter((r) => r.cat === c); if (!items.length) return '';
         return `<div class="ck-cat">${CAT_NAME[c]}</div><div class="ck-tasks">${items.map(taskHTML).join('')}</div>`;
       }).join('');
+      scheduleMark();
     }
     return {
       // 回傳這次有變動的列（沒有變動或第一次繪製時回傳空陣列）
@@ -50,9 +69,13 @@ const ELH_CK = (() => {
         else for (const r of changed) {
           const q = `.ck-task[data-id="${CSS.escape(r.id)}"]`, el = container.querySelector(q);
           if (!el) continue;
-          const pop = el.classList.contains('pop');
+          const pop = el.classList.contains('pop'), wasOpen = !!el.querySelector('.ck-descrow.open');
           el.outerHTML = taskHTML(r);
-          if (pop) container.querySelector(q)?.classList.add('pop');
+          const fresh = container.querySelector(q);
+          if (pop) fresh?.classList.add('pop');
+          const row = fresh?.querySelector('.ck-descrow');
+          if (wasOpen && row) { row.classList.add('open'); row.querySelector('.ck-dx').textContent = '▴'; }
+          scheduleMark();
         }
         return changed;
       },

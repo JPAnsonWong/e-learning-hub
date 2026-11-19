@@ -52,7 +52,7 @@ export function planGeneration({ routine, today }) {
 export function mergeRow(n, f, nowMs) {
   const content = {
     student: n.student, date: n.date, title: n.title, cat: CAT[n.catName] || 'habit', optional: !!n.optional,
-    points: n.points ?? null, note: n.note || '', order: n.order ?? 999, page: n.page, key: n.key,
+    points: n.points ?? null, note: n.note || '', desc: n.desc || '', order: n.order ?? 999, page: n.page, key: n.key,
   };
   const checked = !!n.checked;
   if (!f) {

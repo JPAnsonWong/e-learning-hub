@@ -19,10 +19,13 @@ export async function runDailySync({ notion, store, parentId, now = Date.now(), 
 
   // ---------- 1) 每天（每週）只生成一次當日任務 ----------
   // 用「生成記號」而不是檢查列是否存在：爸爸在 Notion 刪掉的任務不會被重新生成。
+  // 範本每次都讀（一次查詢）：用來生成任務，也用來帶出任務說明（Routine Items 的 Description）
+  const routineRows = await readRoutine(notion, ids.routine, people.idToName);
+  const descByTpl = new Map(routineRows.map((x) => [x.id, x.desc || '']));
   const needDay = !(await store.getDoc('daily_gen', 'D_' + today));
   const needWeek = !(await store.getDoc('daily_gen', 'W_' + monday));
   if (needDay || needWeek) {
-    const plan = planGeneration({ routine: await readRoutine(notion, ids.routine, people.idToName), today });
+    const plan = planGeneration({ routine: routineRows, today });
     const rows = [...(needDay ? plan.daily : []), ...(needWeek ? plan.weekly : [])];
     // 上一次生成到一半失敗時，已建立的列不要重複建立
     const existing = new Set((await readDailyRows(notion, ids.daily, [...new Set(rows.map((r) => r.date))])).map((r) => r.key));
@@ -40,6 +43,7 @@ export async function runDailySync({ notion, store, parentId, now = Date.now(), 
   const nrows = await readDailyRows(notion, ids.daily, rules.watchDates(today));
   const byId = new Map(), docs = new Map();
   for (const n of nrows) {
+    n.desc = descByTpl.get(n.tpl) || ''; // 手動新增的列沒有範本，就沒有說明
     const id = docIdFor(n.key);
     byId.set(id, n);
     const f = await store.getDoc('checkins', id);
