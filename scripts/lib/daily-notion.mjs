@@ -46,7 +46,8 @@ export async function readPeople(notion, dbId) {
 }
 
 export async function readRoutine(notion, dbId, idToName) {
-  const pages = await queryAll(notion, dbId);
+  // 依建立時間排序：網站上任務的顯示順序就是你在 Routine Items 建立的順序（Notion 沒指定排序時，回傳順序不固定）
+  const pages = await queryAll(notion, dbId, { sorts: [{ timestamp: 'created_time', direction: 'ascending' }] });
   return pages.map((p, order) => {
     const pr = p.properties;
     return {
