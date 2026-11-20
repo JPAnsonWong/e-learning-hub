@@ -18,3 +18,5 @@ jobs:
         run: |
           node scripts/tests/daily-rules.test.mjs
           node scripts/tests/daily-run.test.mjs
+          node scripts/tests/model.test.mjs
+          node scripts/tests/site-recs.test.mjs

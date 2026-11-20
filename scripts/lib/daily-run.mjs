@@ -5,14 +5,14 @@
 //   store.listWhere(col, field, value) → [{id, ...data}]   （欄位等於某值）
 //   store.ts() → 伺服器時間戳（測試用毫秒）
 import { hkDate, addDays, mondayOf, lastEligible, planGeneration, mergeRow, quickIds, confirmedBetween, docIdFor, CHILD_NAME, rules } from './daily-sync.mjs';
-import { locate, readPeople, readRoutine, readDailyRows, createDailyRow, patchDailyRow, readCountdowns, readRewards, createRedemptionRow, readRedemptionRow } from './daily-notion.mjs';
+import { locate, readPeople, readRoutine, readDailyRows, createDailyRow, patchDailyRow, readCountdowns, readRewards, createRedemptionRow, readRedemptionRow, readRecommended } from './daily-notion.mjs';
 
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
 const MISSING_GRACE_MS = 20 * 60 * 1000; // Notion 讀不到的文件，連續超過 20 分鐘才從網站移除（避免 Notion 查詢偶爾延遲而誤刪）
 
-export async function runDailySync({ notion, store, parentId, now = Date.now(), log = () => {}, purgeOrphans = false }) {
-  const summary = { generated: 0, created: 0, updated: 0, pushed: 0, flagged: 0, removed: 0, countdowns: 0, rewards: 0, redeemCreated: 0, redeemUpdated: 0, totalsChanged: 0 };
+export async function runDailySync({ notion, store, parentId, progressParentId = null, now = Date.now(), log = () => {}, purgeOrphans = false }) {
+  const summary = { generated: 0, created: 0, updated: 0, pushed: 0, flagged: 0, removed: 0, countdowns: 0, rewards: 0, redeemCreated: 0, redeemUpdated: 0, recommended: 0, totalsChanged: 0 };
   const ids = await locate(notion, parentId);
   const today = hkDate(now), monday = mondayOf(today);
   const people = await readPeople(notion, ids.people);
@@ -128,6 +128,17 @@ export async function runDailySync({ notion, store, parentId, now = Date.now(), 
       changed = true;
     }
     if (changed) { await store.setDoc('checkin_totals', student, { ...t, updatedAt: store.ts() }, { merge: true }); summary.totalsChanged++; }
+  }
+  // ---------- 6) 推薦學習：爸爸在 Notion「教材進度」勾選「推薦」→ 寫進積分總表文件（網站已經能讀，不需要新的安全規則） ----------
+  if (progressParentId) {
+    let rec = null;
+    try { rec = await readRecommended(notion, progressParentId); } catch (e) { log(`讀取推薦教材失敗（略過）：${e.message}`); }
+    if (rec) {
+      for (const student of Object.keys(CHILD_NAME)) {
+        const cur = await store.getDoc('checkin_totals', student);
+        if (!same(cur?.recommended || [], rec[student])) { await store.setDoc('checkin_totals', student, { recommended: rec[student] }, { merge: true }); summary.recommended++; }
+      }
+    }
   }
   return summary;
 }

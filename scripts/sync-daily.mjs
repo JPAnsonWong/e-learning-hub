@@ -42,8 +42,8 @@ try {
     notion = { ...real, call: (method, path, body) => (method === 'PATCH' || (method === 'POST' && path === '/pages') ? Promise.resolve({ id: 'dry-run' }) : real.call(method, path, body)) };
     console.log('【演練模式】只讀取，不會寫入 Notion 或 Firestore。');
   }
-  const s = await runDailySync({ notion, store, parentId: pageIdFrom(NOTION_DAILY_PARENT_ID), log: console.log, purgeOrphans: process.env.PURGE_ORPHANS === 'true' });
-  console.log(`完成：新生成 ${s.generated} 列、新同步 ${s.created} 筆、更新 ${s.updated} 筆、推送打卡到 Notion ${s.pushed} 筆、標記快速打卡 ${s.flagged} 筆、移除多餘文件 ${s.removed} 筆、倒數日變動 ${s.countdowns} 筆、獎勵清單變動 ${s.rewards} 筆、兌換申請新建 ${s.redeemCreated} 筆、兌換狀態更新 ${s.redeemUpdated} 筆、積分總表更新 ${s.totalsChanged} 筆`);
+  const s = await runDailySync({ notion, store, parentId: pageIdFrom(NOTION_DAILY_PARENT_ID), progressParentId: pageIdFrom(process.env.NOTION_PARENT_PAGE_ID) || null, log: console.log, purgeOrphans: process.env.PURGE_ORPHANS === 'true' });
+  console.log(`完成：新生成 ${s.generated} 列、新同步 ${s.created} 筆、更新 ${s.updated} 筆、推送打卡到 Notion ${s.pushed} 筆、標記快速打卡 ${s.flagged} 筆、移除多餘文件 ${s.removed} 筆、倒數日變動 ${s.countdowns} 筆、獎勵清單變動 ${s.rewards} 筆、兌換申請新建 ${s.redeemCreated} 筆、兌換狀態更新 ${s.redeemUpdated} 筆、推薦教材變動 ${s.recommended} 筆、積分總表更新 ${s.totalsChanged} 筆`);
 } catch (e) {
   console.error('同步失敗：' + e.message);
   process.exit(1);

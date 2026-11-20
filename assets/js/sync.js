@@ -111,7 +111,10 @@ const ELH_SYNC = (() => {
     const f = await ok(); if (!f) return;
     try {
       const snap = await f.fsMod.getDoc(f.fsMod.doc(f.db, 'checkin_totals', sid));
-      if (snap.exists()) ELH.setExtra(sid, { base: Number(snap.data().base) || 0, confirmed: Number(snap.data().confirmed) || 0 });
+      if (snap.exists()) {
+        ELH.setExtra(sid, { base: Number(snap.data().base) || 0, confirmed: Number(snap.data().confirmed) || 0 });
+        ELH.setRecs(sid, snap.data().recommended || []); // 爸爸在 Notion 勾選的「推薦學習」
+      }
     } catch (e) { /* 沒有權限或離線就沿用本機快取 */ }
   }
   // 讓其他頁面（例如打卡頁）直接使用 Firestore

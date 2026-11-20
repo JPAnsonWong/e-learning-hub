@@ -152,3 +152,23 @@ export async function readRedemptionRow(notion, page) {
     throw e;
   }
 }
+
+// ---------- 推薦學習 ----------
+// 在「教材進度」資料庫（放在 e-Learning Hub 頁面底下）讀出爸爸勾選「推薦」的教材，回傳 { daughter: [教材 id…], son: […] }。
+// 找不到資料庫、或還沒有「推薦」欄位時回傳 null（略過，不影響其他同步）
+export async function readRecommended(notion, parentId) {
+  const dbs = await notion.findDatabases(parentId, 2);
+  const db = dbs.find((d) => d.title === '教材進度');
+  if (!db) return null;
+  let pages;
+  try { pages = await queryAll(notion, db.id, { filter: { property: '推薦', checkbox: { equals: true } } }); }
+  catch (e) { if (e.status === 400 || e.status === 404) return null; throw e; }
+  const out = { daughter: [], son: [] };
+  for (const p of pages) {
+    // Key 的嚴格格式：孩子|教材 id（教材 id 只能是小寫英數和連字號）；不符合的列略過
+    const km = /^(daughter|son)\|([a-z0-9][a-z0-9-]*)$/.exec(rich(p.properties.Key));
+    if (km && !out[km[1]].includes(km[2])) out[km[1]].push(km[2]);
+  }
+  for (const k of Object.keys(out)) out[k].sort();
+  return out;
+}
