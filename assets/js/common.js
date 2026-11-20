@@ -68,6 +68,21 @@ const ELH = (() => {
   const readExtraAll = () => { try { return JSON.parse(localStorage.getItem(XKEY) || '{}'); } catch { return {}; } };
   const extraOf = (sid) => ({ base: 0, confirmed: 0, ...(readExtraAll()[sid] || {}) });
   function setExtra(sid, v) { const o = readExtraAll(); o[sid] = { base: v.base || 0, confirmed: v.confirmed || 0 }; try { localStorage.setItem(XKEY, JSON.stringify(o)); } catch { /* 忽略 */ } }
+  // ---------- 推薦學習（爸爸在 Notion「教材進度」勾選「推薦」；同步後存在本機快取） ----------
+  const RKEY = 'elh.recs.v1';
+  const readRecs = () => { try { return JSON.parse(localStorage.getItem(RKEY) || '{}'); } catch { return {}; } };
+  function setRecs(sid, ids) { const o = readRecs(); o[sid] = Array.isArray(ids) ? ids : []; try { localStorage.setItem(RKEY, JSON.stringify(o)); } catch { /* 忽略 */ } }
+  // 排序：最近學習過的排最前面；還沒學過的排後面，依教材日期新到舊
+  const byRecent = (a, b) => (b.last - a.last) || String(b.i.date).localeCompare(String(a.i.date));
+  function recommended(d, sid, limit = 99) {
+    const ids = new Set(readRecs()[sid] || []);
+    return d.items.filter((i) => i.student === sid && ids.has(i.id))
+      .map((i) => ({ i, last: itemState(sid, i.id).last || 0 })).sort(byRecent).slice(0, limit).map((x) => x.i);
+  }
+  function recommendedAll(d, limit = 99) {
+    return d.students.flatMap((s) => recommended(d, s.id).map((i) => ({ i, last: itemState(s.id, i.id).last || 0 })))
+      .sort(byRecent).slice(0, limit).map((x) => x.i);
+  }
   const totalPoints = (sid) => points(sid) + extraOf(sid).base + extraOf(sid).confirmed; // 合併總分
   // 完成次數 = 舊的完成記錄（cutover 前）+ 有效場次數
   function completedTimes(sid, id) {
@@ -251,7 +266,7 @@ const ELH = (() => {
     el.innerHTML = `<p class="elh-empty">載入失敗：${esc(e.message)}。請確認是透過網址（不是直接雙擊檔案）打開。</p>`;
   }
 
-  return { loadAll, hooks, itemState, getRaw, mergeItem, applyRemote, points, totalPoints, extraOf, setExtra, pointsInfo, completedTimes, doneCount, markStart, complete, toggleReview, getResume, setResume, sessionById,
+  return { loadAll, hooks, itemState, getRaw, mergeItem, applyRemote, points, totalPoints, extraOf, setExtra, setRecs, recommended, recommendedAll, pointsInfo, completedTimes, doneCount, markStart, complete, toggleReview, getResume, setResume, sessionById,
     saveSession, mergeSession, sessionsOf, summarize,
     esc, stageLabel, typeLabel, student, subject, badges, isNew, card, recent, reviewList, latest, section, mountLinks, fail };
 })();

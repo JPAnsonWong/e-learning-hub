@@ -23,6 +23,7 @@ jobs:
     env:
       NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
       NOTION_DAILY_PARENT_ID: ${{ secrets.NOTION_DAILY_PARENT_ID }}
+      NOTION_PARENT_PAGE_ID: ${{ secrets.NOTION_PARENT_PAGE_ID }}   # e-Learning Hub 頁面：讀「教材進度」的推薦（沒設定就略過推薦同步）
       FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
       DRY_RUN: ${{ inputs.dry_run }}
       PURGE_ORPHANS: ${{ inputs.purge_orphans }}

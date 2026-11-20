@@ -144,3 +144,45 @@
 .ck-descrow.open { align-items: flex-start; }
 .ck-descrow.open .ck-desc { white-space: pre-line; overflow: visible; text-overflow: clip; }
 .bd-kid .ck-desc, .bd-kid .ck-dx { font-size: .72rem; }
+
+/* ===== 看板版面修正：兩位孩子固定左右各一半，同一個螢幕同時看到；每位孩子的任務單欄往下排 ===== */
+.bd { overflow-x: hidden; }
+.bd-kids { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.bd-kid { min-width: 0; }
+.bd-kid .ck-tasks { grid-template-columns: minmax(0, 1fr); gap: .4rem; }
+.bd-kid .ck-task { min-width: 0; min-height: max(2.9rem, 5.2vmin); padding: .3rem .8rem; }
+.bd-kid .ck-cat { margin: .5rem 0 .3rem; }
+.bd-kid-head { margin-bottom: .2rem; }
+.bd-top { margin-bottom: .6rem; gap: .8rem; }
+.bd-clock .time { font-size: 4.2rem; }
+.bd-clock .sec { font-size: 2rem; }
+.bd-clock { min-width: 19rem; }
+.bd-top .ck-card { padding: .6rem 1rem; }
+.bd-cds .ck-cd { padding: .35rem .8rem; }
+@media (max-width: 1100px) { .bd-kid .ck-tasks { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 760px) { .bd-kids { grid-template-columns: minmax(0, 1fr); } }
+
+/* 看板再壓緊：頂部一排更矮、卡片高度由內容決定（一行標題加一行說明），讓兩位孩子的任務盡量一屏看完 */
+.bd-clock { min-width: 17rem; }
+.bd-clock .time { font-size: 3.4rem; }
+.bd-clock .sec { font-size: 1.7rem; }
+.bd-clock .date { font-size: 1.1rem; }
+.bd-top .ck-card { padding: .45rem .9rem; }
+.bd-top h2 { font-size: .95rem; margin: 0 0 .2rem; }
+.bd-cds .ck-cd { padding: .25rem .7rem; }
+.bd-cds .ck-cd b { font-size: 1.9rem; }
+.bd-kid .ck-task { min-height: max(2.6rem, 4.5vmin); padding: .25rem .8rem; }
+.bd-kid .ck-tasks { gap: .35rem; }
+.bd-kid .ck-cat { margin: .4rem 0 .25rem; font-size: 1rem; }
+.bd-kid-head h2 { font-size: 1.6rem; }
+
+/* 看板上不顯示「本週內完成一次打卡」提示（分類標題已經寫了「每周任務」），節省高度 */
+.bd-kid .ck-wk { display: none; }
+
+/* 打卡頁：推薦學習清單 */
+.ck-rec { display: flex; align-items: center; gap: .7rem; min-height: max(3rem, 6vmin); padding: .3rem .2rem; border-bottom: 1px dashed var(--line); }
+.ck-rec:last-child { border-bottom: 0; }
+.ck-rec:active { background: #f6efe0; }
+.ck-rec .ico { font-size: 1.5rem; width: 2rem; text-align: center; flex: 0 0 auto; }
+.ck-rec .t { flex: 1; min-width: 0; font-weight: 800; font-size: 1.05rem; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.ck-rec .t small { display: block; font-size: .8rem; color: var(--muted); font-weight: 600; }

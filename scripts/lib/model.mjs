@@ -26,7 +26,8 @@ export const SCHEMAS = {
   materials: { title: '教材進度', props: {
     教材: { title: {} }, 學生: { select: {} }, 科目: { select: {} }, 階段: { select: {} }, 類型: { select: {} },
     完成次數: { number: {} }, 累計用時分鐘: { number: {} }, 學習場次: { number: {} },
-    最近正確率: { number: { format: 'percent' } }, 最近學習: { date: {} }, 待複習: { checkbox: {} }, Key: { rich_text: {} } } },
+    最近正確率: { number: { format: 'percent' } }, 最近學習: { date: {} }, 待複習: { checkbox: {} },
+    推薦: { checkbox: {} }, Key: { rich_text: {} } } }, // 「推薦」由爸爸手動勾選（Y/N），同步程式不會寫入、不會覆蓋
   sessions: { title: '作答記錄', props: {
     場次: { title: {} }, 學生: { select: {} }, 教材: { rich_text: {} }, 科目: { select: {} }, 階段: { select: {} },
     開始時間: { date: {} }, 用時分鐘: { number: {} }, 總題數: { number: {} }, 答對: { number: {} }, 答錯: { number: {} },
@@ -72,7 +73,8 @@ export function buildModel({ students, stages, types, catalog, materials, sessio
   }
 
   // 教材進度（有進度或有場次的才列出）
-  const keys = new Set([...materials.map((m) => `${m.sid}|${m.mid}`), ...sess.map((s) => `${s.student}|${s.material}`)]);
+  // 每份教材都有一列（即使還沒學過），爸爸才能在 Notion 勾選「推薦」
+  const keys = new Set([...catalog.map((i) => `${i.student}|${i.id}`), ...materials.map((m) => `${m.sid}|${m.mid}`), ...sess.map((s) => `${s.student}|${s.material}`)]);
   for (const key of keys) {
     const [sid, mid] = key.split('|');
     const md = materials.find((m) => m.sid === sid && m.mid === mid)?.data || {};

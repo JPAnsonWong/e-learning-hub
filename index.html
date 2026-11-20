@@ -45,6 +45,7 @@
       const cards = (list) => list.map((i) => ELH.card(d, i, { showStudent: true })).join('');
       app.innerHTML =
         `<div class="elh-students">${students}</div>` +
+        ELH.section('推薦學習', cards(ELH.recommendedAll(d, 8)), '爸爸還沒有推薦教材（在 Notion「教材進度」勾選「推薦」）。') +
         ELH.section('最近學習', cards(ELH.recent(d, null, 6)), '還沒有學習記錄，從上面選一位開始吧。') +
         ELH.section('待複習', cards(ELH.reviewList(d, null, 6)), '沒有待複習的教材。') +
         ELH.section('最新教材', cards(ELH.latest(d, null, 6)), '暫無教材。');

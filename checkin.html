@@ -61,6 +61,7 @@
             <div class="ck-pts3"><div><small id="yLabel">昨日</small><b id="yPts">+0</b></div><div class="exp" id="expBox"><small>待確認</small><b id="expPts" data-v="0">0</b></div><div><small>總分</small><b id="totalPts" data-v="0">0</b></div></div>
             <div class="ck-hint" id="ptsHint"></div>
             <details class="ck-more"><summary>▸ 看明細</summary><div id="ptsDetail"></div></details></div>
+          <div class="ck-card"><h2>📌 推薦學習</h2><div id="recs"><div class="ck-hint">載入中…</div></div></div>
         </div>
       </div>`;
 
@@ -89,6 +90,20 @@
       $('#ptsDetail').innerHTML = `<div class="ck-row2"><span>舊總分（起始，已凍結）</span><b>${ex.base}</b></div><div class="ck-row2"><span>學習積分（作答）</span><b>${ELH.points(sid)}</b></div><div class="ck-row2"><span>打卡積分（已確認）</span><b>${ex.confirmed}</b></div>`;
     }
 
+    // ---------- 推薦學習：爸爸在 Notion「教材進度」勾選的；最近學習過的排最前面 ----------
+    const agoText = (ms) => {
+      if (!ms) return '還沒學過';
+      const days = DR.daysBetween(DR.hkDate(ms), today);
+      return days <= 0 ? '最近學習：今天' : days === 1 ? '最近學習：昨天' : `最近學習：${days} 天前`;
+    };
+    function renderRecs() {
+      const items = ELH.recommended(d, sid, 8);
+      $('#recs').innerHTML = items.length ? items.map((i) => {
+        const sub = ELH.subject(d, sid, i.subject);
+        return `<a class="ck-rec" href="viewer.html?id=${encodeURIComponent(i.id)}"><span class="ico">${esc(sub?.icon || '📘')}</span><span class="t">${esc(i.title)}<small>${esc(ELH.stageLabel(d, i.stage))}・${esc(agoText(ELH.itemState(sid, i.id).last))}</small></span></a>`;
+      }).join('') : '<div class="ck-hint">爸爸還沒有推薦教材（可在 Notion「教材進度」勾選「推薦」）</div>';
+    }
+
     $('#taskCol').addEventListener('click', (e) => { const t = e.target.closest('.ck-task'); if (t) CK.toggle(F, list.get(t.dataset.id), t, $('#expBox'), toast); });
     $('#taskCol').addEventListener('keydown', (e) => { if ((e.key === ' ' || e.key === 'Enter') && e.target.classList.contains('ck-task')) { e.preventDefault(); e.target.click(); } });
 
@@ -107,8 +122,8 @@
     CK.loadCountdowns(F).then((cds) => { $('#cds').innerHTML = CK.countdownsHTML(cds, sid, today); })
       .catch(() => { $('#cds').innerHTML = '<div class="ck-hint">暫時讀不到倒數日</div>'; });
 
-    renderPoints();
-    ELH_SYNC.pull(sid).then(() => renderPoints());
+    renderPoints(); renderRecs();
+    ELH_SYNC.pull(sid).then(() => { renderPoints(); renderRecs(); });
     setInterval(renderPoints, 60000); // 每分鐘更新一次（跨過次日 12:00 時，昨日積分會變成「已確認」）
   } catch (e) { ELH.fail(app, e); }
 })();

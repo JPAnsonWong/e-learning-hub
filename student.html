@@ -86,7 +86,7 @@
       document.getElementById('pts').textContent = `⭐ ${ELH.totalPoints(sid).toLocaleString()} 分`;
       const cards = (l) => l.map((i) => ELH.card(d, i)).join('');
       document.getElementById('extras').innerHTML =
-        (ELH.recent(d, sid, 4).length ? ELH.section('最近學習', cards(ELH.recent(d, sid, 4)), '') : '') +
+        (ELH.recommended(d, sid, 6).length ? ELH.section('推薦學習', cards(ELH.recommended(d, sid, 6)), '') : '') +
         (ELH.reviewList(d, sid, 4).length ? ELH.section('待複習', cards(ELH.reviewList(d, sid, 4)), '') : '');
 
       document.getElementById('chips').innerHTML =

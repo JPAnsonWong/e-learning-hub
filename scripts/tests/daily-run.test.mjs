@@ -15,7 +15,9 @@ const eq = (name, got, want) => {
 const HK = (s) => Date.parse(s + '+08:00');
 
 // ================= 模擬 Notion =================
-const ROOT = 'a'.repeat(32), DB = { daily: 'd1'.padEnd(32, '0'), days: 'd2'.padEnd(32, '0'), routine: 'd3'.padEnd(32, '0'), people: 'd4'.padEnd(32, '0'), rewards: 'd5'.padEnd(32, '0'), redemptions: 'd6'.padEnd(32, '0') };
+const ROOT = 'a'.repeat(32), DB = { daily: 'd1'.padEnd(32, '0'), days: 'd2'.padEnd(32, '0'), routine: 'd3'.padEnd(32, '0'), people: 'd4'.padEnd(32, '0'), rewards: 'd5'.padEnd(32, '0'), redemptions: 'd6'.padEnd(32, '0'), progress: 'd7'.padEnd(32, '0') };
+const ROOT2 = 'b'.repeat(32); // e-Learning Hub 頁面：放「教材進度」（和每日打卡的上層頁面不同）
+let progressBroken = false;
 const pad = (s) => s.padEnd(32, '0');
 const P = {};
 const pages = new Map(); // id → {id, db, properties}
@@ -40,16 +42,18 @@ const server = http.createServer((req, res) => {
     const send = (o, code = 200) => { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(o)); };
     let m;
     if (req.method === 'GET' && (m = url.match(/^\/v1\/blocks\/([0-9a-f]{32})\/children$/))) {
+      if (m[1] === ROOT2) return send({ results: [{ id: DB.progress, type: 'child_database', child_database: { title: '教材進度' } }], has_more: false });
       if (m[1] !== ROOT) return send({ results: [], has_more: false });
       const t = { daily: '每日任務', days: '重要日子', routine: 'Routine Items', people: 'People', rewards: '獎勵', redemptions: '兌換記錄' };
-      return send({ results: [...Object.entries(DB).map(([k, id]) => ({ id, type: 'child_database', child_database: { title: t[k] } })), { id: pad('e1'), type: 'child_database', child_database: { title: 'Routine Items - 棄用' } }], has_more: false });
+      return send({ results: [...Object.entries(DB).filter(([k]) => k !== 'progress').map(([k, id]) => ({ id, type: 'child_database', child_database: { title: t[k] } })), { id: pad('e1'), type: 'child_database', child_database: { title: 'Routine Items - 棄用' } }], has_more: false });
     }
     if (req.method === 'POST' && (m = url.match(/^\/v1\/databases\/([0-9a-f]{32})\/query$/))) {
+      if (m[1] === DB.progress && progressBroken) return send({ message: '推薦 is not a property that exists.' }, 400);
       let rows = [...pages.values()].filter((p) => p.db === m[1]);
       const f = j.filter;
       if (f) {
         const conds = f.or || [f];
-        rows = rows.filter((p) => conds.some((c) => (p.properties[c.property]?.date?.start || '').slice(0, 10) === c.date.equals));
+        rows = rows.filter((p) => conds.some((c) => c.checkbox ? !!p.properties[c.property]?.checkbox === c.checkbox.equals : (p.properties[c.property]?.date?.start || '').slice(0, 10) === c.date.equals));
       }
       return send({ results: rows, has_more: false });
     }
@@ -105,11 +109,14 @@ const tvId = rewardRow('看電視 30 分鐘', 40, { limit: 3, icon: '📺' });
 rewardRow('玩遊戲 30 分鐘', 40);
 rewardRow('已下架的獎勵', 10, { off: true });
 rewardRow('沒有積分的獎勵', 0);
+// 教材進度（e-Learning Hub 頁面底下）：爸爸勾選「推薦」
+const progRow = (key, rec) => add(DB.progress, { 教材: { title: rt(key) }, Key: { rich_text: rt(key) }, 推薦: { checkbox: rec } });
+progRow('daughter|mat-a', true); progRow('daughter|mat-b', false); progRow('daughter|mat-d', true); const matSonB = progRow('son|mat-b', true); progRow('son|bad-student|x', true);
 const store = memoryStore();
 const dailyRows = () => [...pages.values()].filter((p) => p.db === DB.daily);
 const byTitle = (title, kid) => dailyRows().find((p) => p.properties['任務'].title[0].plain_text === title && p.properties['孩子'].select.name === kid);
 const doc = async (date, student, tpl) => { const all = store.cols.checkins; return [...(all || [])].map(([id, d]) => ({ id, ...d })).find((d) => d.date === date && d.student === student && d.title === tpl); };
-const run = (now) => runDailySync({ notion, store, parentId: ROOT, now });
+const run = (now) => runDailySync({ notion, store, parentId: ROOT, progressParentId: ROOT2, now });
 
 // ================= 情境 =================
 const FRI = HK('2026-11-20T08:00:00'); // 週五
@@ -266,6 +273,23 @@ eq('L10 爸爸把申請列整個刪掉 → 視為拒絕', [a3.status, a3.note], 
 pages.delete([...pages.values()].find((p) => p.db === DB.rewards && p.properties['名稱'].title[0].plain_text === '玩遊戲 30 分鐘').id);
 await run(REDEEM_AT + 420000);
 eq('L11 獎勵在 Notion 刪除後，網站端也移除', (await store.listIds('rewards')).length, 1);
+
+// ---- 推薦學習 ----
+const recOf = async (sid) => (await store.getDoc('checkin_totals', sid)).recommended;
+eq('N1 推薦教材同步到積分總表文件（依孩子分開、排序穩定）', [await recOf('daughter'), await recOf('son')], [['mat-a', 'mat-d'], ['mat-b']]);
+const dMatD = [...pages.values()].find((p) => p.db === DB.progress && p.properties.Key.rich_text[0].plain_text === 'daughter|mat-d');
+pages.get(dMatD.id).properties['推薦'] = { checkbox: false };
+pages.get(matSonB).properties['推薦'] = { checkbox: false };
+s = await run(HK('2026-11-22T10:00:00'));
+eq('N2 爸爸取消勾選 → 推薦清單更新（兩位孩子都更新）', [await recOf('daughter'), await recOf('son'), s.recommended], [['mat-a'], [], 2]);
+s = await run(HK('2026-11-22T10:15:00'));
+eq('N3 沒有變動就不寫入', s.recommended, 0);
+progressBroken = true; // 例如「推薦」欄位被刪掉
+s = await run(HK('2026-11-22T10:30:00'));
+eq('N4 讀取失敗（欄位不存在）不會讓整個同步失敗，也不會清空既有推薦', [await recOf('daughter'), s.recommended], [['mat-a'], 0]);
+progressBroken = false;
+const noProgress = await runDailySync({ notion, store, parentId: ROOT, now: HK('2026-11-22T10:45:00') });
+eq('N5 沒有設定教材進度所在頁面 → 略過推薦同步', noProgress.recommended, 0);
 
 // 日誌不洩漏內容：整合測試只確認回傳是數字摘要
 eq('K 同步摘要只有數字', Object.values(s).every((v) => typeof v === 'number'), true);

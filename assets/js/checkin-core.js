@@ -23,7 +23,7 @@ const ELH_CK = (() => {
     if (fixed) fix = `<div class="ck-fix">👨 爸爸已更正：這項未通過${note}</div>`;
     else if (corrected(r) && r.done) fix = `<div class="ck-fix">👨 爸爸已更正：+${r.basePoints} → +${r.points}${note}</div>`;
     else if (r.note) fix = `<small>${esc(r.note)}</small>`;
-    const sub = r.cat === 'week' && !fix ? '<small>本週內完成一次打卡</small>' : (done && r.points == null && !fix ? '<small>已打卡，等爸爸評分</small>' : '');
+    const sub = r.cat === 'week' && !fix ? '<small class="ck-wk">本週內完成一次打卡</small>' : (done && r.points == null && !fix ? '<small>已打卡，等爸爸評分</small>' : '');
     // 任務說明（Routine Items 的 Description）：淺色小字、單行不撐大卡片；放不下時出現 ▾，點一下展開
     const desc = r.desc ? `<div class="ck-descrow"><span class="ck-desc">${esc(r.desc)}</span><span class="ck-dx" aria-hidden="true">▾</span></div>` : '';
     return `<div class="ck-task${done ? ' done' : ''}${fixed ? ' fixed' : ''}" data-id="${esc(r.id)}" role="checkbox" aria-checked="${done}" tabindex="0"><div class="ck-ttl">${esc(r.title)}${r.optional ? '<span class="ck-opt">選填</span>' : ''}${desc}${fix || sub}</div>${pt}<div class="ck-chk">${TICK}</div></div>`;
