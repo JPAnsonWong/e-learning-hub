@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>1–100 英文數字：認讀・拼寫・默寫</title>
+<style>
+:root{
+  --font:"PingFang TC","Microsoft JhengHei",sans-serif;
+  --bg:#fafafa;
+}
+html,body,#app{
+  height:100%;
+  margin:0;
+  padding:0;
+  font-family:var(--font);
+  background:var(--bg);
+  overflow-x:hidden;
+}
+#app{
+  display:flex;
+}
+#left{
+  width:56%;
+  flex-shrink:0;
+  overflow:auto;
+  position:relative;
+}
+#left::after{
+  content:"";
+  display:block;
+  height:0;
+  background:var(--bg);
+}
+#right{
+  width:44%;
+  flex-shrink:0;
+  overflow:auto;
+  padding:1rem;
+  background:#fff;
+}
+#right::after{
+  content:"";
+  display:block;
+  height:0;
+}
+html{scroll-padding-top:12vh}
+input,textarea{scroll-margin-top:12vh}
+input{
+  width:100%;
+  box-sizing:border-box;
+  padding:.6rem;
+  font-size:clamp(3vmin,4vmin,3.6vmin);
+  min-height:max(3rem,7vmin);
+  border:1px solid #bdc3c7;
+  border-radius:.4rem;
+  font-family:var(--font);
+  background:#fff;
+  color:#2c3e50;
+}
+h1,h2,h3{margin:.5rem 0 1rem 0;}
+p{line-height:1.5;margin:0 0 1rem 0;}
+/* view-question 必須在 #left 內，普通文件流，不可 absolute */
+#view-question{
+  display:none;
+  padding:2rem 0;
+}
+#q-num{
+  font-size:clamp(4.8rem,16vmin,11rem);
+  font-weight:800;
+  text-align:center;
+  line-height:1;
+  margin:.5rem 0 1rem 0;
+}
+#q-progress{
+  font-size:clamp(2.4vmin,4fmin,3.2vmin);
+  text-align:center;
+  margin-bottom:1rem;
+}
+#q-mode{
+  font-size:clamp(2vmin,3vmin,2.4vmin);
+  text-align:center;
+  margin-bottom:1rem;
+}
+.gap-skel,.gap-skel .cell{
+  display:flex; flex-wrap:nowrap; justify-content:center; align-items:center;
+  white-space:nowrap; letter-spacing:0; gap:.25rem;
+  font-family:ui-monospace,monospace;
+  font-size:clamp(1.8rem,5.2vmin,3.2rem);
+  overflow-x:auto; margin:.4rem 0 .6rem;
+}
+.gap-skel .cell{
+  display:inline-flex; justify-content:center; align-items:center;
+  min-width:1.15em; padding:.15rem .2rem;
+  border-bottom:3px solid #2c3e50; line-height:1.1;
+}
+.gap-hint{
+  font-size:clamp(1rem,2vmin,1.2rem);
+  color:#666;
+  white-space:nowrap;
+}
+#q-progress{font-size:clamp(2.4vmin,4fmin,3.2vmin);text-align:center;margin-bottom:1rem;}
+#q-mode{font-size:clamp(2vmin,3vmin,2.4vmin);text-align:center;margin-bottom:1rem;}
+/* view-type-groups 與 view-paper-groups 共用樣式 */
+#view-type-groups,#view-paper-groups{
+  box-sizing:border-box; min-height:100%; height:100%;
+  display:flex; flex-direction:column; padding:.4rem .6rem 2.5rem; overflow:auto;
+}
+.group-btn{
+  display:grid; grid-template-columns:1fr 1fr; gap:.35rem .4rem;
+  padding-bottom:2.8rem;
+}
+.group-btn button{
+  display:grid; grid-template-columns:1fr 1fr; gap:.35rem .4rem;
+  padding-bottom:2.8rem;
+}
+.group-btn button{
+  width:100%; margin:0; min-height:2.3rem;
+  font-size:clamp(1rem,3.2vmin,2rem);
+  padding:.35rem .5rem;
+}
+#view-type-groups .group-btn button,#view-paper-groups .group-btn button{
+  min-height:2.3rem;
+  font-size:clamp(1rem,3.2vmin,2rem);
+  padding:.35rem .5rem;
+}
+@media(max-width:899px){
+  .nav-key{width:100%;float:none;margin:.2rem 0;}
+}
+body.kb-open #left::after, body.kb-open #right::after { content:""; display:block; height:50vh; }
+@media(max-width:899px){
+  #view-cover button{flex:1 1 0;}
+}
+button{
+  width:100%;
+  box-sizing:border-box;
+  padding:.6rem 1rem;
+  font-size:clamp(3.6vmin,5vmin,4.8vmin);
+  min-height:max(3rem,7vmin);
+  background:#ecf0f1;
+  border:1px solid #bdc3c7;
+  border-radius:.4rem;
+  cursor:pointer;
+  touch-action:manipulation;
+  font-family:var(--font);
+}
+button:focus{outline:2px solid #2c3e50;outline-offset:2px;}
+a.button,a.button:visited{
+  display:block;
+  width:100%;
+  box-sizing:border-box;
+  padding:.8rem 1.2rem;
+  background:#2c3e50;
+  color:#fff;
+  text-decoration:none;
+  border-radius:.4rem;
+  font-size:clamp(3.6vmin,5vmin,4.8vmin);
+  min-height:max(3rem,7vmin);
+  touch-action:manipulation;
+  text-align:center;
+}
+@media(max-width:899px){
+  #app{flex-direction:column;}
+  #left,#right{width:100%;}
+}
+.fb-ok{color:#0a7a2f;} .fb-bad{color:#a11;}
+.spell-diff{font-size:clamp(1.4rem,4.5vmin,2.4rem); text-align:center; letter-spacing:.04em; margin:.4rem 0;}
+.spell-diff .diff{background:#ffe0e0; color:#a11; font-weight:800; text-decoration:underline;}
+button.selected, #right button.selected{
+  outline:4px solid #1a5276; outline-offset:2px;
+  background:#d4e6f7; font-weight:700;
+  box-shadow:inset 0 0 0 2px #1a5276;
+}
+#view-cover{
+  display:flex;
+  flex-direction:column;
+  gap:.5rem;
+  padding:1rem;
+  box-sizing:border-box;
+  overflow:auto;
+}
+#view-cover h1,#view-cover p{ width:100%; }
+#view-cover button{
+  width:100%;
+  flex:none;
+  display:block;
+}
+#eng-ans,.eng-ans{
+  font-size:clamp(3.6rem,12vmin,8.5rem);
+  font-weight:800;
+  text-align:center;
+  line-height:1.15;
+  margin:.4rem 0 .8rem;
+  word-break:break-word;
+}
+#fb,.fb{
+  font-size:clamp(2.2rem,7vmin,4rem);
+  font-weight:800;
+  text-align:center;
+  line-height:1.2;
+  margin:.35rem 0;
+}
+.fb-ok{color:#0a7a2f;}
+.fb-bad{color:#a11;}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="left">
+    <!-- COVER -->
+    <div id="view-cover">
+      <h1>1–100 英文數字：認讀・拼寫・默寫</h1>
+      <p>這是給女兒（小三／3D）的練習。可分段練習。打字由系統批改；紙筆由家長核對。</p>
+      <button type="button" data-act="teach">找規律</button>
+      <button type="button" data-act="fun">趣味認讀</button>
+      <button type="button" data-act="read">認讀練習</button>
+      <button type="button" data-act="diag">先測一測</button>
+      <button type="button" data-act="gap">補字母</button>
+      <button type="button" data-act="type">打字驗收</button>
+      <button type="button" data-act="paper">紙筆默寫</button>
+    </div>
+
+    <!-- TEACH (找規律) -->
+    <div id="view-teach" style="display:none;padding:1rem;">
+      <button type="button" data-act="cover">返回封面</button>
+      <!-- Card 0: 1–10 -->
+      <div class="card">
+        <h3>1–10</h3>
+        <p>1 one, 2 two, 3 three, 4 four, 5 five, 6 six, 7 seven, 8 eight, 9 nine, 10 ten.</p>
+      </div>
+      <!-- Card 1: 11–19 -->
+      <div class="card">
+        <h3>11–19</h3>
+        <p>11 eleven, 12 twelve, 13 thirteen, 14 fourteen, 15 fifteen, 16 sixteen, 17 seventeen, 18 eighteen, 19 nineteen.</p>
+      </div>
+      <!-- Card 2: 整十 -->
+      <div class="card">
+        <h3>整十</h3>
+        <p>20 twenty, 30 thirty, 40 forty, 50 fifty, 60 sixty, 70 seventy, 80 eighty, 90 ninety. 必須寫「forty 不是 fourty」。</p>
+      </div>
+      <!-- Card 3: 21–99 非整十 -->
+      <div class="card">
+        <h3>21–99 非整十</h3>
+        <p>十位英文 + 連字號 + 個位英文，例 21 twenty-one, 99 ninety-nine。</p>
+      </div>
+      <!-- Card 4: 100 -->
+      <div class="card">
+        <h3>100</h3>
+        <p>one hundred.</p>
+      </div>
+      <!-- Card 5: 易混 -->
+      <div class="card">
+        <h3>易混對比</h3>
+        <p>forty 非 fourty；fifteen / fifty 非 fiveteen / fivety；eighteen / eighty；twelve / twenty；以及 13 thirteen vs 30 thirty、14 fourteen vs 40 forty、15 fifteen vs 50 fifty、16 sixteen vs 60 sixty、17 seventeen vs 70 seventy、18 eighteen vs 80 eighty、19 nineteen vs 90 ninety。</p>
+      </div>
+    </div>
+
+    <!-- FUN (趣味認讀) -->
+    <div id="view-fun" style="display:none;padding:1rem;">
+      <button type="button" data-act="cover">返回封面</button>
+      <div id="fun-links">
+        <a class="button" href="https://www.youtube.com/watch?v=CRQdhS1TJdo" target="_blank" rel="noopener noreferrer">Number Words 1–100（Jack Hartmann）</a>
+        <br>
+        <p>認識 1–100 的阿拉伯數字與英文數詞。</p>
+        <a class="button" href="https://www.youtube.com/watch?v=bGetqbqDVaA" target="_blank" rel="noopener noreferrer">Big Numbers Song（The Singing Walrus）</a>
+        <br>
+        <p>跟著歌曲數到 100，增加趣味。</p>
+      </div>
+    </div>
+
+    <!-- DIAG (先測一測) -->
+    
+
+    <!-- GAP (補字母) -->
+    
+
+    <!-- TYPE (打字驗收) -->
+    <div id="view-type-groups" style="display:none;padding:1rem;">
+      <button type="button" data-act="cover">返回封面</button>
+      <h3>打字組目錄</h3>
+      <div class="group-btn">
+        <button type="button" data-act="group" data-mode="type" data-g="0">第1組 1–10</button>
+        <button type="button" data-act="group" data-mode="type" data-g="1">第2組 11–20</button>
+        <button type="button" data-act="group" data-mode="type" data-g="2">第3組 21–30</button>
+        <button type="button" data-act="group" data-mode="type" data-g="3">第4組 31–40</button>
+        <button type="button" data-act="group" data-mode="type" data-g="4">第5組 41–50</button>
+        <button type="button" data-act="group" data-mode="type" data-g="5">第6組 51–60</button>
+        <button type="button" data-act="group" data-mode="type" data-g="6">第7組 61–70</button>
+        <button type="button" data-act="group" data-mode="type" data-g="7">第8組 71–80</button>
+        <button type="button" data-act="group" data-mode="type" data-g="8">第9組 81–90</button>
+        <button type="button" data-act="group" data-mode="type" data-g="9">第10組 91–100</button>
+      </div>
+    </div>
+
+    <!-- PAPER (紙筆默寫) -->
+    <div id="view-paper-groups" style="display:none;padding:1rem;">
+      <button type="button" data-act="cover">返回封面</button>
+      <h3>紙筆組目錄</h3>
+      <div class="group-btn">
+        <button type="button" data-act="group" data-mode="paper" data-g="0">第1組 1–10</button>
+        <button type="button" data-act="group" data-mode="paper" data-g="1">第2組 11–20</button>
+        <button type="button" data-act="group" data-mode="paper" data-g="2">第3組 21–30</button>
+        <button type="button" data-act="group" data-mode="paper" data-g="3">第4組 31–40</button>
+        <button type="button" data-act="group" data-mode="paper" data-g="4">第5組 41–50</button>
+        <button type="button" data-act="group" data-mode="paper" data-g="5">第6組 51–60</button>
+        <button type="button" data-act="group" data-mode="paper" data-g="6">第7組 61–70</button>
+        <button type="button" data-act="group" data-mode="paper" data-g="7">第8組 71–80</button>
+        <button type="button" data-act="group" data-mode="paper" data-g="8">第9組 81–90</button>
+        <button type="button" data-act="group" data-mode="paper" data-g="9">第10組 91–100</button>
+      </div>
+    </div>
+
+    <!-- READ (認讀練習) -->
+    
+
+    <!-- view-question 必須在 #left 內 -->
+    <div id="view-question"></div>
+  </div>
+
+  <div id="right">
+    <div id="right-default"></div>
+  </div>
+</div>
+
+<!--ELH_SCRIPTS_START-->
+<script>
+/* === DATA_START === */
+var TOTAL_Q = 230;
+
+var ONES=["","one","two","three","four","five","six","seven","eight","nine"];
+var TEENS=["ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"];
+var TENS=["","","twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety"];
+function numToEng(n){
+  if(n===100)return "one hundred";
+  if(n<10)return ONES[n];
+  if(n<20)return TEENS[n-10];
+  var t=Math.floor(n/10),o=n%10;
+  return TENS[t]+(o?("-"+ONES[o]):"");
+}
+
+function pad3(n){return n.toString().padStart(3,"0");}
+
+var PERM_OFFSETS = [6,1,9,3,0,7,4,8,2,5];
+function groupNumbers(g){var s=1+g*10;return PERM_OFFSETS.map(function(o){return s+o;})}
+
+var G1=[7,2,10,4,1,8,5,9,3,6];
+var G2=[17,12,20,14,11,18,15,19,13,16];
+var G3=[27,22,30,24,21,28,25,29,23,26];
+var G4=[37,32,40,34,31,38,35,39,33,36];
+var G5=[47,42,50,44,41,48,45,49,43,46];
+var G6=[57,52,60,54,51,58,55,59,53,56];
+var G7=[67,62,70,64,61,68,65,69,63,66];
+var G8=[77,72,80,74,71,78,75,79,73,76];
+var G9=[87,82,90,84,81,88,85,89,83,86];
+var G10=[97,92,100,94,91,98,95,99,93,96];
+
+var typeOrder=function(){
+  var r=[];
+  for(var i=0;i<10;i++){var g=groupNumbers(i);r=r.concat(g);}
+  return r;
+};
+
+var typeOrderArr=typeOrder();
+
+function globalIndexForType(n){return 30 + typeOrderArr.indexOf(n);}
+
+function globalIndexForPaper(n){return 130+typeOrderArr.indexOf(n);}
+
+var DIAG=[{id:"diag-002",n:2,gi:0},{id:"diag-008",n:8,gi:1},{id:"diag-012",n:12,gi:2},{id:"diag-015",n:15,gi:3},{id:"diag-018",n:18,gi:4},{id:"diag-020",n:20,gi:5},{id:"diag-040",n:40,gi:6},{id:"diag-050",n:50,gi:7},{id:"diag-073",n:73,gi:8},{id:"diag-100",n:100,gi:9}];
+
+var READS=[{id:"read-012",n:12,gi:10,opts:["twelve","twenty","two","eleven"],ans:0},{id:"read-020",n:20,gi:11,opts:["twelve","twenty","two","eleven"],ans:1},{id:"read-015",n:15,gi:12,opts:["fifty","fifteen","fourteen","fiveteen"],ans:1},{id:"read-050",n:50,gi:13,opts:["fifty","fifteen","fourteen","fivety"],ans:0},{id:"read-018",n:18,gi:14,opts:["eight","eighty","eighteen","twelve"],ans:2},{id:"read-040",n:40,gi:15,opts:["fourty","fourteen","forty","four"],ans:2},{id:"read-013",n:13,gi:16,opts:["thirty","thirteen","three","thirty-one"],ans:1},{id:"read-030",n:30,gi:17,opts:["thirty","thirteen","three","twenty"],ans:0},{id:"read-100",n:100,gi:18,opts:["hundred","one hundred","one-hundred","a hundred"],ans:1},{id:"read-021",n:21,gi:19,opts:["twenty one","twentyone","twenty-one","twenty.one"],ans:2}];
+
+var GAPS=[{id:"gap-040",n:40,gi:20,ske:"f _ _ t y",ans:"or"},{id:"gap-015",n:15,gi:21,ske:"f i f _ _ e n",ans:"te"},{id:"gap-050",n:50,gi:22,ske:"f i f _ y",ans:"t"},{id:"gap-018",n:18,gi:23,ske:"_ _ g h t e e n",ans:"ei"},{id:"gap-080",n:80,gi:24,ske:"_ _ g h t y",ans:"ei"},{id:"gap-012",n:12,gi:25,ske:"t _ e l v e",ans:"w"},{id:"gap-020",n:20,gi:26,ske:"t _ e n t y",ans:"w"},{id:"gap-013",n:13,gi:27,ske:"t h i r t _ _ n",ans:"ee"},{id:"gap-030",n:30,gi:28,ske:"t h i r t _",ans:"y"},{id:"gap-014",n:14,gi:29,ske:"f o u r t _ _ n",ans:"ee"}];
+
+function typeId(n){return "type-"+pad3(n);}
+
+function paperId(n){return "paper-"+pad3(n);}
+
+function qByGlobalIndex(i){
+  if(i<0||i>=TOTAL_Q)return null;
+  if(i<10)return {kind:"diag",id:DIAG[i].id,n:DIAG[i].n,gi:DIAG[i].gi};
+  if(i<20)return {kind:"read",id:READS[i-10].id,n:READS[i-10].n,gi:READS[i-10].gi,opts:READS[i-10].opts};
+  if(i<30)return {kind:"gap",id:GAPS[i-20].id,n:GAPS[i-20].n,gi:GAPS[i-20].gi,n:GAPS[i-20].n,ske:GAPS[i-20].ske,ans:GAPS[i-20].ans};
+  if(i<130){
+    var idx=i-30;
+    var g=Math.floor(idx/10);
+    var qn=groupNumbers(g)[idx%10];
+    return {kind:"type",id:typeId(qn),n:qn,gi:i,group:g};
+  }
+  if(i<230){
+    var idx2=i-130;
+    var g2=Math.floor(idx2/10);
+    var qn2=groupNumbers(g2)[idx2%10];
+    return {kind:"paper",id:paperId(qn2),n:qn2,gi:i,group:g2};
+  }
+  return null;
+}
+
+function scoreSpelling(input,n){
+  var normalized=(input||"").trim().toLowerCase();
+  var expected=numToEng(n).toLowerCase();
+  var correct=(normalized===expected);
+  var missingHyphen=false;
+  if(!correct&&n>=21&&n<=99){
+    var t=Math.floor(n/10),o=n%10;
+    if(o!==0){
+      var compactNormalized=normalized.replace(/[-\s]/g,"");
+      var compactExpected=expected.replace(/[-\s]/g,"");
+      if(compactNormalized===compactExpected&&normalized!==expected){
+        missingHyphen=true;
+      }
+    }
+  }
+  return {correct:correct,missingHyphen:missingHyphen,expected:expected,normalized:normalized};
+}
+/* === DATA_END === */
+/* === ENGINE_START === */
+(function(){
+  function elhReport(m){
+    try{
+      if(location.search.indexOf("elhdebug")>=0)console.log("ELH",JSON.stringify(m));
+      if(window.parent!==window)window.parent.postMessage(Object.assign({elh:1},m),location.origin);
+    }catch(e){}
+  }
+  function elhText(h){return String(h==null?"":h).replace(/<[^>]*>/g,"").replace(/\s+/g," ").trim().slice(0,200);}
+
+  var state={view:"cover",mode:"",group:-1,i:-1,revealed:false,picked:null};
+
+  function resetRight(){
+    var r=document.getElementById("right");
+    if(!r)return;
+    r.innerHTML='';
+    document.body.classList.remove("kb-open");
+  }
+  function hideAllViews(){
+    var v;for(v of ["cover","teach","fun","read","diag","gap","type-groups","paper-groups"]){var e=document.getElementById("view-"+v);if(e)e.style.display="none";}
+    var q=document.getElementById("view-question");if(q)q.style.display="none";
+  }
+  function showView(id){
+    if(id!=="question"){resetRight(id);}
+    hideAllViews();
+    var e=document.getElementById("view-"+id);
+    if(e){
+      if(id==="cover"||id==="type-groups"||id==="paper-groups"){e.style.display="flex";}
+      else{e.style.display="block";}
+    }
+    state.view=id;
+  }
+  function ensureQuestionView(){
+    var q=document.getElementById("view-question");if(q)return q;
+    q=document.createElement("div");q.id="view-question";document.getElementById("left").appendChild(q);return q;
+  }
+  function enterQuestion(i,mode,group){
+    state.i=i;state.mode=mode;state.group=group;state.revealed=false;state.picked=null;
+    state.draft="";
+    ensureQuestionView();
+    showView("question");
+    renderQuestion();
+  }
+  function reportAnswer(obj){
+    elhReport(Object.assign({type:"answer"},obj));
+  }
+  function elhState(){
+    if(state.i>=0&&state.i<=229){
+      elhReport({type:"state",data:{i:state.i,v:state.view,m:state.mode,g:state.group,r:!!state.revealed,p:state.picked}});
+    }
+  }
+
+  function renderQuestion(){
+    var q=qByGlobalIndex(state.i);if(!q){showView("cover");return;}
+    var v=document.getElementById("view-question");if(!v)v=ensureQuestionView();
+    v.innerHTML="";
+
+    // left pane
+    var qmode=document.createElement("div");qmode.id="q-mode";
+    if(state.mode==="type")qmode.textContent="打字驗收";
+    else if(state.mode==="paper")qmode.textContent="紙筆默寫";
+    else if(state.mode==="read")qmode.textContent="認讀練習";
+    else if(state.mode==="gap")qmode.textContent="補字母";
+    else if(state.mode==="diag")qmode.textContent="先測一測";
+    v.appendChild(qmode);
+
+    var prog=document.createElement("div");prog.id="q-progress";
+    if(state.mode==="diag"){prog.textContent="第 "+(state.i+1)+" 題／共 10 題";}
+    else if(state.mode==="read"){prog.textContent="第 "+(state.i-9)+" 題／共 10 題";}
+    else if(state.mode==="gap"){prog.textContent="第 "+(state.i-19)+" 題／共 10 題";}
+    else if(state.mode==="type"||state.mode==="paper"){
+      var G=state.group+1;var Lo=state.group*10+1;var Hi=Lo+9;var y=(state.i%10)+1;
+      prog.textContent="第 "+G+" 組（"+Lo+"–"+Hi+"）第 "+y+" 題／共 10 題";
+    }else{prog.textContent="第 "+(state.i+1)+" 題／共 230 題";}
+    v.appendChild(prog);
+
+    var num=document.createElement("div");num.id="q-num";num.innerHTML=q.n;v.appendChild(num);
+
+    // navigation buttons
+    var btn=document.createElement("button");btn.type="button";btn.dataset.act="cover";btn.textContent="返回封面";v.appendChild(btn);
+    if(state.mode==="type"||state.mode==="paper"){
+      var btn2=document.createElement("button");btn2.type="button";btn2.dataset.act="groups";btn2.textContent="返回組目錄";v.appendChild(btn2);
+    }
+    var btn3=document.createElement("button");btn3.type="button";btn3.dataset.act="next";btn3.textContent="下一題";v.appendChild(btn3);
+
+    var r=document.getElementById("right");if(!r)return;
+
+    // right pane
+    r.innerHTML="";
+
+    if(state.mode==="diag"||state.mode==="type"){
+      var fb=document.createElement("div");fb.id="fb";r.appendChild(fb);
+      var inp=document.createElement("input");inp.id="ans-input";inp.type="text";inp.autocomplete="off";inp.autocorrect="off";inp.autocapitalize="off";inp.spellcheck=false;inp.inputmode="text";r.appendChild(inp);
+      inp.value=state.draft||"";
+      var sub=document.createElement("button");sub.type="button";sub.textContent="提交";r.appendChild(sub);
+      sub.setAttribute("data-act","submit");
+      if(state.revealed){
+        var s=scoreSpelling(state.draft||"",q.n);
+        var fbEl=document.getElementById("fb");
+        if(fbEl){
+          fbEl.className=s.correct?"fb fb-ok":"fb fb-bad";
+          fbEl.textContent=s.correct?"答對":"不對";
+          if(s.missingHyphen){
+            var hint=document.createElement("span");hint.textContent=" 請用 twenty-one 這種連字號格式";fbEl.appendChild(hint);
+          }
+          if(!s.correct){
+            var diff=document.createElement("div");diff.className="spell-diff";
+            var exp=s.expected||numToEng(q.n);
+            var draft=(state.draft||"").toLowerCase();
+            var ex=exp.toLowerCase();
+            var len=Math.max(draft.length,ex.length);
+            for(var k=0;k<len;k++){
+              var ch=document.createElement("span");
+              if(k>=draft.length||k>=ex.length||draft[k]!==ex[k]){ch.className="diff";}
+              ch.textContent=k<ex.length?ex[k]:"";
+              diff.appendChild(ch);
+            }
+            r.appendChild(diff);
+          }
+        }
+        var hv=document.createElement("button");hv.type="button";hv.dataset.act="hide-answer";hv.textContent="遮答案";r.appendChild(hv);
+      }
+      document.body.classList.remove("kb-open");
+    }else if(state.mode==="read"){
+      var opts=q.opts||READS[state.i-10].opts;
+      for(var j=0;j<4;j++){
+        var b=document.createElement("button");b.type="button";b.dataset.act="opt";b.dataset.idx=j;b.textContent=opts[j];if(state.picked===j)b.classList.add("selected");r.appendChild(b);
+      }
+      var sub=document.createElement("button");sub.type="button";sub.textContent="確定";r.appendChild(sub);
+      sub.setAttribute("data-act","submit");
+      var fb=document.createElement("div");fb.id="fb";r.appendChild(fb);
+      if(state.revealed){
+        var correct=state.picked===READS[state.i-10].ans;
+        var fbEl=document.getElementById("fb");
+        if(fbEl){
+          fbEl.textContent=correct?"答對":"不對";
+          fbEl.className=correct?"fb fb-ok":"fb fb-bad";
+          if(!correct){
+            var ans=document.createElement("div");ans.textContent=READS[state.i-10].opts?READS[state.i-10].opts[READS[state.i-10].ans]:"";r.appendChild(ans);
+          }
+        }
+      }
+    }else if(state.mode==="gap"){
+      var ske=q.ske||"";var skeEl=document.createElement("div");skeEl.id="gap-skel";skeEl.className="gap-skel";r.appendChild(skeEl);
+      var parts=ske.split(/\s+/);
+      for(var p=0;p<parts.length;p++){
+        var cell=document.createElement("span");cell.className="cell";cell.textContent=parts[p];skeEl.appendChild(cell);
+      }
+      var hint=document.createElement("p");hint.className="gap-hint";hint.textContent="請只填入缺少的字母";r.appendChild(hint);
+      var fb=document.createElement("div");fb.id="fb";r.appendChild(fb);
+      var inp=document.createElement("input");inp.id="ans-input";inp.type="text";inp.autocomplete="off";inp.autocorrect="off";inp.autocapitalize="off";inp.spellcheck=false;inp.inputmode="text";r.appendChild(inp);
+      inp.value=state.draft||"";
+      var sub=document.createElement("button");sub.type="button";sub.textContent="提交";r.appendChild(sub);
+      sub.setAttribute("data-act","submit");
+      if(state.revealed){
+        var inpVal=document.getElementById("ans-input")?document.getElementById("ans-input").value:"";
+        var v=inpVal.trim().toLowerCase();var correct=(v===q.ans);
+        var fbEl=document.getElementById("fb");
+        if(fbEl){
+          fbEl.textContent=correct?"答對":"不對";
+          fbEl.className=correct?"fb fb-ok":"fb fb-bad";
+          if(!correct){
+            var ansBox=document.createElement("div");ansBox.textContent="正確缺字："+q.ans+"  完整單字："+numToEng(q.n);r.appendChild(ansBox);
+            var hv=document.createElement("button");hv.type="button";hv.dataset.act="hide-answer";hv.textContent="遮答案";r.appendChild(hv);
+          }
+        }
+      }
+    }else if(state.mode==="paper"){
+      if(!state.revealed){
+        var btn=document.createElement("button");btn.type="button";btn.dataset.act="reveal";btn.textContent="揭曉答案";r.appendChild(btn);
+      }else{
+        var eng=document.createElement("div");eng.id="eng-ans";eng.className="eng-ans";eng.textContent=numToEng(q.n);r.appendChild(eng);
+        var cap=document.createElement("div");cap.innerHTML="由家長核對，不是電腦辨識手寫；揭曉不算自動答對";
+        r.appendChild(cap);
+        var ok=document.createElement("button");ok.type="button";ok.dataset.act="paper-ok";ok.textContent="寫對";r.appendChild(ok);
+        var rt=document.createElement("button");rt.type="button";rt.dataset.act="paper-retry";rt.textContent="需重練";r.appendChild(rt);
+        var un=document.createElement("button");un.type="button";un.dataset.act="paper-unwritten";un.textContent="未寫看答案";r.appendChild(un);
+        var hv=document.createElement("button");hv.type="button";hv.dataset.act="hide-answer";hv.textContent="遮答案";r.appendChild(hv);
+      }
+    }
+
+    if(state.i>=0&&state.i<=229)elhState();
+  }
+
+  document.addEventListener("click",function(e){
+    var t=e.target.closest("[data-act]");
+    if(!t)return;
+    var act=t.dataset.act;
+
+    if(act==="cover"){showView("cover");}
+    else if(act==="teach"){showView("teach");}
+    else if(act==="fun"){showView("fun");}
+    else if(act==="read"){enterQuestion(10,"read",-1);}
+    else if(act==="diag"){enterQuestion(0,"diag",-1);}
+    else if(act==="gap"){enterQuestion(20,"gap",-1);}
+    else if(act==="type"){showView("type-groups");}
+    else if(act==="paper"){showView("paper-groups");}
+    else if(act==="group"){
+      var mode=t.dataset.mode,g=parseInt(t.dataset.g,10);
+      enterQuestion((mode==="type"?30:130)+g*10,mode,g);
+    }
+    else if(act==="groups"){showView(state.mode+"-groups");}
+    else if(act==="opt"){
+      var idx=parseInt(t.dataset.idx,10);
+      state.picked=idx;
+      var bs=document.querySelectorAll("#right button[data-act='opt']");
+      for(var i=0;i<bs.length;i++){bs[i].classList.remove("selected");if(i===idx)bs[i].classList.add("selected");}
+    }
+    else if(act==="submit"){
+      var q=qByGlobalIndex(state.i);
+      if(!q){return;}
+      if(state.mode==="diag"||state.mode==="type"){
+        var inp=document.getElementById("ans-input");if(!inp){return;}
+        state.draft=inp.value;
+        var v=state.draft;var s=scoreSpelling(state.draft||"",q.n);reportAnswer({q:q.id,choice:v,picked:v,correct:s.correct,text:elhText("數字 "+q.n),answer:elhText(s.expected)});state.revealed=true;
+        inp.value=state.draft||"";
+        renderQuestion();
+      }else if(state.mode==="read"){
+        if(state.picked===null){return;}
+        var correct=state.picked===READS[state.i-10].ans;
+        reportAnswer({q:q.id,choice:state.picked,picked:READS[state.i-10].opts?READS[state.i-10].opts[state.picked]:null,correct:correct,text:elhText("數字 "+q.n),answer:elhText(READS[state.i-10].opts?READS[state.i-10].opts[READS[state.i-10].ans]:"")});state.revealed=true;renderQuestion();
+      }else if(state.mode==="gap"){
+        var inp=document.getElementById("ans-input");if(!inp){return;}
+        state.draft=inp.value;
+        var v=inp.value.trim().toLowerCase();var correct=(v===q.ans);reportAnswer({q:q.id,choice:v,picked:v,correct:correct,text:elhText("數字 "+q.n+" 骨架"),answer:elhText(q.ans)});state.revealed=true;renderQuestion();
+      }
+    }
+    else if(act==="reveal"){
+      var q=qByGlobalIndex(state.i);
+      if(!q)return;
+      reportAnswer({q:q.id,choice:null,picked:null,correct:false,text:elhText("數字 "+q.n),answer:elhText(numToEng(q.n))});state.revealed=true;renderQuestion();
+    }
+    else if(act==="paper-ok"){
+      var q=qByGlobalIndex(state.i);
+      if(!q)return;
+      reportAnswer({q:q.id,choice:"write-ok",picked:"家長自評：寫對",correct:true,text:elhText("數字 "+q.n),answer:elhText(numToEng(q.n))});
+      state.revealed=true;renderQuestion();
+    }
+    else if(act==="paper-retry"){
+      var q=qByGlobalIndex(state.i);
+      if(!q)return;
+      reportAnswer({q:q.id,choice:"retry",picked:"家長自評：需重練",correct:false,text:elhText("數字 "+q.n),answer:elhText(numToEng(q.n))});
+      state.revealed=true;renderQuestion();
+    }
+    else if(act==="paper-unwritten"){
+      var q=qByGlobalIndex(state.i);
+      if(!q)return;
+      reportAnswer({q:q.id,choice:"unwritten",picked:"家長自評：未寫看答案",correct:false,text:elhText("數字 "+q.n),answer:elhText(numToEng(q.n))});
+      state.revealed=true;renderQuestion();
+    }
+    else if(act==="hide-answer"){
+      state.revealed=false;renderQuestion();
+    }
+    else if(act==="next"){
+      state.revealed=false;state.draft="";state.picked=null;
+      var q=qByGlobalIndex(state.i);if(!q){showView("cover");return;}
+      if(state.mode==="diag"){
+        if(state.i<9){state.i++;renderQuestion();}
+        else{showView("cover");}
+      }else if(state.mode==="read"){
+        if(state.i<19){state.i++;renderQuestion();}
+        else{showView("cover");}
+      }else if(state.mode==="gap"){
+        if(state.i<29){state.i++;renderQuestion();}
+        else{showView("cover");}
+      }else if(state.mode==="type"){
+        if(state.i%10!==9){state.i++;renderQuestion();}
+        else{showView("type-groups");}
+      }else if(state.mode==="paper"){
+        if(state.i%10===9){showView("paper-groups");}
+        else{state.i++;renderQuestion();}
+      }
+    }
+  },true);
+
+  // focusin/out via document
+  document.addEventListener("focusin",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA")){document.body.classList.add("kb-open");}
+  },true);
+  document.addEventListener("focusout",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA")){document.body.classList.remove("kb-open");}
+  },true);
+
+  // init
+  elhReport({type:"init",total:230});
+  showView("cover");
+
+  // restore listener inside IIFE
+  window.addEventListener("message",function(e){
+    var m=e.data;if(!m||m.elh!==1||m.type!=="restore"||e.source!==window.parent)return;
+    var d=m.data||{};if(typeof d.i!=="number"||d.i<0||d.i>=230)return;
+    state.i=d.i;state.view=d.v||"question";state.mode=d.m||"";state.group=(typeof d.g==="number")?d.g:-1;state.revealed=!!d.r;state.picked=(d.p===undefined?null:d.p);
+    if(state.view==="question"||(state.i>=0&&state.i<=229&&(state.mode==="diag"||state.mode==="read"||state.mode==="gap"||state.mode==="type"||state.mode==="paper"))){
+      showView("question");renderQuestion();
+    }else{
+      showView(state.view||"cover");
+    }
+  });
+})();
+/* === ENGINE_END === */
+</script>
+<!--ELH_SCRIPTS_END-->
+</body>
+</html>
