@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>單元5 除法｜預習・學習・練習</title>
+<style>
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;overflow:hidden}
+body{
+  font-family:"PingFang TC","Microsoft JhengHei",sans-serif;
+  background:#f5f7fc;color:#17243d;touch-action:manipulation;
+}
+.stage{
+  height:100%;display:grid;
+  grid-template-columns:minmax(0,55fr) minmax(0,45fr);
+  min-height:0;
+}
+.pane{min-width:0;min-height:0;overflow:auto;padding:2vmin 2.4vmin}
+.pane+.pane{border-left:2px solid #d0d7e7}
+h1{font-size:clamp(1.3rem,3.8vmin,6rem);line-height:1.25;margin:1vmin 0 1.5vmin}
+.meta,.feedback,.mode-bar{font-size:clamp(1rem,2.5vmin,4.5rem);line-height:1.4}
+.mode-bar{display:flex;flex-wrap:wrap;gap:1vmin;margin-bottom:1.5vmin}
+.mode-bar button{font-size:clamp(0.95rem,2.4vmin,4rem);padding:0.6vmin 1.4vmin}
+button,input,textarea{font:inherit}
+button{
+  min-height:max(3rem,6.5vmin);min-width:max(3rem,6.5vmin);
+  font-size:clamp(1rem,3vmin,5.5rem);
+  padding:.5vmin 1.2vmin;border:2px solid #536788;
+  border-radius:1vmin;background:white;color:inherit;
+  white-space:normal;overflow-wrap:anywhere;touch-action:manipulation;
+}
+button:focus-visible{outline:4px solid #ad5400;outline-offset:3px}
+button[aria-pressed="true"]{border:4px solid #1b579f;background:#dceaff}
+button:disabled{opacity:.5}
+button.mode-active{border:4px solid #1b579f;background:#dceaff;font-weight:600}
+.options{display:grid;gap:1.2vmin;margin-bottom:1.5vmin}
+.actions{display:flex;flex-wrap:wrap;gap:1vmin;margin:1.2vmin 0}
+.feedback{margin-top:1.2vmin;overflow-wrap:anywhere;min-height:4vmin}
+input{
+  width:100%;max-width:100%;min-height:8vmin;
+  font-size:clamp(1.2rem,3.8vmin,6.5rem);scroll-margin-top:12vh;
+  padding:0.8vmin 1.2vmin;border:2px solid #536788;border-radius:1vmin;
+}
+.numpad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1vmin;max-width:28vmin;margin-top:1vmin}
+.numpad button{min-height:max(3rem,7.5vmin);min-width:0;font-size:clamp(1.2rem,3.5vmin,6rem)}
+[hidden]{display:none!important}
+@media(max-width:899px),(orientation:portrait){
+  .stage{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,42fr) minmax(0,58fr)}
+  .pane+.pane{border-left:0;border-top:2px solid #d0d7e7}
+}
+</style>
+</head>
+<body>
+<main class="stage">
+  <section class="pane" aria-label="題目">
+    <div class="mode-bar" id="modeBar" role="tablist">
+      <button type="button" data-mode="pre" class="mode-active">預習</button>
+      <button type="button" data-mode="learn">學習</button>
+      <button type="button" data-mode="prac">練習</button>
+    </div>
+    <p class="meta" id="meta"></p>
+    <h1 id="prompt"></h1>
+    <div id="visual"></div>
+    <nav class="actions" aria-label="換題">
+      <button type="button" id="prev">上一題</button>
+      <button type="button" id="next">下一題</button>
+    </nav>
+  </section>
+  <section class="pane" aria-label="作答">
+    <div class="options" id="choices"></div>
+    <div id="fillArea" hidden>
+      <input type="text" id="fillInput" inputmode="numeric" placeholder="請輸入答案" autocomplete="off" spellcheck="false">
+      <div class="numpad" id="numpad">
+        <button type="button" data-key="1">1</button>
+        <button type="button" data-key="2">2</button>
+        <button type="button" data-key="3">3</button>
+        <button type="button" data-key="4">4</button>
+        <button type="button" data-key="5">5</button>
+        <button type="button" data-key="6">6</button>
+        <button type="button" data-key="7">7</button>
+        <button type="button" data-key="8">8</button>
+        <button type="button" data-key="9">9</button>
+        <button type="button" data-key="clear">清除</button>
+        <button type="button" data-key="0">0</button>
+        <button type="button" data-key="back">退格</button>
+      </div>
+    </div>
+    <div class="actions">
+      <button type="button" id="check">確定／看答案</button>
+    </div>
+    <div class="feedback" id="feedback" aria-live="polite"></div>
+  </section>
+</main>
+<script>
+function elhReport(m){
+  try{
+    if(location.search.indexOf("elhdebug")>=0)console.log("ELH",JSON.stringify(m));
+    if(window.parent!==window)window.parent.postMessage(Object.assign({elh:1},m),location.origin);
+  }catch(e){}
+}
+function elhText(h){return String(h==null?"":h).replace(/<[^>]*>/g,"").replace(/\s+/g," ").trim().slice(0,200);}
+
+const BANK = {
+  pre: [
+    {id:"u5-pre-01", type:"mc", prompt:"12 ÷ 3 = ？", options:["3","4","5","6"], answer:1, explain:"3 個 4 是 12。"},
+    {id:"u5-pre-02", type:"mc", prompt:"20 ÷ 4 = ？", options:["4","5","6","8"], answer:1, explain:""},
+    {id:"u5-pre-03", type:"mc", prompt:"36 ÷ 6 = ？", options:["5","6","7","9"], answer:1, explain:""},
+    {id:"u5-pre-04", type:"mc", prompt:"45 ÷ 5 = ？", options:["7","8","9","10"], answer:2, explain:""},
+    {id:"u5-pre-05", type:"mc", prompt:"56 ÷ 7 = ？", options:["6","7","8","9"], answer:2, explain:""},
+    {id:"u5-pre-06", type:"mc", prompt:"72 ÷ 8 = ？", options:["8","9","10","12"], answer:1, explain:""},
+    {id:"u5-pre-07", type:"mc", prompt:"63 ÷ 9 = ？", options:["6","7","8","9"], answer:1, explain:""},
+    {id:"u5-pre-08", type:"mc", prompt:"哪一道算式的商是 6？", options:["42÷7","48÷8","54÷9","以上全部"], answer:3, explain:"42÷7=6、48÷8=6、54÷9=6，全部正確。"}
+  ],
+  learn: [
+    {id:"u5-learn-01", type:"mc", prompt:"48 ÷ 4 = ？", options:["10","12","14","16"], answer:1, explain:""},
+    {id:"u5-learn-02", type:"mc", prompt:"72 ÷ 6 = ？", options:["10","12","14","18"], answer:1, explain:""},
+    {id:"u5-learn-03", type:"mc", prompt:"96 ÷ 8 = ？", options:["10","12","14","16"], answer:1, explain:""},
+    {id:"u5-learn-04", type:"mc", prompt:"84 ÷ 7 = ？", options:["10","12","14","16"], answer:1, explain:""},
+    {id:"u5-learn-05", type:"mc", prompt:"125 ÷ 5 = ？", options:["20","25","30","35"], answer:1, explain:""},
+    {id:"u5-learn-06", type:"mc", prompt:"168 ÷ 6 = ？", options:["24","26","28","30"], answer:2, explain:""},
+    {id:"u5-learn-07", type:"mc", prompt:"有 36 顆糖，平均分給 4 個小朋友，每人得幾顆？", options:["6 顆","8 顆","9 顆","12 顆"], answer:2, explain:"36 ÷ 4 = 9 顆。"},
+    {id:"u5-learn-08", type:"mc", prompt:"有 48 本書，每 6 本一盒，可以裝幾盒？", options:["6 盒","8 盒","10 盒","12 盒"], answer:1, explain:"48 ÷ 6 = 8 盒。"},
+    {id:"u5-learn-09", type:"mc", prompt:"有 72 元，買每本 9 元的簿，最多可買幾本？", options:["6 本","7 本","8 本","9 本"], answer:2, explain:"72 ÷ 9 = 8 本。"},
+    {id:"u5-learn-10", type:"mc", prompt:"有 100 支鉛筆，每 4 支一組，可以分成幾組？", options:["20 組","25 組","30 組","40 組"], answer:1, explain:"100 ÷ 4 = 25 組。"}
+  ],
+  prac: [
+    {id:"u5-prac-01", type:"mc", prompt:"64 ÷ 8 = ？", options:["6","7","8","9"], answer:2, explain:""},
+    {id:"u5-prac-02", type:"mc", prompt:"81 ÷ 9 = ？", options:["7","8","9","10"], answer:2, explain:""},
+    {id:"u5-prac-03", type:"mc", prompt:"108 ÷ 6 = ？", options:["16","17","18","19"], answer:2, explain:""},
+    {id:"u5-prac-04", type:"mc", prompt:"144 ÷ 8 = ？", options:["16","17","18","20"], answer:2, explain:""},
+    {id:"u5-prac-05", type:"mc", prompt:"135 ÷ 5 = ？", options:["25","27","29","30"], answer:1, explain:""},
+    {id:"u5-prac-06", type:"mc", prompt:"有 56 個蘋果，平均分給 7 個小朋友，每人得幾個？", options:["6 個","7 個","8 個","9 個"], answer:2, explain:"56 ÷ 7 = 8 個。"},
+    {id:"u5-prac-07", type:"mc", prompt:"有 96 元，每枝筆 8 元，最多可買幾枝？", options:["10 枝","12 枝","14 枝","16 枝"], answer:1, explain:"96 ÷ 8 = 12 枝。"},
+    {id:"u5-prac-08", type:"mc", prompt:"有 120 張貼紙，每 10 張一包，可以包幾包？", options:["10 包","12 包","15 包","20 包"], answer:1, explain:"120 ÷ 10 = 12 包。"},
+    {id:"u5-prac-09", type:"mc", prompt:"有 75 顆糖，每 5 顆一袋，可以裝幾袋？", options:["12 袋","15 袋","18 袋","20 袋"], answer:1, explain:"75 ÷ 5 = 15 袋。"},
+    {id:"u5-prac-10", type:"mc", prompt:"小明有 84 元，想買每本 7 元的書，最多可買幾本？", options:["10 本","12 本","14 本","16 本"], answer:1, explain:"84 ÷ 7 = 12 本。"},
+    {id:"u5-prac-11", type:"mc", prompt:"有 132 個氣球，平均分給 6 個班，每班得幾個？", options:["20 個","22 個","24 個","26 個"], answer:1, explain:"132 ÷ 6 = 22 個。"},
+    {id:"u5-prac-12", type:"mc", prompt:"有 95 支鉛筆，每 4 支一盒，可以裝幾盒？還剩幾支？", options:["23 盒，剩 3 支","23 盒，剩 2 支","24 盒，剩 0 支","22 盒，剩 7 支"], answer:0, explain:"95 ÷ 4 = 23 餘 3。"}
+  ]
+};
+
+const MODE_LABEL = {pre:"預習", learn:"學習", prac:"練習"};
+const MODES = ["pre","learn","prac"];
+const ALL_TOTAL = MODES.reduce(function(n,k){return n+BANK[k].length;},0);
+function emptyProg(k){
+  const n = BANK[k].length;
+  return {i:0, p:Array(n).fill(null), r:Array(n).fill(false), f:Array(n).fill("")};
+}
+let progress = {pre:emptyProg("pre"), learn:emptyProg("learn"), prac:emptyProg("prac")};
+let mode = "pre";
+let QUESTIONS = BANK[mode];
+let TOTAL = QUESTIONS.length;
+let i = 0;
+let picked = progress[mode].p;
+let fillVal = progress[mode].f;
+let revealed = progress[mode].r;
+const $ = id => document.getElementById(id);
+
+function elhState(){
+  if (MODES.indexOf(mode) < 0 || !Number.isInteger(i) || i < 0 || i >= TOTAL) return;
+  progress[mode].i = i;
+  const snap = function(k){return {i:progress[k].i, p:progress[k].p.slice(), r:progress[k].r.slice(), f:progress[k].f.slice()};};
+  const data = {mode:mode, i:i, all:ALL_TOTAL, pre:snap("pre"), learn:snap("learn"), prac:snap("prac")};
+  if (JSON.stringify(data).length > 8000) {
+    console.error("進度快照超過 8000 字元");
+    return;
+  }
+  elhReport({type:"state", data:data});
+}
+
+function render(saveState = true){
+  const q = QUESTIONS[i];
+  $("meta").textContent = "單元5 除法｜" + MODE_LABEL[mode] + "｜第 " + (i + 1) + " / " + TOTAL + " 題";
+  $("prompt").textContent = q.prompt;
+  $("choices").replaceChildren();
+  $("fillArea").hidden = true;
+  $("feedback").textContent = "";
+
+  if (q.type === "mc") {
+    q.options.forEach(function(text, n){
+      const b = document.createElement("button");
+      b.type = "button";
+      b.dataset.pick = String(n);
+      b.textContent = String.fromCharCode(65 + n) + "．" + text;
+      b.setAttribute("aria-pressed", String(picked[i] === n));
+      $("choices").appendChild(b);
+    });
+  } else {
+    $("fillArea").hidden = false;
+    $("fillInput").value = fillVal[i] || "";
+    $("fillInput").readOnly = revealed[i];
+  }
+
+  $("prev").disabled = i === 0;
+  $("next").disabled = i === TOTAL - 1;
+  $("check").disabled = revealed[i];
+
+  if (revealed[i]) {
+    let result = "";
+    if (q.type === "mc") {
+      const p = picked[i];
+      result = p === null ? "未作答；" : (p === q.answer ? "答對了！" : "再想一想；");
+      result += "正確答案：" + q.options[q.answer] + "。" + (q.explain || "");
+    } else {
+      const user = (fillVal[i] || "").trim();
+      const ok = user === q.answerText;
+      result = user === "" ? "未作答；" : (ok ? "答對了！" : "再想一想；");
+      result += "正確答案：" + q.answerText + "。" + (q.explain || "");
+    }
+    $("feedback").textContent = result;
+  }
+  if (saveState) elhState();
+}
+
+function submitCurrent(){
+  if (revealed[i]) return;
+  const q = QUESTIONS[i];
+  let choice = null, correct = false, pickedText = null, answerText = "";
+
+  if (q.type === "mc") {
+    choice = picked[i];
+    correct = choice !== null && choice === q.answer;
+    pickedText = choice === null ? null : elhText(q.options[choice]);
+    answerText = elhText(q.options[q.answer]);
+  } else {
+    const user = (fillVal[i] || "").trim();
+    choice = user === "" ? null : user;
+    correct = user === q.answerText;
+    pickedText = user === "" ? null : elhText(user);
+    answerText = elhText(q.answerText);
+  }
+
+  elhReport({
+    type:"answer",
+    q: q.id,
+    choice: choice,
+    correct: correct,
+    text: elhText(q.prompt),
+    picked: pickedText,
+    answer: answerText
+  });
+  revealed[i] = true;
+  render();
+}
+
+function switchMode(newMode){
+  if (newMode === mode || !BANK[newMode]) return;
+  progress[mode].i = i;
+  mode = newMode;
+  QUESTIONS = BANK[mode];
+  TOTAL = QUESTIONS.length;
+  i = progress[mode].i;
+  picked = progress[mode].p;
+  fillVal = progress[mode].f;
+  revealed = progress[mode].r;
+  document.querySelectorAll("#modeBar button").forEach(b => {
+    b.classList.toggle("mode-active", b.dataset.mode === mode);
+  });
+  render(true);
+}
+
+document.addEventListener("click", function(e){
+  if (!(e.target instanceof Element)) return;
+  const b = e.target.closest("button");
+  if (!b || b.disabled) return;
+
+  if (b.dataset.mode) {
+    switchMode(b.dataset.mode);
+    return;
+  }
+  if (b.hasAttribute("data-pick")) {
+    const n = Number(b.dataset.pick);
+    if (!Number.isInteger(n) || n < 0 || n >= QUESTIONS[i].options.length) return;
+    picked[i] = n;
+    revealed[i] = false;
+    render();
+  } else if (b.id === "check") {
+    if (QUESTIONS[i].type === "fill") {
+      fillVal[i] = $("fillInput").value.trim();
+    }
+    submitCurrent();
+  } else if (b.id === "prev" && i > 0) {
+    i--; render();
+  } else if (b.id === "next" && i < TOTAL - 1) {
+    i++; render();
+  } else if (b.dataset.key) {
+    const key = b.dataset.key;
+    const inp = $("fillInput");
+    if (revealed[i]) return;
+    if (key === "clear") inp.value = "";
+    else if (key === "back") inp.value = inp.value.slice(0, -1);
+    else inp.value += key;
+    fillVal[i] = inp.value;
+  }
+});
+
+$("fillInput").addEventListener("input", function(){
+  if (!revealed[i]) fillVal[i] = this.value;
+});
+
+function applyProgress(d){
+  function load(k){
+    const n = BANK[k].length;
+    const s = d[k];
+    if (!s || !Number.isInteger(s.i) || s.i < 0 || s.i >= n || !Array.isArray(s.p) || s.p.length !== n || !Array.isArray(s.r) || s.r.length !== n) return false;
+    for (let j = 0; j < n; j++){
+      const q = BANK[k][j];
+      if (s.p[j] !== null) {
+        if (!q.options || !Number.isInteger(s.p[j]) || s.p[j] < 0 || s.p[j] >= q.options.length) return false;
+      }
+      if (typeof s.r[j] !== "boolean") return false;
+    }
+    progress[k].i = s.i;
+    progress[k].p = s.p.slice();
+    progress[k].r = s.r.slice();
+    progress[k].f = Array.isArray(s.f) && s.f.length === n ? s.f.slice() : Array(n).fill("");
+    return true;
+  }
+  if (!d || !BANK[d.mode] || !load("pre") || !load("learn") || !load("prac")) return false;
+  mode = d.mode;
+  QUESTIONS = BANK[mode];
+  TOTAL = QUESTIONS.length;
+  i = progress[mode].i;
+  picked = progress[mode].p;
+  fillVal = progress[mode].f;
+  revealed = progress[mode].r;
+  return true;
+}
+
+window.addEventListener("message", function(e){
+  const m = e.data;
+  if (window.parent === window || e.source !== window.parent || e.origin !== location.origin ||
+      !m || m.elh !== 1 || m.type !== "restore") return;
+  if (!applyProgress(m.data || {})) return;
+  document.querySelectorAll("#modeBar button").forEach(b => {
+    b.classList.toggle("mode-active", b.dataset.mode === mode);
+  });
+  render(false);
+});
+
+render(false);
+elhReport({type:"init", total: ALL_TOTAL});
+</script>
+</body>
+</html>
