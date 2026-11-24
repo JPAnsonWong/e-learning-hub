@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>單元6 重量｜預習・學習・練習</title>
+<style>
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;overflow:hidden}
+body{font-family:"PingFang TC","Microsoft JhengHei",sans-serif;background:#f5f7fc;color:#17243d;touch-action:manipulation}
+.stage{height:100%;display:grid;grid-template-columns:minmax(0,55fr) minmax(0,45fr);min-height:0}
+.pane{min-width:0;min-height:0;overflow:auto;padding:2vmin 2.4vmin}
+.pane+.pane{border-left:2px solid #d0d7e7}
+h1{font-size:clamp(1.3rem,3.8vmin,6rem);line-height:1.25;margin:1vmin 0 1.5vmin}
+.meta,.feedback,.mode-bar{font-size:clamp(1rem,2.5vmin,4.5rem);line-height:1.4}
+.mode-bar{display:flex;flex-wrap:wrap;gap:1vmin;margin-bottom:1.5vmin}
+.mode-bar button{font-size:clamp(0.95rem,2.4vmin,4rem);padding:0.6vmin 1.4vmin}
+button,input{font:inherit}
+button{min-height:max(3rem,6.5vmin);min-width:max(3rem,6.5vmin);font-size:clamp(1rem,3vmin,5.5rem);padding:.5vmin 1.2vmin;border:2px solid #536788;border-radius:1vmin;background:white;color:inherit;white-space:normal;overflow-wrap:anywhere;touch-action:manipulation}
+button:focus-visible{outline:4px solid #ad5400;outline-offset:3px}
+button[aria-pressed="true"]{border:4px solid #1b579f;background:#dceaff}
+button:disabled{opacity:.5}
+button.mode-active{border:4px solid #1b579f;background:#dceaff;font-weight:600}
+.options{display:grid;gap:1.2vmin;margin-bottom:1.5vmin}
+.actions{display:flex;flex-wrap:wrap;gap:1vmin;margin:1.2vmin 0}
+.feedback{margin-top:1.2vmin;overflow-wrap:anywhere;min-height:4vmin}
+input{width:100%;max-width:100%;min-height:8vmin;font-size:clamp(1.2rem,3.8vmin,6.5rem);padding:0.8vmin 1.2vmin;border:2px solid #536788;border-radius:1vmin}
+.numpad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1vmin;max-width:28vmin;margin-top:1vmin}
+.numpad button{min-height:max(3rem,7.5vmin);min-width:0;font-size:clamp(1.2rem,3.5vmin,6rem)}
+[hidden]{display:none!important}
+@media(max-width:899px),(orientation:portrait){.stage{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,42fr) minmax(0,58fr)}.pane+.pane{border-left:0;border-top:2px solid #d0d7e7}}
+</style>
+</head>
+<body>
+<main class="stage">
+  <section class="pane" aria-label="題目">
+    <div class="mode-bar" id="modeBar" role="tablist">
+      <button type="button" data-mode="pre" class="mode-active">預習</button>
+      <button type="button" data-mode="learn">學習</button>
+      <button type="button" data-mode="prac">練習</button>
+    </div>
+    <p class="meta" id="meta"></p>
+    <h1 id="prompt"></h1>
+    <div id="visual"></div>
+    <nav class="actions" aria-label="換題">
+      <button type="button" id="prev">上一題</button>
+      <button type="button" id="next">下一題</button>
+    </nav>
+  </section>
+  <section class="pane" aria-label="作答">
+    <div class="options" id="choices"></div>
+    <div id="fillArea" hidden>
+      <input type="text" id="fillInput" inputmode="numeric" placeholder="請輸入答案" autocomplete="off" spellcheck="false">
+      <div class="numpad" id="numpad">
+        <button type="button" data-key="1">1</button><button type="button" data-key="2">2</button><button type="button" data-key="3">3</button>
+        <button type="button" data-key="4">4</button><button type="button" data-key="5">5</button><button type="button" data-key="6">6</button>
+        <button type="button" data-key="7">7</button><button type="button" data-key="8">8</button><button type="button" data-key="9">9</button>
+        <button type="button" data-key="clear">清除</button><button type="button" data-key="0">0</button><button type="button" data-key="back">退格</button>
+      </div>
+    </div>
+    <div class="actions"><button type="button" id="check">確定／看答案</button></div>
+    <div class="feedback" id="feedback" aria-live="polite"></div>
+  </section>
+</main>
+<script>
+function elhReport(m){try{if(location.search.indexOf("elhdebug")>=0)console.log("ELH",JSON.stringify(m));if(window.parent!==window)window.parent.postMessage(Object.assign({elh:1},m),location.origin);}catch(e){}}
+function elhText(h){return String(h==null?"":h).replace(/<[^>]*>/g,"").replace(/\s+/g," ").trim().slice(0,200);}
+
+const BANK = {
+  pre: [
+    {id:"u6-pre-01",type:"mc",prompt:"哪個物件通常比較重？",options:["羽毛","蘋果","紙張"],answer:1,explain:"蘋果比羽毛和紙張重。"},
+    {id:"u6-pre-02",type:"mc",prompt:"直接比較重量時，我們可以用什麼方法？",options:["用天平","用眼睛看","用尺子量"],answer:0,explain:"天平可以準確比較兩邊的重量。"},
+    {id:"u6-pre-03",type:"mc",prompt:"1 公斤大約等於多少克？",options:["10 克","100 克","1000 克"],answer:2,explain:"1 公斤 = 1000 克。"},
+    {id:"u6-pre-04",type:"mc",prompt:"一支鉛筆大約多重？",options:["約 5–10 克","約 500 克","約 2 公斤"],answer:0,explain:"鉛筆很輕，大約幾克到十幾克。"},
+    {id:"u6-pre-05",type:"mc",prompt:"一包米（普通家庭裝）大約多重？",options:["約 50 克","約 500 克","約 5 公斤"],answer:2,explain:"家庭裝米通常是 5 公斤左右。"},
+    {id:"u6-pre-06",type:"mc",prompt:"以下哪個單位較適合量「一粒葡萄」的重量？",options:["公斤","克","噸"],answer:1,explain:"葡萄很輕，用「克」比較合適。"}
+  ],
+  learn: [
+    {id:"u6-learn-01",type:"mc",prompt:"1 公斤 = 多少克？",options:["100 克","500 克","1000 克","2000 克"],answer:2,explain:"1 公斤 = 1000 克。"},
+    {id:"u6-learn-02",type:"mc",prompt:"500 克 = 多少公斤？",options:["0.5 公斤","5 公斤","50 公斤"],answer:0,explain:"500 ÷ 1000 = 0.5 公斤。"},
+    {id:"u6-learn-03",type:"mc",prompt:"2 公斤 300 克 = 多少克？",options:["2030 克","2300 克","23000 克"],answer:1,explain:"2 × 1000 + 300 = 2300 克。"},
+    {id:"u6-learn-04",type:"mc",prompt:"量一袋米（約 5 公斤）最適合用什麼工具？",options:["電子秤（廚房秤）","彈簧秤或電子磅","天平小砝碼"],answer:1,explain:"較重的物品適合用磅秤。"},
+    {id:"u6-learn-05",type:"mc",prompt:"量一顆雞蛋最適合用什麼單位？",options:["公斤","克","噸"],answer:1,explain:"雞蛋大約 50–60 克。"},
+    {id:"u6-learn-06",type:"mc",prompt:"3 公斤 = 多少克？",options:["300 克","3000 克","30000 克"],answer:1,explain:"3 × 1000 = 3000 克。"},
+    {id:"u6-learn-07",type:"mc",prompt:"750 克 + 250 克 = 多少公斤？",options:["0.5 公斤","1 公斤","1.5 公斤"],answer:1,explain:"750 + 250 = 1000 克 = 1 公斤。"},
+    {id:"u6-learn-08",type:"mc",prompt:"以下哪個最重？",options:["800 克","0.9 公斤","1 公斤"],answer:2,explain:"1 公斤 = 1000 克，最大。"}
+  ],
+  prac: [
+    {id:"u6-prac-01",type:"mc",prompt:"4 公斤 = 多少克？",options:["400 克","4000 克","40000 克"],answer:1,explain:"4 × 1000 = 4000 克。"},
+    {id:"u6-prac-02",type:"mc",prompt:"2500 克 = 多少公斤？",options:["2 公斤","2.5 公斤","25 公斤"],answer:1,explain:"2500 ÷ 1000 = 2.5 公斤。"},
+    {id:"u6-prac-03",type:"mc",prompt:"1 公斤 200 克 + 800 克 = 多少公斤？",options:["1.5 公斤","2 公斤","2.2 公斤"],answer:1,explain:"1200 + 800 = 2000 克 = 2 公斤。"},
+    {id:"u6-prac-04",type:"mc",prompt:"小明買了 1.5 公斤蘋果和 500 克香蕉，一共多重？",options:["1.5 公斤","2 公斤","2.5 公斤"],answer:1,explain:"1.5 公斤 + 0.5 公斤 = 2 公斤。"},
+    {id:"u6-prac-05",type:"mc",prompt:"哪一個較輕？",options:["1200 克","1.1 公斤"],answer:1,explain:"1.1 公斤 = 1100 克，較輕。"},
+    {id:"u6-prac-06",type:"mc",prompt:"一袋砂糖重 2 公斤，另一袋重 1500 克，哪袋較重？",options:["2 公斤那袋","1500 克那袋","一樣重"],answer:0,explain:"2 公斤 = 2000 克 > 1500 克。"},
+    {id:"u6-prac-07",type:"mc",prompt:"5 公斤 300 克 = 多少克？",options:["5300 克","50300 克","530 克"],answer:0,explain:"5 × 1000 + 300 = 5300 克。"},
+    {id:"u6-prac-08",type:"mc",prompt:"量一本課本最適合用什麼單位？",options:["克","公斤","噸"],answer:0,explain:"課本通常幾百克，用克較精確。"},
+    {id:"u6-prac-09",type:"mc",prompt:"3000 克 + 2 公斤 = 多少公斤？",options:["3 公斤","5 公斤","5.3 公斤"],answer:1,explain:"3 公斤 + 2 公斤 = 5 公斤。"},
+    {id:"u6-prac-10",type:"mc",prompt:"媽媽買了 3 袋米，每袋 2 公斤，一共多重？",options:["5 公斤","6 公斤","8 公斤"],answer:1,explain:"3 × 2 = 6 公斤。"}
+  ]
+};
+
+const MODE_LABEL = {pre:"預習", learn:"學習", prac:"練習"};
+const MODES = ["pre","learn","prac"];
+const ALL_TOTAL = MODES.reduce(function(n,k){return n+BANK[k].length;},0);
+function emptyProg(k){
+  const n = BANK[k].length;
+  return {i:0, p:Array(n).fill(null), r:Array(n).fill(false), f:Array(n).fill("")};
+}
+let progress = {pre:emptyProg("pre"), learn:emptyProg("learn"), prac:emptyProg("prac")};
+let mode = "pre";
+let QUESTIONS = BANK[mode];
+let TOTAL = QUESTIONS.length;
+let i = 0;
+let picked = progress[mode].p;
+let fillVal = progress[mode].f;
+let revealed = progress[mode].r;
+const $ = id => document.getElementById(id);
+
+function elhState(){
+  if (MODES.indexOf(mode) < 0 || !Number.isInteger(i) || i < 0 || i >= TOTAL) return;
+  progress[mode].i = i;
+  const snap = function(k){return {i:progress[k].i, p:progress[k].p.slice(), r:progress[k].r.slice(), f:progress[k].f.slice()};};
+  const data = {mode:mode, i:i, all:ALL_TOTAL, pre:snap("pre"), learn:snap("learn"), prac:snap("prac")};
+  if (JSON.stringify(data).length > 8000) {
+    console.error("進度快照超過 8000 字元");
+    return;
+  }
+  elhReport({type:"state", data:data});
+}
+
+function render(saveState = true){
+  const q = QUESTIONS[i];
+  $("meta").textContent = "單元6 重量｜" + MODE_LABEL[mode] + "｜第 " + (i + 1) + " / " + TOTAL + " 題";
+  $("prompt").textContent = q.prompt;
+  $("choices").replaceChildren();
+  $("fillArea").hidden = true;
+  $("feedback").textContent = "";
+  if (q.type === "mc") {
+    q.options.forEach(function(text, n){
+      const b = document.createElement("button");
+      b.type = "button";
+      b.dataset.pick = String(n);
+      b.textContent = String.fromCharCode(65 + n) + "．" + text;
+      b.setAttribute("aria-pressed", String(picked[i] === n));
+      $("choices").appendChild(b);
+    });
+  } else {
+    $("fillArea").hidden = false;
+    $("fillInput").value = fillVal[i] || "";
+    $("fillInput").readOnly = revealed[i];
+  }
+  $("prev").disabled = i === 0;
+  $("next").disabled = i === TOTAL - 1;
+  $("check").disabled = revealed[i];
+  if (revealed[i]) {
+    let result = "";
+    if (q.type === "mc") {
+      const p = picked[i];
+      result = p === null ? "未作答；" : (p === q.answer ? "答對了！" : "再想一想；");
+      result += "正確答案：" + q.options[q.answer] + "。" + (q.explain || "");
+    } else {
+      const user = (fillVal[i] || "").trim();
+      result = user === "" ? "未作答；" : (user === q.answerText ? "答對了！" : "再想一想；");
+      result += "正確答案：" + q.answerText + "。" + (q.explain || "");
+    }
+    $("feedback").textContent = result;
+  }
+  if (saveState) elhState();
+}
+
+function submitCurrent(){
+  if (revealed[i]) return;
+  const q = QUESTIONS[i];
+  let choice = null, correct = false, pickedText = null, answerText = "";
+  if (q.type === "mc") {
+    choice = picked[i];
+    correct = choice !== null && choice === q.answer;
+    pickedText = choice === null ? null : elhText(q.options[choice]);
+    answerText = elhText(q.options[q.answer]);
+  } else {
+    const user = (fillVal[i] || "").trim();
+    choice = user === "" ? null : user;
+    correct = user === q.answerText;
+    pickedText = user === "" ? null : elhText(user);
+    answerText = elhText(q.answerText);
+  }
+  elhReport({type:"answer", q:q.id, choice:choice, correct:correct, text:elhText(q.prompt), picked:pickedText, answer:answerText});
+  revealed[i] = true;
+  render();
+}
+
+function switchMode(newMode){
+  if (newMode === mode || !BANK[newMode]) return;
+  progress[mode].i = i;
+  mode = newMode;
+  QUESTIONS = BANK[mode];
+  TOTAL = QUESTIONS.length;
+  i = progress[mode].i;
+  picked = progress[mode].p;
+  fillVal = progress[mode].f;
+  revealed = progress[mode].r;
+  document.querySelectorAll("#modeBar button").forEach(b => {
+    b.classList.toggle("mode-active", b.dataset.mode === mode);
+  });
+  render(true);
+}
+
+document.addEventListener("click", function(e){
+  if (!(e.target instanceof Element)) return;
+  const b = e.target.closest("button");
+  if (!b || b.disabled) return;
+  if (b.dataset.mode) { switchMode(b.dataset.mode); return; }
+  if (b.hasAttribute("data-pick")) {
+    const n = Number(b.dataset.pick);
+    if (!Number.isInteger(n) || n < 0 || n >= QUESTIONS[i].options.length) return;
+    picked[i] = n; revealed[i] = false; render();
+  } else if (b.id === "check") {
+    if (QUESTIONS[i].type === "fill") fillVal[i] = $("fillInput").value.trim();
+    submitCurrent();
+  } else if (b.id === "prev" && i > 0) { i--; render(); }
+  else if (b.id === "next" && i < TOTAL - 1) { i++; render(); }
+  else if (b.dataset.key) {
+    const key = b.dataset.key; const inp = $("fillInput");
+    if (revealed[i]) return;
+    if (key === "clear") inp.value = "";
+    else if (key === "back") inp.value = inp.value.slice(0, -1);
+    else inp.value += key;
+    fillVal[i] = inp.value;
+  }
+});
+
+$("fillInput").addEventListener("input", function(){ if (!revealed[i]) fillVal[i] = this.value; });
+
+function applyProgress(d){
+  function load(k){
+    const n = BANK[k].length;
+    const s = d[k];
+    if (!s || !Number.isInteger(s.i) || s.i < 0 || s.i >= n || !Array.isArray(s.p) || s.p.length !== n || !Array.isArray(s.r) || s.r.length !== n) return false;
+    for (let j = 0; j < n; j++){
+      const q = BANK[k][j];
+      if (s.p[j] !== null) {
+        if (!q.options || !Number.isInteger(s.p[j]) || s.p[j] < 0 || s.p[j] >= q.options.length) return false;
+      }
+      if (typeof s.r[j] !== "boolean") return false;
+    }
+    progress[k].i = s.i;
+    progress[k].p = s.p.slice();
+    progress[k].r = s.r.slice();
+    progress[k].f = Array.isArray(s.f) && s.f.length === n ? s.f.slice() : Array(n).fill("");
+    return true;
+  }
+  if (!d || !BANK[d.mode] || !load("pre") || !load("learn") || !load("prac")) return false;
+  mode = d.mode;
+  QUESTIONS = BANK[mode];
+  TOTAL = QUESTIONS.length;
+  i = progress[mode].i;
+  picked = progress[mode].p;
+  fillVal = progress[mode].f;
+  revealed = progress[mode].r;
+  return true;
+}
+
+window.addEventListener("message", function(e){
+  const m = e.data;
+  if (window.parent === window || e.source !== window.parent || e.origin !== location.origin ||
+      !m || m.elh !== 1 || m.type !== "restore") return;
+  if (!applyProgress(m.data || {})) return;
+  document.querySelectorAll("#modeBar button").forEach(b => {
+    b.classList.toggle("mode-active", b.dataset.mode === mode);
+  });
+  render(false);
+});
+
+render(false);
+elhReport({type:"init", total: ALL_TOTAL});
+</script>
+</body>
+</html>
