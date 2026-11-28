@@ -1,0 +1,15 @@
+{
+  "id": "chi-s1-chengyu-wenyan-quiz",
+  "student": "son",
+  "subject": "chinese",
+  "stage": "s1-1a-term1",
+  "type": "quiz",
+  "title": "讀文言・學成語｜文言知識測驗",
+  "unit": "讀文言・學成語",
+  "tags": [],
+  "difficulty": 2,
+  "minutes": 20,
+  "version": 1,
+  "date": "2026-11-28",
+  "description": "補充教材《讀文言・學成語》文言知識計時測驗，共 20 題、限時 20 分鐘。頁面標明參考答案（課本未印標準答案）。"
+}
