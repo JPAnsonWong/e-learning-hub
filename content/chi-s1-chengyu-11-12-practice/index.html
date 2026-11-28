@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中一中文 讀文言學成語 1.1–1.2 練習</title>
+<style>
+html,body{height:100%;margin:0}
+body{
+  font-family:"PingFang TC","Microsoft JhengHei",sans-serif;
+  touch-action:manipulation;
+  background:#f4f1ea;color:#2b2622;
+}
+.stage{
+  height:100%;
+  display:grid;
+  grid-template-columns:58% 42%;
+  min-height:0;
+}
+.pane{
+  min-height:0;
+  overflow:auto;
+  padding:2.4vmin 3vmin;
+  box-sizing:border-box;
+}
+.pane + .pane{border-left:1px solid #d9dde8}
+.stem{font-size:clamp(1.2rem, 3.8vmin, 6rem);line-height:1.35}
+.hint,.note,.explain{font-size:clamp(1rem, 2.4vmin, 4rem);line-height:1.45}
+.btn,.choice,.card,.bin,.token{
+  min-height:max(3rem,7vmin);
+  min-width:max(3rem,7vmin);
+  font-size:clamp(1rem, 3.2vmin, 5rem);
+  margin:0.6vmin;
+  border-radius:1.2vmin;
+  border:2px solid #3a4a6b;
+  background:#fff;
+  font-family:inherit;
+  color:inherit;
+  touch-action:manipulation;
+  cursor:pointer;
+}
+@media (max-width:900px),(orientation:portrait){
+  .stage{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .pane + .pane{border-left:0;border-top:1px solid #d9dde8}
+}
+
+.choice.selected,.card.selected,.token.selected{background:#e8f0fe;border-color:#1a73e8;color:#1a73e8}
+.btn.primary{background:#1a73e8;color:#fff;border-color:#1a73e8}
+.btn.ghost{background:#fff;color:#1a73e8}
+.token.nop{border:none;background:transparent;min-width:0;min-height:0;cursor:default;padding:0;margin:0 0.1vmin;display:inline}
+.bin{display:block;text-align:left}
+.card{display:inline-flex;align-items:center}
+
+</style>
+</head>
+<body>
+<div class="stage" id="app"></div>
+<script>
+// ---- E_learning Hub 回報（只在被網站 iframe 載入時有效，單獨打開頁面時無任何作用）----
+function elhReport(m){
+  try{
+    if(location.search.indexOf("elhdebug")>=0)console.log("ELH",JSON.stringify(m));
+    if(window.parent!==window)window.parent.postMessage(Object.assign({elh:1},m),location.origin);
+  }catch(e){}
+}
+function elhText(h){return String(h==null?"":h).replace(/<[^>]*>/g,"").replace(/\s+/g," ").trim().slice(0,200);}
+
+const DATA = {"id":"chengyu-11-12-practice","title":"讀文言・學成語｜1.1–1.2 練習","unit":"中一中文｜讀文言・學成語","kind":"practice","audience":"兒子","stage":"中一","minutes":25,"limitMs":1500000,"total":12,"refNote":"參考答案（課本未印標準答案）","coverTip":"共 12 題，限時 25 分鐘。先做 1.1《孟母三遷》（q1–q7），再做 1.2《芝蘭之室》（q8–q12）。部分題型已改為可自動評分。作答期間不顯示對錯，交卷或時間到後才出分，並註明參考答案（課本未印標準答案）。","questions":[{"qid":"q1","type":"mcq","stem":"解釋粗體字：「<b>遂</b>居之」","options":["因此","離開","於是"],"answer":2,"refNote":true,"explain":"「遂」在這裏表示接着、於是就住下來，不是「因此」單獨作原因，也不是「離開」（離開是上文的「去」「徙」）。","section":"1.1 孟母三遷","pointsNote":"原題 4 分之半，現單選"},{"qid":"q2","type":"mcq","stem":"解釋粗體字：「<b>卒</b>成大儒之名」","options":["最終","沒有","順利"],"answer":0,"refNote":true,"explain":"「卒」解作最終、終於。孟子長大後學習六藝，最終成就大儒之名。","section":"1.1 孟母三遷"},{"qid":"q3","type":"mcq","stem":"把「孟母曰：『此非吾所以居處子也。』」譯為白話。課本填空是：孟母說：「這裏不是用來讓孩子________的地方。」","options":["這裏不是用來讓孩子居住（安頓）的地方","這裏不是用來讓孩子做買賣的地方","這裏不是用來讓孩子祭祀的地方","這裏不是用來讓孩子學六藝的地方"],"answer":0,"refNote":true,"explain":"「居處子」指安頓、讓兒子居住。孟母先後覺得墓地和市集都不適合讓孩子住。","section":"1.1 孟母三遷","autoNote":"題型已改為可自動評分"},{"qid":"q4","type":"mcq","stem":"陳述判斷（1）：「孟母認為墓地和市集附近都不是合適的居所。」","options":["正確","不正確"],"answer":0,"refNote":true,"explain":"近墓、近市時，孟母都說「此非吾所以居處子也」，兩處她都認為不合適。","section":"1.1 孟母三遷"},{"qid":"q5","type":"mcq","stem":"陳述判斷（2）：「孟軻小時候最喜歡居住在學校旁。」","options":["正確","不正確"],"answer":1,"refNote":true,"explain":"文中沒有寫孟子「最喜歡」住在學宮旁，而是他在那裏玩設俎豆、揖讓進退，孟母認為「真可以居吾子矣」。這是母親的判斷，不是孩子的喜好。","section":"1.1 孟母三遷"},{"qid":"q6","type":"mcq","stem":"孟母為甚麼認為學校旁是理想的居所？","options":["學校旁邊比較安靜，租金也較便宜","孟子在那裏模仿祭祀禮儀和揖讓進退，這些遊戲有助學習禮儀","孟子可以在學校上課，不必再玩耍","孟母在學校旁找到了工作"],"answer":1,"refNote":true,"explain":"提示要看遷到學宮旁後孟子所玩的遊戲：設俎豆（祭祀禮器）、揖讓進退（禮節），所以孟母認為這裏真正適合兒子居住。","section":"1.1 孟母三遷","autoNote":"原為短答，已改單選。"},{"qid":"q7","type":"mcq","stem":"以下哪一個詞語最適合形容文中孟母的形象？","options":["德才兼備","望子成材","嚴而有愛","言而有信"],"answer":1,"refNote":true,"explain":"全文寫孟母為了教育兒子三次遷居，選擇良好環境，最切合「望子成材」。文中沒有着重寫她的才學、嚴與愛的對比，或守信的事蹟。","section":"1.1 孟母三遷"},{"qid":"q8","type":"mcq","stem":"「與善人居」的「居」字意思：","options":["住所","一起","分開"],"answer":1,"refNote":true,"explain":"「與善人居」是跟善人一起相處、同處，不是指房子，也不是分開。","section":"1.2 芝蘭之室"},{"qid":"q9","type":"mcq","stem":"「是以君子必慎其所與處者焉」的「是以」意思：","options":["因為","而且","所以"],"answer":2,"refNote":true,"explain":"「是以」解作所以、因此，用來推出「君子必須謹慎選擇相處的人」。","section":"1.2 芝蘭之室"},{"qid":"q10","type":"mcq","stem":"把「不知其人，視其友」譯為白話。課本填空：不了解________，________就可知道。","options":["不了解這個人，看他的朋友就可知道","不了解他的父親，看他的朋友就可知道","不了解這個人，看他的君主就可知道","不了解這個地方，看他的朋友就可知道"],"answer":0,"refNote":true,"explain":"原文四句對應：不知其子視其父、不知其人視其友、不知其君視其所使、不知其地視其草木。","section":"1.2 芝蘭之室","autoNote":"題型已改為可自動評分"},{"qid":"q11","type":"mcq","stem":"「與善人居，如入芝蘭之室……與不善人居，如入鮑魚之肆……」運用了哪兩種修辭手法？\n①比喻　②誇張　③對比　④排比","options":["①、③","①、④","②、③","②、④"],"answer":0,"refNote":true,"explain":"「如入……」是比喻；善人與不善人、芝蘭之室與鮑魚之肆是對比。只有兩組相對，不宜算作排比；也沒有明顯誇張。","section":"1.2 芝蘭之室"},{"qid":"q12","type":"mcq","stem":"「丹之所藏者赤，漆之所藏者黑」與哪個成語的意思接近？","options":["近朱者赤，近墨者黑","青出於藍，而勝於藍","天生我材，必有我用","不入虎穴，焉得虎子"],"answer":0,"refNote":true,"explain":"朱砂所在之處是紅的，漆所在之處是黑的，比喻接近甚麼環境、跟甚麼人，就會變得像甚麼。這正是「近朱者赤，近墨者黑」。","section":"1.2 芝蘭之室","autoNote":"原題要求八個字。題型已改為可自動評分，選項都是八字成語。"}]};
+
+document.title = DATA.title || "讀文言・學成語";
+
+function renderStem(s){return esc(s).replace(/&lt;b&gt;(.*?)&lt;\/b&gt;/g,"<b>$1</b>");}
+function esc(s){
+  return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+
+function flatQs(){
+  var out=[];
+  if(Array.isArray(DATA.pages)){
+    DATA.pages.forEach(function(pg){
+      if(Array.isArray(pg.questions)){
+        pg.questions.forEach(function(q){ out.push(q); });
+      }
+    });
+  } else if(Array.isArray(DATA.questions)){
+    DATA.questions.forEach(function(q){ out.push(q); });
+  }
+  return out;
+}
+
+var Qs = flatQs();
+var total = Qs.length;
+var i = -1;
+var started = false;
+var sub = false;
+var remainMs = DATA.limitMs || 0;
+var elapsedMs = 0;
+var timerId = null;
+var lastTick = null;
+var answers = [];
+var reported = false;
+var selCard = null;
+var confirming = false;
+
+function initAnswers(){
+  answers = Qs.map(function(q){
+    if(q.type==="multi") return [];
+    if(q.type==="classify") return q.items.map(function(){ return null; });
+    if(q.type==="circle") return [];
+    return null;
+  });
+}
+
+function fmtMs(ms){
+  var s = Math.max(0, Math.floor(ms/1000));
+  var m = Math.floor(s/60);
+  var sec = s % 60;
+  return (m<10?"0":"")+m + ":" + (sec<10?"0":"")+sec;
+}
+
+function sameSet(a,b){
+  if(!Array.isArray(a)||!Array.isArray(b)||a.length!==b.length) return false;
+  var A=a.slice().sort(function(x,y){return x-y;});
+  var B=b.slice().sort(function(x,y){return x-y;});
+  for(var k=0;k<A.length;k++) if(A[k]!==B[k]) return false;
+  return true;
+}
+
+function sameMap(a,b){
+  if(!Array.isArray(a)||!Array.isArray(b)||a.length!==b.length) return false;
+  for(var k=0;k<a.length;k++) if(a[k]!==b[k]) return false;
+  return true;
+}
+
+function isAnswered(idx){
+  var q = Qs[idx];
+  var a = answers[idx];
+  if(q.type==="mcq") return a !== null && a !== undefined;
+  if(q.type==="multi") return Array.isArray(a) && a.length>0;
+  if(q.type==="classify") return Array.isArray(a) && a.length===q.items.length && a.every(function(x){ return x !== null && x !== undefined; });
+  if(q.type==="circle") return Array.isArray(a) && a.length>0;
+  return false;
+}
+
+function isCorrect(idx){
+  var q = Qs[idx];
+  var a = answers[idx];
+  if(q.type==="mcq") return a === q.answer;
+  if(q.type==="multi") return sameSet(a, q.answer);
+  if(q.type==="classify") return sameMap(a, q.answer);
+  if(q.type==="circle") return sameSet(a, q.answer);
+  return false;
+}
+
+function choiceVal(idx){
+  var q = Qs[idx];
+  var a = answers[idx];
+  if(!isAnswered(idx)) return null;
+  if(q.type==="mcq") return a;
+  if(q.type==="multi") return a.slice().sort(function(x,y){return x-y;}).join("|");
+  if(q.type==="classify") return a.map(function(x){ return (x===null||x===undefined)?"-":x; }).join("|");
+  if(q.type==="circle") return a.slice().sort(function(x,y){return x-y;}).join("|");
+  return null;
+}
+
+function pickedText(idx){
+  var q = Qs[idx];
+  var a = answers[idx];
+  if(q.type==="mcq"){
+    if(a===null || a===undefined) return null;
+    return String(q.options[a]);
+  }
+  if(q.type==="multi"){
+    if(!a||a.length===0) return null;
+    return a.slice().sort(function(x,y){return x-y;}).map(function(k){ return q.options[k]; }).join(" / ");
+  }
+  if(q.type==="classify"){
+    if(!a||!a.length) return null;
+    return a.map(function(k,ci){
+      if(k===null||k===undefined) return q.items[ci] + "→未放";
+      return q.items[ci] + "→" + q.bins[k];
+    }).join(" / ");
+  }
+  if(q.type==="circle"){
+    if(!a||a.length===0) return null;
+    return a.slice().sort(function(x,y){return x-y;}).map(function(k){ return q.tokens[k].t; }).join(" / ");
+  }
+  return null;
+}
+
+function rightText(idx){
+  var q = Qs[idx];
+  if(q.type==="mcq") return String(q.options[q.answer]);
+  if(q.type==="multi") return q.answer.slice().sort(function(x,y){return x-y;}).map(function(k){ return q.options[k]; }).join(" / ");
+  if(q.type==="classify") return q.answer.map(function(k,ci){ return q.items[ci] + "→" + q.bins[k]; }).join(" / ");
+  if(q.type==="circle"){
+    if(q.answerText) return q.answerText;
+    return q.answer.slice().sort(function(x,y){return x-y;}).map(function(k){ return q.tokens[k].t; }).join(" / ");
+  }
+  return "";
+}
+
+function startTimer(){
+  if(timerId) return;
+  lastTick = performance.now();
+  timerId = setInterval(function(){
+    var now = performance.now();
+    var d = now - lastTick;
+    lastTick = now;
+    if(!sub && remainMs>0){
+      remainMs -= d;
+      elapsedMs += d;
+      if(remainMs<=0){
+        remainMs = 0;
+        doSubmit(true);
+        return;
+      }
+    }
+    var el = document.getElementById("timer");
+    if(el) el.textContent = "剩餘 "+fmtMs(remainMs)+"　已用 "+fmtMs(elapsedMs);
+  }, 250);
+}
+
+function stopTimer(){
+  if(timerId){
+    clearInterval(timerId);
+    timerId = null;
+  }
+}
+
+function elhState(){
+  if(!started || i<0) return;
+  elhReport({type:"state", data:{
+    i: i,
+    started: true,
+    sub: !!sub,
+    remainMs: remainMs,
+    elapsedMs: elapsedMs,
+    answers: answers
+  }});
+}
+
+function render(){
+  var app = document.getElementById("app");
+  var left = "";
+  var right = "";
+
+  if(!started){
+    left = '<div class="stem">'+esc(DATA.unit||"")+'</div>'
+      + '<div class="stem" style="font-size:clamp(1.6rem, 6vmin, 6rem);margin-top:2vmin">'+esc(DATA.title||"")+'</div>'
+      + '<div class="note">兒子　中一　限時 '+ (DATA.minutes||0) +' 分鐘　共 '+total+' 題</div>'
+      + '<div class="note">'+esc(DATA.coverTip||"")+'</div>';
+    right = '<button class="btn primary" data-act="start">'+(DATA.kind==="practice"?"開始練習":"開始測驗")+'</button>';
+  } else if(sub){
+    var correctCount = 0;
+    Qs.forEach(function(q,idx){ if(isCorrect(idx)) correctCount++; });
+    left = '<div class="stem">'+esc(DATA.unit||"")+'</div>'
+      + '<div class="stem" style="margin-top:2vmin">交卷結果</div>'
+      + '<div class="note">已用 '+fmtMs(elapsedMs)+'　答對 '+correctCount+' / '+total+' 題</div>'
+      + (DATA.refNote ? '<div class="note">'+esc(DATA.refNote)+'</div>' : "");
+    right = Qs.map(function(q,idx){
+        var ok = isCorrect(idx);
+        var ans = isAnswered(idx);
+        return '<div class="note" style="margin-top:1.2vmin">'
+          + '<b>第 '+(idx+1)+' 題</b>　'+(ok?"答對":(ans?"答錯":"未作答"))
+          + '<br>正確答案：'+esc(rightText(idx))
+          + (q.explain ? '<br>解說：'+esc(q.explain) : "")
+          + (q.refNote && DATA.refNote ? '<br><span class="note">'+esc(DATA.refNote)+'</span>' : "")
+          + '</div>';
+      }).join("");
+  } else if(confirming){
+    var unanswered = 0;
+    Qs.forEach(function(q,idx){ if(!isAnswered(idx)) unanswered++; });
+    left = '<div class="stem">確定交卷？</div>'
+      + '<div class="note">'+(unanswered?("還有 "+unanswered+" 題未作答。"):"全部已作答。")+'交卷後不能再改。</div>';
+    right = '<button class="btn ghost" data-act="submitNo">返回作答</button>'
+      + '<button class="btn primary" data-act="submitYes">確定交卷</button>';
+  } else {
+    var q = Qs[i];
+    left = '<div class="note">'+esc(DATA.unit||"")+'</div>'
+      + '<div class="note">第 '+(i+1)+' / '+total+' 題</div>';
+    if(q.section) left += '<div class="note">'+esc(q.section)+'</div>';
+    left += '<div class="stem" style="margin-top:1.2vmin">'+renderStem(q.stem)+'</div>';
+    if(q.autoNote) left += '<div class="note" style="margin-top:0.6vmin">'+esc(q.autoNote)+'</div>';
+    left += '<div class="note" id="timer">剩餘 '+fmtMs(remainMs)+'　已用 '+fmtMs(elapsedMs)+'</div>';
+
+    if(q.type==="mcq" || q.type==="multi"){
+      right = '<div class="note">'+(q.type==="multi"?"選出所有正確項，全對才得分。":"請選擇一項。")+'</div>'
+        + q.options.map(function(opt,k){
+          var sel = (q.type==="mcq" ? answers[i]===k : (answers[i]&&answers[i].indexOf(k)>=0));
+          return '<button class="choice '+(sel?"selected":"")+'" data-act="opt" data-k="'+k+'">'+String.fromCharCode(65+k)+'　'+esc(opt)+'</button>';
+        }).join("");
+    } else if(q.type==="classify"){
+      if(!Array.isArray(answers[i]) || answers[i].length!==q.items.length){
+        answers[i] = q.items.map(function(){ return null; });
+      }
+      var unplaced = q.items.map(function(it,ci){ return {it:it, ci:ci}; }).filter(function(x){ return answers[i][x.ci]===null; });
+      right = '<div class="note">先點卡片，再點箱子；點箱內卡片可放回。全部放對才得分。</div>';
+      right += '<div style="margin-top:0.8vmin">'+unplaced.map(function(x){
+        return '<button class="card '+(selCard===x.ci?"selected":"")+'" data-act="card" data-k="'+x.ci+'">'+esc(x.it)+'</button>';
+      }).join("")+'</div>';
+      right += q.bins.map(function(b,k){
+        var placed = q.items.map(function(it,ci){ return {it:it, ci:ci}; }).filter(function(x){ return answers[i][x.ci]===k; });
+        return '<div class="bin" data-act="bin" data-k="'+k+'">'+esc(b)
+          + placed.map(function(x){ return '<button class="card" data-act="unplace" data-k="'+x.ci+'">'+esc(x.it)+'</button>'; }).join("")
+          + '</div>';
+      }).join("");
+    } else if(q.type==="circle"){
+      if(!Array.isArray(answers[i])) answers[i] = [];
+      right = '<div class="note">請圈出句中表示判斷的語氣詞、判斷詞或否定詞（可多於一處）。再點一次可取消。</div>'
+        + '<div style="margin-top:1vmin;line-height:1.8">'+q.tokens.map(function(t,k){
+          var sel = answers[i].indexOf(k)>=0;
+          if(t.click===false) return '<span class="token nop">'+esc(t.t)+'</span>';
+          return '<button class="token '+(sel?"selected":"")+'" data-act="tok" data-k="'+k+'">'+esc(t.t)+'</button>';
+        }).join("")+'</div>';
+    } else {
+      right = "";
+    }
+    right += '<div style="margin-top:2vmin">'
+      + (i>0?'<button class="btn ghost" data-act="prev">上一題</button>':'')
+      + (i<total-1?'<button class="btn" data-act="next">下一題</button>':'')
+      + '<button class="btn primary" data-act="submit">交卷</button>'
+      + '</div>';
+  }
+
+  app.innerHTML = '<div class="pane" id="left">'+left+'</div><div class="pane" id="right">'+right+'</div>';
+  elhState();
+}
+
+document.addEventListener("click", function(e){
+  var b = e.target.closest("[data-act]");
+  if(!b) return;
+  var act = b.getAttribute("data-act");
+  var kAttr = b.getAttribute("data-k");
+  var k = kAttr==null ? null : parseInt(kAttr,10);
+
+  if(act==="start"){
+    started = true; sub = false; i = 0; reported = false; confirming = false; selCard = null;
+    initAnswers();
+    remainMs = DATA.limitMs || 0;
+    elapsedMs = 0;
+    startTimer();
+    render();
+    return;
+  }
+  if(act==="prev"){
+    if(i>0){ i--; selCard=null; confirming=false; render(); }
+    return;
+  }
+  if(act==="next"){
+    if(i<total-1){ i++; selCard=null; confirming=false; render(); }
+    return;
+  }
+  if(act==="submit"){
+    confirming = true;
+    render();
+    return;
+  }
+  if(act==="submitNo"){
+    confirming = false;
+    render();
+    return;
+  }
+  if(act==="submitYes"){
+    doSubmit(false);
+    return;
+  }
+  if(!started || sub || confirming) return;
+  var q = Qs[i];
+  if(act==="opt"){
+    if(q.type==="mcq") answers[i] = k;
+    else if(q.type==="multi"){
+      if(!Array.isArray(answers[i])) answers[i]=[];
+      var pos = answers[i].indexOf(k);
+      if(pos>=0) answers[i].splice(pos,1);
+      else answers[i].push(k);
+    }
+    render();
+    return;
+  }
+  if(act==="card"){
+    selCard = k;
+    render();
+    return;
+  }
+  if(act==="bin"){
+    if(selCard!==null && q.type==="classify"){
+      if(!Array.isArray(answers[i]) || answers[i].length!==q.items.length){
+        answers[i] = q.items.map(function(){ return null; });
+      }
+      answers[i][selCard] = k;
+      selCard = null;
+      render();
+    }
+    return;
+  }
+  if(act==="unplace"){
+    if(q.type==="classify"){
+      answers[i][k] = null;
+      selCard = null;
+      render();
+    }
+    return;
+  }
+  if(act==="tok"){
+    if(q.type==="circle"){
+      if(!Array.isArray(answers[i])) answers[i]=[];
+      var pos2 = answers[i].indexOf(k);
+      if(pos2>=0) answers[i].splice(pos2,1);
+      else answers[i].push(k);
+      render();
+    }
+  }
+}, true);
+
+function doSubmit(auto){
+  if(sub || reported) return;
+  sub = true;
+  confirming = false;
+  stopTimer();
+  Qs.forEach(function(q,idx){
+    elhReport({
+      type:"answer",
+      q: q.qid,
+      choice: isAnswered(idx) ? choiceVal(idx) : null,
+      correct: isAnswered(idx) ? isCorrect(idx) : false,
+      text: elhText(q.stem),
+      picked: isAnswered(idx) ? pickedText(idx) : null,
+      answer: elhText(rightText(idx))
+    });
+  });
+  reported = true;
+  render();
+}
+
+window.addEventListener("message", function(e){
+  var m = e.data;
+  if(!m || m.elh !== 1 || m.type !== "restore" || e.source !== window.parent) return;
+  var d = m.data || {};
+  if(typeof d.i !== "number" || d.i < 0 || d.i >= total) return;
+  i = d.i;
+  started = !!d.started;
+    sub = !!d.sub;
+  remainMs = typeof d.remainMs === "number" ? d.remainMs : (DATA.limitMs||0);
+  elapsedMs = typeof d.elapsedMs === "number" ? d.elapsedMs : 0;
+  answers = Array.isArray(d.answers) ? d.answers : initAnswers() || [];
+  if(sub) stopTimer(); else startTimer();
+  render();
+});
+
+elhReport({type:"init", total: total});
+render();
+</script>
+</body>
+</html>

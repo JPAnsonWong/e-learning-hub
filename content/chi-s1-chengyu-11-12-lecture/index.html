@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>中一中文 讀文言學成語 1.1–1.2 講讀</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+html,body{height:100%;margin:0}
+body{
+  font-family:"PingFang TC","Microsoft JhengHei",sans-serif;
+  touch-action:manipulation;
+  background:#f4f1ea;color:#2b2622;
+}
+.stage{
+  height:100%;
+  display:grid;
+  grid-template-columns:58% 42%;
+  min-height:0;
+}
+.pane{
+  min-height:0;
+  overflow:auto;
+  padding:2.4vmin 3vmin;
+  box-sizing:border-box;
+}
+.pane + .pane{border-left:1px solid #d9dde8}
+.stem{font-size:clamp(1.2rem, 3.8vmin, 6rem);line-height:1.35}
+.hint,.note,.explain{font-size:clamp(1rem, 2.4vmin, 4rem);line-height:1.45}
+.btn, .choice, .card, .bin, .token{
+  min-height:max(3rem,7vmin);
+  min-width:max(3rem,7vmin);
+  font-size:clamp(1rem, 3.2vmin, 5rem);
+  margin:0.6vmin;
+  border-radius:1.2vmin;
+  border:2px solid #3a4a6b;
+  background:#fff;
+  font-family:inherit;
+  color:inherit;
+  touch-action:manipulation;
+  cursor:pointer;
+}
+.choice.selected{background:#e8f0fe;border-color:#1a73e8;color:#1a73e8}
+.btn.primary{background:#1a73e8;color:#fff;border-color:#1a73e8}
+.btn.ghost{background:transparent;color:#1a73e8}
+.hintBox{background:#fff3cd;border:1px solid #ffc107;border-radius:0.8vmin;padding:1.2vmin;margin:1vmin 0}
+.correctBox{background:#d4edda;border:1px solid #28a745;border-radius:0.8vmin;padding:1.2vmin;margin:1vmin 0}
+.explainBox{background:#e8f0fe;border:1px solid #1a73e8;border-radius:0.8vmin;padding:1.2vmin;margin:1vmin 0}
+.tableWrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:clamp(0.95rem, 2.4vmin, 3.6rem)}
+th,td{border:1px solid #d9dde8;padding:0.8vmin 1vmin;text-align:left}
+th{background:#eef0f5}
+.quote{background:#fafafa;border-left:4px solid #3a4a6b;padding:1vmin 1.5vmin;margin:1vmin 0;font-style:italic}
+.notes{font-size:clamp(0.95rem, 2.4vmin, 3.6rem);line-height:1.6}
+.notes li{margin:0.6vmin 0}
+@media (max-width:900px),(orientation:portrait){
+  .stage{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .pane + .pane{border-left:0;border-top:1px solid #d9dde8}
+}
+</style>
+</head>
+<body>
+<div class="stage" id="app"></div>
+<script>
+// ---- E_learning Hub 回報（只在被網站 iframe 載入時有效，單獨打開頁面時無任何作用）----
+function elhReport(m){
+  try{
+    if(location.search.indexOf("elhdebug")>=0)console.log("ELH",JSON.stringify(m));
+    if(window.parent!==window)window.parent.postMessage(Object.assign({elh:1},m),location.origin);
+  }catch(e){}
+}
+function elhText(h){return String(h==null?"":h).replace(/<[^>]*>/g,"").replace(/\s+/g," ").trim().slice(0,200);}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");}
+
+// 唯一資料注入
+const DATA = {"id":"chengyu-11-12-lecture","title":"讀文言・學成語｜1.1–1.2 講讀","unit":"中一中文｜讀文言・學成語","kind":"lecture","audience":"兒子","stage":"中一","minutes":25,"total":8,"refNote":"參考答案（課本未印標準答案）","coverTip":"共兩個分頁：1.1《孟母三遷》、1.2《芝蘭之室》。每個分頁先逐步閱讀字解、釋義、近義或反義、例句、背景、原文和注釋，再做四道引導題。","pages":[{"id":"p1","title":"1.1 孟母三遷","steps":[{"title":"字解・釋義","blocks":[{"type":"p","text":"字解：（孟子）（母親）（三次）（遷居）"},{"type":"p","text":"釋義：形容家長為教育子女，選擇良好的學習環境所花的苦心。"}]},{"title":"近義與例句","blocks":[{"type":"p","text":"近義：里仁為美、居必擇鄰"},{"type":"p","text":"例句：許多家長為了給孩子一個優良的學習環境，都效法孟母三遷的精神，搬到擁有良好校網的地區居住。"}]},{"title":"背景","blocks":[{"type":"p","text":"背景：孟子是僅次於孔子的儒家宗師。據說孟子幼年喪父，全靠母親將他撫養成人。「孟母三遷」這個故事，便記述了孟母在撫育兒子時的用心。"}]},{"title":"原文（一）","blocks":[{"type":"p","text":"原文（劉向《列女傳・母儀》）"},{"type":"quote","text":"鄒孟軻之母也，號孟母。其舍近墓。孟子之少也，嬉遊為墓間之事，踴躍築埋。孟母曰：「此非吾所以居處子也。」"}]},{"title":"原文（二）","blocks":[{"type":"p","text":"原文（續）"},{"type":"quote","text":"乃去舍市傍，其嬉戲為賈人衒賣之事。孟母又曰：「此非吾所以居處子也。」"}]},{"title":"原文（三）","blocks":[{"type":"p","text":"原文（續完）"},{"type":"quote","text":"復徙舍學宮之傍。其嬉遊乃設俎豆，揖讓進退。孟母曰：「真可以居吾子矣。」遂居之。及孟子長，學六藝，卒成大儒之名。"}]},{"title":"注釋","blocks":[{"type":"notes","items":["1. 鄒：古代地名，在今山東省鄒縣境內。","2. 孟軻：孟子，名軻，字子輿，戰國時代思想家，為儒家學派代表人物。","3. 賈人衒賣：賈人，商人。衒賣，誇耀貨物以招徠買賣。","4. 設俎豆：俎豆，古代祭祀或宴會時放置食物的兩種禮器。這裏引申為祭祀之意。","5. 揖讓進退：古代主客相見時的禮節，這裏指禮儀方面的學問。","6. 六藝：古代儒家學派要求學生掌握的六種基本才能，包括禮、樂、射、御、書、數；亦可指六部儒家經典。"]}]}],"questions":[{"qid":"C1","type":"mcq","stem":"孟母第一次搬家，是因為住處靠近甚麼地方？","options":["市集","墓地","學宮","山林"],"answer":1,"refNote":true,"hint":"看原文第一句「其舍近墓」，以及孟子當時玩的是「墓間之事」。","deepen":"近墓而學「踴躍築埋」，孟母覺得不是安頓孩子的地方，於是搬走。"},{"qid":"C2","type":"mcq","stem":"搬到市集旁以後，孟子玩的是甚麼？","options":["築埋","設俎豆、揖讓進退","賈人衒賣之事","學六藝"],"answer":2,"refNote":true,"hint":"第二次住處是「市傍」，看他模仿的是哪一種人的行為。","deepen":"市集旁容易學到商人誇耀貨物、招徠買賣，孟母同樣認為不合適。"},{"qid":"C3","type":"mcq","stem":"孟母為甚麼說學宮旁邊「真可以居吾子矣」？","options":["那裏比較熱鬧，朋友多","孟子在那裏模仿祭祀禮儀和揖讓進退，有助學習禮儀","學宮附近比較富有","孟子自己要求搬到學校旁"],"answer":1,"refNote":true,"hint":"提示在原文「設俎豆，揖讓進退」，再看注釋 4、5。","deepen":"孟母三次遷居，看的不是房子好不好，而是周圍環境會帶給孩子甚麼影響。"},{"qid":"C4","type":"mcq","stem":"「孟母三遷」這個成語主要形容甚麼？","options":["孩子不喜歡念書，母親很生氣","人應該常常搬家","家長為教育子女，選擇良好學習環境所花的苦心","學宮一定比市集好找工作"],"answer":2,"refNote":true,"hint":"回到本課開頭的「釋義」看一看。","deepen":"近義詞「里仁為美」「居必擇鄰」也是強調選擇環境的重要。"}]},{"id":"p2","title":"1.2 芝蘭之室","steps":[{"title":"字解・釋義","blocks":[{"type":"p","text":"字解：（香草）（香草）（的）（屋子）"},{"type":"p","text":"釋義：比喻良好的環境。"}]},{"title":"反義與例句","blocks":[{"type":"p","text":"反義：鮑魚之肆、烏煙瘴氣"},{"type":"p","text":"例句：陳教授德高望重，跟隨他多年的學生就像進入了芝蘭之室，都被他薰陶成為仁人君子。"}]},{"title":"背景","blocks":[{"type":"p","text":"背景：《孔子家語》是記述孔子思想和生平的著作。從本文可見，孔子除了注重個人的品德修養，還重視周遭環境對一個人品德的影響。"}]},{"title":"原文（一）","blocks":[{"type":"p","text":"原文（《孔子家語・六本》）"},{"type":"quote","text":"不知其子，視其父；不知其人，視其友；不知其君，視其所使；不知其地，視其草木。"}]},{"title":"原文（二）","blocks":[{"type":"p","text":"原文（續）"},{"type":"quote","text":"故曰：與善人居，如入芝蘭之室，久而不聞其香，即與之化矣；與不善人居，如入鮑魚之肆，久而不聞其臭，亦與之化矣。"}]},{"title":"原文（三）","blocks":[{"type":"p","text":"原文（續完）"},{"type":"quote","text":"丹之所藏者赤，漆之所藏者黑。是以君子必慎其所與處者焉。"}]},{"title":"注釋","blocks":[{"type":"notes","items":["1. 所使：派遣的使者。","2. 芝蘭之室：芝和蘭都是香草。芝蘭之室指種植芝蘭的屋子，比喻良好的環境。","3. 化：同化，改變，指融入當中的環境。","4. 鮑魚之肆：賣醃魚的店舖，味腥臭。","5. 丹：朱砂，一種紅色的礦石。","6. 漆：墨漆，由植物而來的塗料。"]}]}],"questions":[{"qid":"C5","type":"mcq","stem":"「芝蘭之室」中的「芝蘭」是指甚麼？","options":["兩種香草","一種珍貴的木材","孔子的學生","醃魚"],"answer":0,"refNote":true,"hint":"看注釋 2。","deepen":"芝蘭之室本指種了香草的屋子，後來比喻良好的環境。"},{"qid":"C6","type":"mcq","stem":"「與不善人居，如入鮑魚之肆」是用甚麼來比喻不好的環境？","options":["香草屋","賣醃魚的店舖","朱砂","墨漆"],"answer":1,"refNote":true,"hint":"看注釋 4，「鮑魚之肆」不是真的魚塘。","deepen":"和「芝蘭之室」相對，一個香、一個臭，說明環境會改變人。"},{"qid":"C7","type":"mcq","stem":"「久而不聞其香」「久而不聞其臭」中的「化」是指甚麼？","options":["鮮花開了","東西腐爛","同化、融入環境而被改變","搬家"],"answer":2,"refNote":true,"hint":"看注釋 3，重點不是香氣消失，而是人已被環境改變。","deepen":"待得久了，好的或壞的氣味都聞不出來，正說明人已與環境同化。"},{"qid":"C8","type":"mcq","stem":"本文最後一句「君子必慎其所與處者焉」，是提醒君子要怎樣？","options":["小心選擇相處的人和環境","不要接近香草","盡量不要和別人說話","要多讀《孔子家語》"],"answer":0,"refNote":true,"hint":"看全文收結，以及「所與處者」指跟誰一起、處在甚麼環境。","deepen":"前面用父親、朋友、使者、草木，以及芝蘭、鮑魚、丹、漆，都在說明環境能改變人，所以要謹慎選擇。"}]}]};
+
+document.title = DATA.title || "文言知識溫習";
+
+// 狀態
+let phase = "cover"; // cover | lecture | question | pageDone | allDone
+let page = 0;        // 分頁索引
+let step = 0;        // 講解節索引
+let qi = 0;          // 分頁內題序
+let i = -1;          // 全局題索引（封面 -1）
+let picked = null;   // 目前選項序號或 null
+let revealed = false;
+
+// 攤平所有題目
+function flatQs(){
+  const arr = [];
+  DATA.pages.forEach((pg, pi) => {
+    (pg.questions || []).forEach((q, qi) => {
+      arr.push({page: pi, qi, q});
+    });
+  });
+  return arr;
+}
+const FLAT = flatQs();
+const TOTAL = FLAT.length;
+function pageFirstI(p){
+  const f = FLAT.find(x => x.page === p);
+  return f ? FLAT.indexOf(f) : -1;
+}
+
+// 初始回報（只呼叫一次）
+elhReport({type:"init", total: TOTAL});
+
+// HTML 跳脫：題幹只保留 <b>...</b>
+function renderStem(html){
+  return esc(html).replace(/&lt;b&gt;(.*?)&lt;\/b&gt;/g, "<b>$1</b>");
+}
+
+// 狀態回報
+function elhState(){
+  if(i < 0) return;
+  elhReport({type:"state", data:{i, phase, page, step, qi, p:picked, r:revealed}});
+}
+
+// 還原監聽（放在最後）
+window.addEventListener("message", function(e){
+  var m = e.data;
+  if(!m || m.elh !== 1 || m.type !== "restore" || e.source !== window.parent) return;
+  var d = m.data || {};
+  if(typeof d.i !== "number" || d.i < -1 || d.i >= TOTAL) return;
+  i = d.i;
+  phase = d.phase || "cover";
+  page = typeof d.page === "number" ? d.page : 0;
+  step = typeof d.step === "number" ? d.step : 0;
+  qi = typeof d.qi === "number" ? d.qi : 0;
+  picked = (typeof d.p === "number" ? d.p : null);
+  revealed = !!d.r;
+  render();
+});
+
+// 事件委派
+document.getElementById("app").addEventListener("click", function(e){
+  const btn = e.target.closest("[data-act]");
+  if(!btn) return;
+  const act = btn.dataset.act;
+  const k = btn.dataset.k ? parseInt(btn.dataset.k, 10) : null;
+
+  if(act === "start"){
+    phase = "lecture"; page = (k !== null ? k : 0); step = 0;
+    i = pageFirstI(page);
+    picked = null; revealed = false;
+    render();
+  }else if(act === "nextStep"){
+    const pg = DATA.pages[page];
+    if(step < pg.steps.length - 1){
+      step++;
+      render();
+    }else{
+      // 進入第一題
+      phase = "question"; qi = 0;
+      i = pageFirstI(page);
+      picked = null; revealed = false;
+      render();
+    }
+  }else if(act === "prevStep"){
+    if(step > 0){ step--; render(); }
+  }else if(act === "pick"){
+    if(!revealed){ picked = k; render(); }
+  }else if(act === "submit"){
+    if(picked === null){
+      // 欄內提示
+      const right = document.getElementById("right");
+      if(right){
+        const box = document.createElement("div");
+        box.className = "hintBox";
+        box.textContent = "請先選擇一個選項";
+        right.insertBefore(box, right.firstChild);
+        setTimeout(() => box.remove(), 2000);
+      }
+      return;
+    }
+    revealAnswer();
+  }else if(act === "showAnswer"){
+    if(picked === null){
+      // 沒作答直接看答案
+      revealed = true;
+      elhReport({
+        type:"answer",
+        q: FLAT[i].q.qid,
+        choice: null,
+        correct: false,
+        text: elhText(FLAT[i].q.stem),
+        picked: null,
+        answer: elhText(FLAT[i].q.options[FLAT[i].q.answer])
+      });
+      render();
+    }else{
+      revealAnswer();
+    }
+  }else if(act === "retry"){
+    revealed = false; picked = null; render();
+  }else if(act === "nextQ"){
+    const pg = DATA.pages[page];
+    if(qi < pg.questions.length - 1){
+      qi++; i = pageFirstI(page) + qi; picked = null; revealed = false; render();
+    }else{
+      phase = (page < DATA.pages.length - 1) ? "pageDone" : "allDone"; render();
+    }
+  }else if(act === "nextPage"){
+    if(page < DATA.pages.length - 1){
+      page++; phase = "lecture"; step = 0;
+      i = pageFirstI(page); picked = null; revealed = false; render();
+    }else{
+      phase = "allDone"; render();
+    }
+  }else if(act === "toc"){
+    phase = "cover"; page = 0; step = 0; qi = 0; i = -1; picked = null; revealed = false; render();
+  }
+});
+
+function revealAnswer(){
+  const item = FLAT[i];
+  const q = item.q;
+  const correct = (picked === q.answer);
+  revealed = true;
+  elhReport({
+    type:"answer",
+    q: q.qid,
+    choice: picked,
+    correct: correct,
+    text: elhText(q.stem),
+    picked: elhText(q.options[picked]),
+    answer: elhText(q.options[q.answer])
+  });
+  render();
+}
+
+// 渲染主入口
+function render(){
+  const app = document.getElementById("app");
+  app.innerHTML = `
+    <div class="pane" id="left"></div>
+    <div class="pane" id="right"></div>
+  `;
+  const left = document.getElementById("left");
+  const right = document.getElementById("right");
+
+  if(phase === "cover"){
+    renderCover(left, right);
+  }else if(phase === "lecture"){
+    renderLecture(left, right);
+  }else if(phase === "question"){
+    renderQuestion(left, right);
+  }else if(phase === "pageDone"){
+    renderPageDone(left, right);
+  }else if(phase === "allDone"){
+    renderAllDone(left, right);
+  }
+  elhState();
+}
+
+// 封面
+function renderCover(left, right){
+  left.innerHTML = `
+    <div style="margin-top:8vmin">
+      <div style="font-size:clamp(1rem, 3vmin, 4rem);color:#666;margin-bottom:1vmin">${DATA.unit || ""}</div>
+      <div class="stem" style="font-size:clamp(1.6rem, 5vmin, 6rem);margin-bottom:2vmin">${esc(DATA.title || "")}</div>
+      <div style="font-size:clamp(1rem, 2.8vmin, 4rem);color:#555;margin-bottom:3vmin">兒子・中一</div>
+      <div class="note" style="background:#fff;border:1px solid #d9dde8;border-radius:1vmin;padding:2vmin">${esc(DATA.coverTip || "")}</div>
+    </div>
+  `;
+  right.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:1vmin;height:100%;justify-content:center">
+      <button class="btn primary" data-act="start" style="font-size:clamp(1.2rem, 4vmin, 5rem);padding:2vmin">開始學習</button>
+      <div style="margin-top:2vmin;font-size:clamp(0.9rem,2.4vmin,1.2rem);color:#666">或選擇分頁：</div>
+      <div style="display:flex;flex-direction:column;gap:0.8vmin">
+        ${DATA.pages.map((pg, idx) => `<button class="btn ghost" data-act="start" data-k="${idx}" style="text-align:left;padding:1.2vmin 1.5vmin">${esc(pg.title)}</button>`).join("")}
+      </div>
+    </div>
+  `;
+}
+
+// 講解
+function renderLecture(left, right){
+  const pg = DATA.pages[page];
+  const st = pg.steps[step];
+  left.innerHTML = `
+    <div style="margin-bottom:1.5vmin;font-size:clamp(0.9rem,2.4vmin,1.2rem);color:#666">${esc(pg.title)} · 講解 第 ${step+1}／${pg.steps.length} 節</div>
+    <div class="stem" style="margin-bottom:1.5vmin">${esc(st.title)}</div>
+    <div id="lectureContent"></div>
+  `;
+  const content = document.getElementById("lectureContent");
+  (st.blocks || []).forEach(b => {
+    const div = document.createElement("div");
+    div.style.marginBottom = "1.5vmin";
+    if(b.type === "p"){
+      div.innerHTML = renderStem(b.text || b.html || "");
+      div.className = "note";
+    }else if(b.type === "list"){
+      div.innerHTML = "<ul style='margin:0;padding-left:1.5em'>" + (b.items || []).map(item => `<li class="note">${renderStem(item)}</li>`).join("") + "</ul>";
+    }else if(b.type === "table"){
+      let html = "<div class='tableWrap'><table><thead><tr>";
+      (b.headers || []).forEach(h => html += `<th>${esc(h)}</th>`);
+      html += "</tr></thead><tbody>";
+      (b.rows || []).forEach(row => {
+        html += "<tr>";
+        row.forEach(cell => html += `<td>${renderStem(cell)}</td>`);
+        html += "</tr>";
+      });
+      html += "</tbody></table></div>";
+      div.innerHTML = html;
+    }else if(b.type === "quote"){
+      div.className = "quote";
+      div.innerHTML = renderStem(b.text || b.html || "");
+    }else if(b.type === "notes"){
+      div.className = "notes";
+      div.innerHTML = "<ul style='margin:0;padding-left:1.5em'>" + (b.items || []).map(item => `<li>${renderStem(item)}</li>`).join("") + "</ul>";
+    }
+    content.appendChild(div);
+  });
+
+  const isLast = step === pg.steps.length - 1;
+  right.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:1vmin;height:100%;justify-content:center">
+      ${step>0?`<button class="btn" data-act="prevStep">上一節</button>`:""}
+      <button class="btn primary" data-act="nextStep">${isLast ? "開始作答" : "下一節"}</button>
+      <button class="btn ghost" data-act="toc">返回目錄</button>
+    </div>
+  `;
+}
+
+// 作答
+function renderQuestion(left, right){
+  const item = FLAT[i];
+  const q = item.q;
+  const pg = DATA.pages[page];
+  left.innerHTML = `
+    <div style="margin-bottom:1vmin;font-size:clamp(0.9rem,2.4vmin,1.2rem);color:#666">${esc(DATA.unit)} · ${esc(pg.title)} · 第 ${i+1}／${TOTAL} 題</div>
+    <div class="stem">${renderStem(q.stem)}</div>
+  `;
+  right.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:0.8vmin;margin-bottom:1.5vmin">
+      ${q.options.map((opt, idx) => `
+        <button class="choice ${picked===idx?"selected":""}" data-act="pick" data-k="${idx}">
+          <span style="display:inline-block;width:2.5em;text-align:center;font-weight:bold">${String.fromCharCode(65+idx)}</span>${esc(opt)}
+        </button>
+      `).join("")}
+    </div>
+    <div style="display:flex;gap:1vmin;flex-wrap:wrap">
+      <button class="btn primary" data-act="submit" style="flex:1">確定</button>
+      <button class="btn ghost" data-act="showAnswer" style="flex:1">${picked===null?"看答案":"提交並看答案"}</button>
+    </div>
+    ${revealed ? renderRevealed(q) : ""}
+  `;
+}
+
+function renderRevealed(q){
+  const correct = (picked === q.answer);
+  let html = `<div style="margin-top:1.5vmin">`;
+  if(correct){
+    html += `<div class="correctBox">答對了！${q.deepen ? `<div class="explain" style="margin-top:0.5vmin">${esc(q.deepen)}</div>` : ""}</div>`;
+  }else{
+    html += `<div class="hintBox">${q.hint ? esc(q.hint) : "再思考一下"}</div>`;
+  }
+  html += `<div class="explainBox">正確答案：${String.fromCharCode(65+q.answer)} ${esc(q.options[q.answer])}</div>`;
+  if(q.refNote){
+    html += `<div class="note" style="margin-top:1vmin;font-size:clamp(0.8rem, 2.2vmin, 3.2rem);color:#666">參考答案（課本未印標準答案）</div>`;
+  }
+  html += `<div style="display:flex;gap:1vmin;margin-top:1.5vmin;flex-wrap:wrap">
+    <button class="btn ghost" data-act="retry" style="flex:1">再做一次</button>
+    <button class="btn primary" data-act="nextQ" style="flex:1">下一題</button>
+  </div></div>`;
+  return html;
+}
+
+// 分頁完成
+function renderPageDone(left, right){
+  const pg = DATA.pages[page];
+  left.innerHTML = `
+    <div class="stem" style="text-align:center;margin-top:5vmin">🎉</div>
+    <div class="stem" style="text-align:center">${esc(pg.title)} 引導題已完成</div>
+  `;
+  const hasNext = page < DATA.pages.length - 1;
+  right.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:1vmin;height:100%;justify-content:center">
+      ${hasNext ? `<button class="btn primary" data-act="nextPage" style="font-size:clamp(1.2rem, 4vmin, 5rem);padding:2vmin">下一分頁</button>` : ""}
+      <button class="btn ghost" data-act="toc" style="font-size:clamp(1rem, 3vmin, 5rem);padding:1.5vmin">返回目錄</button>
+    </div>
+  `;
+}
+
+// 全部完成
+function renderAllDone(left, right){
+  left.innerHTML = `
+    <div class="stem" style="text-align:center;margin-top:5vmin">🎉</div>
+    <div class="stem" style="text-align:center">已走完所有分頁</div>
+    <div class="note" style="text-align:center;margin-top:2vmin">做得好，兒子！可以回到目錄複習，或關閉頁面。</div>
+  `;
+  right.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:1vmin;height:100%;justify-content:center">
+      <button class="btn ghost" data-act="toc" style="font-size:clamp(1.2rem, 4vmin, 5rem);padding:2vmin">返回目錄</button>
+    </div>
+  `;
+}
+
+// 啟動
+render();
+
+// 鍵盤彈出時捲動保護
+document.addEventListener("focusin", function(e){
+  var el = e.target;
+  if(el.matches("input,textarea")) setTimeout(function(){ el.scrollIntoView({block:"start", behavior:"smooth"}); }, 150);
+});
+</script>
+</body>
+</html>

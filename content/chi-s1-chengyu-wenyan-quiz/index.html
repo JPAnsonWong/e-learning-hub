@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中一中文 讀文言學成語 文言知識 測驗</title>
+<style>
+html,body{height:100%;margin:0}
+body{
+  font-family:"PingFang TC","Microsoft JhengHei",sans-serif;
+  touch-action:manipulation;
+  background:#f4f1ea;color:#2b2622;
+}
+.stage{
+  height:100%;
+  display:grid;
+  grid-template-columns:58% 42%;
+  min-height:0;
+}
+.pane{
+  min-height:0;
+  overflow:auto;
+  padding:2.4vmin 3vmin;
+  box-sizing:border-box;
+}
+.pane + .pane{border-left:1px solid #d9dde8}
+.stem{font-size:clamp(1.2rem, 3.8vmin, 6rem);line-height:1.35}
+.hint,.note,.explain{font-size:clamp(1rem, 2.4vmin, 4rem);line-height:1.45}
+.btn,.choice,.card,.bin,.token{
+  min-height:max(3rem,7vmin);
+  min-width:max(3rem,7vmin);
+  font-size:clamp(1rem, 3.2vmin, 5rem);
+  margin:0.6vmin;
+  border-radius:1.2vmin;
+  border:2px solid #3a4a6b;
+  background:#fff;
+  font-family:inherit;
+  color:inherit;
+  touch-action:manipulation;
+  cursor:pointer;
+}
+@media (max-width:900px),(orientation:portrait){
+  .stage{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .pane + .pane{border-left:0;border-top:1px solid #d9dde8}
+}
+
+.choice.selected,.card.selected,.token.selected{background:#e8f0fe;border-color:#1a73e8;color:#1a73e8}
+.btn.primary{background:#1a73e8;color:#fff;border-color:#1a73e8}
+.btn.ghost{background:#fff;color:#1a73e8}
+.token.nop{border:none;background:transparent;min-width:0;min-height:0;cursor:default;padding:0;margin:0 0.1vmin;display:inline}
+.bin{display:block;text-align:left}
+.card{display:inline-flex;align-items:center}
+
+</style>
+</head>
+<body>
+<div class="stage" id="app"></div>
+<script>
+// ---- E_learning Hub 回報（只在被網站 iframe 載入時有效，單獨打開頁面時無任何作用）----
+function elhReport(m){
+  try{
+    if(location.search.indexOf("elhdebug")>=0)console.log("ELH",JSON.stringify(m));
+    if(window.parent!==window)window.parent.postMessage(Object.assign({elh:1},m),location.origin);
+  }catch(e){}
+}
+function elhText(h){return String(h==null?"":h).replace(/<[^>]*>/g,"").replace(/\s+/g," ").trim().slice(0,200);}
+
+const DATA = {"id":"wenyan-quiz","title":"讀文言・學成語｜文言知識測驗","unit":"中一中文｜讀文言・學成語","kind":"quiz","audience":"兒子","stage":"中一","minutes":20,"limitMs":1200000,"total":20,"refNote":"參考答案（課本未印標準答案）","coverTip":"共 20 題，限時 20 分鐘。單選 10 題、多選 4 題（須選出所有正確項，全對才得分）、分類箱 4 題（先點卡片再點箱子，全部放對才得分）、圈選判斷詞 2 題。作答期間不顯示對錯，交卷或時間到後才出分，並註明參考答案（課本未印標準答案）。","questions":[{"qid":"q1","type":"mcq","stem":"文言文以甚麼為主？","options":["雙音節詞","單音節詞","多音節詞","外來詞"],"answer":1,"refNote":true,"explain":"文言文以單音節詞為主，白話文以雙音節詞為主。一個單字如「日」「月」「林」就能表示完整意思。"},{"qid":"q2","type":"mcq","stem":"「妻子」在文言文中應怎樣理解？","options":["只指男方的配偶","「妻」與「子」連用，指妻子與子女","只指子女","與白話意義完全相同"],"answer":1,"refNote":true,"explain":"看似雙音節詞，其實是兩個單音節詞連用，解作妻子與子女。"},{"qid":"q3","type":"mcq","stem":"「緣溪行」中，哪些是單音節詞？","options":["只有「緣」","只有「行」","緣、溪、行","緣溪（作為一個詞）、行"],"answer":2,"refNote":true,"explain":"課本例子：「緣溪行。」（沿着小溪前行。）單音節詞是緣、溪、行。"},{"qid":"q4","type":"mcq","stem":"「犧牲玉帛，弗敢加也」中，「犧牲」的古義是甚麼？屬於哪一種古今異義？","options":["付出生命；詞義擴大","祭祀用的牲畜；詞義轉移","犧牲權益；詞義縮小","傑出人物；褒貶義變化"],"answer":1,"refNote":true,"explain":"「犧牲」古義是祭祀用的牲畜，今義是付出個人生命或權益，屬於詞義轉移。"},{"qid":"q5","type":"mcq","stem":"「子路從而後，遇丈人」中，「丈人」的古義是甚麼？","options":["岳父","老人","父親","有學問的人"],"answer":1,"refNote":true,"explain":"古義是老人，今義是岳父，屬於詞義縮小。"},{"qid":"q6","type":"mcq","stem":"成語「持之以恆」中的「之」字意思最接近哪一項？","options":["的","往、到……去","他、它","得"],"answer":2,"refNote":true,"explain":"課本把「持之以恆」「取而代之」歸入代詞「他、它」。"},{"qid":"q7","type":"mcq","stem":"「項伯乃夜馳之沛公軍」中的「之」字意思是甚麼？","options":["的","往、到……去","他、它","取消句子獨立性"],"answer":1,"refNote":true,"explain":"「之」作動詞，解作往、到……去。成語「之死靡他」也是這種用法。"},{"qid":"q8","type":"mcq","stem":"成語「溫故知新」中「故」的意思是甚麼？","options":["所以、因此","故意、特意","以前的、舊的","老朋友"],"answer":2,"refNote":true,"explain":"「故」作形容詞，解作以前的、舊的。"},{"qid":"q9","type":"mcq","stem":"成語「亡羊補牢」中「亡」的意思是甚麼？","options":["死亡","逃跑","沒有（通「無」）","丟失、損失"],"answer":3,"refNote":true,"explain":"「亡羊」是丢失了羊，這裏的「亡」解作丟失、損失。"},{"qid":"q10","type":"mcq","stem":"「少不更事」中「少」的意思是甚麼？","options":["數量少","年幼、年輕","稍微","缺少"],"answer":1,"refNote":true,"explain":"這個成語指年紀輕、閱歷淺，「少」解作年幼、年輕。"},{"qid":"q11","type":"multi","stem":"下列哪些例子屬於「詞義擴大」或「詞義褒貶義變化」？（選兩項）","options":["美人：古義妃嬪、歌伎，今義貌美的女子（擴大）","丈人：古義老人，今義岳父（縮小）","犧牲：古義祭祀牲畜，今義付出生命或權益（轉移）","風流：古義傑出人物（褒），今義到處留情（貶）（褒貶變化）"],"answer":[0,3],"refNote":true,"explain":"美人是詞義擴大，風流是褒貶義變化。丈人是縮小，犧牲是轉移。"},{"qid":"q12","type":"multi","stem":"下列哪些句子用了「者／也」來表示判斷？（選兩項）","options":["陳勝者，陽城人也。","蓮，花之君子者也。","荀卿，趙人。","秦，虎狼之國。"],"answer":[0,1],"refNote":true,"explain":"A 用「者……也」，B 用「者也」。C、D 是靠語意直接判斷，沒有用「者／也」。"},{"qid":"q13","type":"multi","stem":"下列哪些「故」的意思是「原因、緣故」或「老朋友、舊交情」？（選兩項）","options":["無緣無故","一見如故","故弄玄虛","明知故犯"],"answer":[0,1],"refNote":true,"explain":"「無緣無故」的「故」是原因、緣故；「一見如故」的「故」是老朋友、舊交情。「故弄玄虛」「明知故犯」的「故」是故意、特意。"},{"qid":"q14","type":"multi","stem":"下列哪些成語中的「去」解作「離開」或「距、距離」？（選兩項）","options":["一去不返","除殘去穢","相去咫尺","大勢已去"],"answer":[0,2],"refNote":true,"explain":"「一去不返」的「去」是離開；「相去咫尺」的「去」是距、距離。「除殘去穢」的「去」是除掉；「大勢已去」的「去」是失去、損失。"},{"qid":"q15","type":"classify","stem":"把下列詞語歸入古今異義的類別。","items":["美人","丈人","犧牲","風流"],"bins":["詞義擴大","詞義縮小","詞義轉移","詞義褒貶義變化"],"answer":[0,1,2,3],"explain":"以課本文首四個例子為準。","refNote":true},{"qid":"q16","type":"classify","stem":"判斷下列「之」的用法。","items":["不速之客","置之不理","項伯乃夜馳之沛公軍","久而久之"],"bins":["助詞，解作「的」","代詞，解作「他、它」","動詞，解作「往」","助詞，調整音節、不譯"],"answer":[0,1,2,3],"explain":"四種用法都出自課本「之」字表。","refNote":true},{"qid":"q17","type":"classify","stem":"判斷下列成語中「道」的意思。","items":["道聽途說","養生之道","志同道合","微不足道"],"bins":["路","方法、途徑","主張、思想、學說","說、講"],"answer":[0,1,2,3],"explain":"「道聽途說」本義是路上聽來的話；「養生之道」是方法；「志同道合」是主張、思想相同；「微不足道」是不值得說。","refNote":true},{"qid":"q18","type":"classify","stem":"判斷下列成語中「顧」的意思。","items":["左顧右盼","三顧草廬","奮不顧身","顧全大局"],"bins":["回頭看、看","探望、拜訪","顧慮、考慮","照顧、顧念"],"answer":[0,1,2,3],"explain":"以課本為「顧」所列義項及成語為準。「奮不顧身」是不顧慮自身安危。","refNote":true},{"qid":"q19","type":"circle","stem":"請圈出句中表示判斷的語氣詞、判斷詞或否定詞（可多於一處），再按確認。","sentence":"如今人方為刀俎，我為魚肉。（《史記・項羽本紀》）","tokens":[{"t":"如","click":true,"ok":false},{"t":"今","click":true,"ok":false},{"t":"人","click":true,"ok":false},{"t":"方","click":true,"ok":false},{"t":"為","click":true,"ok":true},{"t":"刀","click":true,"ok":false},{"t":"俎","click":true,"ok":false},{"t":"，","click":false},{"t":"我","click":true,"ok":false},{"t":"為","click":true,"ok":true},{"t":"魚","click":true,"ok":false},{"t":"肉","click":true,"ok":false},{"t":"。","click":false},{"t":"（","click":false},{"t":"《","click":false},{"t":"史","click":true,"ok":false},{"t":"記","click":true,"ok":false},{"t":"・","click":false},{"t":"項","click":true,"ok":false},{"t":"羽","click":true,"ok":false},{"t":"本","click":true,"ok":false},{"t":"紀","click":true,"ok":false},{"t":"》","click":false},{"t":"）","click":false}],"answer":[4,9],"answerText":"為 / 為","explain":"這句用判斷詞「為」表示肯定判斷，意思是人家是刀和砧板，我們是魚肉。不要圈「如今」「人」「我」等。","refNote":true},{"qid":"q20","type":"circle","stem":"請圈出句中表示判斷的語氣詞、判斷詞或否定詞（可多於一處），再按確認。","sentence":"師者，所以傳道、受業、解惑也。（韓愈《師說》）","tokens":[{"t":"師","click":true,"ok":false},{"t":"者","click":true,"ok":true},{"t":"，","click":false},{"t":"所","click":true,"ok":false},{"t":"以","click":true,"ok":false},{"t":"傳","click":true,"ok":false},{"t":"道","click":true,"ok":false},{"t":"、","click":false},{"t":"受","click":true,"ok":false},{"t":"業","click":true,"ok":false},{"t":"、","click":false},{"t":"解","click":true,"ok":false},{"t":"惑","click":true,"ok":false},{"t":"也","click":true,"ok":true},{"t":"。","click":false},{"t":"（","click":false},{"t":"韓","click":true,"ok":false},{"t":"愈","click":true,"ok":false},{"t":"《","click":false},{"t":"師","click":true,"ok":false},{"t":"說","click":true,"ok":false},{"t":"》","click":false},{"t":"）","click":false}],"answer":[1,13],"answerText":"者 / 也","explain":"這句用「……者……也」表示肯定判斷。不要把「所以」當作判斷詞。","refNote":true}]};
+
+document.title = DATA.title || "讀文言・學成語";
+
+function renderStem(s){return esc(s).replace(/&lt;b&gt;(.*?)&lt;\/b&gt;/g,"<b>$1</b>");}
+function esc(s){
+  return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+
+function flatQs(){
+  var out=[];
+  if(Array.isArray(DATA.pages)){
+    DATA.pages.forEach(function(pg){
+      if(Array.isArray(pg.questions)){
+        pg.questions.forEach(function(q){ out.push(q); });
+      }
+    });
+  } else if(Array.isArray(DATA.questions)){
+    DATA.questions.forEach(function(q){ out.push(q); });
+  }
+  return out;
+}
+
+var Qs = flatQs();
+var total = Qs.length;
+var i = -1;
+var started = false;
+var sub = false;
+var remainMs = DATA.limitMs || 0;
+var elapsedMs = 0;
+var timerId = null;
+var lastTick = null;
+var answers = [];
+var reported = false;
+var selCard = null;
+var confirming = false;
+
+function initAnswers(){
+  answers = Qs.map(function(q){
+    if(q.type==="multi") return [];
+    if(q.type==="classify") return q.items.map(function(){ return null; });
+    if(q.type==="circle") return [];
+    return null;
+  });
+}
+
+function fmtMs(ms){
+  var s = Math.max(0, Math.floor(ms/1000));
+  var m = Math.floor(s/60);
+  var sec = s % 60;
+  return (m<10?"0":"")+m + ":" + (sec<10?"0":"")+sec;
+}
+
+function sameSet(a,b){
+  if(!Array.isArray(a)||!Array.isArray(b)||a.length!==b.length) return false;
+  var A=a.slice().sort(function(x,y){return x-y;});
+  var B=b.slice().sort(function(x,y){return x-y;});
+  for(var k=0;k<A.length;k++) if(A[k]!==B[k]) return false;
+  return true;
+}
+
+function sameMap(a,b){
+  if(!Array.isArray(a)||!Array.isArray(b)||a.length!==b.length) return false;
+  for(var k=0;k<a.length;k++) if(a[k]!==b[k]) return false;
+  return true;
+}
+
+function isAnswered(idx){
+  var q = Qs[idx];
+  var a = answers[idx];
+  if(q.type==="mcq") return a !== null && a !== undefined;
+  if(q.type==="multi") return Array.isArray(a) && a.length>0;
+  if(q.type==="classify") return Array.isArray(a) && a.length===q.items.length && a.every(function(x){ return x !== null && x !== undefined; });
+  if(q.type==="circle") return Array.isArray(a) && a.length>0;
+  return false;
+}
+
+function isCorrect(idx){
+  var q = Qs[idx];
+  var a = answers[idx];
+  if(q.type==="mcq") return a === q.answer;
+  if(q.type==="multi") return sameSet(a, q.answer);
+  if(q.type==="classify") return sameMap(a, q.answer);
+  if(q.type==="circle") return sameSet(a, q.answer);
+  return false;
+}
+
+function choiceVal(idx){
+  var q = Qs[idx];
+  var a = answers[idx];
+  if(!isAnswered(idx)) return null;
+  if(q.type==="mcq") return a;
+  if(q.type==="multi") return a.slice().sort(function(x,y){return x-y;}).join("|");
+  if(q.type==="classify") return a.map(function(x){ return (x===null||x===undefined)?"-":x; }).join("|");
+  if(q.type==="circle") return a.slice().sort(function(x,y){return x-y;}).join("|");
+  return null;
+}
+
+function pickedText(idx){
+  var q = Qs[idx];
+  var a = answers[idx];
+  if(q.type==="mcq"){
+    if(a===null || a===undefined) return null;
+    return String(q.options[a]);
+  }
+  if(q.type==="multi"){
+    if(!a||a.length===0) return null;
+    return a.slice().sort(function(x,y){return x-y;}).map(function(k){ return q.options[k]; }).join(" / ");
+  }
+  if(q.type==="classify"){
+    if(!a||!a.length) return null;
+    return a.map(function(k,ci){
+      if(k===null||k===undefined) return q.items[ci] + "→未放";
+      return q.items[ci] + "→" + q.bins[k];
+    }).join(" / ");
+  }
+  if(q.type==="circle"){
+    if(!a||a.length===0) return null;
+    return a.slice().sort(function(x,y){return x-y;}).map(function(k){ return q.tokens[k].t; }).join(" / ");
+  }
+  return null;
+}
+
+function rightText(idx){
+  var q = Qs[idx];
+  if(q.type==="mcq") return String(q.options[q.answer]);
+  if(q.type==="multi") return q.answer.slice().sort(function(x,y){return x-y;}).map(function(k){ return q.options[k]; }).join(" / ");
+  if(q.type==="classify") return q.answer.map(function(k,ci){ return q.items[ci] + "→" + q.bins[k]; }).join(" / ");
+  if(q.type==="circle"){
+    if(q.answerText) return q.answerText;
+    return q.answer.slice().sort(function(x,y){return x-y;}).map(function(k){ return q.tokens[k].t; }).join(" / ");
+  }
+  return "";
+}
+
+function startTimer(){
+  if(timerId) return;
+  lastTick = performance.now();
+  timerId = setInterval(function(){
+    var now = performance.now();
+    var d = now - lastTick;
+    lastTick = now;
+    if(!sub && remainMs>0){
+      remainMs -= d;
+      elapsedMs += d;
+      if(remainMs<=0){
+        remainMs = 0;
+        doSubmit(true);
+        return;
+      }
+    }
+    var el = document.getElementById("timer");
+    if(el) el.textContent = "剩餘 "+fmtMs(remainMs)+"　已用 "+fmtMs(elapsedMs);
+  }, 250);
+}
+
+function stopTimer(){
+  if(timerId){
+    clearInterval(timerId);
+    timerId = null;
+  }
+}
+
+function elhState(){
+  if(!started || i<0) return;
+  elhReport({type:"state", data:{
+    i: i,
+    started: true,
+    sub: !!sub,
+    remainMs: remainMs,
+    elapsedMs: elapsedMs,
+    answers: answers
+  }});
+}
+
+function render(){
+  var app = document.getElementById("app");
+  var left = "";
+  var right = "";
+
+  if(!started){
+    left = '<div class="stem">'+esc(DATA.unit||"")+'</div>'
+      + '<div class="stem" style="font-size:clamp(1.6rem, 6vmin, 6rem);margin-top:2vmin">'+esc(DATA.title||"")+'</div>'
+      + '<div class="note">兒子　中一　限時 '+ (DATA.minutes||0) +' 分鐘　共 '+total+' 題</div>'
+      + '<div class="note">'+esc(DATA.coverTip||"")+'</div>';
+    right = '<button class="btn primary" data-act="start">'+(DATA.kind==="practice"?"開始練習":"開始測驗")+'</button>';
+  } else if(sub){
+    var correctCount = 0;
+    Qs.forEach(function(q,idx){ if(isCorrect(idx)) correctCount++; });
+    left = '<div class="stem">'+esc(DATA.unit||"")+'</div>'
+      + '<div class="stem" style="margin-top:2vmin">交卷結果</div>'
+      + '<div class="note">已用 '+fmtMs(elapsedMs)+'　答對 '+correctCount+' / '+total+' 題</div>'
+      + (DATA.refNote ? '<div class="note">'+esc(DATA.refNote)+'</div>' : "");
+    right = Qs.map(function(q,idx){
+        var ok = isCorrect(idx);
+        var ans = isAnswered(idx);
+        return '<div class="note" style="margin-top:1.2vmin">'
+          + '<b>第 '+(idx+1)+' 題</b>　'+(ok?"答對":(ans?"答錯":"未作答"))
+          + '<br>正確答案：'+esc(rightText(idx))
+          + (q.explain ? '<br>解說：'+esc(q.explain) : "")
+          + (q.refNote && DATA.refNote ? '<br><span class="note">'+esc(DATA.refNote)+'</span>' : "")
+          + '</div>';
+      }).join("");
+  } else if(confirming){
+    var unanswered = 0;
+    Qs.forEach(function(q,idx){ if(!isAnswered(idx)) unanswered++; });
+    left = '<div class="stem">確定交卷？</div>'
+      + '<div class="note">'+(unanswered?("還有 "+unanswered+" 題未作答。"):"全部已作答。")+'交卷後不能再改。</div>';
+    right = '<button class="btn ghost" data-act="submitNo">返回作答</button>'
+      + '<button class="btn primary" data-act="submitYes">確定交卷</button>';
+  } else {
+    var q = Qs[i];
+    left = '<div class="note">'+esc(DATA.unit||"")+'</div>'
+      + '<div class="note">第 '+(i+1)+' / '+total+' 題</div>';
+    if(q.section) left += '<div class="note">'+esc(q.section)+'</div>';
+    left += '<div class="stem" style="margin-top:1.2vmin">'+renderStem(q.stem)+'</div>';
+    if(q.autoNote) left += '<div class="note" style="margin-top:0.6vmin">'+esc(q.autoNote)+'</div>';
+    left += '<div class="note" id="timer">剩餘 '+fmtMs(remainMs)+'　已用 '+fmtMs(elapsedMs)+'</div>';
+
+    if(q.type==="mcq" || q.type==="multi"){
+      right = '<div class="note">'+(q.type==="multi"?"選出所有正確項，全對才得分。":"請選擇一項。")+'</div>'
+        + q.options.map(function(opt,k){
+          var sel = (q.type==="mcq" ? answers[i]===k : (answers[i]&&answers[i].indexOf(k)>=0));
+          return '<button class="choice '+(sel?"selected":"")+'" data-act="opt" data-k="'+k+'">'+String.fromCharCode(65+k)+'　'+esc(opt)+'</button>';
+        }).join("");
+    } else if(q.type==="classify"){
+      if(!Array.isArray(answers[i]) || answers[i].length!==q.items.length){
+        answers[i] = q.items.map(function(){ return null; });
+      }
+      var unplaced = q.items.map(function(it,ci){ return {it:it, ci:ci}; }).filter(function(x){ return answers[i][x.ci]===null; });
+      right = '<div class="note">先點卡片，再點箱子；點箱內卡片可放回。全部放對才得分。</div>';
+      right += '<div style="margin-top:0.8vmin">'+unplaced.map(function(x){
+        return '<button class="card '+(selCard===x.ci?"selected":"")+'" data-act="card" data-k="'+x.ci+'">'+esc(x.it)+'</button>';
+      }).join("")+'</div>';
+      right += q.bins.map(function(b,k){
+        var placed = q.items.map(function(it,ci){ return {it:it, ci:ci}; }).filter(function(x){ return answers[i][x.ci]===k; });
+        return '<div class="bin" data-act="bin" data-k="'+k+'">'+esc(b)
+          + placed.map(function(x){ return '<button class="card" data-act="unplace" data-k="'+x.ci+'">'+esc(x.it)+'</button>'; }).join("")
+          + '</div>';
+      }).join("");
+    } else if(q.type==="circle"){
+      if(!Array.isArray(answers[i])) answers[i] = [];
+      var endAt = -1;
+      for(var ti=0; ti<q.tokens.length; ti++){
+        if(q.tokens[ti].t==="。"){ endAt = ti; break; }
+      }
+      var sentHtml = "";
+      var srcText = "";
+      q.tokens.forEach(function(t,k){
+        if(endAt>=0 && k>endAt){ srcText += t.t; return; }
+        var sel = answers[i].indexOf(k)>=0;
+        if(t.click===false) sentHtml += '<span class="token nop">'+esc(t.t)+'</span>';
+        else sentHtml += '<button class="token '+(sel?"selected":"")+'" data-act="tok" data-k="'+k+'">'+esc(t.t)+'</button>';
+      });
+      right = '<div class="note">請圈出句中表示判斷的語氣詞、判斷詞或否定詞（可多於一處）。再點一次可取消。</div>'
+        + '<div style="margin-top:1vmin;line-height:1.8">'+sentHtml+'</div>'
+        + (srcText ? '<div class="note circle-source" style="margin-top:1vmin">'+esc(srcText)+'</div>' : '');
+    } else {
+      right = "";
+    }
+    right += '<div style="margin-top:2vmin">'
+      + (i>0?'<button class="btn ghost" data-act="prev">上一題</button>':'')
+      + (i<total-1?'<button class="btn" data-act="next">下一題</button>':'')
+      + '<button class="btn primary" data-act="submit">交卷</button>'
+      + '</div>';
+  }
+
+  app.innerHTML = '<div class="pane" id="left">'+left+'</div><div class="pane" id="right">'+right+'</div>';
+  elhState();
+}
+
+document.addEventListener("click", function(e){
+  var b = e.target.closest("[data-act]");
+  if(!b) return;
+  var act = b.getAttribute("data-act");
+  var kAttr = b.getAttribute("data-k");
+  var k = kAttr==null ? null : parseInt(kAttr,10);
+
+  if(act==="start"){
+    started = true; sub = false; i = 0; reported = false; confirming = false; selCard = null;
+    initAnswers();
+    remainMs = DATA.limitMs || 0;
+    elapsedMs = 0;
+    startTimer();
+    render();
+    return;
+  }
+  if(act==="prev"){
+    if(i>0){ i--; selCard=null; confirming=false; render(); }
+    return;
+  }
+  if(act==="next"){
+    if(i<total-1){ i++; selCard=null; confirming=false; render(); }
+    return;
+  }
+  if(act==="submit"){
+    confirming = true;
+    render();
+    return;
+  }
+  if(act==="submitNo"){
+    confirming = false;
+    render();
+    return;
+  }
+  if(act==="submitYes"){
+    doSubmit(false);
+    return;
+  }
+  if(!started || sub || confirming) return;
+  var q = Qs[i];
+  if(act==="opt"){
+    if(q.type==="mcq") answers[i] = k;
+    else if(q.type==="multi"){
+      if(!Array.isArray(answers[i])) answers[i]=[];
+      var pos = answers[i].indexOf(k);
+      if(pos>=0) answers[i].splice(pos,1);
+      else answers[i].push(k);
+    }
+    render();
+    return;
+  }
+  if(act==="card"){
+    selCard = k;
+    render();
+    return;
+  }
+  if(act==="bin"){
+    if(selCard!==null && q.type==="classify"){
+      if(!Array.isArray(answers[i]) || answers[i].length!==q.items.length){
+        answers[i] = q.items.map(function(){ return null; });
+      }
+      answers[i][selCard] = k;
+      selCard = null;
+      render();
+    }
+    return;
+  }
+  if(act==="unplace"){
+    if(q.type==="classify"){
+      answers[i][k] = null;
+      selCard = null;
+      render();
+    }
+    return;
+  }
+  if(act==="tok"){
+    if(q.type==="circle"){
+      if(!Array.isArray(answers[i])) answers[i]=[];
+      var pos2 = answers[i].indexOf(k);
+      if(pos2>=0) answers[i].splice(pos2,1);
+      else answers[i].push(k);
+      render();
+    }
+  }
+}, true);
+
+function doSubmit(auto){
+  if(sub || reported) return;
+  sub = true;
+  confirming = false;
+  stopTimer();
+  Qs.forEach(function(q,idx){
+    elhReport({
+      type:"answer",
+      q: q.qid,
+      choice: isAnswered(idx) ? choiceVal(idx) : null,
+      correct: isAnswered(idx) ? isCorrect(idx) : false,
+      text: elhText(q.stem),
+      picked: isAnswered(idx) ? pickedText(idx) : null,
+      answer: elhText(rightText(idx))
+    });
+  });
+  reported = true;
+  render();
+}
+
+window.addEventListener("message", function(e){
+  var m = e.data;
+  if(!m || m.elh !== 1 || m.type !== "restore" || e.source !== window.parent) return;
+  var d = m.data || {};
+  if(typeof d.i !== "number" || d.i < 0 || d.i >= total) return;
+  i = d.i;
+  started = !!d.started;
+    sub = !!d.sub;
+  remainMs = typeof d.remainMs === "number" ? d.remainMs : (DATA.limitMs||0);
+  elapsedMs = typeof d.elapsedMs === "number" ? d.elapsedMs : 0;
+  answers = Array.isArray(d.answers) ? d.answers : initAnswers() || [];
+  if(sub) stopTimer(); else startTimer();
+  render();
+});
+
+elhReport({type:"init", total: total});
+render();
+</script>
+</body>
+</html>
